@@ -1,11 +1,10 @@
 import React, { memo, Suspense } from 'react'
 
-import Box from '../../components/Box'
-import Spinner from '../../components/Spinner'
-import logo from '../../logo.svg'
+import Box from '@/shared/ui/Box'
+import Spinner from '@/shared/ui/Spinner'
 
-import Counter from './Counter'
-import DocList from './DocList'
+import Counter from '@/features/counter'
+import DocList from '@/features/doc-list'
 import styles from './index.module.css'
 
 interface Props {}
