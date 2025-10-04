@@ -1,10 +1,9 @@
 import { createBrowserRouter } from 'react-router'
 
-import Layout from '@/widgets/Layout/Layout'
-import Index from '@/pages/Index'
 import Example from '@/pages/example/example'
+import Index from '@/pages/Index'
 import Notfound from '@/pages/Notfound'
-
+import Layout from '@/widgets/Layout/Layout'
 
 const router = createBrowserRouter([
   {

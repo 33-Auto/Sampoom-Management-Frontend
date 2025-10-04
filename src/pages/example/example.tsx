@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
 
-import Box from '@/shared/ui/Box'
-import Spinner from '@/shared/ui/Spinner'
 import { getItems } from '@/entities/doc/api/docApi'
 import type { Part } from '@/entities/doc/model/types'
+import Box from '@/shared/ui/Box'
+import Spinner from '@/shared/ui/Spinner'
 
 interface Props {}
 
