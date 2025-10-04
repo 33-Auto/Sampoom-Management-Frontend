@@ -1,0 +1,2 @@
+- name: Print environment variable
+  run: echo "REACT_APP_TEXT is $REACT_APP_TEXT"
