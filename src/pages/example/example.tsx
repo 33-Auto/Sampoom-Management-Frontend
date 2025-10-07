@@ -14,7 +14,7 @@ const Example: React.FC<Props> = memo(() => {
     getItems()
       .then((data) => {
         console.log(data)
-        setPartList(data.data as Part[])
+        setPartList(data as Part[])
       })
       .catch((err) => {
         console.error(err)
@@ -29,9 +29,8 @@ const Example: React.FC<Props> = memo(() => {
         ) : (
           <ul>
             {partList.map((part) => (
-              <li key={part.id}>
+              <li key={part.url}>
                 <span>{part.name}</span>
-                <span>{part.count}</span>
               </li>
             ))}
           </ul>
