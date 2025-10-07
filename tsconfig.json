@@ -23,7 +23,6 @@
   },
   "include": [
     "./src",
-    "./@types",
     "./mocks",
     "scripts",
     "./**.js",

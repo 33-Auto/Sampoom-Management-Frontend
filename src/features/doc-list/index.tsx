@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import Spinner from '@/components/Spinner'
+import Spinner from '@/shared/ui/Spinner'
 
-import styles from './DocList.module.css'
+import styles from './index.module.css'
 interface Props {}
 
 const DocList: React.FC<Props> = () => {
