@@ -9,9 +9,8 @@ import styles from '@/widgets/Layout/Layout.module.css'
 
 interface Props {}
 
-const apiKey = process.env.REACT_APP_TEXT
-
 const Index: React.FC<Props> = memo(() => {
+  const apiKey = process.env.REACT_APP_TEXT
   return (
     <>
       <Box>
