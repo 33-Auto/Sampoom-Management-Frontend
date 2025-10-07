@@ -1,13 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import { vi } from 'vitest'
 
 import App from '@/app/App'
 
 test('Work App Component without error', () => {
+  vi.stubEnv('REACT_APP_TEXT', "I'm REACT_APP_TEXT from .env")
   render(<App />)
 
   expect(screen.getByText("I'm REACT_APP_TEXT from .env")).toBeInTheDocument()
+  vi.unstubAllEnvs()
 })
 
 test('Working Counter', async () => {
