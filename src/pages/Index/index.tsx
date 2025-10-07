@@ -9,11 +9,13 @@ import styles from '@/widgets/Layout/Layout.module.css'
 
 interface Props {}
 
+const apiKey = process.env.REACT_APP_TEXT
+
 const Index: React.FC<Props> = memo(() => {
   return (
     <>
       <Box>
-        <h1 className={styles.h1}>I'm REACT_APP_TEXT from .env</h1>
+        <h1 className={styles.h1}>{apiKey}</h1>
         <img src={logo} alt="react-logo" className="react-logo" />
       </Box>
       <Box>
