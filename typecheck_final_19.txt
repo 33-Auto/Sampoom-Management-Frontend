@@ -1,8 +1,0 @@
-
-> create-react-app@0.0.1 typecheck /Users/choosla/Dev/Frontend/Sampoom-Management-Frontend
-> tsc --noEmit
-
-src/entities/inventory/index.ts(2,15): error TS2306: File '/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/entities/inventory/model/index.ts' is not a module.
-src/features/routing-process/ui/routing-process-form.tsx(22,3): error TS2305: Module '"../model/routing-process.types"' has no exported member 'RoutingProcessFormData'.
-src/shared/api/index.ts(2,10): error TS2305: Module '"./query"' has no exported member 'tanstackQueryClient'.
- ELIFECYCLE  Command failed with exit code 2.

@@ -4,28 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
-    <title>삼품관리</title>
-    <script>
-      // 페이지 로딩 전에 테마 적용 (깜빡임 방지)
-      (function () {
-        try {
-          const theme = localStorage.getItem("theme-storage");
-          if (theme) {
-            const parsed = JSON.parse(theme);
-            const currentTheme = parsed?.state?.theme || "light";
-            if (currentTheme === "dark") {
-              document.documentElement.classList.add("dark");
-            }
-          }
-        } catch (e) {
-          // localStorage 접근 실패 시 무시
-        }
-      })();
-    </script>
+    <title>Create React App</title>
   </head>
   <body>
     <div id="root"></div>

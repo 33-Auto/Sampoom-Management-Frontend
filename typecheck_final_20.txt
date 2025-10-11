@@ -1,4 +1,0 @@
-
-> create-react-app@0.0.1 typecheck /Users/choosla/Dev/Frontend/Sampoom-Management-Frontend
-> tsc --noEmit
-
