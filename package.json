@@ -11,6 +11,7 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "start": "vite",
     "dev": "vite",
     "build": "vite build",

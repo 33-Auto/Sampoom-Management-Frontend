@@ -1,0 +1,48 @@
+import React from "react";
+import { Outlet } from "react-router-dom";import { BranchSelectBar } from "@/features/branch-select";import { ModuleHeader, NavigationTabs } from "@/widgets/Header";const WMSLayout: React.FC = () => {
+  const headerConfig = {
+    moduleTitle: "재고 관리 (WMS)",
+    moduleDescription: "창고 출고 지시 및 재고 현황을 관리합니다",
+    moduleIcon: "ri-archive-drawer-line",
+    moduleColor: "bg-purple-600",
+    navItems: [],
+  };
+
+  const navItems = [
+    {
+      path: "/wms/shipping",
+      label: "출고 지시",
+      icon: "ri-truck-line",
+      active: true,
+    },
+    {
+      path: "/wms/inventory",
+      label: "재고 현황",
+      icon: "ri-bar-chart-box-line",
+    },
+    // { path: "/wms/receiving", label: "입고 관리", icon: "ri-file-list-3-line" },
+    {
+      path: "/wms/orders",
+      label: "발주 관리",
+      icon: "ri-shopping-bag-line",
+    },
+    {
+      path: "/wms/rop-settings",
+      label: "ROP 설정",
+      icon: "ri-settings-3-line",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
+      <ModuleHeader {...headerConfig} />
+      <NavigationTabs navItems={navItems} moduleColor="bg-purple-600" />
+      {/* 지점 선택 영역 */}
+      <BranchSelectBar moduleType="wms" />
+
+      <Outlet />
+    </div>
+  );
+};
+
+export default WMSLayout;
