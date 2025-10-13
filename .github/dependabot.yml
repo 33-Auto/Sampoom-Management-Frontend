@@ -1,7 +1,33 @@
+# .github/dependabot.yml
+
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    # Files stored in `app` directory
-    directory: '/'
+  # npm(pnpm) 의존성 설정
+  - package-ecosystem: "npm"
+    directory: "/" # package.json 파일이 있는 위치
     schedule:
-      interval: 'daily'
+      interval: "daily" # 매일 업데이트 확인
+    
+    # 그룹화 규칙 정의
+    groups:
+      # 개발 의존성(devDependencies)을 모두 하나의 PR로 묶음
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      
+      # 프로덕션 의존성(dependencies)을 모두 하나의 PR로 묶음
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # 필요하다면 특정 패턴으로도 그룹화 가능
+      # 예: 모든 eslint 관련 패키지를 한 번에 업데이트
+      eslint-packages:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "eslint-plugin-*"
