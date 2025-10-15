@@ -1,5 +1,4 @@
-import { useRef, useEffect } from 'react'
-/**
+import { useEffect, useRef } from "react";/**
  * Simulate componentDidUpdate() method of Class Component
  * https://reactjs.org/docs/react-component.html#componentdidupdate
  */
@@ -7,15 +6,15 @@ const useUpdateEffect = (
   effect: AnyFunction,
   deps: any[] | undefined = undefined,
 ): void => {
-  const mounted = useRef<boolean>(false)
+  const mounted = useRef<boolean>(false);
   useEffect(() => {
     if (!mounted.current) {
       // fire componentDidMount
-      mounted.current = true
+      mounted.current = true;
     } else {
-      effect()
+      effect();
     }
-  }, deps)
-}
+  }, deps);
+};
 
-export default useUpdateEffect
+export default useUpdateEffect;

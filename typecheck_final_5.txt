@@ -1,0 +1,158 @@
+
+> create-react-app@0.0.1 typecheck /Users/choosla/Dev/Frontend/Sampoom-Management-Frontend
+> tsc --noEmit
+
+src/app/App.tsx(43,22): error TS2322: Type '(props: ErrorHandlerProps) => JSX.Element' is not assignable to type 'ComponentType<FallbackProps> | undefined'.
+  Type '(props: ErrorHandlerProps) => JSX.Element' is not assignable to type 'FunctionComponent<FallbackProps>'.
+    Types of parameters 'props' and 'props' are incompatible.
+      Type 'FallbackProps' is not assignable to type 'ErrorHandlerProps'.
+        Types of property 'error' are incompatible.
+          Type 'unknown' is not assignable to type 'Error'.
+src/app/App.tsx(44,30): error TS2740: Type 'OpenapiQueryClient<paths, `${string}/${string}`>' is missing the following properties from type 'QueryClient': #private, mount, unmount, isFetching, and 29 more.
+src/app/model/index.ts(1,15): error TS2307: Cannot find module './__tests__' or its corresponding type declarations.
+src/app/providers/router.tsx(56,49): error TS2339: Property 'WorkOrderDetail' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/production/index")'.
+src/app/providers/router.tsx(73,44): error TS2339: Property 'SalesOrderDetail' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/sales/index")'.
+src/app/providers/router.tsx(87,42): error TS2339: Property 'ShippingProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(107,6): error TS2339: Property 'EmployeeProfileProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/hrm/index")'.
+src/app/providers/router.tsx(111,6): error TS2339: Property 'EmployeeStatusProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/hrm/index")'.
+src/app/providers/router.tsx(222,18): error TS2339: Property 'ItemProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(229,18): error TS2339: Property 'ItemProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(238,23): error TS2339: Property 'bomsLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(248,18): error TS2339: Property 'BomProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(255,18): error TS2339: Property 'BomProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(264,23): error TS2339: Property 'partnersLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(273,23): error TS2339: Property 'PartnerProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(282,23): error TS2339: Property 'PartnerProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(294,23): error TS2339: Property 'branchesLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(303,23): error TS2339: Property 'BranchProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(312,23): error TS2339: Property 'BranchProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(326,23): error TS2339: Property 'workCentersLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(335,23): error TS2339: Property 'WorkCenterProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(344,23): error TS2339: Property 'WorkCenterProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(356,23): error TS2339: Property 'routingsLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(365,23): error TS2339: Property 'RoutingProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(374,23): error TS2339: Property 'RoutingProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/master/index")'.
+src/app/providers/router.tsx(399,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/sales/index")'.
+src/app/providers/router.tsx(428,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(444,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(456,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(465,23): error TS2339: Property 'default' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(468,23): error TS2339: Property 'stockingProcessLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/features/stocking-process/index")'.
+src/app/providers/router.tsx(489,23): error TS2339: Property 'ropSettingsLoader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(498,23): error TS2339: Property 'RopProcess' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/index")'.
+src/app/providers/router.tsx(523,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/production/index")'.
+src/app/providers/router.tsx(539,23): error TS2339: Property 'loader' does not exist on type 'typeof import("/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/production/index")'.
+src/entities/bom/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/bom/index.ts(2,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/branch/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/branch/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/branch/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/department/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/department/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/department/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/employee/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/inventory/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/inventory/model/index.ts(1,15): error TS2307: Cannot find module './rop' or its corresponding type declarations.
+src/entities/mp/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/mps/api/mps.api.ts(130,48): error TS2339: Property 'fetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/entities/order/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/order/index.ts(2,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/partner/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/partner/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/partner/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/planning/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/planning/index.ts(2,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/position/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/position/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/position/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/purchase-order/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/purchase-order/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/routing/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/routing/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/routing/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/sale-order/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/sale-order/index.ts(2,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/shipping/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/shipping/index.ts(2,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/entities/wm/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/wm/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/workcenter/index.ts(1,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/entities/workcenter/index.ts(2,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/entities/workcenter/index.ts(3,15): error TS2307: Cannot find module './model' or its corresponding type declarations.
+src/features/doc-list/index.ts(1,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/features/item-process/api/item-process.loader.ts(11,25): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/features/item-process/api/item-process.loader.ts(13,25): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/features/master-list/ui/MasterListLayout.tsx(6,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'TableProps'.
+src/features/receiving-process/api/receiving-process.loader.ts(7,23): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/features/routing-process/model/index.ts(2,1): error TS2308: Module "./routing-process.contract" has already exported a member named 'RoutingProcessFormData'. Consider explicitly re-exporting to resolve the ambiguity.
+src/features/stocking-process/api/stocking-process.loader.ts(6,30): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/features/table-pagination/lib/index.ts(1,15): error TS2307: Cannot find module './hook' or its corresponding type declarations.
+src/pages/home/ui/Home.tsx(4,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Layout/index"' has no default export. Did you mean to use 'import { HomeLayout } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Layout/index"' instead?
+src/pages/hrm/employees/api/hrm-employees.loaders.ts(6,36): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/hrm/employees/ui/index.ts(2,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/hrm/shared/index.ts(1,15): error TS2307: Cannot find module './lib' or its corresponding type declarations.
+src/pages/master/bom/api/bom.loaders.ts(6,15): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/bom/ui/index.ts(2,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/branches/api/branches.loaders.ts(6,15): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/branches/ui/index.ts(3,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/branches/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/departments/api/departments.loaders.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/departments/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/items/api/items.loaders.ts(6,44): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/items/ui/index.ts(3,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/items/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/partners/api/partners.loaders.ts(6,15): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/partners/ui/index.ts(3,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/partners/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/positions/api/positions.loaders.ts(6,40): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/positions/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/routings/api/routings.loaders.ts(6,15): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/routings/create/ui/RoutingCreate.tsx(5,10): error TS2724: '"../../../workcenters"' has no exported member named 'mockWorkCentersMaster'. Did you mean 'WorkCenterMaster'?
+src/pages/master/routings/create/ui/RoutingCreate.tsx(54,16): error TS7006: Parameter 'wc' implicitly has an 'any' type.
+src/pages/master/routings/ui/index.ts(2,15): error TS2307: Cannot find module './create' or its corresponding type declarations.
+src/pages/master/routings/ui/index.ts(4,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/routings/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/master/workcenters/api/workcenters.loaders.ts(6,15): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/master/workcenters/ui/index.ts(2,15): error TS2307: Cannot find module './create' or its corresponding type declarations.
+src/pages/master/workcenters/ui/index.ts(4,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/master/workcenters/ui/masterListConfig.tsx(3,15): error TS2305: Module '"@/shared/ui/Table"' has no exported member 'Column'.
+src/pages/Notfound/index.ts(2,15): error TS2307: Cannot find module './ui' or its corresponding type declarations.
+src/pages/production/orders/api/loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/production/orders/api/loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/production/orders/ui/index.ts(2,15): error TS2307: Cannot find module './detail' or its corresponding type declarations.
+src/pages/production/planning/api/loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/production/planning/api/loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/purchasing/requests/api/loader.ts(6,23): error TS2339: Property 'prefetchQuery' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/sales/orders/api/loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/sales/orders/api/loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/inventory/api/loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/inventory/api/loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/purchase-orders/api/loader.ts(8,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/purchase-orders/api/loader.ts(24,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/purchase-orders/detail/[id]/index.ts(1,15): error TS2306: File '/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/purchase-orders/detail/[id]/page.tsx' is not a module.
+src/pages/wms/purchase-orders/ui/index.ts(2,15): error TS2307: Cannot find module './detail' or its corresponding type declarations.
+src/pages/wms/rop-settings/api/rop-settings.loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/rop-settings/api/rop-settings.loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/rop-settings/ui/index.ts(2,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/pages/wms/shipping/api/loader.ts(6,42): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/shipping/api/loader.ts(22,23): error TS2339: Property 'ensureQueryData' does not exist on type 'OpenapiQueryClient<paths, `${string}/${string}`>'.
+src/pages/wms/shipping/ui/index.ts(2,15): error TS2307: Cannot find module './process' or its corresponding type declarations.
+src/widgets/Layout/HomeLayout.tsx(3,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/HRMLayout.tsx(4,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/HRMLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/MasterLayout.tsx(4,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/MasterLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/ModuleLayout.tsx(4,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/ModuleLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/ProductionLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/ProductionLayout.tsx(6,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/PurchasingLayout.tsx(4,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/PurchasingLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/SalesLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/SalesLayout.tsx(6,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/ui/index.ts(1,15): error TS2307: Cannot find module './Footer' or its corresponding type declarations.
+src/widgets/Layout/ui/index.ts(2,15): error TS2307: Cannot find module './Header' or its corresponding type declarations.
+src/widgets/Layout/ui/index.ts(3,15): error TS2307: Cannot find module './Sidebar' or its corresponding type declarations.
+src/widgets/Layout/WMSLayout.tsx(5,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { ModuleHeader } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+src/widgets/Layout/WMSLayout.tsx(6,8): error TS2613: Module '"/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' has no default export. Did you mean to use 'import { NavigationTabs } from "/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/widgets/Header/index"' instead?
+ ELIFECYCLE  Command failed with exit code 2.

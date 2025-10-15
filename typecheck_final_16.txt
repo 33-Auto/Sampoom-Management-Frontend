@@ -1,0 +1,22 @@
+
+> create-react-app@0.0.1 typecheck /Users/choosla/Dev/Frontend/Sampoom-Management-Frontend
+> tsc --noEmit
+
+src/entities/inventory/index.ts(2,15): error TS2306: File '/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/entities/inventory/model/index.ts' is not a module.
+src/entities/mps/api/mps.api.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/entities/mps/api/mps.api.ts(2,23): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/item-process/api/item-process.loader.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/item-process/api/item-process.loader.ts(2,25): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/receiving-process/api/receiving-process.loader.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/receiving-process/api/receiving-process.loader.ts(2,25): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/routing-process/model/index.ts(2,1): error TS2308: Module "./routing-process.contract" has already exported a member named 'RoutingProcessFormData'. Consider explicitly re-exporting to resolve the ambiguity.
+src/features/stocking-process/api/stocking-process.loader.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/features/stocking-process/api/stocking-process.loader.ts(2,25): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/pages/master/items/api/items.loaders.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/pages/master/items/api/items.loaders.ts(2,25): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/pages/master/routings/create/ui/RoutingCreate.tsx(5,10): error TS2724: '"../../../workcenters"' has no exported member named 'mockWorkCentersMaster'. Did you mean 'WorkCenterMaster'?
+src/pages/master/routings/create/ui/RoutingCreate.tsx(54,16): error TS7006: Parameter 'wc' implicitly has an 'any' type.
+src/pages/purchasing/requests/api/loader.ts(1,10): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/pages/purchasing/requests/api/loader.ts(2,25): error TS2300: Duplicate identifier 'tanstackQueryClient'.
+src/pages/wms/purchase-orders/detail/[id]/index.ts(1,15): error TS2306: File '/Users/choosla/Dev/Frontend/Sampoom-Management-Frontend/src/pages/wms/purchase-orders/detail/[id]/page.tsx' is not a module.
+ ELIFECYCLE  Command failed with exit code 2.

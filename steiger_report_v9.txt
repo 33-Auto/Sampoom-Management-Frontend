@@ -1,0 +1,270 @@
+
+┌ src/features/bom-process/ui/bom-process-form.tsx
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/branch-process/model/branch-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/master-list/lib/useMasterListControls.ts
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/master-list/ui/MasterListLayout.tsx
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/partner-process/model/partner-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/rop-process/model/rop-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/routing-process/model/routing-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/routing-process/ui/routing-process-form.tsx
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/shipping-process/model/shipping-process.types.test.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/shipping-process/model/shipping-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/workcenter-process/model/workcenter-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/pages/master/routings/create/ui/RoutingCreate.tsx
+✘ Forbidden cross-import from slice "master/workcenters".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/entities
+✘ Inconsistent pluralization of slice names. Prefer all singular names
+✔ Auto-fixable
+│
+└ fsd/inconsistent-naming: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/inconsistent-naming
+
+┌ src/app/providers/router.tsx
+✘ Forbidden sidestep of public API when importing from "@/pages/master/bom/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/master/partners/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/master/branches/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/master/workcenters/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/master/routings/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/sales/orders/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/wms/inventory/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/wms/purchase-orders/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/wms/purchase-orders/detail".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/features/stocking-process/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/wms/rop-settings/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/production/orders/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/app/providers/router.tsx
+⚠ Forbidden sidestep of public API when importing from "@/pages/production/planning/api".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/entities/mps/api/mps.api.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/v1".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/entities/user/api/auth.api.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/entities/user/mocks/data.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/entities/user/mocks/handlers.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/entities/user/model/auth.store.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/bom-process/ui/bom-process-form.tsx
+✘ Forbidden sidestep of public API when importing from "@/pages/master/bom/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/branch-process/model/branch-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/branches/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/master-list/ui/MasterListLayout.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/partner-process/model/partner-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/partners/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/receiving-process/mocks/data.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/receiving-process/model/receiving-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/rop-process/model/rop-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/rop-settings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/routing-process/model/routing-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/routings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/routing-process/ui/routing-process-form.tsx
+✘ Forbidden sidestep of public API when importing from "@/pages/master/routings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/shipping-process/model/shipping-process.types.test.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/shipping/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/shipping-process/model/shipping-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/shipping/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/user-menu/ui/UserMenu.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/workcenter-process/model/workcenter-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/workcenters/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/branches/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/departments/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/items/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/partners/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/positions/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/routings/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/master/workcenters/ui/masterListConfig.tsx
+✘ Forbidden sidestep of public API when importing from "@/shared/ui/Table/Table".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/wms/inventory/mocks/data.ts
+✘ Forbidden sidestep of public API when importing from "@/shared/model/models".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/pages/wms/purchase-orders/detail/StockingPage.tsx
+✘ Forbidden sidestep of public API when importing from "@/features/stocking-process/api/stocking-process.loader".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+─────────────────────────────────────────────────────────────────────────
+ Found 41 errors and 12 warnings (1 can be fixed automatically with --fix)
+

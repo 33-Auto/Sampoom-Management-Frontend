@@ -21,13 +21,6 @@
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": [
-    "./src",
-    "./mocks",
-    "scripts",
-    "./**.js",
-    "./**.ts",
-    "eslint.config.js"
-  ],
-  "exclude": ["dist"]
+  "include": ["src/**/*", "mocks/**/*", "scripts/**/*", "eslint.config.js", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }

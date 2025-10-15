@@ -1,0 +1,30 @@
+
+┌ src/features/master-list/lib/useMasterListControls.ts
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/master-list/ui/MasterListLayout.tsx
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/pages/master/routings/create/ui/RoutingCreate.tsx
+✘ Forbidden cross-import from slice "master/workcenters".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/entities
+✘ Inconsistent pluralization of slice names. Prefer all singular names
+✔ Auto-fixable
+│
+└ fsd/inconsistent-naming: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/inconsistent-naming
+
+┌ src/pages/wms/purchase-orders/detail/StockingPage.tsx
+✘ Forbidden sidestep of public API when importing from "@/features/stocking-process/api/stocking-process.loader".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+────────────────────────────────────────────────────────
+ Found 5 errors (1 can be fixed automatically with --fix)
+

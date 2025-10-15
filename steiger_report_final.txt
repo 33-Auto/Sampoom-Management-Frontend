@@ -1,0 +1,120 @@
+
+┌ src/features/bom-process/ui/bom-process-form.tsx
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/branch-process/model/branch-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/master-list/lib/useMasterListControls.ts
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/master-list/ui/MasterListLayout.tsx
+✘ Forbidden cross-import from slice "table-pagination".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/partner-process/model/partner-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/rop-process/model/rop-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/routing-process/model/routing-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/routing-process/ui/routing-process-form.tsx
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/shipping-process/model/shipping-process.types.test.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/shipping-process/model/shipping-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/features/workcenter-process/model/workcenter-process.types.ts
+✘ Forbidden import from higher layer "pages".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/pages/master/routings/create/ui/RoutingCreate.tsx
+✘ Forbidden cross-import from slice "master/workcenters".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/shared/config/sidebar.ts
+✘ Forbidden import from higher layer "widgets".
+│
+└ fsd/forbidden-imports: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/forbidden-imports
+
+┌ src/entities
+✘ Inconsistent pluralization of slice names. Prefer all singular names
+✔ Auto-fixable
+│
+└ fsd/inconsistent-naming: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/inconsistent-naming
+
+┌ src/features/bom-process/ui/bom-process-form.tsx
+✘ Forbidden sidestep of public API when importing from "@/pages/master/bom/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/branch-process/model/branch-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/branches/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/partner-process/model/partner-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/partners/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/rop-process/model/rop-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/rop-settings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/routing-process/model/routing-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/routings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/routing-process/ui/routing-process-form.tsx
+✘ Forbidden sidestep of public API when importing from "@/pages/master/routings/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/shipping-process/model/shipping-process.types.test.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/shipping/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/shipping-process/model/shipping-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/wms/shipping/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+┌ src/features/workcenter-process/model/workcenter-process.types.ts
+✘ Forbidden sidestep of public API when importing from "@/pages/master/workcenters/model".
+│
+└ fsd/no-public-api-sidestep: https://github.com/feature-sliced/steiger/tree/master/packages/steiger-plugin-fsd/src/no-public-api-sidestep
+
+─────────────────────────────────────────────────────────
+ Found 23 errors (1 can be fixed automatically with --fix)
+

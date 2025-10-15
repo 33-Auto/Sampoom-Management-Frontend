@@ -248,3 +248,10 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,react
+
+# 예시 파일 예외
+src-will-replace
+
+example
+
+realworld-react-fsd
