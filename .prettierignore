@@ -9,3 +9,7 @@ dist-ssr
 .all-contributorsrc
 .vscode
 .idea
+.github
+**.yml
+**.yaml
+.md
