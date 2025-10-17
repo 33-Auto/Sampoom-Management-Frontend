@@ -1,16 +1,16 @@
-import React, { memo, Suspense } from 'react'
+import React, { memo, Suspense } from "react";
 
-import Counter from '@/features/counter'
-import DocList from '@/features/doc-list'
-import logo from '@/shared/assets/logo.svg'
-import Box from '@/shared/ui/Box'
-import Spinner from '@/shared/ui/Spinner'
-import styles from '@/widgets/Layout/Layout.module.css'
+import Counter from "@/features/counter";
+import DocList from "@/features/doc-list";
+import logo from "@/shared/assets/logo.svg";
+import Box from "@/shared/ui/Box";
+import Spinner from "@/shared/ui/Spinner";
+import styles from "@/widgets/Layout/Layout.module.css";
 
 interface Props {}
 
 const Index: React.FC<Props> = memo(() => {
-  const apiKey = process.env.REACT_APP_TEXT
+  const apiKey = process.env.REACT_APP_TEXT;
   return (
     <>
       <Box>
@@ -26,8 +26,8 @@ const Index: React.FC<Props> = memo(() => {
         </Suspense>
       </Box>
     </>
-  )
-})
-Index.displayName = 'Index'
+  );
+});
+Index.displayName = "Index";
 
-export default Index
+export default Index;
