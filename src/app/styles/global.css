@@ -1,6 +1,7 @@
 @import 'tailwindcss';
+@import './theme.css';
 
-@plugin '@tailwindcss/forms';
+@plugin "@tailwindcss/forms";
 
 @theme {
   --font-sans:
@@ -16,7 +17,12 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
 @layer base {
+  button {
+    background-color: var(--color-primary);
+  }
+
   *,
   ::after,
   ::before,
@@ -25,7 +31,6 @@
     border-color: var(--color-gray-200, currentColor);
   }
 }
-
 html,
 body {
   height: 100%;
@@ -66,4 +71,27 @@ code {
   to {
     transform: rotate(360deg);
   }
+}
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff')
+    format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+    format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff')
+    format('woff');
+  font-weight: 700;
+  font-display: swap;
 }
