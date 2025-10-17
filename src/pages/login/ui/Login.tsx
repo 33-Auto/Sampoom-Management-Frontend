@@ -1,12 +1,11 @@
-import Button from '@/shared/ui'
+import { Button } from "@/shared/ui";
 
 export default function Login() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-[440px] mb-8 p-6 bg-white rounded-lg shadow-md"></div>
-      <Button variant="primary" size="md">
-        로그인
-      </Button>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
+      <div className="bg-avocado-300 mb-8 w-[440px] rounded-lg p-6 shadow-md">
+        <Button size="lg">로그인</Button>
+      </div>
     </div>
-  )
+  );
 }

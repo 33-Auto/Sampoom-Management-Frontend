@@ -1,14 +1,14 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter } from "react-router";
 
-import Example from '@/pages/example/example'
+import Example from "@/pages/example/example";
 // import Index from '@/pages/Index'
-import Login from '@/pages/login/ui/Login'
-import Notfound from '@/pages/Notfound'
-import Layout from '@/widgets/Layout/Layout'
+import Login from "@/pages/login/ui/Login";
+import Notfound from "@/pages/Notfound";
+import Layout from "@/widgets/Layout/Layout";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: (
       <Layout>
         <Login />
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/example',
+    path: "/example",
     element: (
       <Layout>
         <Example />
@@ -24,13 +24,13 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '*',
+    path: "*",
     element: (
       <Layout>
         <Notfound />
       </Layout>
     ),
   },
-])
+]);
 
-export default router
+export default router;
