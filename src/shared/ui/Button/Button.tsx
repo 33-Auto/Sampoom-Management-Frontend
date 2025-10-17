@@ -1,82 +1,57 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import type { ButtonHTMLAttributes } from "react";
+import * as React from "react";
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  children: ReactNode
+import { cn } from "@/shared/lib";
+
+const buttonVariants = cva(
+  "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-main-500 hover:bg-main-500/90 text-white",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border-input bg-background hover:bg-accent hover:text-accent-foreground border",
+        secondary:
+          "text-secondary-foreground hover:bg-secondary/80 bg-secondary",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
 }
 
-export default function Button({
-  variant = 'primary',
-  size = 'md',
-  children,
-  className = '',
-  disabled,
-  ...props
-}: ButtonProps) {
-  const baseClasses =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap'
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
+Button.displayName = "Button";
 
-  const variantClasses = {
-    primary: disabled
-      ? 'text-white opacity-50 cursor-not-allowed'
-      : 'text-white hover:opacity-90 active:opacity-80',
-    secondary: disabled
-      ? 'border opacity-50 cursor-not-allowed'
-      : 'border hover:opacity-90 active:opacity-80',
-    danger: disabled
-      ? 'text-white opacity-50 cursor-not-allowed'
-      : 'text-white hover:opacity-90 active:opacity-80',
-  }
-
-  const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base',
-  }
-
-  const getVariantStyles = () => {
-    if (disabled) {
-      switch (variant) {
-        case 'primary':
-          return { backgroundColor: '#8080FF' }
-        case 'secondary':
-          return {
-            backgroundColor: '#FFFFFF',
-            borderColor: '#E9EAEC',
-            color: '#17191B',
-          }
-        case 'danger':
-          return { backgroundColor: '#FF6C6C' }
-        default:
-          return { backgroundColor: '#8080FF' }
-      }
-    }
-
-    switch (variant) {
-      case 'primary':
-        return { backgroundColor: '#8080FF' }
-      case 'secondary':
-        return {
-          backgroundColor: '#FFFFFF',
-          borderColor: '#E9EAEC',
-          color: '#17191B',
-        }
-      case 'danger':
-        return { backgroundColor: '#FF6C6C' }
-      default:
-        return { backgroundColor: '#8080FF' }
-    }
-  }
-
-  return (
-    <button
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-      style={getVariantStyles()}
-      disabled={disabled}
-      {...props}
-    >
-      {children}
-    </button>
-  )
-}
+export { Button, buttonVariants };
