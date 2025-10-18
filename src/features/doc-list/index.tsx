@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
-import Spinner from '@/shared/ui/Spinner'
+import Spinner from "@/shared/ui/Spinner";
 
-import styles from './index.module.css'
+import styles from "./index.module.css";
 interface Props {}
 
 const DocList: React.FC<Props> = () => {
-  const [docList, setDocList] = useState<DocList>([])
+  const [docList, setDocList] = useState<DocList>([]);
 
   useEffect(() => {
-    fetch('/api/doclist')
+    fetch("/api/doclist")
       .then(async (res) => res.json())
-      .then((data) => setDocList(data))
-  }, [])
+      .then((data) => setDocList(data));
+  }, []);
 
   return (
     <>
@@ -28,8 +28,8 @@ const DocList: React.FC<Props> = () => {
         )}
       </section>
     </>
-  )
-}
-DocList.displayName = 'DocList'
+  );
+};
+DocList.displayName = "DocList";
 
-export default DocList
+export default DocList;
