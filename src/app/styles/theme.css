@@ -1,0 +1,68 @@
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff')
+    format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+    format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff')
+    format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* 사용자 정의 테마 설정 */
+@theme {
+  --font-sans:
+    'GMarketSans', Inter var, ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Main Colors */
+  --color-main-900: #1f1f5c;
+  --color-main-800: #333399;
+  --color-main-700: #4c4cbb;
+  --color-main-600: #6666dd;
+  --color-main-500: #8888ff; /* 기본 메인 색상 */
+  --color-main-400: #9999ff;
+  --color-main-300: #b3b3ff;
+  --color-main-200: #ccccff;
+  --color-main-100: #e6e6ff;
+
+  /* Grey Colors */
+  --color-grey-100: #e9eaec;
+  --color-grey-200: #d1d3d7;
+  --color-grey-300: #b9bcc2;
+  --color-grey-400: #444444;
+  --color-grey-500: #6b7280;
+  --color-grey-600: #4b5563;
+  --color-grey-700: #374151;
+  --color-grey-800: #1f2937;
+  --color-grey-900: #111827;
+
+  /* Status colors */
+  --color-like-red: #ea3323; /* 좋아요 색상 */
+  --color-error-red: #ff6c6c; /* 오류 상태 색상 */
+  --color-success-green: #10b981; /* 성공 상태 색상 */
+  --color-warning-yellow: #f59e0b; /* 경고 상태 색상 */
+
+  /* Background Colors */
+  --color-bg-card-black: #36393f;
+  --color-bg-black: #17181b;
+  --color-bg-card-white: #ffffff;
+  --color-bg-white: #f5f5f5;
+
+  /* 기본 흰색과 검은색을 제정의 */
+  --color-white: #ffffff;
+  --color-black: #000000;
+}
