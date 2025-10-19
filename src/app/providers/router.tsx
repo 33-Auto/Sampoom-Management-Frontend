@@ -9,11 +9,7 @@ import Layout from "@/widgets/Layout/Layout";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Layout>
-        <Login />
-      </Layout>
-    ),
+    element: <Login />,
   },
   {
     path: "/example",
