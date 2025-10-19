@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 import Logo from "@/shared/assets/logo_text_dark.svg";
 import { Button, Input, Select } from "@/shared/ui";
+
+import { register } from "../api/register";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -30,11 +33,25 @@ export default function Register() {
 
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      await register({
+        userName: formData.username,
+        email: formData.email,
+        password: formData.password,
+        position: formData.role,
+      });
+
       alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
       navigate("/login");
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(`회원가입 실패: ${error.message}`);
+      } else {
+        alert("알 수 없는 오류가 발생했습니다.");
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
