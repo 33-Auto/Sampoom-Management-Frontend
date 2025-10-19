@@ -35,7 +35,7 @@ describe('Input', () => {
 
     const inputElement = screen.getByRole('textbox')
 
-    expect(inputElement).toHaveClass('primary')
+    expect(inputElement).toHaveClass(inputVariants({ variant: 'primary' }))
   })
 
   // disapble 상태에서는 입력이 되면 안된다.
@@ -75,5 +75,60 @@ describe('Input', () => {
 
     rerender(<Input variant="secondary" />)
     expect(inputElement).toHaveClass(inputVariants({ variant: 'secondary' }))
+  })
+
+  it('label prop이 주어졌을 때, 해당 label이 렌더링 되어야 한다', () => {
+    const labelText = '이것은 라벨입니다'
+    render(<Input label={labelText} />)
+
+    const inputElement = screen.getByLabelText(labelText)
+
+    expect(inputElement).toBeInTheDocument()
+  })
+
+  it('label prop이 주어지지 않았을 때, label이 렌더링되지 않아야 한다', () => {
+    render(<Input />)
+    const absentLabel = screen.queryByRole('label')
+    expect(absentLabel).not.toBeInTheDocument()
+  })
+
+  it('error prop이 true로 주어졌을 때, 에러 스타일이 적용되어야 한다', () => {
+    render(<Input error={true} />)
+    const inputElement = screen.getByRole('textbox')
+    expect(inputElement).toHaveClass(inputVariants({ error: true }))
+  })
+
+  it('errorText prop이 주어졌을 때, 에러 텍스트가 렌더링 되어야 한다', () => {
+    const errorText = '이것은 에러 텍스트입니다'
+    render(<Input errorText={errorText} />)
+    const errorElement = screen.getByText(errorText)
+    expect(errorElement).toBeInTheDocument()
+  })
+
+  it('비밀번호는 type="password"로 렌더링 되어야 한다', () => {
+    const labelText = '비밀번호'
+    render(<Input type="password" label={labelText} />)
+    const inputElement = screen.getByLabelText(labelText)
+    expect(inputElement).toHaveAttribute('type', 'password')
+  })
+
+  it("비밀번호는 icon을 눌러 type='text'로 변경할 수 있어야 한다", async () => {
+    const user = userEvent.setup()
+    const labelText = '비밀번호'
+    render(<Input type="password" label={labelText} />)
+    const inputElement = screen.getByLabelText(labelText)
+    expect(inputElement).toHaveAttribute('type', 'password')
+
+    const toggleButton = screen.getByRole('button')
+    await user.click(toggleButton)
+
+    expect(inputElement).toHaveAttribute('type', 'text')
+  })
+
+  it('helperText prop이 주어졌을 때, 헬프 텍스트가 렌더링 되어야 한다', () => {
+    const helperText = '이것은 헬프 텍스트입니다'
+    render(<Input helperText={helperText} />)
+    const helpElement = screen.getByText(helperText)
+    expect(helpElement).toBeInTheDocument()
   })
 })
