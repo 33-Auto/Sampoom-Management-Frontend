@@ -123,7 +123,7 @@ export default function Login() {
           {/* Footer */}
           <div className="mt-6 text-center">
             <button
-              onClick={async () => navigate("/signup")}
+              onClick={async () => navigate("/register")}
               className="cursor-pointer bg-transparent text-sm font-medium text-main-500 transition-colors duration-200 hover:text-main-600 dark:hover:text-main-400"
             >
               계정이 없으신가요? 회원가입
