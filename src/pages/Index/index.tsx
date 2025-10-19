@@ -3,6 +3,7 @@ import React, { memo, Suspense } from "react";
 import Counter from "@/features/counter";
 import DocList from "@/features/doc-list";
 import logo from "@/shared/assets/logo.svg";
+import { Input } from "@/shared/ui";
 import Box from "@/shared/ui/Box";
 import Spinner from "@/shared/ui/Spinner";
 import { Table } from "@/shared/ui/Table";
@@ -51,6 +52,7 @@ const Index: React.FC<Props> = memo(() => {
         <h1 className={styles.h1}>{apiKey}</h1>
         <img src={logo} alt="react-logo" className="react-logo" />
       </Box>
+      <Input></Input>
       <Box>
         <Counter />
       </Box>
