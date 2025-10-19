@@ -1,41 +1,17 @@
 import React, { memo } from "react";
 
-import { getItems } from "@/entities/doc/api/docApi";
-import type { Part } from "@/entities/doc/model/types";
-import Box from "@/shared/ui/Box";
-import Spinner from "@/shared/ui/Spinner";
+import { Select } from "@/shared/ui";
 
 interface Props {}
 
 const Example: React.FC<Props> = memo(() => {
-  const [partList, setPartList] = React.useState<Part[]>([]);
-
-  React.useEffect(() => {
-    getItems()
-      .then((data) => {
-        console.log(data);
-        setPartList(data as Part[]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-
+  const options = [
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+  ];
   return (
     <>
-      <Box>
-        {partList.length === 0 ? (
-          <Spinner />
-        ) : (
-          <ul>
-            {partList.map((part) => (
-              <li key={part.url}>
-                <span>{part.name}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Box>
+      <Select label="테스트" options={options} />
     </>
   );
 });
