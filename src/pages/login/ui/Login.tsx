@@ -131,6 +131,8 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      <Table columns={sampleColumns} data={sampleData} />
     </div>
   );
 }
