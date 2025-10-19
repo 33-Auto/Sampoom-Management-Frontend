@@ -4,12 +4,17 @@ import Example from "@/pages/example/example";
 // import Index from '@/pages/Index'
 import Login from "@/pages/login/ui/Login";
 import Notfound from "@/pages/Notfound";
+import Register from "@/pages/register/ui/Register";
 import Layout from "@/widgets/Layout/Layout";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "/example",
