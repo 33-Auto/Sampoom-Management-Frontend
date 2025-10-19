@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/shared/lib";
 
 export const selectVariants = cva(
-  `dark:text-grey-100" focus:ring-opacity-50 w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-grey-900 transition-all duration-200 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-grey-100 dark:bg-bg-card-black dark:text-white dark:disabled:bg-grey-900`,
+  `focus:ring-opacity-50 w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-grey-900 transition-all duration-200 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-grey-100 dark:bg-bg-card-black dark:text-white dark:disabled:bg-grey-900`,
   {
     variants: {
       error: {
