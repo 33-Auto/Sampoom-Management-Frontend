@@ -1,37 +1,89 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 
-import Example from "@/pages/example/example";
-// import Index from '@/pages/Index'
-import Login from "@/pages/login/ui/Login";
-import Notfound from "@/pages/Notfound";
-import Register from "@/pages/register/ui/Register";
-import Layout from "@/widgets/Layout/Layout";
+import Home from '@/pages/Index/index';
+import Login from '@/pages/login/ui/Login';
+import Register from '@/pages/register/ui/Register';
+import WarehouseDashboard from '@/pages/warehouse-dashboard/page';
+import WarehouseOrders from '@/pages/warehouse-orders/page';
+import PartInventory from '@/pages/warehouse-inventory/page';
+import WarehouseEmployees from '@/pages/warehouse-employees/page';
+import FactoryDashboard from '@/pages/factory-dashboard/FactoryDashboard';
+import FactoryOrders from '@/pages/factory-orders/FactoryOrdersPage';
+import MaterialInventory from '@/pages/factory-materials/FactoryMaterialsPage';
+import BOMManagement from '@/pages/factory-bom/FactoryBomPage';
+import FactoryEmployees from '@/pages/factory-employees/FactoryEmployeesPage';
+import { Notfound } from '@/pages/Notfound/Notfound';
+// import ComponentsPage from '@/pages/components/page';
 
-const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
-    path: "/login",
-    element: <Login />,
+    path: '/',
+    element: <Home />
   },
   {
-    path: "/register",
-    element: <Register />,
+    path: '/login',
+    element: <Login />
   },
   {
-    path: "/example",
-    element: (
-      <Layout>
-        <Example />
-      </Layout>
-    ),
+    path: '/signup',
+    element: <Register />
+  },
+  // Warehouse Manager Routes
+  {
+    path: '/warehouse',
+    element: <Navigate to="/warehouse/dashboard" replace />
   },
   {
-    path: "*",
-    element: (
-      <Layout>
-        <Notfound />
-      </Layout>
-    ),
+    path: '/warehouse/dashboard',
+    element: <WarehouseDashboard />
   },
-]);
+  {
+    path: '/warehouse/orders',
+    element: <WarehouseOrders />
+  },
+  {
+    path: '/warehouse/inventory',
+    element: <PartInventory />
+  },
+  {
+    path: '/warehouse/employees',
+    element: <WarehouseEmployees />
+  },
+  // Factory Manager Routes
+  {
+    path: '/factory',
+    element: <Navigate to="/factory/dashboard" replace />
+  },
+  {
+    path: '/factory/dashboard',
+    element: <FactoryDashboard />
+  },
+  {
+    path: '/factory/orders',
+    element: <FactoryOrders />
+  },
+  {
+    path: '/factory/materials',
+    element: <MaterialInventory />
+  },
+  {
+    path: '/factory/bom',
+    element: <BOMManagement />
+  },
+  {
+    path: '/factory/employees',
+    element: <FactoryEmployees />
+  },
+  // {
+  //   path: '/components',
+  //   element: <ComponentsPage />,
+  // },
+  {
+    path: '*',
+    element: <Notfound />
+  }
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;
