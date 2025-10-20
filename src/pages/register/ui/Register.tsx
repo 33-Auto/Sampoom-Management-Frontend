@@ -46,10 +46,12 @@ export default function Register() {
             <p className="mt-2 text-grey-600 dark:text-grey-300">
               ERP 시스템에 로그인하세요
             </p>
+
+            <p className="mt-2 text-grey-600 dark:text-grey-300">
+              새 계정을 만드세요
+            </p>
           </div>
-          <p className="mt-2 text-grey-600 dark:text-grey-300">
-            새 계정을 만드세요
-          </p>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               label="사용자명"
