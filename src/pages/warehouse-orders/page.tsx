@@ -1,0 +1,253 @@
+import { useState } from "react";
+import { Sidebar } from "@/widgets/Sidebar";
+import { Button, Table } from "@/shared/ui";
+import { warehouseOrders } from "@/../mocks";
+
+export default function WarehouseOrders() {
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("current");
+
+  const sidebarItems = [
+    {
+      path: "/warehouse/dashboard",
+      label: "대시보드",
+      icon: "ri-dashboard-line",
+    },
+    {
+      path: "/warehouse/orders",
+      label: "주문 관리",
+      icon: "ri-file-list-line",
+    },
+    {
+      path: "/warehouse/inventory",
+      label: "부품 재고",
+      icon: "ri-archive-line",
+    },
+    { path: "/warehouse/employees", label: "직원 관리", icon: "ri-team-line" },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "Approved":
+        return "bg-main-100 text-main-800";
+      case "Shipped":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-grey-100 text-grey-800";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "Pending":
+        return "승인 대기";
+      case "Approved":
+        return "승인됨";
+      case "Shipped":
+        return "배송완료";
+      default:
+        return status;
+    }
+  };
+
+  const handleApproveOrder = (orderId: string) => {
+    alert(`주문 ${orderId}이(가) 승인되었습니다.`);
+  };
+
+  const handleRejectOrder = (orderId: string) => {
+    alert(`주문 ${orderId}이(가) 거부되었습니다.`);
+  };
+
+  const columns = [
+    { key: "id", title: "주문 ID" },
+    { key: "dealershipName", title: "대리점명" },
+    { key: "orderDate", title: "주문일" },
+    {
+      key: "status",
+      title: "상태",
+      render: (value: string) => (
+        <span
+          className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(value)}`}
+        >
+          {getStatusText(value)}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      title: "작업",
+      render: (_: any, row: any) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => setSelectedOrder(row)}
+        >
+          상세보기
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <div className="flex min-h-screen bg-bg-white transition-colors duration-200 dark:bg-bg-black">
+      <Sidebar items={sidebarItems} userRole="Warehouse Manager" />
+
+      <div className="flex-1 p-8">
+        <div className="mb-8">
+          <h1 className="mb-2 text-3xl font-bold text-grey-500 dark:text-grey-100">
+            주문 관리
+          </h1>
+          <p className="text-grey-400 dark:text-grey-300">
+            대리점에서 들어온 주문을 관리하세요
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-6">
+          <div className="flex w-fit space-x-1 rounded-lg bg-grey-100 p-1 transition-colors duration-200 dark:bg-grey-800">
+            <button
+              onClick={() => setActiveTab("current")}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "current"
+                  ? "bg-main-500 text-white"
+                  : "text-grey-400 hover:text-grey-500 dark:text-grey-300 dark:hover:text-grey-200"
+              }`}
+            >
+              현재 주문
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "history"
+                  ? "bg-main-500 text-white"
+                  : "text-grey-400 hover:text-grey-500 dark:text-grey-300 dark:hover:text-grey-200"
+              }`}
+            >
+              주문 이력
+            </button>
+          </div>
+        </div>
+
+        {/* Orders Table */}
+        <div className="rounded-xl border border-grey-100 bg-bg-card-white shadow-sm transition-colors duration-200 dark:border-grey-700 dark:bg-bg-card-black">
+          <div className="border-b border-grey-100 p-6 dark:border-grey-700">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
+                주문 목록
+              </h3>
+              <div className="text-sm text-grey-500 dark:text-grey-300">
+                총 {warehouseOrders.length}개 주문
+              </div>
+            </div>
+          </div>
+          <Table data={warehouseOrders} columns={columns} />
+        </div>
+
+        {/* Order Details Modal */}
+        {selectedOrder && (
+          <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+            <div className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-bg-card-white p-6 transition-colors duration-200 dark:bg-bg-card-black">
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-grey-500 dark:text-grey-100">
+                  주문 상세정보
+                </h2>
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="text-grey-400 hover:text-grey-500 dark:text-grey-300 dark:hover:text-grey-200"
+                >
+                  <i className="ri-close-line text-xl"></i>
+                </button>
+              </div>
+
+              <div className="mb-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-grey-500 dark:text-grey-300">
+                      주문 ID
+                    </p>
+                    <p className="font-medium text-grey-500 dark:text-grey-100">
+                      {selectedOrder.id}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-grey-500 dark:text-grey-300">
+                      대리점명
+                    </p>
+                    <p className="font-medium text-grey-500 dark:text-grey-100">
+                      {selectedOrder.dealershipName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-grey-500 dark:text-grey-300">
+                      주문일
+                    </p>
+                    <p className="font-medium text-grey-500 dark:text-grey-100">
+                      {selectedOrder.orderDate}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-grey-500 dark:text-grey-300">
+                      상태
+                    </p>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(selectedOrder.status)}`}
+                    >
+                      {getStatusText(selectedOrder.status)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="mb-4 text-lg font-semibold text-grey-500 dark:text-grey-100">
+                  주문 부품
+                </h3>
+                <div className="space-y-3">
+                  {selectedOrder.parts.map((part: any, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between rounded-lg bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black"
+                    >
+                      <div>
+                        <p className="font-medium text-grey-500 dark:text-grey-100">
+                          {part.partName}
+                        </p>
+                        <p className="text-sm text-grey-500 dark:text-grey-300">
+                          부품 ID: {part.partId}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-medium text-grey-500 dark:text-grey-100">
+                          {part.quantity}개
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {selectedOrder.status === "Pending" && (
+                <div className="flex space-x-3">
+                  <Button
+                    variant="default"
+                    onClick={() => handleApproveOrder(selectedOrder.id)}
+                  >
+                    주문 승인
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleRejectOrder(selectedOrder.id)}
+                  >
+                    주문 거부
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
