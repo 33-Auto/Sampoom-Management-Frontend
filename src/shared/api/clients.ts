@@ -1,7 +1,5 @@
-import createClient from "openapi-fetch";
+import { createApiClient } from "./apiClient";
 
-import type { paths } from "./v1";
+const client = createApiClient();
 
-export const { GET, POST, PUT, DELETE } = createClient<paths>({
-  baseUrl: "https://sampoom.store/",
-});
+export const { GET, POST, PUT, DELETE } = client;
