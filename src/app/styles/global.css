@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import './theme.css';
+@import "tailwindcss";
+@import "./theme.css";
 
 @plugin "@tailwindcss/forms";
 
@@ -14,7 +14,7 @@
 
 @layer base {
   /* Default Button Styles */
-  button {
+  /* button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +30,7 @@
   button:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
-  }
+  } */
 
   /* Default Input Styles */
   input {
@@ -152,7 +152,7 @@ body {
 
 code {
   font-family:
-    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 .react-logo {
