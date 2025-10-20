@@ -10,7 +10,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         primary:
-          "border-grey-300 focus:border-blue-500 focus:ring-blue-500 dark:border-grey-700",
+          "border-grey-300 focus:border-main-500 focus:ring-main-500 dark:border-grey-700",
 
         secondary:
           "border-grey-300 focus:border-green-500 focus:ring-green-500 dark:border-grey-700",
@@ -23,7 +23,7 @@ const inputVariants = cva(
       },
 
       defaultVariants: {
-        error: "false",
+        varaint: "primary",
       },
     },
   },
