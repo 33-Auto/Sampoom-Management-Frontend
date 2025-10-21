@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sidebar } from "@/widgets/Sidebar";
-import { Button, Input, Select, Table } from "@/shared/ui";
+
 import { rawMaterials } from "@/../mocks";
+import { Button, Input, Select, Table } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function MaterialInventory() {
   const [showOrderModal, setShowOrderModal] = useState(false);

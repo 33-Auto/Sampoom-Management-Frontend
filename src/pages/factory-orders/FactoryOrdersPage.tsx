@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sidebar } from "@/widgets/Sidebar";
-import { Button, Table } from "@/shared/ui";
+
 import { factoryOrders, billOfMaterials, rawMaterials } from "@/../mocks";
+import { Button, Table } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function FactoryOrders() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);

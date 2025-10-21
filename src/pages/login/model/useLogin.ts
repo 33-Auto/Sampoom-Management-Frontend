@@ -12,9 +12,13 @@ export function useLogin() {
   const handleLogin = async (credentials: LoginRequest) => {
     setIsLoading(true);
     try {
-      const data = (await login(credentials)) as LoginResponse;
+      const data = (await login(credentials)).data as LoginResponse;
+      console.log("Login response data:", data);
 
-      if (data.userName && data.role) {
+      if (
+        data.userName
+        //&& data.branch && data.workspace
+      ) {
         loginAction(data);
         navigate("/");
       } else {

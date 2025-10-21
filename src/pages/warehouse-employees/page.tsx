@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sidebar } from "@/widgets/Sidebar";
-import { Button, Input, Table } from "@/shared/ui";
+
 import { warehouseEmployees } from "@/../mocks";
+import { Button, Input, Table } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function WarehouseEmployees() {
   const [showEditModal, setShowEditModal] = useState(false);
