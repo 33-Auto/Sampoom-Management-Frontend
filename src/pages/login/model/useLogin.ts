@@ -15,12 +15,9 @@ export function useLogin() {
       const data = (await login(credentials)).data as LoginResponse;
       console.log("Login response data:", data);
 
-      if (
-        data.userName
-        //&& data.branch && data.workspace
-      ) {
+      if (data.userName && data.branch && data.workspace) {
         loginAction(data);
-        navigate("/");
+        navigate(`/${data.workspace.toLowerCase()}/dashboard`);
       } else {
         throw new Error("로그인 실패 : 잘못된 유저 정보입니다.");
       }
