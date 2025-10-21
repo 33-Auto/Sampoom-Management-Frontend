@@ -100,6 +100,154 @@ export interface paths {
     patch: operations["patchUser"];
     trace?: never;
   };
+  "/api/order/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["createOrder"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/{orderId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getOrder"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/requested": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getRequestedOrders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HealthCheck API
+     * @description 서버 상태 체크 API입니다.
+     */
+    get: operations["healthCheck"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health-unauthorized": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["unauthorizedTest"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health-notfound": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["notFoundTest"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health-forbidden": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["forbiddenTest"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health-error": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/order/api/v1/health-data": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData_1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/warehouse/branch": {
     parameters: {
       query?: never;
@@ -207,7 +355,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck"];
+    get: operations["healthCheck1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -223,7 +371,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest"];
+    get: operations["unauthorizedTest1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -239,7 +387,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest"];
+    get: operations["notFoundTest1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -255,7 +403,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest"];
+    get: operations["forbiddenTest1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -271,7 +419,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData"];
+    get: operations["healthCheckData1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -287,7 +435,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_1"];
+    get: operations["healthCheckData_11"];
     put?: never;
     post?: never;
     delete?: never;
@@ -587,7 +735,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck1"];
+    get: operations["healthCheck2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -603,7 +751,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest1"];
+    get: operations["unauthorizedTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -619,7 +767,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest1"];
+    get: operations["notFoundTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -635,7 +783,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest1"];
+    get: operations["forbiddenTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -651,7 +799,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData1"];
+    get: operations["healthCheckData2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -667,7 +815,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_11"];
+    get: operations["healthCheckData_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -852,7 +1000,7 @@ export interface paths {
      * 주문 생성
      * @description 장바구니에 담긴 품목을 기반으로 새 주문을 생성합니다.
      */
-    post: operations["createOrder"];
+    post: operations["createOrder1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -996,7 +1144,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck2"];
+    get: operations["healthCheck3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1012,7 +1160,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest2"];
+    get: operations["unauthorizedTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1028,7 +1176,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest2"];
+    get: operations["notFoundTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1044,7 +1192,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest2"];
+    get: operations["forbiddenTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1060,7 +1208,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData2"];
+    get: operations["healthCheckData3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1076,7 +1224,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_12"];
+    get: operations["healthCheckData_13"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1156,7 +1304,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck3"];
+    get: operations["healthCheck4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1172,7 +1320,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest3"];
+    get: operations["unauthorizedTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1188,7 +1336,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest3"];
+    get: operations["notFoundTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1204,7 +1352,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest3"];
+    get: operations["forbiddenTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1220,7 +1368,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData3"];
+    get: operations["healthCheckData4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1236,7 +1384,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_13"];
+    get: operations["healthCheckData_14"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1256,7 +1404,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck4"];
+    get: operations["healthCheck5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1272,7 +1420,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest4"];
+    get: operations["unauthorizedTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1288,7 +1436,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest4"];
+    get: operations["notFoundTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1304,7 +1452,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest4"];
+    get: operations["forbiddenTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1320,7 +1468,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData4"];
+    get: operations["healthCheckData5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1336,7 +1484,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_14"];
+    get: operations["healthCheckData_15"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1349,24 +1497,6 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    RefreshRequest: {
-      refreshToken: string;
-    };
-    ApiResponseRefreshResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["RefreshResponse"];
-    };
-    RefreshResponse: {
-      accessToken?: string;
-      /** Format: int32 */
-      expiresIn?: number;
-      refreshToken?: string;
-    };
     ApiResponseVoid: {
       /** Format: int32 */
       status?: number;
@@ -1379,25 +1509,6 @@ export interface components {
     LoginRequest: {
       email: string;
       password: string;
-    };
-    ApiResponseLoginResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["LoginResponse"];
-    };
-    LoginResponse: {
-      /** Format: int64 */
-      userId?: number;
-      userName?: string;
-      role?: string;
-      accessToken?: string;
-      refreshToken?: string;
-      /** Format: int32 */
-      expiresIn?: number;
     };
     VerifyLoginRequest: {
       email: string;
@@ -1466,6 +1577,62 @@ export interface components {
       workspace?: string;
       branch?: string;
     };
+    ItemDto: {
+      code?: string;
+      /** Format: int32 */
+      quantity?: number;
+    };
+    OrderReqDto: {
+      /** @enum {string} */
+      requester?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      branch?: string;
+      items?: components["schemas"]["ItemDto"][];
+    };
+    ApiResponseOrderResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["OrderResDto"];
+    };
+    OrderResDto: {
+      /** Format: int64 */
+      id?: number;
+      /** @enum {string} */
+      requester?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      branch?: string;
+      items?: components["schemas"]["ItemDto"][];
+      /** @enum {string} */
+      status?:
+        | "PENDING"
+        | "CONFIRMED"
+        | "SHIPPING"
+        | "DELAYED"
+        | "PRODUCING"
+        | "COMPLETED"
+        | "CANCELED";
+    };
+    ApiResponseListOrderResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["OrderResDto"][];
+    };
+    ApiResponseVoid1: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: Record<string, never>;
+    };
+    ApiResponseString: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: string;
+    };
     BranchCreateReqDto: {
       name: string;
     };
@@ -1487,21 +1654,21 @@ export interface components {
       /** Format: int32 */
       delta: number;
     };
-    ApiResponseVoid1: {
+    ApiResponseVoid2: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       message?: string;
       data?: Record<string, never>;
     };
-    ItemDto: {
+    ItemDto1: {
       code: string;
       /** Format: int32 */
       quantity: number;
     };
-    OrderReqDto: {
+    OrderReqDto1: {
       branch: string;
-      items: components["schemas"]["ItemDto"][];
+      items: components["schemas"]["ItemDto1"][];
     };
     ApiResponseOrderStatus: {
       /** Format: int32 */
@@ -1559,13 +1726,6 @@ export interface components {
       /** Format: int64 */
       id?: number;
       name?: string;
-    };
-    ApiResponseString: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: string;
     };
     ApiResponseMaterialOrderResponseDto: {
       /** Format: int32 */
@@ -2002,14 +2162,14 @@ export interface components {
       /** Format: int64 */
       categoryId?: number;
     };
-    ApiResponseVoid2: {
+    ApiResponseVoid3: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       message?: string;
       data?: Record<string, never>;
     };
-    ApiResponseVoid3: {
+    ApiResponseVoid4: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
@@ -2032,11 +2192,7 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RefreshRequest"];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description OK */
       200: {
@@ -2044,7 +2200,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseRefreshResponse"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -2088,7 +2244,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseLoginResponse"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -2165,82 +2321,7 @@ export interface operations {
       };
     };
   };
-  createBranch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BranchCreateReqDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseBranchCreateResDto"];
-        };
-      };
-    };
-  };
-  getParts: {
-    parameters: {
-      query?: {
-        categoryId?: number;
-        groupId?: number;
-      };
-      header?: never;
-      path: {
-        warehouseId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartResDto"];
-        };
-      };
-    };
-  };
-  updateParts: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        warehouseId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdatePartReqDto"][];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
-        };
-      };
-    };
-  };
-  orderProcess: {
+  createOrder: {
     parameters: {
       query?: never;
       header?: never;
@@ -2259,17 +2340,17 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseOrderStatus"];
+          "*/*": components["schemas"]["ApiResponseOrderResDto"];
         };
       };
     };
   };
-  getPartsByGroup: {
+  getOrder: {
     parameters: {
       query?: never;
       header?: never;
       path: {
-        groupId: number;
+        orderId: number;
       };
       cookie?: never;
     };
@@ -2281,18 +2362,18 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseListPartResDto"];
+          "*/*": components["schemas"]["ApiResponseOrderResDto"];
         };
       };
     };
   };
-  getCategoriesByWarehouse: {
+  getRequestedOrders: {
     parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        warehouseId: number;
+      query: {
+        from: string;
       };
+      header?: never;
+      path?: never;
       cookie?: never;
     };
     requestBody?: never;
@@ -2303,30 +2384,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseListCategoryResDto"];
-        };
-      };
-    };
-  };
-  getGroupsByCategory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        warehouseId: number;
-        categoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListGroupResDto"];
+          "*/*": components["schemas"]["ApiResponseListOrderResDto"];
         };
       };
     };
@@ -2434,6 +2492,294 @@ export interface operations {
     };
   };
   healthCheckData_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
+  createBranch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BranchCreateReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseBranchCreateResDto"];
+        };
+      };
+    };
+  };
+  getParts: {
+    parameters: {
+      query?: {
+        categoryId?: number;
+        groupId?: number;
+      };
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartResDto"];
+        };
+      };
+    };
+  };
+  updateParts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdatePartReqDto"][];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  orderProcess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["OrderReqDto1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseOrderStatus"];
+        };
+      };
+    };
+  };
+  getPartsByGroup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        groupId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartResDto"];
+        };
+      };
+    };
+  };
+  getCategoriesByWarehouse: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListCategoryResDto"];
+        };
+      };
+    };
+  };
+  getGroupsByCategory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        categoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListGroupResDto"];
+        };
+      };
+    };
+  };
+  healthCheck1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  unauthorizedTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  notFoundTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  forbiddenTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData1: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData_11: {
     parameters: {
       query?: never;
       header?: never;
@@ -2884,7 +3230,7 @@ export interface operations {
       };
     };
   };
-  healthCheck1: {
+  healthCheck2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2904,7 +3250,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest1: {
+  unauthorizedTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2924,7 +3270,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest1: {
+  notFoundTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2944,7 +3290,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest1: {
+  forbiddenTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2964,7 +3310,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData1: {
+  healthCheckData2: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -2986,7 +3332,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_11: {
+  healthCheckData_12: {
     parameters: {
       query?: never;
       header?: never;
@@ -3272,7 +3618,7 @@ export interface operations {
       };
     };
   };
-  createOrder: {
+  createOrder1: {
     parameters: {
       query?: never;
       header?: never;
@@ -3510,7 +3856,7 @@ export interface operations {
       };
     };
   };
-  healthCheck2: {
+  healthCheck3: {
     parameters: {
       query?: never;
       header?: never;
@@ -3530,7 +3876,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest2: {
+  unauthorizedTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -3550,7 +3896,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest2: {
+  notFoundTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -3570,7 +3916,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest2: {
+  forbiddenTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -3590,7 +3936,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData2: {
+  healthCheckData3: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -3612,7 +3958,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_12: {
+  healthCheckData_13: {
     parameters: {
       query?: never;
       header?: never;
@@ -3692,128 +4038,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheck3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  unauthorizedTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  notFoundTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  forbiddenTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  healthCheckData3: {
-    parameters: {
-      query?: {
-        fail?: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  healthCheckData_13: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
@@ -3921,6 +4145,128 @@ export interface operations {
     };
   };
   healthCheckData_14: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
+  healthCheck5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid4"];
+        };
+      };
+    };
+  };
+  unauthorizedTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid4"];
+        };
+      };
+    };
+  };
+  notFoundTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid4"];
+        };
+      };
+    };
+  };
+  forbiddenTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid4"];
+        };
+      };
+    };
+  };
+  healthCheckData5: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid4"];
+        };
+      };
+    };
+  };
+  healthCheckData_15: {
     parameters: {
       query?: never;
       header?: never;
