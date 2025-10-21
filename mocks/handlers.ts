@@ -40,7 +40,6 @@ function apiFail(status = 500, message = "Internal Server Error") {
 interface LoginResponse {
   userId: number;
   email: string;
-  password: string;
   workspace: string;
   branch: string;
   userName: string;
@@ -86,7 +85,6 @@ export const handlers = [
       userId: users.findIndex((u) => u.email === email) + 1,
       userName: user.userName,
       email: user.email,
-      password: user.password,
       workspace: user.workspace!,
       branch: user.branch!,
       position: user.position!,
