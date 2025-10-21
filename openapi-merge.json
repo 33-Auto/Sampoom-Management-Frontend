@@ -1,0 +1,53 @@
+{
+  "inputs": [
+    {
+      "inputURL": "https://sampoom.store/api/auth/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/auth"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/user/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/user"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/order/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/order"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/warehouse/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/warehouse"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/factory/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/factory"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/agency/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/agency"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/part/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/part"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/material/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/material"
+      }
+    }
+  ],
+  "output": "dist/combined-api.yaml"
+}
