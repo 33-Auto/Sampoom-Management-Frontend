@@ -1539,13 +1539,12 @@ export interface components {
     };
     LoginResponse: {
       /** Format: int64 */
-      userId?: number;
-      userName?: string;
-      role?: string;
-      accessToken?: string;
-      refreshToken?: string;
-      /** Format: int64 */
-      expiresIn?: number;
+      userId: number;
+      email: string;
+      workspace: string;
+      branch: string;
+      userName: string;
+      position: string;
     };
     VerifyLoginRequest: {
       email: string;
