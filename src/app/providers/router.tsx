@@ -5,14 +5,14 @@ import BOMManagement from "@/pages/factory-bom/FactoryBomPage";
 import FactoryDashboard from "@/pages/factory-dashboard/FactoryDashboard";
 import FactoryEmployees from "@/pages/factory-employees/FactoryEmployeesPage";
 import MaterialInventory from "@/pages/factory-materials/FactoryMaterialsPage";
-import FactoryOrders from "@/pages/factory-orders/FactoryOrdersPage";
+import FactoryOrders from "@/pages/factory-orders/ui/FactoryOrdersPage";
 import Login from "@/pages/login/ui/Login";
 import { Notfound } from "@/pages/Notfound/Notfound";
 import Register from "@/pages/register/ui/Register";
 import WarehouseDashboard from "@/pages/warehouse-dashboard/page";
 import WarehouseEmployees from "@/pages/warehouse-employees/page";
 import PartInventory from "@/pages/warehouse-inventory/page";
-import WarehouseOrders from "@/pages/warehouse-orders/page";
+import WarehouseOrders from "@/pages/warehouse-orders";
 // import ComponentsPage from '@/pages/components/page';
 
 const routes: RouteObject[] = [
