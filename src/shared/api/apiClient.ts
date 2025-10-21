@@ -23,7 +23,7 @@ export const createApiClient = () => {
       }
 
       // 리프레시 토큰 자체가 만료된 경우
-      if (response.url.includes("/auth/reissue")) {
+      if (response.url.includes("/auth/refresh`")) {
         // 인증 실패에 대한 것을 app 레이어에 느슨한 결합도로 알림
         window.dispatchEvent(new Event("auth:failed"));
         return response;
