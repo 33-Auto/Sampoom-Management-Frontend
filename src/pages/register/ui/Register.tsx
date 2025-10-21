@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { register } from "@/entities/user/api/auth.api";
+import { register } from "@/entities/user";
 import Logo from "@/shared/assets/logo_text_dark.svg";
 import { Button, Input, Select } from "@/shared/ui";
 
