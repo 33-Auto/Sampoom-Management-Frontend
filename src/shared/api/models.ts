@@ -5,7 +5,7 @@ type Schemas = components["schemas"];
 
 // Auth
 export type LoginRequest = Schemas["LoginRequest"];
-export type LoginResponse = Schemas["LoginResponse"];
+export type LoginResponse = Schemas["UserResponse"];
 export type SignupRequest = Schemas["SignupRequest"];
 export type SignupResponse = Schemas["SignupResponse"];
 
