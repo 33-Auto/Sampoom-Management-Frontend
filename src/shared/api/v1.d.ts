@@ -1497,6 +1497,24 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    RefreshRequest: {
+      refreshToken: string;
+    };
+    ApiResponseRefreshResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["RefreshResponse"];
+    };
+    RefreshResponse: {
+      accessToken?: string;
+      /** Format: int32 */
+      expiresIn?: number;
+      refreshToken?: string;
+    };
     ApiResponseVoid: {
       /** Format: int32 */
       status?: number;
@@ -1509,6 +1527,25 @@ export interface components {
     LoginRequest: {
       email: string;
       password: string;
+    };
+    ApiResponseLoginResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["LoginResponse"];
+    };
+    LoginResponse: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+      role?: string;
+      accessToken?: string;
+      refreshToken?: string;
+      /** Format: int64 */
+      expiresIn?: number;
     };
     VerifyLoginRequest: {
       email: string;
@@ -2188,11 +2225,17 @@ export interface operations {
   refresh: {
     parameters: {
       query?: never;
-      header?: never;
+      header?: {
+        "X-Client-Type"?: string;
+      };
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["RefreshRequest"];
+      };
+    };
     responses: {
       /** @description OK */
       200: {
@@ -2200,7 +2243,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
+          "*/*": components["schemas"]["ApiResponseRefreshResponse"];
         };
       };
     };
@@ -2208,7 +2251,9 @@ export interface operations {
   logout: {
     parameters: {
       query?: never;
-      header?: never;
+      header?: {
+        "X-Client-Type"?: string;
+      };
       path?: never;
       cookie?: never;
     };
@@ -2228,7 +2273,9 @@ export interface operations {
   login: {
     parameters: {
       query?: never;
-      header?: never;
+      header?: {
+        "X-Client-Type"?: string;
+      };
       path?: never;
       cookie?: never;
     };
@@ -2244,7 +2291,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
+          "*/*": components["schemas"]["ApiResponseLoginResponse"];
         };
       };
     };
