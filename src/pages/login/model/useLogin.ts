@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { login } from "@/entities/user/api/auth.api";
-import { useAuthStore } from "@/entities/user/model/auth.store";
+import { login, useAuthStore } from "@/entities/user";
 import type { LoginRequest, LoginResponse } from "@/shared/api/models";
 
 export function useLogin() {
