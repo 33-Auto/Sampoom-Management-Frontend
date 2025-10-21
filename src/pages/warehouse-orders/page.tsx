@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sidebar } from "@/widgets/Sidebar";
-import { Button, Table } from "@/shared/ui";
+
 import { warehouseOrders } from "@/../mocks";
+import { Button, Table } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function WarehouseOrders() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);

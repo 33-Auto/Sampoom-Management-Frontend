@@ -1,55 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { register } from "@/entities/user";
+import type { SignupRequest } from "@/shared/api/models";
 import Logo from "@/shared/assets/logo_text_dark.svg";
 import { Button, Input, Select } from "@/shared/ui";
 
+import { useRegister } from "../model/useRegister";
+
 export default function Register() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    role: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [loading, setLoading] = useState(false);
+  const { handleRegister, isLoading: loading } = useRegister();
 
-  const roleOptions = [
-    { value: "Warehouse Manager", label: "창고 관리자" },
-    { value: "Factory Manager", label: "공장 관리자" },
+  const workSpaceOptions = [
+    { value: "warehouse", label: "창고 관리자" },
+    { value: "factory", label: "공장 관리자" },
   ];
+
+  const branchOptions = [
+    { value: "seoul", label: "서울 지점" },
+    { value: "busan", label: "부산 지점" },
+  ];
+
+  const [formData, setFormData] = useState<SignupRequest>({
+    email: "",
+    password: "",
+    workspace: workSpaceOptions[0].value,
+    branch: branchOptions[0].value,
+    userName: "",
+    position: "",
+  });
+
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    setLoading(true);
+    console.log("Submitting registration with data:", formData);
 
-    try {
-      await register({
-        userName: formData.username,
-        email: formData.email,
-        password: formData.password,
-        position: formData.role,
-      });
-
-      alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
-      navigate("/login");
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(`회원가입 실패: ${error.message}`);
-      } else {
-        alert("알 수 없는 오류가 발생했습니다.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    handleRegister(formData);
   };
 
   return (
@@ -71,9 +64,9 @@ export default function Register() {
             <Input
               label="사용자명"
               type="text"
-              value={formData.username}
+              value={formData.userName}
               onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
+                setFormData({ ...formData, userName: e.target.value })
               }
               placeholder="사용자명을 입력하세요"
               required
@@ -92,11 +85,21 @@ export default function Register() {
 
             <Select
               label="역할"
-              value={formData.role}
+              value={formData.workspace}
               onChange={(e) =>
-                setFormData({ ...formData, role: e.target.value })
+                setFormData({ ...formData, workspace: e.target.value })
               }
-              options={roleOptions}
+              options={workSpaceOptions}
+              required
+            />
+
+            <Select
+              label="지점"
+              value={formData.branch}
+              onChange={(e) =>
+                setFormData({ ...formData, branch: e.target.value })
+              }
+              options={branchOptions}
               required
             />
 
@@ -114,10 +117,8 @@ export default function Register() {
             <Input
               label="비밀번호 확인"
               type="password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="비밀번호를 다시 입력하세요"
               required
             />
