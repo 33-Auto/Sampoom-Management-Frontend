@@ -6,7 +6,6 @@ import FactoryDashboard from "@/pages/factory-dashboard/FactoryDashboard";
 import FactoryEmployees from "@/pages/factory-employees/FactoryEmployeesPage";
 import MaterialInventory from "@/pages/factory-materials/FactoryMaterialsPage";
 import FactoryOrders from "@/pages/factory-orders/FactoryOrdersPage";
-import Home from "@/pages/Index/index";
 import Login from "@/pages/login/ui/Login";
 import { Notfound } from "@/pages/Notfound/Notfound";
 import Register from "@/pages/register/ui/Register";
@@ -19,7 +18,7 @@ import WarehouseOrders from "@/pages/warehouse-orders/page";
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Home />,
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "/login",
