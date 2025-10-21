@@ -3,6 +3,7 @@ import { http, HttpResponse } from "msw";
 import type {
   LoginRequest,
   LoginResponse,
+  OrderResDto,
   SignupRequest,
   SignupResponse,
 } from "@/shared/api/models";
@@ -38,6 +39,36 @@ function apiFail(status = 500, message = "Internal Server Error") {
   );
 }
 
+const mockWarehouseOrders: OrderResDto[] = [
+  {
+    id: 1,
+    requester: "WAREHOUSE",
+    branch: "AutoMax Dealership",
+    items: [
+      { code: "P001", quantity: 2 },
+      { code: "P003", quantity: 4 },
+    ],
+    status: "PENDING",
+  },
+  {
+    id: 2,
+    requester: "WAREHOUSE",
+    branch: "Premier Motors",
+    items: [
+      { code: "P002", quantity: 1 },
+      { code: "P004", quantity: 2 },
+    ],
+    status: "CONFIRMED",
+  },
+  {
+    id: 3,
+    requester: "WAREHOUSE",
+    branch: "City Auto Center",
+    items: [{ code: "P005", quantity: 3 }],
+    status: "SHIPPING",
+  },
+];
+
 // 메모리 상에 사용자 데이터 저장
 const users: SignupRequest[] = [
   {
@@ -60,6 +91,17 @@ const users: SignupRequest[] = [
 let userIdCounter = 1;
 
 export const handlers = [
+  http.get("/api/order/requested", async ({ request }) => {
+    const url = new URL(request.url);
+    const from = url.searchParams.get("from");
+
+    if (from === "warehouse") {
+      await sleep(500);
+      return apiSuccess(mockWarehouseOrders);
+    }
+    return apiSuccess([]);
+  }),
+
   http.get("http://localhost:3000/api/doclist", async () => {
     const data: DocList = [
       { name: "React", url: "https://react.dev/" },
