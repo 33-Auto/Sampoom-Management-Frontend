@@ -11,3 +11,7 @@ export type SignupResponse = Schemas["SignupResponse"];
 
 // User
 export type UserResponse = Schemas["UserResponse"];
+
+// Mock
+export type ApiResponseSignupResponse = Schemas["ApiResponseSignupResponse"];
+export type ApiResponseLoginResponse = Schemas["ApiResponseLoginResponse"];

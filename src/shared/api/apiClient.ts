@@ -2,7 +2,7 @@ import createClient from "openapi-fetch";
 
 import type { paths } from "@/shared/api/v1";
 
-const BASE_URL = "https://sampoom.store";
+const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 export const createApiClient = () => {
   const client = createClient<paths>({
@@ -10,11 +10,14 @@ export const createApiClient = () => {
     credentials: "include",
   });
 
+  console.log("API Client created with BASE_URL:", BASE_URL);
+
   let refreshPromise: Promise<Response> | null = null;
 
   client.use({
     async onRequest({ request }) {
       request.headers.set("Content-Type", "application/json");
+      request.headers.set("X-Client-Type", "WEB");
       return request;
     },
     async onResponse({ response, options }) {
@@ -48,7 +51,7 @@ export const createApiClient = () => {
         }
       } catch (error) {
         console.error("토큰 리프레시 실패, 로그아웃 처리.", error);
-        // 인증 실패에 대한 것도ㅗ app 레이어에 느슨한 결합도로 알림
+        // 인증 실패에 대한 것도 app 레이어에 느슨한 결합도로 알림
         window.dispatchEvent(new Event("auth:failed"));
         return response;
       }
