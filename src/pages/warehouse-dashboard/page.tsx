@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Sidebar } from "@/widgets/Sidebar";
 import { Button } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function WarehouseDashboard() {
   const sidebarItems = [

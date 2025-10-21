@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sidebar } from "@/widgets/Sidebar";
-import { Button, Input, Select } from "@/shared/ui";
+
 import { billOfMaterials, rawMaterials } from "@/../mocks";
+import { Button, Input, Select } from "@/shared/ui";
+import { Sidebar } from "@/widgets/Sidebar";
 
 export default function BOMManagement() {
   const [selectedBOM, setSelectedBOM] = useState<any>(null);
