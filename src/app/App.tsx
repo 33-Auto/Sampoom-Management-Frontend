@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router";
 
 import ErrorBoundary from "@/app/providers/ErrorBoundary";
 import router from "@/app/providers/router";
-import { useAuthStore } from "@/entities/user/model/auth.store";
+import { useAuthStore } from "@/entities/user";
 
 const App: React.FC = () => {
   // 인증 실패에 대한 전역 처리
