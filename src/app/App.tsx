@@ -1,9 +1,18 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router";
 
 import ErrorBoundary from "@/app/providers/ErrorBoundary";
 import router from "@/app/providers/router";
 import { useAuthStore } from "@/entities/user";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 const App: React.FC = () => {
   // 인증 실패에 대한 전역 처리
@@ -20,9 +29,11 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <RouterProvider router={router} />
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 };
 App.displayName = "App";

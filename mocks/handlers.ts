@@ -2,6 +2,8 @@ import { http, HttpResponse } from "msw";
 
 import type {
   LoginRequest,
+  LoginResponse,
+  OrderResDto,
   SignupRequest,
   SignupResponse,
 } from "@/shared/api/models";
@@ -15,7 +17,7 @@ function apiSuccess<T>(data: T, status = 200, message = "Success") {
     {
       status,
       success: true,
-      code: status, // Using HTTP status as code for simplicity
+      code: 10000,
       message,
       data,
     },
@@ -29,7 +31,7 @@ function apiFail(status = 500, message = "Internal Server Error") {
     {
       status,
       success: false,
-      code: status,
+      code: 50000,
       message,
       data: null,
     },
@@ -37,20 +39,69 @@ function apiFail(status = 500, message = "Internal Server Error") {
   );
 }
 
-interface LoginResponse {
-  userId: number;
-  email: string;
-  workspace: string;
-  branch: string;
-  userName: string;
-  position: string;
-}
+const mockWarehouseOrders: OrderResDto[] = [
+  {
+    id: 1,
+    requester: "WAREHOUSE",
+    branch: "AutoMax Dealership",
+    items: [
+      { code: "P001", quantity: 2 },
+      { code: "P003", quantity: 4 },
+    ],
+    status: "PENDING",
+  },
+  {
+    id: 2,
+    requester: "WAREHOUSE",
+    branch: "Premier Motors",
+    items: [
+      { code: "P002", quantity: 1 },
+      { code: "P004", quantity: 2 },
+    ],
+    status: "CONFIRMED",
+  },
+  {
+    id: 3,
+    requester: "WAREHOUSE",
+    branch: "City Auto Center",
+    items: [{ code: "P005", quantity: 3 }],
+    status: "SHIPPING",
+  },
+];
 
-// --- In-memory user database ---
-const users: SignupRequest[] = [];
+// 메모리 상에 사용자 데이터 저장
+const users: SignupRequest[] = [
+  {
+    email: "test2@naver.com",
+    password: "12341234",
+    userName: "Test User 2",
+    workspace: "Warehouse",
+    branch: "Busan",
+    position: "Employee",
+  },
+  {
+    email: "test1@naver.com",
+    password: "12341234",
+    userName: "Test User 1",
+    workspace: "Factory",
+    branch: "Seoul",
+    position: "Manager",
+  },
+];
 let userIdCounter = 1;
 
 export const handlers = [
+  http.get("/api/order/requested", async ({ request }) => {
+    const url = new URL(request.url);
+    const from = url.searchParams.get("from");
+
+    if (from === "warehouse") {
+      await sleep(500);
+      return apiSuccess(mockWarehouseOrders);
+    }
+    return apiSuccess([]);
+  }),
+
   http.get("http://localhost:3000/api/doclist", async () => {
     const data: DocList = [
       { name: "React", url: "https://react.dev/" },

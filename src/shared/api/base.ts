@@ -1,11 +1,12 @@
-import createClient from "openapi-fetch";
+import createFetchClient from "openapi-fetch";
+import createClient from "openapi-react-query";
 
 import type { paths } from "@/shared/api/v1";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-export const createApiClient = () => {
-  const client = createClient<paths>({
+const createAuthAwareFetchClient = () => {
+  const fetchClient = createFetchClient<paths>({
     baseUrl: BASE_URL,
     credentials: "include",
   });
@@ -14,7 +15,7 @@ export const createApiClient = () => {
 
   let refreshPromise: Promise<Response> | null = null;
 
-  client.use({
+  fetchClient.use({
     async onRequest({ request }) {
       request.headers.set("Content-Type", "application/json");
       request.headers.set("X-Client-Type", "WEB");
@@ -25,9 +26,7 @@ export const createApiClient = () => {
         return response;
       }
 
-      // 리프레시 토큰 자체가 만료된 경우
-      if (response.url.includes("/auth/refresh`")) {
-        // 인증 실패에 대한 것을 app 레이어에 느슨한 결합도로 알림
+      if (response.url === `${BASE_URL}/auth/refresh`) {
         window.dispatchEvent(new Event("auth:failed"));
         return response;
       }
@@ -51,12 +50,14 @@ export const createApiClient = () => {
         }
       } catch (error) {
         console.error("토큰 리프레시 실패, 로그아웃 처리.", error);
-        // 인증 실패에 대한 것도 app 레이어에 느슨한 결합도로 알림
         window.dispatchEvent(new Event("auth:failed"));
         return response;
       }
     },
   });
 
-  return client;
+  return fetchClient;
 };
+
+export const fetchClient = createAuthAwareFetchClient();
+export const queryClient = createClient(fetchClient);

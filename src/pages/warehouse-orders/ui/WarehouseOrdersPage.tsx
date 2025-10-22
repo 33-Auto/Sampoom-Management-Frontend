@@ -1,12 +1,18 @@
 import { useState } from "react";
 
-import { warehouseOrders } from "@/../mocks";
 import { Button, Table } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
 
-export default function WarehouseOrders() {
+import {
+  // useWarehouseOrders,
+  useWarehouseOrdersWithQuery,
+} from "../model/useWarehouseOrders";
+
+export default function WarehouseOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("current");
+  // const { orders, isLoading, error } = useWarehouseOrders();
+  const { orders, isLoading, error } = useWarehouseOrdersWithQuery();
 
   const sidebarItems = [
     {
@@ -29,12 +35,16 @@ export default function WarehouseOrders() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Pending":
+      case "PENDING":
         return "bg-yellow-100 text-yellow-800";
-      case "Approved":
+      case "CONFIRMED":
         return "bg-main-100 text-main-800";
-      case "Shipped":
+      case "SHIPPING":
         return "bg-green-100 text-green-800";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800";
+      case "CANCELED":
+        return "bg-red-100 text-red-800";
       default:
         return "bg-grey-100 text-grey-800";
     }
@@ -42,12 +52,16 @@ export default function WarehouseOrders() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "Pending":
+      case "PENDING":
         return "승인 대기";
-      case "Approved":
+      case "CONFIRMED":
         return "승인됨";
-      case "Shipped":
+      case "SHIPPING":
+        return "배송중";
+      case "COMPLETED":
         return "배송완료";
+      case "CANCELED":
+        return "취소됨";
       default:
         return status;
     }
@@ -63,8 +77,7 @@ export default function WarehouseOrders() {
 
   const columns = [
     { key: "id", title: "주문 ID" },
-    { key: "dealershipName", title: "대리점명" },
-    { key: "orderDate", title: "주문일" },
+    { key: "branch", title: "지점명" },
     {
       key: "status",
       title: "상태",
@@ -90,6 +103,15 @@ export default function WarehouseOrders() {
       ),
     },
   ];
+
+  //! TODO: 로딩 및 에러 처리 컴포넌트로 교체
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="flex min-h-screen bg-bg-white transition-colors duration-200 dark:bg-bg-black">
@@ -139,11 +161,11 @@ export default function WarehouseOrders() {
                 주문 목록
               </h3>
               <div className="text-sm text-grey-500 dark:text-grey-300">
-                총 {warehouseOrders.length}개 주문
+                총 {orders.length}개 주문
               </div>
             </div>
           </div>
-          <Table data={warehouseOrders} columns={columns} />
+          <Table data={orders} columns={columns} />
         </div>
 
         {/* Order Details Modal */}
@@ -174,18 +196,10 @@ export default function WarehouseOrders() {
                   </div>
                   <div>
                     <p className="text-sm text-grey-500 dark:text-grey-300">
-                      대리점명
+                      지점명
                     </p>
                     <p className="font-medium text-grey-500 dark:text-grey-100">
-                      {selectedOrder.dealershipName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-grey-500 dark:text-grey-300">
-                      주문일
-                    </p>
-                    <p className="font-medium text-grey-500 dark:text-grey-100">
-                      {selectedOrder.orderDate}
+                      {selectedOrder.branch}
                     </p>
                   </div>
                   <div>
@@ -206,22 +220,19 @@ export default function WarehouseOrders() {
                   주문 부품
                 </h3>
                 <div className="space-y-3">
-                  {selectedOrder.parts.map((part: any, index: number) => (
+                  {selectedOrder.items.map((item: any, index: number) => (
                     <div
                       key={index}
                       className="flex items-center justify-between rounded-lg bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black"
                     >
                       <div>
                         <p className="font-medium text-grey-500 dark:text-grey-100">
-                          {part.partName}
-                        </p>
-                        <p className="text-sm text-grey-500 dark:text-grey-300">
-                          부품 ID: {part.partId}
+                          {item.code}
                         </p>
                       </div>
                       <div className="text-right">
                         <span className="font-medium text-grey-500 dark:text-grey-100">
-                          {part.quantity}개
+                          {item.quantity}개
                         </span>
                       </div>
                     </div>
@@ -229,7 +240,7 @@ export default function WarehouseOrders() {
                 </div>
               </div>
 
-              {selectedOrder.status === "Pending" && (
+              {selectedOrder.status === "PENDING" && (
                 <div className="flex space-x-3">
                   <Button
                     variant="default"
