@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 
 import type { OrderResDto } from "@/shared/api/models";
 
-import { getRequestedOrders } from "../api/order.api";
+import {
+  getRequestedOrders,
+  useGetRequestedOrdersQuery,
+} from "../api/order.api";
 
 export function useWarehouseOrders() {
   const [orders, setOrders] = useState<OrderResDto[]>([]);
@@ -33,4 +36,14 @@ export function useWarehouseOrders() {
   }, []);
 
   return { orders, isLoading, error };
+}
+
+export function useWarehouseOrdersWithQuery() {
+  const { data, error, isLoading } = useGetRequestedOrdersQuery();
+
+  return {
+    orders: data?.data || [],
+    isLoading,
+    error: error,
+  };
 }
