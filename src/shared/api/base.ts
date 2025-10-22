@@ -1,4 +1,5 @@
 import createFetchClient from "openapi-fetch";
+import createClient from "openapi-react-query";
 
 import type { paths } from "@/shared/api/v1";
 
@@ -59,3 +60,4 @@ const createAuthAwareFetchClient = () => {
 };
 
 export const fetchClient = createAuthAwareFetchClient();
+export const queryClient = createClient(fetchClient);
