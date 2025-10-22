@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router";
 
@@ -19,10 +20,20 @@ const App: React.FC = () => {
     };
   }, []);
 
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
   return (
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <RouterProvider router={router} />
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 };
 App.displayName = "App";
