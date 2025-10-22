@@ -17,7 +17,7 @@ function apiSuccess<T>(data: T, status = 200, message = "Success") {
     {
       status,
       success: true,
-      code: status,
+      code: 10000,
       message,
       data,
     },
@@ -31,7 +31,7 @@ function apiFail(status = 500, message = "Internal Server Error") {
     {
       status,
       success: false,
-      code: status,
+      code: 50000,
       message,
       data: null,
     },
