@@ -1,15 +1,18 @@
 import { useState } from "react";
 
-
 import { Button, Table } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
 
-import { useWarehouseOrders } from "../model/useWarehouseOrders";
+import {
+  // useWarehouseOrders,
+  useWarehouseOrdersWithQuery,
+} from "../model/useWarehouseOrders";
 
 export default function WarehouseOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("current");
-  const { orders, isLoading, error } = useWarehouseOrders();
+  // const { orders, isLoading, error } = useWarehouseOrders();
+  const { orders, isLoading, error } = useWarehouseOrdersWithQuery();
 
   const sidebarItems = [
     {

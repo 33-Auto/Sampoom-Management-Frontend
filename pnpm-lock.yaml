@@ -29,6 +29,9 @@ importers:
       openapi-fetch:
         specifier: ^0.15.0
         version: 0.15.0
+      openapi-react-query:
+        specifier: ^0.5.1
+        version: 0.5.1(@tanstack/react-query@5.90.5(react@19.2.0))(openapi-fetch@0.15.0)
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -2866,6 +2869,12 @@ packages:
 
   openapi-merge@1.3.3:
     resolution: {integrity: sha512-zC6DE+ekFJwWMwssb+LOkZbYqlA/LCaFT4RdhSpDpxF4vaMoPNDuztWFkEAImhLMg4GKvoQH6gUvAKzaXDRC2A==}
+
+  openapi-react-query@0.5.1:
+    resolution: {integrity: sha512-BzUDxICV9v8584pBiGM9jgCqSBBp/mP91SJ68Pu7PqeppqfWxazi3vVaMup5Acjxv3cN9GbV6xuVHfbGsJfexw==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.80.0
+      openapi-fetch: ^0.15.0
 
   openapi-typescript-helpers@0.0.15:
     resolution: {integrity: sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==}
@@ -6668,6 +6677,12 @@ snapshots:
       atlassian-openapi: 1.0.21
       lodash: 4.17.21
       ts-is-present: 1.2.2
+
+  openapi-react-query@0.5.1(@tanstack/react-query@5.90.5(react@19.2.0))(openapi-fetch@0.15.0):
+    dependencies:
+      '@tanstack/react-query': 5.90.5(react@19.2.0)
+      openapi-fetch: 0.15.0
+      openapi-typescript-helpers: 0.0.15
 
   openapi-typescript-helpers@0.0.15: {}
 

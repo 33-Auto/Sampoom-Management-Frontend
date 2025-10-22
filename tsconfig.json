@@ -27,7 +27,8 @@
     "scripts",
     "./**.js",
     "./**.ts",
-    "eslint.config.js"
+    "eslint.config.js",
+    "src/shared/api/.ts"
   ],
   "exclude": ["dist"]
 }
