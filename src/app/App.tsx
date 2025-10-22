@@ -6,6 +6,14 @@ import ErrorBoundary from "@/app/providers/ErrorBoundary";
 import router from "@/app/providers/router";
 import { useAuthStore } from "@/entities/user";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 const App: React.FC = () => {
   // 인증 실패에 대한 전역 처리
   useEffect(() => {
@@ -19,14 +27,6 @@ const App: React.FC = () => {
       window.removeEventListener("auth:failed", handleAuthFailure);
     };
   }, []);
-
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
 
   return (
     <QueryClientProvider client={queryClient}>
