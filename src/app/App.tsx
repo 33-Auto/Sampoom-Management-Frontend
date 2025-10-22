@@ -29,6 +29,14 @@ const App: React.FC = () => {
     };
   }, []);
 
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
