@@ -41,6 +41,8 @@ export function useWarehouseOrders() {
 export function useWarehouseOrdersWithQuery() {
   const { data, error, isLoading } = useGetRequestedOrdersQuery();
 
+  console.log("Warehouse Orders Query Data:", data);
+
   return {
     orders: data?.data || [],
     isLoading,
