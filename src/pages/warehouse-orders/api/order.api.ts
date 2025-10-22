@@ -1,7 +1,7 @@
-import { GET, queryClient } from "@/shared/api";
+import { fetchClient, queryClient } from "@/shared/api";
 
 export const getRequestedOrders = async () => {
-  const { data, error } = await GET("/api/order/requested", {
+  const { data, error } = await fetchClient.GET("/api/order/requested", {
     params: { query: { from: "warehouse" } },
   });
 
