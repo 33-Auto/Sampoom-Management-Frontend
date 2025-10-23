@@ -34,7 +34,7 @@ const App: React.FC = () => {
       <ErrorBoundary>
         <RouterProvider router={router} />
       </ErrorBoundary>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 };
