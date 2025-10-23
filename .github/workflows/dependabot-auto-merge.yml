@@ -19,5 +19,3 @@ jobs:
 
       - name: Merge PR
         run: gh pr merge "${{ github.head_ref }}" --merge --auto
-        env:
-          GH_TOKEN: ${{ github.token }}
