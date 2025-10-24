@@ -1,17 +1,17 @@
 import type { RouteObject } from "react-router-dom";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import BOMManagement from "@/pages/factory-bom/FactoryBomPage";
-import FactoryDashboard from "@/pages/factory-dashboard/FactoryDashboard";
-import FactoryEmployees from "@/pages/factory-employees/FactoryEmployeesPage";
-import MaterialInventory from "@/pages/factory-materials/FactoryMaterialsPage";
-import FactoryOrders from "@/pages/factory-orders/ui/FactoryOrdersPage";
-import Login from "@/pages/login/ui/Login";
+import { FactoryBom } from "@/pages/factory-bom";
+import { FactoryDashboard } from "@/pages/factory-dashboard";
+import { FactoryEmployees } from "@/pages/factory-employees";
+import { FactoryMaterials } from "@/pages/factory-materials";
+import { FactoryOrders } from "@/pages/factory-orders";
+import { Login } from "@/pages/login";
 import { Notfound } from "@/pages/Notfound/Notfound";
-import Register from "@/pages/register/ui/Register";
-import WarehouseDashboard from "@/pages/warehouse-dashboard/page";
-import WarehouseEmployees from "@/pages/warehouse-employees/page";
-import PartInventory from "@/pages/warehouse-inventory/page";
+import { Register } from "@/pages/register";
+import { WarehouseDashboard } from "@/pages/warehouse-dashboard";
+import { WarehouseEmployees } from "@/pages/warehouse-employees";
+import { WarehouseInventory } from "@/pages/warehouse-inventory";
 // import ComponentsPage from '@/pages/components/page';
 
 const routes: RouteObject[] = [
@@ -27,7 +27,7 @@ const routes: RouteObject[] = [
     path: "/signup",
     element: <Register />,
   },
-  // Warehouse Manager Routes
+
   {
     path: "/warehouse",
     element: <Navigate to="/warehouse/dashboard" replace />,
@@ -46,7 +46,7 @@ const routes: RouteObject[] = [
   },
   {
     path: "/warehouse/inventory",
-    element: <PartInventory />,
+    element: <WarehouseInventory />,
   },
   {
     path: "/warehouse/employees",
@@ -67,11 +67,11 @@ const routes: RouteObject[] = [
   },
   {
     path: "/factory/materials",
-    element: <MaterialInventory />,
+    element: <FactoryMaterials />,
   },
   {
     path: "/factory/bom",
-    element: <BOMManagement />,
+    element: <FactoryBom />,
   },
   {
     path: "/factory/employees",

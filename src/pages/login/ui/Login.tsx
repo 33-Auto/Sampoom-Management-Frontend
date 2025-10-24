@@ -6,7 +6,7 @@ import { Button, Input } from "@/shared/ui";
 
 import { useLogin } from "../model/useLogin";
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
   const { handleLogin, isLoading } = useLogin();
   const [formData, setFormData] = useState({
@@ -75,4 +75,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export { Login };
