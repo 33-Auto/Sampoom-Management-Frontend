@@ -21,7 +21,7 @@ const ErrorHandler = (props: ErrorHandlerProps) => {
 
   const navigate = useNavigate();
 
-  if ((error as any)?.response?.status === 404) {
+  if ((error as any)?.status === 404) {
     return <Navigate to="/404" replace />;
   }
 
