@@ -12,7 +12,6 @@ import Register from "@/pages/register/ui/Register";
 import WarehouseDashboard from "@/pages/warehouse-dashboard/page";
 import WarehouseEmployees from "@/pages/warehouse-employees/page";
 import PartInventory from "@/pages/warehouse-inventory/page";
-import WarehouseOrders from "@/pages/warehouse-orders";
 // import ComponentsPage from '@/pages/components/page';
 
 const routes: RouteObject[] = [
@@ -39,7 +38,11 @@ const routes: RouteObject[] = [
   },
   {
     path: "/warehouse/orders",
-    element: <WarehouseOrders />,
+    lazy: async () => {
+      const { default: Component } = await import("@/pages/warehouse-orders");
+      const { loader } = await import("@/pages/warehouse-orders/api/loader");
+      return { Component, loader };
+    },
   },
   {
     path: "/warehouse/inventory",
