@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { Button } from "@/shared/ui";
 
@@ -18,6 +18,8 @@ const isDev =
 
 const ErrorHandler = (props: ErrorHandlerProps) => {
   const { error, resetErrorBoundary } = props;
+
+  const navigate = useNavigate();
 
   if ((error as any)?.response?.status === 404) {
     return <Navigate to="/404" replace />;
@@ -47,7 +49,7 @@ const ErrorHandler = (props: ErrorHandlerProps) => {
         <Button type="button" onClick={resetErrorBoundary}>
           다시시도
         </Button>
-        <Button type="button" onClick={() => (window.location.href = "/")}>
+        <Button type="button" onClick={async () => navigate("/")}>
           홈으로
         </Button>
       </div>
