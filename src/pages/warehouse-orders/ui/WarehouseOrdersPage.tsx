@@ -1,18 +1,46 @@
-import { useState } from "react";
+import { Suspense, use, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
+import type { OrderResDto } from "@/shared/api/models";
 import { Button, Table } from "@/shared/ui";
+import Spinner from "@/shared/ui/Spinner";
 import { Sidebar } from "@/widgets/Sidebar";
 
-import {
-  // useWarehouseOrders,
-  useWarehouseOrdersWithQuery,
-} from "../model/useWarehouseOrders";
+// Promise를 처리하고 테이블 컨텐츠를 렌더링하는 새로운 자식 컴포넌트
+function OrdersTableContent({
+  ordersPromise,
+  columns,
+}: {
+  ordersPromise: Promise<{ data: OrderResDto[] }>;
+  columns: any[];
+}) {
+  // 'use' 훅을 사용하여 Promise가 해결될 때까지 컴포넌트 렌더링을 일시 중단합니다.
+  const resolvedOrders = use(ordersPromise);
+  const orders = resolvedOrders.data || [];
+
+  return (
+    <>
+      <div className="border-b border-grey-100 p-6 dark:border-grey-700">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
+            주문 목록
+          </h3>
+          <div className="text-sm text-grey-500 dark:text-grey-300">
+            총 {orders.length}개 주문
+          </div>
+        </div>
+      </div>
+      <Table data={orders} columns={columns} />
+    </>
+  );
+}
 
 export default function WarehouseOrdersPage() {
+  const { orders: ordersPromise } = useLoaderData() as {
+    orders: Promise<{ data: OrderResDto[] }>;
+  };
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("current");
-  // const { orders, isLoading, error } = useWarehouseOrders();
-  const { orders, isLoading, error } = useWarehouseOrdersWithQuery();
 
   const sidebarItems = [
     {
@@ -83,7 +111,9 @@ export default function WarehouseOrdersPage() {
       title: "상태",
       render: (value: string) => (
         <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(value)}`}
+          className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(
+            value,
+          )}`}
         >
           {getStatusText(value)}
         </span>
@@ -103,15 +133,6 @@ export default function WarehouseOrdersPage() {
       ),
     },
   ];
-
-  //! TODO: 로딩 및 에러 처리 컴포넌트로 교체
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="flex min-h-screen bg-bg-white transition-colors duration-200 dark:bg-bg-black">
@@ -155,17 +176,18 @@ export default function WarehouseOrdersPage() {
 
         {/* Orders Table */}
         <div className="rounded-xl border border-grey-100 bg-bg-card-white shadow-sm transition-colors duration-200 dark:border-grey-700 dark:bg-bg-card-black">
-          <div className="border-b border-grey-100 p-6 dark:border-grey-700">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
-                주문 목록
-              </h3>
-              <div className="text-sm text-grey-500 dark:text-grey-300">
-                총 {orders.length}개 주문
+          <Suspense
+            fallback={
+              <div className="p-6 text-center">
+                <Spinner />
               </div>
-            </div>
-          </div>
-          <Table data={orders} columns={columns} />
+            }
+          >
+            <OrdersTableContent
+              ordersPromise={ordersPromise}
+              columns={columns}
+            />
+          </Suspense>
         </div>
 
         {/* Order Details Modal */}
@@ -207,7 +229,9 @@ export default function WarehouseOrdersPage() {
                       상태
                     </p>
                     <span
-                      className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(selectedOrder.status)}`}
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(
+                        selectedOrder.status,
+                      )}`}
                     >
                       {getStatusText(selectedOrder.status)}
                     </span>

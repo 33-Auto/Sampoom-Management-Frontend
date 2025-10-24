@@ -1,19 +1,13 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React, { useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { RouterProvider } from "react-router";
 
-import ErrorBoundary from "@/app/providers/ErrorBoundary";
 import router from "@/app/providers/router";
 import { useAuthStore } from "@/entities/user";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
+import { queryClient } from "@/shared/api/query";
+import { ErrorHandler } from "@/shared/ui";
 
 const App: React.FC = () => {
   // 인증 실패에 대한 전역 처리
@@ -30,12 +24,12 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
+    <ErrorBoundary FallbackComponent={ErrorHandler}>
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-      </ErrorBoundary>
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-    </QueryClientProvider>
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 App.displayName = "App";
