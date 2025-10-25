@@ -58,8 +58,7 @@ function Sidebar({ items, userRole }: SidebarProps) {
           </div>
         </div>
       </div>
-
-      {/* Navigation */}
+      {/* 네비게이션 메뉴 */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {items.map((item) => (
@@ -83,8 +82,7 @@ function Sidebar({ items, userRole }: SidebarProps) {
           ))}
         </ul>
       </nav>
-
-      {/* User Profile & Logout */}
+      {/* 유저 프로필 및 로그아웃 */}
       <div className="border-t border-main-800 p-4 dark:border-main-800">
         {/* {isCollapsed && (
           <div className="mb-3 flex justify-center">
