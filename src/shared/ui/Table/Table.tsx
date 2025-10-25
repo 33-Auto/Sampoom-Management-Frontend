@@ -9,31 +9,49 @@ interface Column {
 
 interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   columns: Column[];
-  data: any[];
+  data?: any[];
+  dataPromise?: Promise<{ data: any[] }>;
   loading?: boolean;
   emptyText?: string;
 }
 
+// 현재 Table은 Promise 데이터를 지원한다.
+// data와 dataPromise가 동시에 주어질 때, data가 우선시된다.
 const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
   const {
     columns,
     data,
+    dataPromise,
     loading = false,
     emptyText = "데이터가 없습니다.",
     className,
     ...rest
   } = props;
 
-  if (loading) {
-    return (
-      <div className="overflow-hidden rounded-lg border border-grey-200 bg-white dark:border-grey-700 dark:bg-bg-card-black">
-        <div className="p-8 text-center">
-          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-main-500 border-t-transparent"></div>
-          <p className="mt-2 text-grey-500 dark:text-grey-400">로딩 중...</p>
-        </div>
-      </div>
-    );
-  }
+  // Promise 데이터 처리
+  const [resolvedData, setResolvedData] = React.useState<any[]>([]);
+  const [isPromiseLoading, setIsPromiseLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    // data가 없고 dataPromise가 있을 때만 처리
+    if (dataPromise && !data) {
+      setIsPromiseLoading(true);
+      dataPromise
+        .then((result) => {
+          setResolvedData(result.data || []);
+        })
+        .catch((error) => {
+          console.error("Promise 데이터 로딩 실패:", error);
+          setResolvedData([]);
+        })
+        .finally(() => {
+          setIsPromiseLoading(false);
+        });
+    }
+  }, [dataPromise, data]);
+
+  const finalData = data || resolvedData;
+  const isLoading = loading || isPromiseLoading;
 
   return (
     <div className="overflow-hidden rounded-lg border border-grey-200 bg-white dark:border-grey-700 dark:bg-bg-card-black">
@@ -53,7 +71,18 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-grey-200 dark:divide-grey-700">
-            {data.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-6 py-8 text-center text-grey-500 dark:text-grey-400"
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="inline-block h-10 w-10 animate-spin rounded-full border-2 border-main-500 border-t-transparent"></div>
+                  </div>
+                </td>
+              </tr>
+            ) : finalData.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length}
@@ -63,7 +92,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
                 </td>
               </tr>
             ) : (
-              data.map((record, index) => (
+              finalData.map((record, index) => (
                 <tr
                   key={index}
                   className="hover:bg-grey-50 transition-colors dark:hover:bg-grey-800"
