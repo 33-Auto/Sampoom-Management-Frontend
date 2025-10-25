@@ -135,7 +135,7 @@ describe("Feature: Table Component", () => {
       render(<Table {...props} />);
 
       // Then
-      expect(screen.getByText(/로딩 중/)).toBeInTheDocument();
+      expect(screen.getByTestId("spinner")).toBeInTheDocument();
     });
 
     it("Given: dataPromise가 주어졌을 때, When: 렌더링하면, Then: 테이블 헤더는 표시되어야 한다.", () => {

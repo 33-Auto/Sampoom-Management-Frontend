@@ -78,7 +78,10 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
                   className="px-6 py-8 text-center text-grey-500 dark:text-white"
                 >
                   <div className="flex items-center justify-center space-x-2">
-                    <div className="inline-block h-10 w-10 animate-spin rounded-full border-2 border-main-500 border-t-transparent"></div>
+                    <div
+                      data-testid="spinner"
+                      className="inline-block h-10 w-10 animate-spin rounded-full border-2 border-main-500 border-t-transparent"
+                    ></div>
                   </div>
                 </td>
               </tr>
