@@ -1,40 +1,10 @@
-import { Suspense, use, useState } from "react";
+import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import type { OrderResDto } from "@/shared/api/models";
 import { warehouseSidebarItems } from "@/shared/config/sidebar";
 import { Button, Table } from "@/shared/ui";
-import Spinner from "@/shared/ui/Spinner";
 import { PageLayout } from "@/widgets/Layout";
-
-// Promise를 처리하고 테이블 컨텐츠를 렌더링하는 새로운 자식 컴포넌트
-function OrdersTableContent({
-  ordersPromise,
-  columns,
-}: {
-  ordersPromise: Promise<{ data: OrderResDto[] }>;
-  columns: any[];
-}) {
-  // 'use' 훅을 사용하여 Promise가 해결될 때까지 컴포넌트 렌더링을 일시 중단합니다.
-  const resolvedOrders = use(ordersPromise);
-  const orders = resolvedOrders.data || [];
-
-  return (
-    <>
-      <div className="border-b border-grey-100 p-6 dark:border-grey-700">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
-            주문 목록
-          </h3>
-          <div className="text-sm text-grey-500 dark:text-grey-300">
-            총 {orders.length}개 주문
-          </div>
-        </div>
-      </div>
-      <Table data={orders} columns={columns} />
-    </>
-  );
-}
 
 export default function WarehouseOrdersPage() {
   const { orders: ordersPromise } = useLoaderData() as {
@@ -123,7 +93,7 @@ export default function WarehouseOrdersPage() {
       pageTitle="주문 관리"
       pageDescription="대리점에서 들어온 주문을 관리하세요"
     >
-      {/* Tabs */}
+      {/* 탭들 */}
       <div className="mb-6">
         <div className="flex w-fit space-x-1 rounded-lg bg-grey-100 p-1 transition-colors duration-200 dark:bg-grey-800">
           <button
@@ -149,20 +119,22 @@ export default function WarehouseOrdersPage() {
         </div>
       </div>
 
-      {/* Orders Table */}
+      {/* 주문 목록 테이블 */}
       <div className="rounded-xl border border-grey-100 bg-bg-card-white shadow-sm transition-colors duration-200 dark:border-grey-700 dark:bg-bg-card-black">
-        <Suspense
-          fallback={
-            <div className="p-6 text-center">
-              <Spinner />
+        <div className="border-b border-grey-100 p-6 dark:border-grey-700">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
+              주문 목록
+            </h3>
+            <div className="text-sm text-grey-500 dark:text-grey-300">
+              주문 목록
             </div>
-          }
-        >
-          <OrdersTableContent ordersPromise={ordersPromise} columns={columns} />
-        </Suspense>
+          </div>
+        </div>
+        <Table dataPromise={ordersPromise} columns={columns} />
       </div>
 
-      {/* Order Details Modal */}
+      {/* 주문 목록 테이블 모달 */}
       {selectedOrder && (
         <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
           <div className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-bg-card-white p-6 transition-colors duration-200 dark:bg-bg-card-black">
