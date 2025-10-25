@@ -1,1 +1,1 @@
-export { default } from './FactoryDashboard';
+export * from "./ui";
