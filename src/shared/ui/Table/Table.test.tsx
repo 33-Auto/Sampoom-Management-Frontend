@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 
 // 테스트할 컴포넌트와 타입을 import
@@ -87,7 +87,7 @@ describe("Feature: Table Component", () => {
   });
 
   describe("Scenario 5: 로딩 상태 표시 (확장)", () => {
-    it("Given: loading=true 상태일 때, When: 렌더링하면, Then: '로딩 중...' 메시지가 표시되어야 한다.", () => {
+    it("Given: loading=true 상태일 때, When: 렌더링하면, Then: 테이블 헤더는 여전히 표시되어야 한다.", () => {
       // Given
       const props = { columns: testColumns, data: [], loading: true };
 
@@ -95,7 +95,13 @@ describe("Feature: Table Component", () => {
       render(<Table {...props} />);
 
       // Then
-      expect(screen.getByText("로딩 중...")).toBeInTheDocument();
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+        screen.getByRole("columnheader", { name: "Name" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("columnheader", { name: "Age" }),
+      ).toBeInTheDocument();
     });
 
     it("Given: loading=true 상태일 때, When: 렌더링하면, But: 데이터나 '데이터 없음' 메시지는 표시되지 않아야 한다.", () => {
@@ -113,6 +119,108 @@ describe("Feature: Table Component", () => {
       expect(screen.queryByText("데이터가 없습니다.")).not.toBeInTheDocument();
       expect(
         screen.queryByRole("cell", { name: "Alice" }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Scenario 6: Promise 데이터 처리", () => {
+    it("Given: dataPromise가 주어졌을 때, When: 렌더링하면, Then: 초기에는 로딩 상태가 표시되어야 한다.", () => {
+      // Given
+      const mockPromise = new Promise<{ data: any[] }>((resolve) => {
+        setTimeout(() => resolve({ data: testData }), 100);
+      });
+      const props = { columns: testColumns, dataPromise: mockPromise };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      expect(screen.getByTestId("spinner")).toBeInTheDocument();
+    });
+
+    it("Given: dataPromise가 주어졌을 때, When: 렌더링하면, Then: 테이블 헤더는 표시되어야 한다.", () => {
+      // Given
+      const mockPromise = new Promise<{ data: any[] }>((resolve) => {
+        setTimeout(() => resolve({ data: testData }), 100);
+      });
+      const props = { columns: testColumns, dataPromise: mockPromise };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+        screen.getByRole("columnheader", { name: "Name" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("columnheader", { name: "Age" }),
+      ).toBeInTheDocument();
+    });
+
+    it("Given: dataPromise가 성공적으로 해결될 때, When: 렌더링하면, Then: 데이터가 표시되어야 한다.", async () => {
+      // Given
+      const mockPromise = Promise.resolve({ data: testData });
+      const props = { columns: testColumns, dataPromise: mockPromise };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      await waitFor(() => {
+        expect(screen.getByRole("cell", { name: "Alice" })).toBeInTheDocument();
+        expect(screen.getByRole("cell", { name: "30" })).toBeInTheDocument();
+      });
+    });
+
+    it("Given: dataPromise가 실패할 때, When: 렌더링하면, Then: 빈 데이터 상태가 표시되어야 한다.", async () => {
+      // Given
+      const mockPromise = Promise.reject(new Error("API Error"));
+      const props = { columns: testColumns, dataPromise: mockPromise };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      await waitFor(() => {
+        expect(screen.getByText("데이터가 없습니다.")).toBeInTheDocument();
+      });
+    });
+
+    it("Given: dataPromise가 빈 데이터를 반환할 때, When: 렌더링하면, Then: '데이터가 없습니다.' 메시지가 표시되어야 한다.", async () => {
+      // Given
+      const mockPromise = Promise.resolve({ data: [] });
+      const props = { columns: testColumns, dataPromise: mockPromise };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      await waitFor(() => {
+        expect(screen.getByText("데이터가 없습니다.")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("Scenario 7: data와 dataPromise 우선순위", () => {
+    it("Given: data와 dataPromise가 모두 주어졌을 때, When: 렌더링하면, Then: data가 우선적으로 사용되어야 한다.", () => {
+      // Given
+      // Promise인 데이터에는 Bob이 있지만, data에는 Alice만 있음
+      const mockPromise = Promise.resolve({ data: [{ name: "Bob", age: 25 }] });
+      const props = {
+        columns: testColumns,
+        data: testData,
+        dataPromise: mockPromise,
+      };
+
+      // When
+      render(<Table {...props} />);
+
+      // Then
+      // data가 우선이므로 Alice만 보여야 함
+      expect(screen.getByRole("cell", { name: "Alice" })).toBeInTheDocument();
+      expect(
+        screen.queryByRole("cell", { name: "Bob" }),
       ).not.toBeInTheDocument();
     });
   });
