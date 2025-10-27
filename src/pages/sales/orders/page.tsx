@@ -1,8 +1,6 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ModuleHeader from '@/widgets/Header/ModuleHeader';
-import NavigationTabs from '@/widgets/Header/NavigationTabs';
 import { Button } from '@/shared/ui';
 import { Input } from '@/shared/ui';
 import { Select } from '@/shared/ui';
@@ -73,28 +71,6 @@ export default function SalesOrders() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('전체');
   const [priorityFilter, setPriorityFilter] = useState('전체');
-
-  const headerConfig = {
-    moduleTitle: '판매 관리',
-    moduleDescription: '대리점 주문 접수 및 승인을 관리합니다',
-    moduleIcon: 'ri-shopping-cart-line',
-    moduleColor: 'bg-green-500',
-    userRole: '판매 관리자',
-    userEmail: 'sales@company.com',
-    navItems: [
-      { path: '/sales/orders', label: '판매 주문', icon: 'ri-shopping-cart-line', active: true },
-      { path: '/sales/customers', label: '고객 관리', icon: 'ri-user-line' },
-      { path: '/sales/analytics', label: '판매 분석', icon: 'ri-bar-chart-line' }
-    ]
-  };
-
-  // 기존 코드 유지
-  const navItems = [
-    { path: '/', label: '홈', icon: 'ri-home-line' },
-    { path: '/sales/orders', label: '판매 주문', icon: 'ri-shopping-cart-line', active: true },
-    { path: '/sales/customers', label: '고객 관리', icon: 'ri-user-line' },
-    { path: '/sales/analytics', label: '판매 분석', icon: 'ri-bar-chart-line' },
-  ];
 
   const statusOptions = [
     { value: '전체', label: '전체 상태' },
@@ -198,7 +174,7 @@ export default function SalesOrders() {
               <Button variant="default" size="sm" onClick={() => handleApprove(row.orderId)}>
                 승인
               </Button>
-              <Button variant="danger" size="sm" onClick={() => handleReject(row.orderId)}>
+              <Button variant="destructive" size="sm" onClick={() => handleReject(row.orderId)}>
                 반려
               </Button>
             </>
@@ -219,15 +195,8 @@ export default function SalesOrders() {
   const totalAmount = salesOrderData.reduce((sum, order) => sum + order.totalAmount, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs 
-        navItems={navItems} 
-        moduleColor="bg-green-500"
-      />
-
+    <>
       {/* 메인 컨텐츠 */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* 통계 카드 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
@@ -330,7 +299,6 @@ export default function SalesOrders() {
             <Table columns={columns} data={filteredData} emptyText="조건에 맞는 주문이 없습니다" />
           </div>
         </div>
-      </div>
-    </div>
+    </>
   );
 }

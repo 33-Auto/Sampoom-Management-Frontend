@@ -1,8 +1,6 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ModuleHeader from '@/widgets/Header/ModuleHeader';
-import NavigationTabs from '@/widgets/Header/NavigationTabs';
 import { Button } from '@/shared/ui';
 import { Input } from '@/shared/ui';
 import { Select } from '@/shared/ui';
@@ -65,28 +63,6 @@ export default function ProductionPlanning() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('전체');
   const [priorityFilter, setPriorityFilter] = useState('전체');
-
-  const headerConfig = {
-    moduleTitle: '생산 관리',
-    moduleDescription: '생산 지시, 계획 및 실적을 관리합니다',
-    moduleIcon: 'ri-calendar-line',
-    moduleColor: 'bg-red-500',
-    userRole: '생산 계획자',
-    userEmail: 'planning@company.com',
-    navItems: [
-      { path: '/production/orders', label: '생산 지시', icon: 'ri-settings-line' },
-      { path: '/production/planning', label: '생산 계획', icon: 'ri-calendar-line', active: true },
-      { path: '/production/performance', label: '생산 실적', icon: 'ri-bar-chart-line' },
-      { path: '/production/quality', label: '품질 관리', icon: 'ri-shield-check-line' }
-    ]
-  };
-
-  const navItems = [
-    { path: '/production/orders', label: '생산 지시', icon: 'ri-settings-line' },
-    { path: '/production/planning', label: '생산 계획', icon: 'ri-calendar-line', active: true },
-    { path: '/production/performance', label: '생산 실적', icon: 'ri-bar-chart-line' },
-    { path: '/production/quality', label: '품질 관리', icon: 'ri-shield-check-line' }
-  ];
 
   const statusOptions = [
     { value: '전체', label: '전체 상태' },
@@ -215,7 +191,7 @@ export default function ProductionPlanning() {
           )}
           {row.status === '구매요청' && (
             <Button
-              variant="warning"
+              variant="outline"
               size="sm"
               onClick={() => handleCreatePurchaseRequest(row.planId)}
             >
@@ -237,17 +213,10 @@ export default function ProductionPlanning() {
   const purchaseRequests = mrpPlanData.filter(plan => plan.status === '구매요청').length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs 
-        navItems={navItems} 
-        moduleColor="bg-red-500"
-      />
-
+    <>
       {/* 메인 컨텐츠 */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* 통계 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      {/* 통계 카드 */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -367,8 +336,7 @@ export default function ProductionPlanning() {
               </p>
             </div>
           </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
