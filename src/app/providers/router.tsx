@@ -1,47 +1,39 @@
 import type { RouteObject } from "react-router-dom";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { lazy } from "react";
 
 // Auth pages
-import { Login } from "@/pages/login/ui";
-import Register from "@/pages/register/ui/Register";
 import Home from "@/pages/home/page";
+import { Login } from "@/pages/login/ui";
 
 // Master pages
-import ItemMaster from "@/pages/master/items/page";
-import ItemCreate from "@/pages/master/items/create/page";
 import BomMaster from "@/pages/master/bom/page";
-import PartnerMaster from "@/pages/master/partners/page";
 import DepartmentMaster from "@/pages/master/departments/page";
+import ItemCreate from "@/pages/master/items/create/page";
+import ItemMaster from "@/pages/master/items/page";
+import PartnerMaster from "@/pages/master/partners/page";
 import PositionMaster from "@/pages/master/positions/page";
-import WorkCenterMaster from "@/pages/master/workcenters/page";
-import WorkCenterCreate from "@/pages/master/workcenters/create/page";
-import RoutingMaster from "@/pages/master/routings/page";
 import RoutingCreate from "@/pages/master/routings/create/page";
+import RoutingMaster from "@/pages/master/routings/page";
+import WorkCenterCreate from "@/pages/master/workcenters/create/page";
+import WorkCenterMaster from "@/pages/master/workcenters/page";
 
 // Sales
-import SalesOrders from "@/pages/sales/orders/page";
 
 // WMS
-import ShippingTodos from "@/pages/wms/shipping/page";
-import InventoryDashboard from "@/pages/wms/inventory/page";
 
 // Production
-import WorkOrders from "@/pages/production/orders/page";
+import { Notfound } from "@/pages/Notfound/Notfound";
 import WorkOrderDetail from "@/pages/production/orders/detail/page";
+import WorkOrders from "@/pages/production/orders/page";
 import ProductionPlanning from "@/pages/production/planning/page";
 
 // Purchasing
-import PurchaseRequests from "@/pages/purchasing/requests/page";
 import PurchaseOrders from "@/pages/purchasing/orders/page";
-
-import { Notfound } from "@/pages/Notfound/Notfound";
-
-// HRM Pages - lazy loading
-const HRMEmployees = lazy(() => import("@/pages/hrm/employees/page"));
-const HRMPayroll = lazy(() => import("@/pages/hrm/payroll/page"));
-const HRMAttendance = lazy(() => import("@/pages/hrm/attendance/page"));
-const HRMEvaluation = lazy(() => import("@/pages/hrm/evaluation/page"));
+import PurchaseRequests from "@/pages/purchasing/requests/page";
+import Register from "@/pages/register/ui/Register";
+import SalesOrders from "@/pages/sales/orders/page";
+import InventoryDashboard from "@/pages/wms/inventory/page";
+import ShippingTodos from "@/pages/wms/shipping/page";
 
 const routes: RouteObject[] = [
   {
@@ -132,19 +124,35 @@ const routes: RouteObject[] = [
   // HRM Routes
   {
     path: "/hrm/employees",
-    element: <HRMEmployees />,
+    lazy: async () => {
+      const { default: Component } = await import("@/pages/hrm/employees/page");
+      return { Component };
+    },
   },
   {
     path: "/hrm/payroll",
-    element: <HRMPayroll />,
+    lazy: async () => {
+      const { default: Component } = await import("@/pages/hrm/payroll/page");
+      return { Component };
+    },
   },
   {
     path: "/hrm/attendance",
-    element: <HRMAttendance />,
+    lazy: async () => {
+      const { default: Component } = await import(
+        "@/pages/hrm/attendance/page"
+      );
+      return { Component };
+    },
   },
   {
     path: "/hrm/evaluation",
-    element: <HRMEvaluation />,
+    lazy: async () => {
+      const { default: Component } = await import(
+        "@/pages/hrm/evaluation/page"
+      );
+      return { Component };
+    },
   },
 
   // Warehouse routes
