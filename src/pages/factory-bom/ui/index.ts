@@ -1,1 +1,0 @@
-export { FactoryBom } from "./FactoryBom";

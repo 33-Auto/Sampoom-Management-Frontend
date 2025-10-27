@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import type { OrderResDto } from "@/shared/api/models";
-import { warehouseSidebarItems } from "@/shared/config/sidebar";
 import { Button, Table } from "@/shared/ui";
-import { PageLayout } from "@/widgets/Layout";
 
 export default function WarehouseOrdersPage() {
   const { orders: ordersPromise } = useLoaderData() as {
@@ -87,12 +85,7 @@ export default function WarehouseOrdersPage() {
   ];
 
   return (
-    <PageLayout
-      sidebarItems={warehouseSidebarItems}
-      userRole="Warehouse Manager"
-      pageTitle="주문 관리"
-      pageDescription="대리점에서 들어온 주문을 관리하세요"
-    >
+    <div>
       {/* 탭들 */}
       <div className="mb-6">
         <div className="flex w-fit space-x-1 rounded-lg bg-grey-100 p-1 transition-colors duration-200 dark:bg-grey-800">
@@ -227,6 +220,6 @@ export default function WarehouseOrdersPage() {
           </div>
         </div>
       )}
-    </PageLayout>
+    </div>
   );
 }
