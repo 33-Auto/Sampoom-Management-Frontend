@@ -1,8 +1,5 @@
 
 import React, { useState } from 'react';
-import ModuleHeader from '@/widgets/Header/ModuleHeader';
-import NavigationTabs from '@/widgets/Header/NavigationTabs';
-
 interface PurchaseOrder {
   id: string;
   poNumber: string;
@@ -25,23 +22,7 @@ const PurchaseOrders: React.FC = () => {
   const [supplierFilter, setSupplierFilter] = useState<string>('all');
 
   // 네비게이션 아이템
-  const navItems = [
-    { path: '/purchasing/requests', label: '구매 요청', icon: 'ri-file-text-line' },
-    { path: '/purchasing/orders', label: '구매 주문', icon: 'ri-shopping-bag-line', active: true },
-    { path: '/purchasing/suppliers', label: '공급업체', icon: 'ri-building-line' },
-    { path: '/purchasing/analytics', label: '구매 분석', icon: 'ri-bar-chart-line' }
-  ];
-
   // 헤더 설정
-  const headerConfig = {
-    moduleTitle: '구매 관리',
-    moduleDescription: '구매 요청, 주문 및 공급업체를 관리합니다',
-    moduleIcon: 'ri-shopping-bag-line',
-    moduleColor: 'bg-orange-500',
-    userRole: '구매 담당자',
-    userEmail: 'purchasing@company.com'
-  };
-
   // 구매 주문 목록 데이터
   const [purchaseOrders] = useState<PurchaseOrder[]>([
     {
@@ -152,14 +133,7 @@ const PurchaseOrders: React.FC = () => {
   const uniqueSuppliers = [...new Set(purchaseOrders.map(order => order.supplierName))];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs 
-        navItems={navItems} 
-        moduleColor="bg-orange-500"
-      />
-      
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="max-w-7xl mx-auto px-6 py-8">
         {/* 요약 카드 */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-sm border">
@@ -329,7 +303,6 @@ const PurchaseOrders: React.FC = () => {
             </table>
           </div>
         </div>
-      </div>
     </div>
   );
 };

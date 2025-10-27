@@ -4,9 +4,6 @@ import { Button } from "@/shared/ui";
 import { Input } from "@/shared/ui";
 import { Select } from "@/shared/ui";
 import { Table } from "@/shared/ui";
-import ModuleHeader from "@/widgets/Header/ModuleHeader";
-import NavigationTabs from "@/widgets/Header/NavigationTabs";
-
 // 구매 요청 데이터
 const purchaseRequestData = [
   {
@@ -66,40 +63,7 @@ export default function PurchaseRequests() {
   const [urgencyFilter, setUrgencyFilter] = useState("전체");
 
   // 헤더 설정
-  const headerConfig = {
-    moduleTitle: "구매 관리",
-    moduleDescription: "구매 요청, 주문 및 공급업체를 관리합니다",
-    moduleIcon: "ri-shopping-bag-line",
-    moduleColor: "bg-orange-500",
-    userRole: "구매 담당자",
-    userEmail: "purchasing@company.com",
-  };
-
   // 네비게이션 탭 설정
-  const navItems = [
-    {
-      path: "/purchasing/requests",
-      label: "구매 요청",
-      icon: "ri-file-text-line",
-      active: true,
-    },
-    {
-      path: "/purchasing/orders",
-      label: "구매 주문",
-      icon: "ri-shopping-bag-line",
-    },
-    {
-      path: "/purchasing/suppliers",
-      label: "공급업체",
-      icon: "ri-building-line",
-    },
-    {
-      path: "/purchasing/analytics",
-      label: "구매 분석",
-      icon: "ri-bar-chart-line",
-    },
-  ];
-
   const statusOptions = [
     { value: "전체", label: "전체 상태" },
     { value: "승인대기", label: "승인대기" },
@@ -250,11 +214,8 @@ export default function PurchaseRequests() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs navItems={navItems} moduleColor="bg-orange-500" />
+    <>
       {/* 메인 컨텐츠 */}
-      <div className="p-6">
         {/* 통계 카드 */}
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -369,7 +330,6 @@ export default function PurchaseRequests() {
             />
           </div>
         </div>
-      </div>
-    </div>
+    </>
   );
 }

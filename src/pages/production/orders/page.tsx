@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModuleHeader from "@/widgets/Header/ModuleHeader";
-import NavigationTabs from "@/widgets/Header/NavigationTabs";
 import { Button } from "@/shared/ui";
 import { Input } from "@/shared/ui";
 import { Select } from "@/shared/ui";
@@ -71,40 +69,7 @@ export default function WorkOrders() {
   const [statusFilter, setStatusFilter] = useState("전체");
   const [priorityFilter, setPriorityFilter] = useState("전체");
 
-  const headerConfig = {
-    moduleTitle: "생산 관리",
-    moduleDescription: "생산 지시, 계획 및 실적을 관리합니다",
-    moduleIcon: "ri-settings-line",
-    moduleColor: "bg-red-500",
-    userRole: "생산 관리자",
-    userEmail: "production@company.com",
-  };
-
   // navItems를 별도로 정의
-  const navItems = [
-    {
-      path: "/production/orders",
-      label: "생산 지시",
-      icon: "ri-settings-line",
-      active: true,
-    },
-    {
-      path: "/production/planning",
-      label: "생산 계획",
-      icon: "ri-calendar-line",
-    },
-    {
-      path: "/production/performance",
-      label: "생산 실적",
-      icon: "ri-bar-chart-line",
-    },
-    {
-      path: "/production/quality",
-      label: "품질 관리",
-      icon: "ri-shield-check-line",
-    },
-  ];
-
   const statusOptions = [
     { value: "전체", label: "전체 상태" },
     { value: "대기", label: "대기" },
@@ -266,14 +231,10 @@ export default function WorkOrders() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs navItems={navItems} moduleColor="bg-red-500" />
-
+    <>
       {/* 메인 컨텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* 통계 카드 */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+      {/* 통계 카드 */}
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
@@ -387,8 +348,7 @@ export default function WorkOrders() {
               emptyText="조건에 맞는 생산지시가 없습니다"
             />
           </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
