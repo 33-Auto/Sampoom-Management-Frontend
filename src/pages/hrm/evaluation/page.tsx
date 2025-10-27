@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui";
-import { Input } from "@/shared/ui";
-import { Select } from "@/shared/ui";
+
+import { Button, Select } from "@/shared/ui";
 
 export default function HRMEvaluation() {
-  const navigate = useNavigate();
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [setCurrentTime] = useState(new Date());
   const [selectedPeriod, setSelectedPeriod] = useState("2024-Q1");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);

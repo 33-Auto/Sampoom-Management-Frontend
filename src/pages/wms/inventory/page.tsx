@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui";
-import { Input } from "@/shared/ui";
-import { Select } from "@/shared/ui";
-import { Table } from "@/shared/ui";
+
+import type { PartResDto } from "@/shared/api/models";
+import { Button, Input, Select, Table } from "@/shared/ui";
+
 import { useWarehouseInventoryQuery } from "./api/inventory.api";
-import { PartResDto } from "@/shared/api/models";
 
 export default function InventoryDashboard() {
   const {
@@ -13,8 +11,6 @@ export default function InventoryDashboard() {
     isLoading,
     isError,
   } = useWarehouseInventoryQuery();
-
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("전체");
   const [statusFilter, setStatusFilter] = useState("전체");
