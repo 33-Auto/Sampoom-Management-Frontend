@@ -45,6 +45,9 @@ import ProductionLayout from "@/widgets/Layout/ProductionLayout";
 import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import HRMLayout from "@/widgets/Layout/HRMLayout";
 
+// loaders
+import { loader as warehouseInventoryLoader } from "@/pages/wms/inventory/api/loader";
+
 // HRM Pages - lazy loading
 const HRMEmployees = lazy(() => import("@/pages/hrm/employees/page"));
 const HRMPayroll = lazy(() => import("@/pages/hrm/payroll/page"));
@@ -94,13 +97,13 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/sales/orders" replace />
+        element: <Navigate to="/sales/orders" replace />,
       },
       {
         path: "orders",
-        element: <SalesOrders />
-      }
-    ]
+        element: <SalesOrders />,
+      },
+    ],
   },
 
   // WMS routes with nested layout
@@ -110,17 +113,17 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/wms/shipping" replace />
+        element: <Navigate to="/wms/shipping" replace />,
       },
       {
         path: "shipping",
-        element: <ShippingTodos />
+        element: <ShippingTodos />,
       },
       {
         path: "inventory",
-        element: <InventoryDashboard />
-      }
-    ]
+        element: <InventoryDashboard />,
+      },
+    ],
   },
 
   // Production routes with nested layout
@@ -130,21 +133,21 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/production/orders" replace />
+        element: <Navigate to="/production/orders" replace />,
       },
       {
         path: "orders",
-        element: <WorkOrders />
+        element: <WorkOrders />,
       },
       {
         path: "orders/:id",
-        element: <WorkOrderDetail />
+        element: <WorkOrderDetail />,
       },
       {
         path: "planning",
-        element: <ProductionPlanning />
-      }
-    ]
+        element: <ProductionPlanning />,
+      },
+    ],
   },
 
   // Purchasing routes with nested layout
@@ -154,17 +157,17 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/purchasing/requests" replace />
+        element: <Navigate to="/purchasing/requests" replace />,
       },
       {
         path: "requests",
-        element: <PurchaseRequests />
+        element: <PurchaseRequests />,
       },
       {
         path: "orders",
-        element: <PurchaseOrders />
-      }
-    ]
+        element: <PurchaseOrders />,
+      },
+    ],
   },
 
   // HRM Routes with nested layout
@@ -174,21 +177,21 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "employees",
-        element: <HRMEmployees />
+        element: <HRMEmployees />,
       },
       {
         path: "payroll",
-        element: <HRMPayroll />
+        element: <HRMPayroll />,
       },
       {
         path: "attendance",
-        element: <HRMAttendance />
+        element: <HRMAttendance />,
       },
       {
         path: "evaluation",
-        element: <HRMEvaluation />
-      }
-    ]
+        element: <HRMEvaluation />,
+      },
+    ],
   },
 
   // Warehouse routes
@@ -219,6 +222,7 @@ const routes: RouteObject[] = [
       );
       return { Component };
     },
+    loader: warehouseInventoryLoader,
   },
 
   // Factory routes

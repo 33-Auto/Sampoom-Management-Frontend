@@ -53,3 +53,4 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ navItems, moduleColor }
 
 export default NavigationTabs;
 
+
