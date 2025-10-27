@@ -4,16 +4,16 @@ import type { components } from "./v1";
 type Schemas = components["schemas"];
 
 // Auth
-export type LoginRequest = Schemas["LoginRequest"];
-export type LoginResponse = Schemas["LoginResponse"];
-export type SignupRequest = Schemas["SignupRequest"];
-export type SignupResponse = Schemas["SignupResponse"];
+// export type LoginRequest = Schemas["LoginRequest"];
+// export type LoginResponse = Schemas["LoginResponse"];
+// export type SignupRequest = Schemas["SignupRequest"];
+// export type SignupResponse = Schemas["SignupResponse"];
 
-// User
-export type UserResponse = Schemas["UserResponse"];
+// // User
+// export type UserResponse = Schemas["UserResponse"];
 
-// Mock
-export type ApiResponseSignupResponse = Schemas["ApiResponseSignupResponse"];
+// // Mock
+// export type ApiResponseSignupResponse = Schemas["ApiResponseSignupResponse"];
 export type ApiResponseLoginResponse = Schemas["ApiResponseLoginResponse"];
 
 // Factory
@@ -22,3 +22,4 @@ export type FactoryOrders =
 
 // Warehouse
 export type OrderResDto = Schemas["OrderResDto"];
+export type PartResDto = Schemas["PartResDto"];

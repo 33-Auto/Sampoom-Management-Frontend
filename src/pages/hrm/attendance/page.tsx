@@ -21,28 +21,6 @@ export default function HRMAttendance() {
     return () => clearInterval(timer);
   }, []);
 
-  const headerConfig = {
-    moduleTitle: '인사 관리 (HRM)',
-    moduleDescription: '직원 정보, 급여, 근태 및 평가 관리를 수행합니다',
-    moduleIcon: 'ri-team-line',
-    moduleColor: 'bg-teal-600',
-    userRole: '인사 담당자',
-    userEmail: 'hr@company.com',
-    navItems: [
-      { path: '/hrm/employees', label: '직원 관리', icon: 'ri-user-line' },
-      { path: '/hrm/payroll', label: '급여 관리', icon: 'ri-money-dollar-circle-line' },
-      { path: '/hrm/attendance', label: '근태 관리', icon: 'ri-time-line', active: true },
-      { path: '/hrm/evaluation', label: '평가 관리', icon: 'ri-star-line' }
-    ]
-  };
-
-  const navItems = [
-    { path: '/hrm/employees', label: '직원 관리', icon: 'ri-user-line' },
-    { path: '/hrm/payroll', label: '급여 관리', icon: 'ri-money-dollar-circle-line' },
-    { path: '/hrm/attendance', label: '근태 관리', icon: 'ri-time-line', active: true },
-    { path: '/hrm/evaluation', label: '평가 관리', icon: 'ri-star-line' }
-  ];
-
   const attendanceData = [
     {
       id: 'EMP-001',
@@ -227,14 +205,8 @@ export default function HRMAttendance() {
   const totalOvertimeHours = attendanceData.reduce((sum, a) => sum + a.overtime, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs 
-        navItems={navItems} 
-        moduleColor="bg-teal-600"
-      />
-      
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <>
+<div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -420,6 +392,6 @@ export default function HRMAttendance() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

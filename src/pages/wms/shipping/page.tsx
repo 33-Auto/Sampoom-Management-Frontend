@@ -1,8 +1,6 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ModuleHeader from '@/widgets/Header/ModuleHeader';
-import NavigationTabs from '@/widgets/Header/NavigationTabs';
 import { Button } from '@/shared/ui';
 import { Input } from '@/shared/ui';
 import { Select } from '@/shared/ui';
@@ -62,28 +60,6 @@ export default function ShippingTodos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('전체');
   const [priorityFilter, setPriorityFilter] = useState('전체');
-
-  const headerConfig = {
-    moduleTitle: '재고 관리 (WMS)',
-    moduleDescription: '창고 출고, 재고 현황 및 위치를 관리합니다',
-    moduleIcon: 'ri-truck-line',
-    moduleColor: 'bg-purple-500',
-    userRole: '창고 관리자',
-    userEmail: 'warehouse@company.com',
-    navItems: [
-      { path: '/wms/shipping', label: '출고 지시', icon: 'ri-truck-line', active: true },
-      { path: '/wms/inventory', label: '재고 현황', icon: 'ri-stack-line' },
-      { path: '/wms/receiving', label: '입고 관리', icon: 'ri-inbox-line' },
-      { path: '/wms/locations', label: '창고 위치', icon: 'ri-map-pin-line' }
-    ]
-  };
-
-  const navItems = [
-    { path: '/wms/shipping', label: '출고 지시', icon: 'ri-truck-line', active: true },
-    { path: '/wms/inventory', label: '재고 현황', icon: 'ri-stack-line' },
-    { path: '/wms/receiving', label: '입고 관리', icon: 'ri-inbox-line' },
-    { path: '/wms/locations', label: '창고 위치', icon: 'ri-map-pin-line' }
-  ];
 
   const statusOptions = [
     { value: '전체', label: '전체 상태' },
@@ -188,7 +164,7 @@ export default function ShippingTodos() {
           )}
           {row.status === '재고부족' && (
             <Button
-              variant="warning"
+              variant="outline"
               size="sm"
               onClick={() => handleStockAlert(row.shippingId)}
             >
@@ -210,12 +186,7 @@ export default function ShippingTodos() {
   const urgentShipping = shippingTodoData.filter(item => item.priority === '높음').length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeader {...headerConfig} />
-      <NavigationTabs 
-        navItems={navItems} 
-        moduleColor="bg-purple-500"
-      />
+    <>
 
       {/* 메인 컨텐츠 */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -326,6 +297,6 @@ export default function ShippingTodos() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
