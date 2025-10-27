@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui";
-import { Input } from "@/shared/ui";
-import { Select } from "@/shared/ui";
-import { Table } from "@/shared/ui";
+
+import { Button, Input, Select, Table } from "@/shared/ui";
 
 // 생산 지시 데이터
 const workOrderData = [
@@ -235,119 +233,117 @@ export default function WorkOrders() {
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                <i className="ri-file-list-line text-xl text-blue-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">전체 지시</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {totalOrders}
-                </p>
-              </div>
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+              <i className="ri-file-list-line text-xl text-blue-600"></i>
             </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-                <i className="ri-time-line text-xl text-yellow-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">대기 중</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {pendingOrders}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-                <i className="ri-play-line text-xl text-orange-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">진행 중</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {inProgressOrders}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                <i className="ri-check-line text-xl text-green-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">완료</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {completedOrders}
-                </p>
-              </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">전체 지시</p>
+              <p className="text-2xl font-bold text-gray-900">{totalOrders}</p>
             </div>
           </div>
         </div>
 
-        {/* 필터 및 검색 */}
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Input
-              placeholder="생산지시번호, 제품명 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-              options={statusOptions}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            />
-            <Select
-              options={priorityOptions}
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-            />
-            <div className="flex space-x-2">
-              <Button variant="default" size="sm">
-                <i className="ri-add-line mr-2"></i>
-                신규 지시
-              </Button>
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
+              <i className="ri-time-line text-xl text-yellow-600"></i>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">대기 중</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {pendingOrders}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
+              <i className="ri-play-line text-xl text-orange-600"></i>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">진행 중</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {inProgressOrders}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+              <i className="ri-check-line text-xl text-green-600"></i>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">완료</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {completedOrders}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 필터 및 검색 */}
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <Input
+            placeholder="생산지시번호, 제품명 검색..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Select
+            options={statusOptions}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          />
+          <Select
+            options={priorityOptions}
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+          />
+          <div className="flex space-x-2">
+            <Button variant="default" size="sm">
+              <i className="ri-add-line mr-2"></i>
+              신규 지시
+            </Button>
+            <Button variant="secondary" size="sm">
+              <i className="ri-download-line mr-2"></i>
+              내보내기
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* 생산 지시 목록 테이블 */}
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="border-b border-gray-200 p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              생산 지시 목록
+            </h2>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500">
+                총 {filteredData.length}개 지시
+              </span>
               <Button variant="secondary" size="sm">
-                <i className="ri-download-line mr-2"></i>
-                내보내기
+                <i className="ri-refresh-line mr-2"></i>
+                새로고침
               </Button>
             </div>
           </div>
         </div>
-
-        {/* 생산 지시 목록 테이블 */}
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                생산 지시 목록
-              </h2>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">
-                  총 {filteredData.length}개 지시
-                </span>
-                <Button variant="secondary" size="sm">
-                  <i className="ri-refresh-line mr-2"></i>
-                  새로고침
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="p-6">
-            <Table
-              columns={columns}
-              data={filteredData}
-              emptyText="조건에 맞는 생산지시가 없습니다"
-            />
-          </div>
+        <div className="p-6">
+          <Table
+            columns={columns}
+            data={filteredData}
+            emptyText="조건에 맞는 생산지시가 없습니다"
+          />
+        </div>
       </div>
     </>
   );

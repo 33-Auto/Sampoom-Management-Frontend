@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -11,12 +12,16 @@ const ProductionLayout: React.FC = () => {
     moduleColor: "bg-orange-600",
     userRole: "생산 관리자",
     userEmail: "production@company.com",
-    navItems: []
+    navItems: [],
   };
 
   const navItems = [
     { path: "/production/orders", label: "생산 지시", icon: "ri-hammer-line" },
-    { path: "/production/planning", label: "생산 계획", icon: "ri-calendar-line" }
+    {
+      path: "/production/planning",
+      label: "생산 계획",
+      icon: "ri-calendar-line",
+    },
   ];
 
   return (
@@ -31,5 +36,3 @@ const ProductionLayout: React.FC = () => {
 };
 
 export default ProductionLayout;
-
-

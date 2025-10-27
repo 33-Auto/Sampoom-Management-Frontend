@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
+
 import "@/app/styles/global.css";
 import App from "@/app/App";
+
 import { NotificationProvider } from "./NotificationContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
@@ -15,6 +17,6 @@ import("./mocks/browser")
     root.render(
       <NotificationProvider>
         <App />
-      </NotificationProvider>
+      </NotificationProvider>,
     );
   });

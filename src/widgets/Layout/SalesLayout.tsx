@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -11,11 +12,11 @@ const SalesLayout: React.FC = () => {
     moduleColor: "bg-green-600",
     userRole: "판매 관리자",
     userEmail: "sales@company.com",
-    navItems: []
+    navItems: [],
   };
 
   const navItems = [
-    { path: "/sales/orders", label: "판매 주문", icon: "ri-file-list-line" }
+    { path: "/sales/orders", label: "판매 주문", icon: "ri-file-list-line" },
   ];
 
   return (
@@ -30,5 +31,3 @@ const SalesLayout: React.FC = () => {
 };
 
 export default SalesLayout;
-
-

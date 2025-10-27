@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -11,12 +12,16 @@ const WMSLayout: React.FC = () => {
     moduleColor: "bg-purple-600",
     userRole: "창고 관리자",
     userEmail: "warehouse@company.com",
-    navItems: []
+    navItems: [],
   };
 
   const navItems = [
     { path: "/wms/shipping", label: "출고 지시", icon: "ri-truck-line" },
-    { path: "/wms/inventory", label: "재고 현황", icon: "ri-bar-chart-box-line" }
+    {
+      path: "/wms/inventory",
+      label: "재고 현황",
+      icon: "ri-bar-chart-box-line",
+    },
   ];
 
   return (
@@ -31,5 +36,3 @@ const WMSLayout: React.FC = () => {
 };
 
 export default WMSLayout;
-
-
