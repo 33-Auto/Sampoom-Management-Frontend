@@ -1,0 +1,756 @@
+
+export const factoryOrders = [
+  {
+    id: 'ORD-001',
+    warehouseName: 'Central Warehouse',
+    orderDate: '2024-01-15',
+    status: 'Pending',
+    parts: [
+      { partId: 'P001', partName: 'Engine Block', quantity: 5 },
+      { partId: 'P002', partName: 'Transmission', quantity: 3 }
+    ]
+  },
+  {
+    id: 'ORD-002',
+    warehouseName: 'North Warehouse',
+    orderDate: '2024-01-14',
+    status: 'In Production',
+    parts: [
+      { partId: 'P003', partName: 'Brake System', quantity: 8 },
+      { partId: 'P004', partName: 'Suspension Kit', quantity: 4 }
+    ]
+  },
+  {
+    id: 'ORD-003',
+    warehouseName: 'South Warehouse',
+    orderDate: '2024-01-13',
+    status: 'Shipped',
+    parts: [
+      { partId: 'P005', partName: 'Exhaust System', quantity: 6 }
+    ]
+  }
+];
+
+export const rawMaterials = [
+  {
+    id: 'M001',
+    name: 'Steel Sheets',
+    category: 'Metal',
+    currentStock: 150,
+    unit: 'kg',
+    minStock: 50
+  },
+  {
+    id: 'M002',
+    name: 'Aluminum Rods',
+    category: 'Metal',
+    currentStock: 25,
+    unit: 'pieces',
+    minStock: 30
+  },
+  {
+    id: 'M003',
+    name: 'Rubber Gaskets',
+    category: 'Rubber',
+    currentStock: 200,
+    unit: 'pieces',
+    minStock: 100
+  },
+  {
+    id: 'M004',
+    name: 'Electronic Components',
+    category: 'Electronics',
+    currentStock: 75,
+    unit: 'sets',
+    minStock: 50
+  }
+];
+
+export const billOfMaterials = [
+  {
+    partId: 'P001',
+    partName: 'Engine Block',
+    materials: [
+      { materialId: 'M001', materialName: 'Steel Sheets', requiredQuantity: 15, unit: 'kg' },
+      { materialId: 'M004', materialName: 'Electronic Components', requiredQuantity: 2, unit: 'sets' }
+    ]
+  },
+  {
+    partId: 'P002',
+    partName: 'Transmission',
+    materials: [
+      { materialId: 'M001', materialName: 'Steel Sheets', requiredQuantity: 12, unit: 'kg' },
+      { materialId: 'M002', materialName: 'Aluminum Rods', requiredQuantity: 8, unit: 'pieces' }
+    ]
+  }
+];
+
+export const factoryEmployees = [
+  {
+    id: 'EMP-F001',
+    name: 'Michael Chen',
+    position: 'Production Supervisor',
+    contact: 'michael.chen@sampoom.com',
+    phone: '+1-555-0101'
+  },
+  {
+    id: 'EMP-F002',
+    name: 'Lisa Rodriguez',
+    position: 'Quality Control Manager',
+    contact: 'lisa.rodriguez@sampoom.com',
+    phone: '+1-555-0102'
+  },
+  {
+    id: 'EMP-F003',
+    name: 'David Kim',
+    position: 'Machine Operator',
+    contact: 'david.kim@sampoom.com',
+    phone: '+1-555-0103'
+  },
+  {
+    id: 'EMP-F004',
+    name: 'Emma Thompson',
+    position: 'Materials Coordinator',
+    contact: 'emma.thompson@sampoom.com',
+    phone: '+1-555-0104'
+  }
+];
+
+// 작업장 마스터 데이터
+export const workCenterMasterData = [
+  {
+    workCenterCode: 'WC001',
+    workCenterName: '절삭 가공 1호기',
+    type: '내부 설비',
+    dailyCapacity: 16,
+    efficiency: 85,
+    hourlyRate: 45000,
+    status: '가동',
+    description: 'CNC 선반 가공',
+  },
+  {
+    workCenterCode: 'WC002',
+    workCenterName: '밀링 가공 1호기',
+    type: '내부 설비',
+    dailyCapacity: 16,
+    efficiency: 90,
+    hourlyRate: 50000,
+    status: '가동',
+    description: 'CNC 밀링 가공',
+  },
+  {
+    workCenterCode: 'WC003',
+    workCenterName: '용접 작업장',
+    type: '내부 설비',
+    dailyCapacity: 8,
+    efficiency: 75,
+    hourlyRate: 35000,
+    status: '가동',
+    description: '아르곤 용접',
+  },
+  {
+    workCenterCode: 'WC004',
+    workCenterName: '표면처리 라인',
+    type: '내부 설비',
+    dailyCapacity: 24,
+    efficiency: 95,
+    hourlyRate: 25000,
+    status: '가동',
+    description: '도장 및 코팅',
+  },
+  {
+    workCenterCode: 'WC005',
+    workCenterName: '조립 라인 A',
+    type: '내부 설비',
+    dailyCapacity: 8,
+    efficiency: 80,
+    hourlyRate: 30000,
+    status: '가동',
+    description: '최종 조립',
+  },
+  {
+    workCenterCode: 'WC006',
+    workCenterName: '품질 검사실',
+    type: '검사 설비',
+    dailyCapacity: 8,
+    efficiency: 100,
+    hourlyRate: 40000,
+    status: '가동',
+    description: '최종 품질 검사',
+  },
+  {
+    workCenterCode: 'EXT001',
+    workCenterName: '(주)정밀가공',
+    type: '외주 가공처',
+    dailyCapacity: 16,
+    efficiency: 90,
+    hourlyRate: 38000,
+    status: '가동',
+    description: '정밀 가공 외주',
+  },
+  {
+    workCenterCode: 'EXT002',
+    workCenterName: '(주)열처리전문',
+    type: '외주 가공처',
+    dailyCapacity: 24,
+    efficiency: 95,
+    hourlyRate: 28000,
+    status: '가동',
+    description: '열처리 전문 업체',
+  },
+  {
+    workCenterCode: 'WC007',
+    workCenterName: '포장 라인',
+    type: '내부 설비',
+    dailyCapacity: 8,
+    efficiency: 90,
+    hourlyRate: 20000,
+    status: '정비',
+    description: '제품 포장',
+  },
+  {
+    workCenterCode: 'WC008',
+    workCenterName: '절삭 가공 2호기',
+    type: '내부 설비',
+    dailyCapacity: 16,
+    efficiency: 80,
+    hourlyRate: 42000,
+    status: '중단',
+    description: 'CNC 선반 가공 (예비)',
+  },
+];
+
+// 공정 마스터 데이터
+export const routingMasterData = [
+  {
+    routingCode: 'RT001',
+    itemCode: 'MAT001',
+    itemName: '스테인리스 스틸 봉재',
+    version: '1.0',
+    status: '활성',
+    totalLeadTime: 12,
+    operationCount: 4,
+    operations: [
+      {
+        operationNumber: 10,
+        operationName: '절삭 가공',
+        workCenterCode: 'WC001',
+        setupTime: 30,
+        processTime: 5,
+        waitTime: 60,
+      },
+      {
+        operationNumber: 20,
+        operationName: '밀링 가공',
+        workCenterCode: 'WC002',
+        setupTime: 45,
+        processTime: 8,
+        waitTime: 120,
+      },
+      {
+        operationNumber: 30,
+        operationName: '표면처리',
+        workCenterCode: 'WC004',
+        setupTime: 15,
+        processTime: 3,
+        waitTime: 180,
+      },
+      {
+        operationNumber: 40,
+        operationName: '품질검사',
+        workCenterCode: 'WC006',
+        setupTime: 10,
+        processTime: 2,
+        waitTime: 0,
+      },
+    ],
+  },
+  {
+    routingCode: 'RT002',
+    itemCode: 'MAT002',
+    itemName: '알루미늄 합금 판재',
+    version: '1.0',
+    status: '활성',
+    totalLeadTime: 8,
+    operationCount: 3,
+    operations: [
+      {
+        operationNumber: 10,
+        operationName: '절단 가공',
+        workCenterCode: 'WC001',
+        setupTime: 20,
+        processTime: 3,
+        waitTime: 60,
+      },
+      {
+        operationNumber: 20,
+        operationName: '표면처리',
+        workCenterCode: 'WC004',
+        setupTime: 15,
+        processTime: 2,
+        waitTime: 120,
+      },
+      {
+        operationNumber: 30,
+        operationName: '품질검사',
+        workCenterCode: 'WC006',
+        setupTime: 10,
+        processTime: 1,
+        waitTime: 0,
+      },
+    ],
+  },
+  {
+    routingCode: 'RT003',
+    itemCode: 'SEMI001',
+    itemName: '플라스틱 하우징',
+    version: '1.1',
+    status: '활성',
+    totalLeadTime: 16,
+    operationCount: 5,
+    operations: [
+      {
+        operationNumber: 10,
+        operationName: '사출 성형',
+        workCenterCode: 'WC002',
+        setupTime: 60,
+        processTime: 2,
+        waitTime: 240,
+      },
+      {
+        operationNumber: 20,
+        operationName: '트리밍',
+        workCenterCode: 'WC001',
+        setupTime: 15,
+        processTime: 1,
+        waitTime: 60,
+      },
+      {
+        operationNumber: 30,
+        operationName: '표면처리',
+        workCenterCode: 'WC004',
+        setupTime: 30,
+        processTime: 3,
+        waitTime: 180,
+      },
+      {
+        operationNumber: 40,
+        operationName: '조립 준비',
+        workCenterCode: 'WC005',
+        setupTime: 20,
+        processTime: 2,
+        waitTime: 60,
+      },
+      {
+        operationNumber: 50,
+        operationName: '품질검사',
+        workCenterCode: 'WC006',
+        setupTime: 15,
+        processTime: 3,
+        waitTime: 0,
+      },
+    ],
+  },
+  {
+    routingCode: 'RT004',
+    itemCode: 'SEMI002',
+    itemName: '기계 부품 어셈블리',
+    version: '2.0',
+    status: '활성',
+    totalLeadTime: 24,
+    operationCount: 6,
+    operations: [
+      {
+        operationNumber: 10,
+        operationName: '정밀 가공',
+        workCenterCode: 'EXT001',
+        setupTime: 120,
+        processTime: 15,
+        waitTime: 480,
+      },
+      {
+        operationNumber: 20,
+        operationName: '열처리',
+        workCenterCode: 'EXT002',
+        setupTime: 60,
+        processTime: 0,
+        waitTime: 720,
+      },
+      {
+        operationNumber: 30,
+        operationName: '정밀 밀링',
+        workCenterCode: 'WC002',
+        setupTime: 45,
+        processTime: 12,
+        waitTime: 120,
+      },
+      {
+        operationNumber: 40,
+        operationName: '용접',
+        workCenterCode: 'WC003',
+        setupTime: 30,
+        processTime: 8,
+        waitTime: 180,
+      },
+      {
+        operationNumber: 50,
+        operationName: '조립',
+        workCenterCode: 'WC005',
+        setupTime: 60,
+        processTime: 10,
+        waitTime: 120,
+      },
+      {
+        operationNumber: 60,
+        operationName: '최종검사',
+        workCenterCode: 'WC006',
+        setupTime: 20,
+        processTime: 5,
+        waitTime: 0,
+      },
+    ],
+  },
+  {
+    routingCode: 'RT005',
+    itemCode: 'FIN001',
+    itemName: '자동차 엔진 부품',
+    version: '1.0',
+    status: '검토중',
+    totalLeadTime: 32,
+    operationCount: 7,
+    operations: [
+      {
+        operationNumber: 10,
+        operationName: '주조',
+        workCenterCode: 'EXT001',
+        setupTime: 180,
+        processTime: 0,
+        waitTime: 1440,
+      },
+      {
+        operationNumber: 20,
+        operationName: '거친 가공',
+        workCenterCode: 'WC001',
+        setupTime: 60,
+        processTime: 20,
+        waitTime: 240,
+      },
+      {
+        operationNumber: 30,
+        operationName: '열처리',
+        workCenterCode: 'EXT002',
+        setupTime: 30,
+        processTime: 0,
+        waitTime: 480,
+      },
+      {
+        operationNumber: 40,
+        operationName: '정밀 가공',
+        workCenterCode: 'WC002',
+        setupTime: 90,
+        processTime: 25,
+        waitTime: 180,
+      },
+      {
+        operationNumber: 50,
+        operationName: '표면처리',
+        workCenterCode: 'WC004',
+        setupTime: 45,
+        processTime: 5,
+        waitTime: 360,
+      },
+      {
+        operationNumber: 60,
+        operationName: '최종 조립',
+        workCenterCode: 'WC005',
+        setupTime: 120,
+        processTime: 15,
+        waitTime: 120,
+      },
+      {
+        operationNumber: 70,
+        operationName: '성능 테스트',
+        workCenterCode: 'WC006',
+        setupTime: 30,
+        processTime: 10,
+        waitTime: 0,
+      },
+    ],
+  },
+];
+
+// 기존 materialMasterData에 calculatedProductionLeadTime 필드 추가
+export const materialMasterData = [
+  {
+    itemCode: 'MAT001',
+    itemName: '스테인리스 스틸 봉재',
+    category: '원자재 > 금속',
+    itemType: '원자재',
+    procurementType: '구매',
+    purchaseLeadTime: 7,
+    productionLeadTime: null,
+    calculatedProductionLeadTime: null,
+    unit: 'kg',
+    standardPrice: 8500,
+    currentStock: 2500,
+    status: '활성',
+  },
+  {
+    itemCode: 'MAT002',
+    itemName: '알루미늄 합금 판재',
+    category: '원자재 > 금속',
+    itemType: '원자재',
+    procurementType: '구매',
+    purchaseLeadTime: 5,
+    productionLeadTime: null,
+    calculatedProductionLeadTime: null,
+    unit: 'kg',
+    standardPrice: 12000,
+    currentStock: 1800,
+    status: '활성',
+  },
+  {
+    itemCode: 'MAT003',
+    itemName: '실리콘 고무',
+    category: '원자재 > 고무',
+    itemType: '원자재',
+    procurementType: '구매',
+    purchaseLeadTime: 10,
+    productionLeadTime: null,
+    calculatedProductionLeadTime: null,
+    unit: 'kg',
+    standardPrice: 15000,
+    currentStock: 800,
+    status: '활성',
+  },
+  {
+    itemCode: 'MAT004',
+    itemName: 'PCB 기판',
+    category: '원자재 > 전자부품',
+    itemType: '원자재',
+    procurementType: '구매',
+    purchaseLeadTime: 14,
+    productionLeadTime: null,
+    calculatedProductionLeadTime: null,
+    unit: 'ea',
+    standardPrice: 25000,
+    currentStock: 500,
+    status: '활성',
+  },
+  {
+    itemCode: 'SEMI001',
+    itemName: '플라스틱 하우징',
+    category: '반제품 > 플라스틱',
+    itemType: '반제품',
+    procurementType: '생산',
+    purchaseLeadTime: null,
+    productionLeadTime: 3,
+    calculatedProductionLeadTime: 16,
+    unit: 'ea',
+    standardPrice: 18000,
+    currentStock: 300,
+    status: '활성',
+  },
+  {
+    itemCode: 'SEMI002',
+    itemName: '기계 부품 어셈블리',
+    category: '반제품 > 기계',
+    itemType: '반제품',
+    procurementType: '생산',
+    purchaseLeadTime: null,
+    productionLeadTime: 5,
+    calculatedProductionLeadTime: 24,
+    unit: 'ea',
+    standardPrice: 85000,
+    currentStock: 150,
+    status: '활성',
+  },
+  {
+    itemCode: 'SEMI003',
+    itemName: '전자 모듈',
+    category: '반제품 > 전자부품',
+    itemType: '반제품',
+    procurementType: '혼합',
+    purchaseLeadTime: 12,
+    productionLeadTime: 4,
+    calculatedProductionLeadTime: 20,
+    unit: 'ea',
+    standardPrice: 45000,
+    currentStock: 200,
+    status: '활성',
+  },
+  {
+    itemCode: 'FIN001',
+    itemName: '자동차 엔진 부품',
+    category: '완제품 > 자동차',
+    itemType: '완제품',
+    procurementType: '생산',
+    purchaseLeadTime: null,
+    productionLeadTime: 7,
+    calculatedProductionLeadTime: 32,
+    unit: 'ea',
+    standardPrice: 350000,
+    currentStock: 50,
+    status: '검토중',
+  },
+  {
+    itemCode: 'FIN002',
+    itemName: '산업용 펌프',
+    category: '완제품 > 기계',
+    itemType: '완제품',
+    procurementType: '생산',
+    purchaseLeadTime: null,
+    productionLeadTime: 10,
+    calculatedProductionLeadTime: 28,
+    unit: 'ea',
+    standardPrice: 1200000,
+    currentStock: 25,
+    status: '활성',
+  },
+  {
+    itemCode: 'MAT005',
+    itemName: '티타늄 합금',
+    category: '원자재 > 금속',
+    itemType: '원자재',
+    procurementType: '구매',
+    purchaseLeadTime: 21,
+    productionLeadTime: null,
+    calculatedProductionLeadTime: null,
+    unit: 'kg',
+    standardPrice: 45000,
+    currentStock: 120,
+    status: '활성',
+  },
+  {
+    itemCode: 'SEMI004',
+    itemName: '정밀 기어박스',
+    category: '반제품 > 기계',
+    itemType: '반제품',
+    procurementType: '혼합',
+    purchaseLeadTime: 15,
+    productionLeadTime: 6,
+    calculatedProductionLeadTime: 30,
+    unit: 'ea',
+    standardPrice: 180000,
+    currentStock: 80,
+    status: '활성',
+  },
+];
+
+export const partnerMasterData = [
+  {
+    partnerCode: 'CUST-001',
+    partnerName: '서울대리점',
+    partnerType: '고객사',
+    businessNumber: '123-45-67890',
+    representative: '김대리',
+    contact: 'kim@seoul-dealer.com',
+    phone: '02-1234-5678',
+    address: '서울시 강남구 테헤란로 123',
+    paymentTerms: '월말결제',
+    creditLimit: 50000000,
+    status: '활성',
+    registrationDate: '2024-01-01'
+  },
+  {
+    partnerCode: 'CUST-002',
+    partnerName: '부산대리점',
+    partnerType: '고객사',
+    businessNumber: '234-56-78901',
+    representative: '이부장',
+    contact: 'lee@busan-dealer.com',
+    phone: '051-2345-6789',
+    address: '부산시 해운대구 센텀로 456',
+    paymentTerms: '월말결제',
+    creditLimit: 30000000,
+    status: '활성',
+    registrationDate: '2024-01-05'
+  },
+  {
+    partnerCode: 'SUPP-001',
+    partnerName: '대한금속',
+    partnerType: '공급업체',
+    businessNumber: '345-67-89012',
+    representative: '박사장',
+    contact: 'park@daehan-metal.com',
+    phone: '031-3456-7890',
+    address: '경기도 안산시 단원구 공단로 789',
+    paymentTerms: '30일 후 결제',
+    creditLimit: 0,
+    status: '활성',
+    registrationDate: '2023-12-15'
+  },
+  {
+    partnerCode: 'SUPP-002',
+    partnerName: '한국고무',
+    partnerType: '공급업체',
+    businessNumber: '456-78-90123',
+    representative: '최대표',
+    contact: 'choi@korea-rubber.com',
+    phone: '032-4567-8901',
+    address: '인천시 남동구 논현로 321',
+    paymentTerms: '45일 후 결제',
+    creditLimit: 0,
+    status: '활성',
+    registrationDate: '2023-12-20'
+  }
+];
+
+export const bomMasterData = [
+  {
+    bomId: 'BOM-001',
+    bomName: '엔진 어셈블리 A-Type',
+    version: 'v2.1',
+    status: '활성',
+    description: '고성능 엔진 어셈블리 (2024년형)',
+    createdDate: '2024-01-10',
+    lastModified: '2024-01-18',
+    materials: [
+      { itemCode: 'RAW-AL-001', itemName: '알루미늄 합금', quantity: 3, unit: 'KG', unitCost: 8500 },
+      { itemCode: 'RAW-EL-003', itemName: '전자 센서', quantity: 8, unit: 'EA', unitCost: 15000 },
+      { itemCode: 'RAW-CU-006', itemName: '구리 와이어', quantity: 15, unit: 'M', unitCost: 450 }
+    ]
+  },
+  {
+    bomId: 'BOM-002',
+    bomName: '브레이크 시스템',
+    version: 'v1.5',
+    status: '활성',
+    description: '안전성 강화 브레이크 시스템',
+    createdDate: '2024-01-08',
+    lastModified: '2024-01-15',
+    materials: [
+      { itemCode: 'RAW-RU-002', itemName: '고무 시일링', quantity: 12, unit: 'EA', unitCost: 1200 },
+      { itemCode: 'RAW-ST-004', itemName: 'M5 육각 볼트', quantity: 24, unit: 'EA', unitCost: 150 },
+      { itemCode: 'RAW-OI-007', itemName: '유압유', quantity: 2, unit: 'L', unitCost: 2800 }
+    ]
+  },
+  {
+    bomId: 'BOM-003',
+    bomName: '전자제어 모듈',
+    version: 'v3.0',
+    status: '초안',
+    description: '차세대 전자제어 시스템',
+    createdDate: '2024-01-12',
+    lastModified: '2024-01-19',
+    materials: [
+      { itemCode: 'RAW-EL-003', itemName: '전자 센서', quantity: 5, unit: 'EA', unitCost: 15000 },
+      { itemCode: 'RAW-PL-005', itemName: '플라스틱 하우징', quantity: 2, unit: 'EA', unitCost: 3200 },
+      { itemCode: 'RAW-CU-006', itemName: '구리 와이어', quantity: 8, unit: 'M', unitCost: 450 }
+    ]
+  },
+  {
+    bomId: 'BOM-004',
+    bomName: '서스펜션 키트',
+    version: 'v1.0',
+    status: '비활성',
+    description: '구형 서스펜션 시스템 (단종)',
+    createdDate: '2023-12-20',
+    lastModified: '2024-01-05',
+    materials: [
+      { itemCode: 'RAW-PL-005', itemName: '플라스틱 하우징', quantity: 1, unit: 'EA', unitCost: 3200 },
+      { itemCode: 'RAW-RU-002', itemName: '고무 시일링', quantity: 6, unit: 'EA', unitCost: 1200 },
+      { itemCode: 'RAW-BE-008', itemName: '베어링', quantity: 4, unit: 'EA', unitCost: 12000 }
+    ]
+  }
+];

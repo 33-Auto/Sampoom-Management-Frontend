@@ -1,1 +1,0 @@
-export { FactoryOrders } from "./FactoryOrdersPage";
