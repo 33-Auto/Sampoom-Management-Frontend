@@ -176,15 +176,6 @@ const routes: RouteObject[] = [
       return { Component };
     },
   },
-  {
-    path: "/warehouse/employees",
-    lazy: async () => {
-      const { default: Component } = await import(
-        "@/pages/warehouse/employees/page"
-      );
-      return { Component };
-    },
-  },
 
   // Factory routes
   {
