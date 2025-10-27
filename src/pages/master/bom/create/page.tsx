@@ -311,7 +311,7 @@ const CreateBOM: React.FC = () => {
                             ₩{item.standardPrice.toLocaleString()}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {item.supplier}
+                            {"supplier" in item ? String(item.supplier) : "-"}
                           </div>
                         </div>
                       </div>
