@@ -11,7 +11,7 @@ export interface NavItem {
   active?: boolean;
 }
 
-export interface ModuleLayoutProps extends PropsWithChildren {
+interface ModuleLayoutProps extends PropsWithChildren {
   moduleTitle: string;
   moduleDescription: string;
   moduleIcon: string;

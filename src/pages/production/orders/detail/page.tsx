@@ -155,8 +155,6 @@ const WorkOrderDetail: React.FC = () => {
         </div>
       </div>
 
-      <NavigationTabs navItems={navItems} moduleColor="bg-red-500" />
-
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 왼쪽: 지시 정보 및 BOM */}
         <div className="space-y-6 lg:col-span-2">

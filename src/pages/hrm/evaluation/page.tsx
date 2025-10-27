@@ -1,20 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { Button, Select } from "@/shared/ui";
 
 export default function HRMEvaluation() {
-  const [setCurrentTime] = useState(new Date());
   const [selectedPeriod, setSelectedPeriod] = useState("2024-Q1");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const evaluationData = [
     {
@@ -374,7 +366,7 @@ export default function HRMEvaluation() {
               onChange={(e) => setDepartmentFilter(e.target.value)}
             />
             <div className="flex items-end">
-              <Button variant="secondary" size="md" className="w-full">
+              <Button variant="secondary" size="default" className="w-full">
                 <i className="ri-search-line mr-2"></i>
                 조회
               </Button>
@@ -625,7 +617,7 @@ export default function HRMEvaluation() {
                           <span
                             className={`text-xl font-bold ${getScoreColor(score as number)}`}
                           >
-                            {score}
+                            {String(score)}
                           </span>
                         </div>
                       ),

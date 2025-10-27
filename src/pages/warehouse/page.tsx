@@ -3,7 +3,7 @@ import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
 export default function WarehouseDashboard() {
-  const { showSuccess } = useNotification();
+  const { showSuccess, showInfo } = useNotification();
 
   const headerConfig = {
     moduleTitle: "창고 관리",

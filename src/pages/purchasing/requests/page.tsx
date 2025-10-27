@@ -174,7 +174,7 @@ export default function PurchaseRequests() {
                 승인
               </Button>
               <Button
-                variant="danger"
+                variant="destructive"
                 size="sm"
                 onClick={() => handleReject(row.requestId)}
               >
