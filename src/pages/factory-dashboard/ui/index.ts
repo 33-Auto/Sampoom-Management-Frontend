@@ -1,1 +1,0 @@
-export { FactoryDashboard } from "./FactoryDashboard";
