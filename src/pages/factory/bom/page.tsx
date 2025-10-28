@@ -150,6 +150,15 @@ export default function FactoryBOM() {
   //   console.log('Create BOM');
   // };
 
+  //! TODO: BOM 생성 라우팅 확인해보기
+  // const handleEditBOM = (bom: any) => {
+  //   navigate(`/factory/bom/edit/${bom.id}`);
+  // };
+
+  // const handleCreateBOM = () => {
+  //   navigate('/factory/bom/create');
+  // };
+
   const handleDeleteSelected = () => {
     if (selectedBOMs.length === 0) {
       showError("오류", "삭제할 BOM을 선택해주세요.");
