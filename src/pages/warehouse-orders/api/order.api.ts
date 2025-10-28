@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchClient } from "@/shared/api";
 
 export const getRequestedOrders = async () => {
-  const { data, error } = await fetchClient.GET("/api/order/requested", {
+  const { data, error } = await fetchClient.GET("/api/order/requested" as any, {
     params: { query: { from: "warehouse" } },
   });
 

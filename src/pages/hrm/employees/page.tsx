@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui";
-import { Input } from "@/shared/ui";
-import { Select } from "@/shared/ui";
+
+import { Button, Input, Select } from "@/shared/ui";
 
 interface Employee {
   id: string;
@@ -26,7 +25,6 @@ interface Employee {
 
 export default function HRMEmployees() {
   const navigate = useNavigate();
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -55,13 +53,6 @@ export default function HRMEmployees() {
       return "알 수 없음";
     }
   };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const employees: Employee[] = [
     {
@@ -425,7 +416,7 @@ export default function HRMEmployees() {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => navigate("/hrm/attendance")}
+              onClick={async () => navigate("/hrm/attendance")}
             >
               <i className="ri-time-line mr-2"></i>
               근태 현황

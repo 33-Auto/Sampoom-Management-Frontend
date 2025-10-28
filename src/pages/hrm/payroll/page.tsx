@@ -1,25 +1,14 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui";
-import { Input } from "@/shared/ui";
-import { Select } from "@/shared/ui";
+import { useState } from "react";
+
+import { Button, Input, Select } from "@/shared/ui";
 
 export default function HRMPayroll() {
-  const navigate = useNavigate();
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7),
   );
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [showPayrollModal, setShowPayrollModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const payrollData = [
     {
@@ -300,7 +289,7 @@ export default function HRMPayroll() {
               onChange={(e) => setDepartmentFilter(e.target.value)}
             />
             <div className="flex items-end">
-              <Button variant="secondary" size="md" className="w-full">
+              <Button variant="secondary" size="default" className="w-full">
                 <i className="ri-search-line mr-2"></i>
                 조회
               </Button>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { login, useAuthStore } from "@/entities/user";
-import type { LoginRequest, LoginResponse } from "@/shared/api/models";
+import type { LoginRequest, UserResponse } from "@/shared/api/models";
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export function useLogin() {
   const handleLogin = async (credentials: LoginRequest) => {
     setIsLoading(true);
     try {
-      const data = (await login(credentials)).data as LoginResponse;
+      const data = (await login(credentials)).data as UserResponse;
       console.log("Login response data:", data);
 
       if (data.userName && data.branch && data.workspace) {
