@@ -1,0 +1,1 @@
+export { PartnerMaster } from "./ui";

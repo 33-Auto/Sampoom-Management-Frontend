@@ -1,5 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { RouterProvider } from "react-router";
@@ -24,12 +26,16 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorHandler}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <>
+      <ErrorBoundary FallbackComponent={ErrorHandler}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        </QueryClientProvider>
+      </ErrorBoundary>
+      <Analytics />
+      <SpeedInsights />
+    </>
   );
 };
 App.displayName = "App";

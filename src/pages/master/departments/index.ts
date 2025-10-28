@@ -1,0 +1,1 @@
+export { DepartmentMaster } from "./ui";
