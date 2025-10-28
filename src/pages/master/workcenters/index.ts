@@ -1,1 +1,1 @@
-export { PositionMaster } from "./ui";
+export { PositionMaster, WorkCenterMaster } from "./ui";
