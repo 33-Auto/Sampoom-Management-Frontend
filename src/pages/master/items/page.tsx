@@ -7,25 +7,47 @@ import { Button, Input, Select, Table } from "@/shared/ui";
 export default function ItemMaster() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("전체");
-  const [typeFilter, setTypeFilter] = useState("전체");
-  const [procurementFilter, setProcurementFilter] = useState("전체");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [selectedType, setSelectedType] = useState("전체");
+  const [selectedProcurement, setSelectedProcurement] = useState("전체");
 
   const categoryOptions = [
     { value: "전체", label: "전체 카테고리" },
-    { value: "원자재 > 금속", label: "원자재 > 금속" },
-    { value: "원자재 > 고무", label: "원자재 > 고무" },
-    { value: "원자재 > 전자부품", label: "원자재 > 전자부품" },
-    { value: "반제품 > 플라스틱", label: "반제품 > 플라스틱" },
-    { value: "반제품 > 기계", label: "반제품 > 기계" },
-    { value: "완제품 > 자동차", label: "완제품 > 자동차" },
+    {
+      value: "원자재 > 금속 > 스테인리스",
+      label: "원자재 > 금속 > 스테인리스",
+    },
+    { value: "원자재 > 금속 > 알루미늄", label: "원자재 > 금속 > 알루미늄" },
+    { value: "원자재 > 고무 > 실리콘", label: "원자재 > 고무 > 실리콘" },
+    { value: "원자재 > 전자부품 > 기판", label: "원자재 > 전자부품 > 기판" },
+    {
+      value: "부품 > 안전 > 제동 > 브레이크",
+      label: "부품 > 안전 > 제동 > 브레이크",
+    },
+    {
+      value: "부품 > 섀시 > 현가장치 > 서스펜션",
+      label: "부품 > 섀시 > 현가장치 > 서스펜션",
+    },
+    {
+      value: "부품 > 기계 > 동력전달 > 기어박스",
+      label: "부품 > 기계 > 동력전달 > 기어박스",
+    },
+    {
+      value: "부품 > 전기 > 조명 > LED모듈",
+      label: "부품 > 전기 > 조명 > LED모듈",
+    },
+    { value: "부품 > 내장 > 시트 > 쿠션", label: "부품 > 내장 > 시트 > 쿠션" },
+    {
+      value: "완제품 > 자동차부품 > 엔진",
+      label: "완제품 > 자동차부품 > 엔진",
+    },
+    { value: "완제품 > 산업기계 > 펌프", label: "완제품 > 산업기계 > 펌프" },
   ];
 
   const typeOptions = [
     { value: "전체", label: "전체 유형" },
     { value: "원자재", label: "원자재" },
-    { value: "반제품", label: "반제품" },
-    { value: "완제품", label: "완제품" },
+    { value: "부품", label: "부품" },
   ];
 
   const procurementOptions = [
@@ -39,13 +61,12 @@ export default function ItemMaster() {
     const matchesSearch =
       item.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.itemCode?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "전체" ||
-      item.category?.includes(categoryFilter.split(" > ")[1]);
-    const matchesType = typeFilter === "전체" || item.itemType === typeFilter;
+    const matchesCategory = selectedCategory === "전체" || true;
+    const matchesType =
+      selectedType === "전체" || item.itemType === selectedType;
     const matchesProcurement =
-      procurementFilter === "전체" ||
-      item.procurementType === procurementFilter;
+      selectedProcurement === "전체" ||
+      item.procurementType === selectedProcurement;
     return (
       matchesSearch && matchesCategory && matchesType && matchesProcurement
     );
@@ -64,9 +85,7 @@ export default function ItemMaster() {
           className={`rounded-full px-2 py-1 text-xs font-medium ${
             value === "원자재"
               ? "bg-blue-100 text-blue-800"
-              : value === "반제품"
-                ? "bg-green-100 text-green-800"
-                : "bg-purple-100 text-purple-800"
+              : "bg-green-100 text-green-800"
           }`}
         >
           {value}
@@ -95,7 +114,7 @@ export default function ItemMaster() {
       key: "leadTime",
       title: "리드 타임",
       width: "120px",
-      render: (value: any, row: any) => {
+      render: (_: any, row: any) => {
         if (row.procurementType === "구매") {
           return (
             <div className="text-center">
@@ -197,7 +216,6 @@ export default function ItemMaster() {
 
   return (
     <>
-      {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -291,18 +309,18 @@ export default function ItemMaster() {
           />
           <Select
             options={categoryOptions}
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           />
           <Select
             options={typeOptions}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
           />
           <Select
             options={procurementOptions}
-            value={procurementFilter}
-            onChange={(e) => setProcurementFilter(e.target.value)}
+            value={selectedProcurement}
+            onChange={(e) => setSelectedProcurement(e.target.value)}
           />
           <div className="flex space-x-2">
             <Button
