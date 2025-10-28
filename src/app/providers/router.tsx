@@ -1,33 +1,59 @@
+/* eslint-disable import/order */
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-// Auth pages
-import Home from "@/pages/home/page";
+// ============================================================================
+// Public Pages - 인증 없이 접근 가능한 페이지
+// ============================================================================
+import { Home } from "@/pages/home";
 import { Login } from "@/pages/login/ui";
-import BomCreate from "@/pages/master/bom/create/page";
-import BomMaster from "@/pages/master/bom/page";
-import DepartmentMaster from "@/pages/master/departments/page";
-import ItemCreate from "@/pages/master/items/create/page";
-import ItemMaster from "@/pages/master/items/page";
-import PartnerMaster from "@/pages/master/partners/page";
-import PositionMaster from "@/pages/master/positions/page";
-import RoutingCreate from "@/pages/master/routings/create/page";
-import RoutingMaster from "@/pages/master/routings/page";
-import WorkCenterCreate from "@/pages/master/workcenters/create/page";
-import WorkCenterMaster from "@/pages/master/workcenters/page";
-import { Notfound } from "@/pages/Notfound/Notfound";
-import WorkOrderDetail from "@/pages/production/orders/detail/page";
-import WorkOrders from "@/pages/production/orders/page";
-import ProductionPlanning from "@/pages/production/planning/page";
-import PurchaseOrders from "@/pages/purchasing/orders/page";
-import PurchaseRequests from "@/pages/purchasing/requests/page";
 import Register from "@/pages/register/ui/Register";
-import SalesOrders from "@/pages/sales/orders/page";
+import { Notfound } from "@/pages/Notfound/Notfound";
+
+// ============================================================================
+// Master Pages - 기준 정보 관리 모듈
+// ============================================================================
+import { BomMasterPage as BomMaster } from "@/pages/master/bom";
+import { CreateBOM as BomCreate } from "@/pages/master/bom/create";
+import { DepartmentMaster } from "@/pages/master/departments";
+import { ItemMaster } from "@/pages/master/items";
+import { ItemCreate } from "@/pages/master/items/create";
+import { PartnerMaster } from "@/pages/master/partners";
+import { PositionMaster } from "@/pages/master/positions";
+import { RoutingMaster } from "@/pages/master/routings";
+import { RoutingCreate } from "@/pages/master/routings/create";
+import { WorkCenterMaster } from "@/pages/master/workcenters";
+import { CreateWorkCenter as WorkCenterCreate } from "@/pages/master/workcenters/create";
+
+// ============================================================================
+// Production Pages - 생산 관리 모듈
+// ============================================================================
+import { WorkOrders } from "@/pages/production/orders";
+import { WorkOrderDetail } from "@/pages/production/orders/detail";
+import { ProductionPlanning } from "@/pages/production/planning";
+
+// ============================================================================
+// Purchasing Pages - 구매 관리 모듈
+// ============================================================================
+import { PurchaseOrders } from "@/pages/purchasing/orders";
+import { PurchaseRequests } from "@/pages/purchasing/requests";
+
+// ============================================================================
+// Sales Pages - 판매 관리 모듈
+// ============================================================================
+import { SalesOrders } from "@/pages/sales/orders";
+
+// ============================================================================
+// WMS Pages - 창고 관리 모듈
+// ============================================================================
 import { loader as warehouseInventoryLoader } from "@/pages/wms/inventory/api/loader";
-import InventoryDashboard from "@/pages/wms/inventory/page";
-import ShippingTodos from "@/pages/wms/shipping/page";
-// Layouts
+import { InventoryDashboard } from "@/pages/wms/inventory";
+import { ShippingTodos } from "@/pages/wms/shipping";
+
+// ============================================================================
+// Layouts - 각 모듈별 레이아웃 컴포넌트
+// ============================================================================
 import HRMLayout from "@/widgets/Layout/HRMLayout";
 import MasterLayout from "@/widgets/Layout/MasterLayout";
 import ProductionLayout from "@/widgets/Layout/ProductionLayout";
@@ -35,15 +61,29 @@ import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import SalesLayout from "@/widgets/Layout/SalesLayout";
 import WMSLayout from "@/widgets/Layout/WMSLayout";
 
-// loaders
+// ============================================================================
+// HRM Pages - 인사 관리 모듈 (지연 로딩)
+// ============================================================================
+const HRMEmployees = lazy(async () => ({
+  default: (await import("@/pages/hrm/employees")).HRMEmployees,
+}));
+const HRMPayroll = lazy(async () => ({
+  default: (await import("@/pages/hrm/payroll")).HRMPayroll,
+}));
+const HRMAttendance = lazy(async () => ({
+  default: (await import("@/pages/hrm/attendance")).HRMAttendance,
+}));
+const HRMEvaluation = lazy(async () => ({
+  default: (await import("@/pages/hrm/evaluation")).HRMEvaluation,
+}));
 
-// HRM Pages - lazy loading
-const HRMEmployees = lazy(async () => import("@/pages/hrm/employees/page"));
-const HRMPayroll = lazy(async () => import("@/pages/hrm/payroll/page"));
-const HRMAttendance = lazy(async () => import("@/pages/hrm/attendance/page"));
-const HRMEvaluation = lazy(async () => import("@/pages/hrm/evaluation/page"));
-
+// ============================================================================
+// Routes Configuration - 라우트 설정
+// ============================================================================
 const routes: RouteObject[] = [
+  // ----------------------------------------------------------------------------
+  // Public Routes - 공개 페이지
+  // ----------------------------------------------------------------------------
   {
     path: "/",
     element: <Home />,
@@ -61,7 +101,9 @@ const routes: RouteObject[] = [
     element: <Register />,
   },
 
-  // Master routes with nested layout using Outlet
+  // ----------------------------------------------------------------------------
+  // Master Module - 기준 정보 관리
+  // ----------------------------------------------------------------------------
   {
     path: "/master",
     element: <MasterLayout />,
@@ -80,7 +122,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // Sales routes with nested layout
+  // ----------------------------------------------------------------------------
+  // Sales Module - 판매 관리
+  // ----------------------------------------------------------------------------
   {
     path: "/sales",
     element: <SalesLayout />,
@@ -96,7 +140,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // WMS routes with nested layout
+  // ----------------------------------------------------------------------------
+  // WMS Module - 창고 관리
+  // ----------------------------------------------------------------------------
   {
     path: "/wms",
     element: <WMSLayout />,
@@ -116,7 +162,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // Production routes with nested layout
+  // ----------------------------------------------------------------------------
+  // Production Module - 생산 관리
+  // ----------------------------------------------------------------------------
   {
     path: "/production",
     element: <ProductionLayout />,
@@ -140,7 +188,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // Purchasing routes with nested layout
+  // ----------------------------------------------------------------------------
+  // Purchasing Module - 구매 관리
+  // ----------------------------------------------------------------------------
   {
     path: "/purchasing",
     element: <PurchasingLayout />,
@@ -160,7 +210,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // HRM Routes with nested layout
+  // ----------------------------------------------------------------------------
+  // HRM Module - 인사 관리 (지연 로딩)
+  // ----------------------------------------------------------------------------
   {
     path: "/hrm",
     element: <HRMLayout />,
@@ -184,7 +236,9 @@ const routes: RouteObject[] = [
     ],
   },
 
-  // Warehouse routes
+  // ----------------------------------------------------------------------------
+  // Warehouse Module - 창고 대시보드 (지연 로딩)
+  // ----------------------------------------------------------------------------
   {
     path: "/warehouse",
     element: <Navigate to="/warehouse/dashboard" replace />,
@@ -192,7 +246,9 @@ const routes: RouteObject[] = [
   {
     path: "/warehouse/dashboard",
     lazy: async () => {
-      const { default: Component } = await import("@/pages/warehouse/page");
+      const { WarehouseDashboard: Component } = await import(
+        "@/pages/warehouse"
+      );
       return { Component };
     },
   },
@@ -207,15 +263,17 @@ const routes: RouteObject[] = [
   {
     path: "/warehouse/inventory",
     lazy: async () => {
-      const { default: Component } = await import(
-        "@/pages/warehouse/inventory/page"
+      const { WarehouseInventory: Component } = await import(
+        "@/pages/warehouse/inventory"
       );
       return { Component };
     },
     loader: warehouseInventoryLoader,
   },
 
-  // Factory routes
+  // ----------------------------------------------------------------------------
+  // Factory Module - 생산 관리 (지연 로딩)
+  // ----------------------------------------------------------------------------
   {
     path: "/factory",
     element: <Navigate to="/factory/dashboard" replace />,
@@ -223,15 +281,15 @@ const routes: RouteObject[] = [
   {
     path: "/factory/dashboard",
     lazy: async () => {
-      const { default: Component } = await import("@/pages/factory/page");
+      const { FactoryDashboard: Component } = await import("@/pages/factory");
       return { Component };
     },
   },
   {
     path: "/factory/orders",
     lazy: async () => {
-      const { default: Component } = await import(
-        "@/pages/factory/orders/page"
+      const { FactoryOrders: Component } = await import(
+        "@/pages/factory/orders"
       );
       return { Component };
     },
@@ -248,26 +306,32 @@ const routes: RouteObject[] = [
   {
     path: "/factory/bom",
     lazy: async () => {
-      const { default: Component } = await import("@/pages/factory/bom/page");
+      const { FactoryBOM: Component } = await import("@/pages/factory/bom");
       return { Component };
     },
   },
   {
     path: "/factory/employees",
     lazy: async () => {
-      const { default: Component } = await import(
-        "@/pages/factory/employees/page"
+      const { FactoryEmployees: Component } = await import(
+        "@/pages/factory/employees"
       );
       return { Component };
     },
   },
 
+  // ----------------------------------------------------------------------------
+  // Not Found - 404 페이지
+  // ----------------------------------------------------------------------------
   {
     path: "*",
     element: <Notfound />,
   },
 ];
 
+// ============================================================================
+// Create Router - 라우터 생성 및 내보내기
+// ============================================================================
 const router = createBrowserRouter(routes);
 
 export default router;

@@ -1,0 +1,1 @@
+export { WorkOrderDetail } from "./WorkOrderDetail";
