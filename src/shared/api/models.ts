@@ -4,16 +4,50 @@ import type { components } from "./v1";
 type Schemas = components["schemas"];
 
 // Auth
-// export type LoginRequest = Schemas["LoginRequest"];
-// export type LoginResponse = Schemas["LoginResponse"];
-// export type SignupRequest = Schemas["SignupRequest"];
-// export type SignupResponse = Schemas["SignupResponse"];
+export type LoginRequest = Schemas["LoginRequest"];
 
-// // User
-// export type UserResponse = Schemas["UserResponse"];
+// LoginResponse from OpenAPI doesn't have all fields we need
+export interface LoginResponse {
+  userId?: number;
+  userName?: string;
+  email?: string;
+  role?: string;
+  workspace?: string;
+  branch?: string;
+  position?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresIn?: number;
+}
 
-// // Mock
-// export type ApiResponseSignupResponse = Schemas["ApiResponseSignupResponse"];
+// UserResponse for auth store
+export interface UserResponse {
+  userId?: number;
+  userName?: string;
+  email?: string;
+  role?: string;
+  workspace?: string;
+  branch?: string;
+  position?: string;
+}
+
+//! TODO: 가입 OPENAPI로 변경
+export interface SignupRequest {
+  email: string;
+  password: string;
+  userName: string;
+  workspace: string;
+  branch: string;
+  position: string;
+}
+
+export interface SignupResponse {
+  userId: number;
+  userName: string;
+  email: string;
+}
+
+// Mock
 export type ApiResponseLoginResponse = Schemas["ApiResponseLoginResponse"];
 
 // Factory

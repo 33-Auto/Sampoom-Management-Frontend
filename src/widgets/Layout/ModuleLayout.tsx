@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -10,7 +11,7 @@ export interface NavItem {
   active?: boolean;
 }
 
-export interface ModuleLayoutProps extends PropsWithChildren {
+interface ModuleLayoutProps extends PropsWithChildren {
   moduleTitle: string;
   moduleDescription: string;
   moduleIcon: string;
@@ -37,7 +38,7 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
     moduleColor,
     userRole,
     userEmail,
-    navItems: []
+    navItems: [],
   };
 
   return (
@@ -50,5 +51,3 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
 };
 
 export { ModuleLayout, type ModuleLayoutProps };
-
-

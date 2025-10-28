@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -11,12 +12,20 @@ const PurchasingLayout: React.FC = () => {
     moduleColor: "bg-red-600",
     userRole: "구매 관리자",
     userEmail: "purchasing@company.com",
-    navItems: []
+    navItems: [],
   };
 
   const navItems = [
-    { path: "/purchasing/requests", label: "구매 요청", icon: "ri-file-add-line" },
-    { path: "/purchasing/orders", label: "구매 주문", icon: "ri-file-check-line" }
+    {
+      path: "/purchasing/requests",
+      label: "구매 요청",
+      icon: "ri-file-add-line",
+    },
+    {
+      path: "/purchasing/orders",
+      label: "구매 주문",
+      icon: "ri-file-check-line",
+    },
   ];
 
   return (
@@ -31,4 +40,3 @@ const PurchasingLayout: React.FC = () => {
 };
 
 export default PurchasingLayout;
-

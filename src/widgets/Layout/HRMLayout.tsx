@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -11,14 +12,18 @@ const HRMLayout: React.FC = () => {
     moduleColor: "bg-teal-600",
     userRole: "인사 담당자",
     userEmail: "hr@company.com",
-    navItems: []
+    navItems: [],
   };
 
   const navItems = [
     { path: "/hrm/employees", label: "직원 관리", icon: "ri-user-line" },
-    { path: "/hrm/payroll", label: "급여 관리", icon: "ri-money-dollar-circle-line" },
+    {
+      path: "/hrm/payroll",
+      label: "급여 관리",
+      icon: "ri-money-dollar-circle-line",
+    },
     { path: "/hrm/attendance", label: "근태 관리", icon: "ri-time-line" },
-    { path: "/hrm/evaluation", label: "평가 관리", icon: "ri-star-line" }
+    { path: "/hrm/evaluation", label: "평가 관리", icon: "ri-star-line" },
   ];
 
   return (
@@ -33,5 +38,3 @@ const HRMLayout: React.FC = () => {
 };
 
 export default HRMLayout;
-
-

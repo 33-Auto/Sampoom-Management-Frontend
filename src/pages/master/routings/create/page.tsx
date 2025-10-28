@@ -1,13 +1,9 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/shared/ui';
-import { Input } from '@/shared/ui';
-import { Select } from '@/shared/ui';
-import ModuleHeader from '@/widgets/Header/ModuleHeader';
-import NavigationTabs from '@/widgets/Header/NavigationTabs';
-import { useNotification } from '@/app/providers/NotificationContext';
-import { workCenterMasterData } from '@/mocks/factoryData';
+import { useNotification } from "@/app/providers/NotificationContext";
+import { workCenterMasterData } from "@/mocks/factoryData";
+import { Button, Input, Select } from "@/shared/ui";
 
 export default function RoutingCreate() {
   const navigate = useNavigate();
@@ -15,67 +11,67 @@ export default function RoutingCreate() {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    itemCode: '',
-    itemName: '',
-    version: '1.0',
-    status: 'active',
-    description: ''
+    itemCode: "",
+    itemName: "",
+    version: "1.0",
+    status: "active",
+    description: "",
   });
 
   const [processes, setProcesses] = useState([
     {
       id: 1,
       sequence: 1,
-      processName: '',
-      workCenter: '',
-      setupTime: '',
-      processTime: '',
-      waitTime: '',
-      description: ''
-    }
+      processName: "",
+      workCenter: "",
+      setupTime: "",
+      processTime: "",
+      waitTime: "",
+      description: "",
+    },
   ]);
 
   // 품목 마스터 데이터 (실제로는 API에서 가져와야 함)
   const itemMasterData = [
-    { value: '', label: '품목을 선택하세요' },
-    { value: 'ITEM001', label: 'ITEM001 - 정밀 가공 부품' },
-    { value: 'ITEM002', label: 'ITEM002 - 스테인리스 볼트' },
-    { value: 'ITEM003', label: 'ITEM003 - 알루미늄 하우징' },
-    { value: 'ITEM004', label: 'ITEM004 - 전자 센서 모듈' },
-    { value: 'ITEM005', label: 'ITEM005 - 플라스틱 커버' }
+    { value: "", label: "품목을 선택하세요" },
+    { value: "ITEM001", label: "ITEM001 - 정밀 가공 부품" },
+    { value: "ITEM002", label: "ITEM002 - 스테인리스 볼트" },
+    { value: "ITEM003", label: "ITEM003 - 알루미늄 하우징" },
+    { value: "ITEM004", label: "ITEM004 - 전자 센서 모듈" },
+    { value: "ITEM005", label: "ITEM005 - 플라스틱 커버" },
   ];
 
   const statusOptions = [
-    { value: 'active', label: '활성' },
-    { value: 'review', label: '검토중' },
-    { value: 'inactive', label: '비활성' }
+    { value: "active", label: "활성" },
+    { value: "review", label: "검토중" },
+    { value: "inactive", label: "비활성" },
   ];
 
   // 작업장 옵션을 작업장 마스터 데이터에서 가져오기
   const workCenterOptions = [
-    { value: '', label: '작업장 선택' },
+    { value: "", label: "작업장 선택" },
     ...workCenterMasterData
-      .filter(wc => wc.status === '가동')
-      .map(wc => ({
+      .filter((wc) => wc.status === "가동")
+      .map((wc) => ({
         value: wc.workCenterCode,
-        label: `${wc.workCenterCode} - ${wc.workCenterName}`
-      }))
+        label: `${wc.workCenterCode} - ${wc.workCenterName}`,
+      })),
   ];
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
 
     // 품목 선택 시 품목명 자동 설정
-    if (field === 'itemCode') {
-      const selectedItem = itemMasterData.find(item => item.value === value);
+    if (field === "itemCode") {
+      const selectedItem = itemMasterData.find((item) => item.value === value);
       if (selectedItem) {
-        const itemName = selectedItem.label.split(' - ')[1] || '';
-        setFormData(prev => ({
+        const itemName = selectedItem.label.split(" - ")[1] || "";
+        setFormData((prev) => ({
           ...prev,
-          itemName: itemName
+          itemName: itemName,
         }));
       }
     }
@@ -85,7 +81,7 @@ export default function RoutingCreate() {
     const updatedProcesses = [...processes];
     updatedProcesses[index] = {
       ...updatedProcesses[index],
-      [field]: value
+      [field]: value,
     };
     setProcesses(updatedProcesses);
   };
@@ -94,12 +90,12 @@ export default function RoutingCreate() {
     const newProcess = {
       id: Date.now(),
       sequence: processes.length + 1,
-      processName: '',
-      workCenter: '',
-      setupTime: '',
-      processTime: '',
-      waitTime: '',
-      description: ''
+      processName: "",
+      workCenter: "",
+      setupTime: "",
+      processTime: "",
+      waitTime: "",
+      description: "",
     };
     setProcesses([...processes, newProcess]);
   };
@@ -110,7 +106,7 @@ export default function RoutingCreate() {
       // 순서 재정렬
       const reorderedProcesses = updatedProcesses.map((process, i) => ({
         ...process,
-        sequence: i + 1
+        sequence: i + 1,
       }));
       setProcesses(reorderedProcesses);
     }
@@ -124,21 +120,26 @@ export default function RoutingCreate() {
   };
 
   const getTotalLeadTime = () => {
-    return processes.reduce((total, process) => total + calculateTotalTime(process), 0);
+    return processes.reduce(
+      (total, process) => total + calculateTotalTime(process),
+      0,
+    );
   };
 
   const validateForm = () => {
     if (!formData.itemCode) {
-      showError('입력 오류', '품목을 선택해주세요.');
+      showError("입력 오류", "품목을 선택해주세요.");
       return false;
     }
-    
-    const incompleteProcesses = processes.filter(p => !p.processName || !p.workCenter);
+
+    const incompleteProcesses = processes.filter(
+      (p) => !p.processName || !p.workCenter,
+    );
     if (incompleteProcesses.length > 0) {
-      showError('입력 오류', '모든 공정의 필수 정보를 입력해주세요.');
+      showError("입력 오류", "모든 공정의 필수 정보를 입력해주세요.");
       return false;
     }
-    
+
     return true;
   };
 
@@ -148,40 +149,31 @@ export default function RoutingCreate() {
     setLoading(true);
     try {
       // 실제 API 호출 시뮬레이션
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      showSuccess('등록 완료', '공정이 성공적으로 등록되었습니다.');
-      navigate('/master/routings');
-    } catch (error) {
-      showError('등록 실패', '공정 등록 중 오류가 발생했습니다.');
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      showSuccess("등록 완료", "공정이 성공적으로 등록되었습니다.");
+      navigate("/master/routings");
+    } catch {
+      showError("등록 실패", "공정 등록 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    navigate('/master/routings');
+    navigate("/master/routings");
   };
 
   return (
-    <div className="min-h-screen bg-bg-white dark:bg-bg-black transition-colors duration-200">
-      <Header
-        moduleTitle="기준정보 관리"
-        moduleDescription="품목, BOM, 거래처, 작업장, 공정 등 기준 정보를 관리합니다"
-        moduleIcon="ri-settings-3-line"
-        moduleColor="bg-main-500"
-        userRole="Master Data Manager"
-        userEmail="admin@company.com"
-      />
-
+    <>
       <div className="p-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto max-w-4xl">
           {/* 페이지 헤더 */}
           <div className="mb-8">
-            <div className="flex items-center space-x-3 mb-2">
+            <div className="mb-2 flex items-center space-x-3">
               <button
                 onClick={handleCancel}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400"></i>
               </button>
@@ -195,19 +187,21 @@ export default function RoutingCreate() {
           </div>
 
           {/* 등록 폼 */}
-          <div className="bg-white dark:bg-bg-card-black rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
             <div className="space-y-8">
               {/* 기본 정보 */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
                   기본 정보
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <Select
                     label="품목 선택"
                     options={itemMasterData}
                     value={formData.itemCode}
-                    onChange={(e) => handleInputChange('itemCode', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("itemCode", e.target.value)
+                    }
                     helperText="공정을 적용할 품목을 선택하세요"
                   />
                   <Input
@@ -221,33 +215,36 @@ export default function RoutingCreate() {
                     label="버전"
                     placeholder="1.0"
                     value={formData.version}
-                    onChange={(e) => handleInputChange('version', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("version", e.target.value)
+                    }
                     helperText="공정의 버전을 입력하세요"
                   />
                   <Select
                     label="상태"
                     options={statusOptions}
                     value={formData.status}
-                    onChange={(e) => handleInputChange('status', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("status", e.target.value)
+                    }
                   />
                 </div>
               </div>
 
               {/* 공정 순서 */}
               <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                     공정 순서
                   </h3>
                   <div className="flex items-center space-x-4">
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      총 리드타임: <span className="font-medium">{getTotalLeadTime()}분</span>
+                      총 리드타임:{" "}
+                      <span className="font-medium">
+                        {getTotalLeadTime()}분
+                      </span>
                     </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={addProcess}
-                    >
+                    <Button variant="secondary" size="sm" onClick={addProcess}>
                       <i className="ri-add-line mr-2"></i>
                       공정 추가
                     </Button>
@@ -256,10 +253,13 @@ export default function RoutingCreate() {
 
                 <div className="space-y-4">
                   {processes.map((process, index) => (
-                    <div key={process.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                      <div className="flex items-center justify-between mb-4">
+                    <div
+                      key={process.id}
+                      className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                    >
+                      <div className="mb-4 flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-main-500 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-main-500 text-sm font-medium text-white">
                             {process.sequence}
                           </div>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
@@ -272,28 +272,38 @@ export default function RoutingCreate() {
                             size="sm"
                             onClick={() => removeProcess(index)}
                           >
-                            <i className="ri-delete-bin-line text-red-5
-
-0"></i>
+                            <i className="ri-delete-bin-line text-red-5 0"></i>
                           </Button>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <Input
                           label="공정명"
                           placeholder="CNC 가공"
                           value={process.processName}
-                          onChange={(e) => handleProcessChange(index, 'processName', e.target.value)}
+                          onChange={(e) =>
+                            handleProcessChange(
+                              index,
+                              "processName",
+                              e.target.value,
+                            )
+                          }
                         />
                         <div className="w-full">
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                             작업장
                           </label>
                           <Select
                             options={workCenterOptions}
                             value={process.workCenter}
-                            onChange={(e) => handleProcessChange(index, 'workCenter', e.target.value)}
+                            onChange={(e) =>
+                              handleProcessChange(
+                                index,
+                                "workCenter",
+                                e.target.value,
+                              )
+                            }
                           />
                         </div>
                         <Input
@@ -301,28 +311,46 @@ export default function RoutingCreate() {
                           type="number"
                           placeholder="30"
                           value={process.setupTime}
-                          onChange={(e) => handleProcessChange(index, 'setupTime', e.target.value)}
+                          onChange={(e) =>
+                            handleProcessChange(
+                              index,
+                              "setupTime",
+                              e.target.value,
+                            )
+                          }
                         />
                         <Input
                           label="가공시간 (분)"
                           type="number"
                           placeholder="120"
                           value={process.processTime}
-                          onChange={(e) => handleProcessChange(index, 'processTime', e.target.value)}
+                          onChange={(e) =>
+                            handleProcessChange(
+                              index,
+                              "processTime",
+                              e.target.value,
+                            )
+                          }
                         />
                         <Input
                           label="대기시간 (분)"
                           type="number"
                           placeholder="15"
                           value={process.waitTime}
-                          onChange={(e) => handleProcessChange(index, 'waitTime', e.target.value)}
+                          onChange={(e) =>
+                            handleProcessChange(
+                              index,
+                              "waitTime",
+                              e.target.value,
+                            )
+                          }
                         />
                         <div className="flex items-end">
                           <div className="w-full">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                               소계 (분)
                             </label>
-                            <div className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-900 dark:text-gray-100">
+                            <div className="rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
                               {calculateTotalTime(process)}
                             </div>
                           </div>
@@ -330,15 +358,21 @@ export default function RoutingCreate() {
                       </div>
 
                       <div className="mt-4">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                           공정 설명
                         </label>
                         <textarea
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-main-500 focus:border-transparent dark:bg-gray-800 dark:text-gray-100"
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-main-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
                           rows={2}
                           placeholder="공정에 대한 상세 설명을 입력하세요"
                           value={process.description}
-                          onChange={(e) => handleProcessChange(index, 'description', e.target.value)}
+                          onChange={(e) =>
+                            handleProcessChange(
+                              index,
+                              "description",
+                              e.target.value,
+                            )
+                          }
                         />
                       </div>
                     </div>
@@ -348,20 +382,22 @@ export default function RoutingCreate() {
 
               {/* 추가 정보 */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
                   추가 정보
                 </h3>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       공정 설명
                     </label>
                     <textarea
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-main-500 focus:border-transparent dark:bg-gray-800 dark:text-gray-100"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-main-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
                       rows={4}
                       placeholder="전체 공정에 대한 설명을 입력하세요"
                       value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("description", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -369,7 +405,7 @@ export default function RoutingCreate() {
             </div>
 
             {/* 버튼 영역 */}
-            <div className="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="mt-8 flex justify-end space-x-4 border-t border-gray-200 pt-6 dark:border-gray-700">
               <Button
                 variant="secondary"
                 onClick={handleCancel}
@@ -388,6 +424,6 @@ export default function RoutingCreate() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
