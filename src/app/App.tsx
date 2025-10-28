@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { RouterProvider } from "react-router";
@@ -33,6 +34,7 @@ const App: React.FC = () => {
         </QueryClientProvider>
       </ErrorBoundary>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 };

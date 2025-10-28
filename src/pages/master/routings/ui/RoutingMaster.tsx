@@ -175,7 +175,7 @@ export const RoutingMaster = () => {
                 placeholder="품목명, 코드 또는 공정 코드 검색..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="md:col-span-2"
+                // className="md:col-span-2"
               />
               <Select
                 options={statusOptions}
