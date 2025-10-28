@@ -3,7 +3,7 @@
 // import { useNotification } from '@/app/providers/NotificationContext';
 // import { Button, Input, Select } from '@/shared/ui';
 
-// export const FactoryMaterials = () => {() {
+// export const FactoryMaterials = () => {
 //   const [currentTime, setCurrentTime] = useState(new Date());
 //   const [searchTerm, setSearchTerm] = useState('');
 //   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -543,3 +543,5 @@
 //     </div>
 //   );
 // };
+
+export {};

@@ -3,7 +3,7 @@
 // import { useNotification } from "@/app/providers/NotificationContext";
 // import { Button, Select } from "@/shared/ui";
 
-// export const MaterialMaster = () => {() {
+// export const MaterialMaster = () => {
 //   const [searchTerm, setSearchTerm] = useState("");
 //   const [categoryFilter, setCategoryFilter] = useState("all");
 //   const [typeFilter, setTypeFilter] = useState("all");
@@ -573,3 +573,5 @@
 //     </div>
 //   );
 // };
+
+export {};
