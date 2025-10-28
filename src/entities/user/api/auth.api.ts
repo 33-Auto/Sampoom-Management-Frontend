@@ -16,7 +16,7 @@ export const login = async (credentials: LoginRequest) => {
 
 // 회원가입 로직 수행
 export const register = async (userInfo: SignupRequest) => {
-  const { data, error } = await fetchClient.POST("/api/user/signup", {
+  const { data, error } = await fetchClient.POST("/api/user/signup" as any, {
     body: userInfo,
   });
 
