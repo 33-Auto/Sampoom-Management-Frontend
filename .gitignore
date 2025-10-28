@@ -249,5 +249,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node,react
 
-# 예시파일 제거
-src-will-replace/
+# 예시 파일 예외
+src-will-replace

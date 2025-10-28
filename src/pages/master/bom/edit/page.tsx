@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useNotification } from "@/app/providers/NotificationContext";
 import { materialMasterData } from "@/mocks/factoryData";
 import { Button, Input } from "@/shared/ui";
 
@@ -17,6 +18,8 @@ interface BOMItem {
 const EditBOM: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { showSuccess, showError } = useNotification();
+  const [loading, setLoading] = useState(false);
   const [bomCode, setBomCode] = useState("");
   const [bomName, setBomName] = useState("");
   const [version, setVersion] = useState("");
@@ -72,6 +75,7 @@ const EditBOM: React.FC = () => {
   };
 
   const handleQuantityChange = (id: string, quantity: number) => {
+    if (quantity < 1) return;
     setBomItems(
       bomItems.map((item) =>
         item.id === id
@@ -87,24 +91,33 @@ const EditBOM: React.FC = () => {
 
   const totalCost = bomItems.reduce((sum, item) => sum + item.totalCost, 0);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!bomCode || !bomName || bomItems.length === 0) {
-      alert("필수 정보를 모두 입력해주세요.");
+      showError("입력 오류", "필수 정보를 모두 입력해주세요.");
       return;
     }
 
-    // 저장 로직 구현
-    console.log("BOM 수정 저장:", {
-      id,
-      bomCode,
-      bomName,
-      version,
-      description,
-      items: bomItems,
-      totalCost,
-    });
+    setLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    navigate("/master/bom");
+      console.log("BOM 수정 저장:", {
+        id,
+        bomCode,
+        bomName,
+        version,
+        description,
+        items: bomItems,
+        totalCost,
+      });
+
+      showSuccess("수정 완료", "BOM이 성공적으로 수정되었습니다.");
+      navigate("/master/bom");
+    } catch {
+      showError("수정 실패", "BOM 수정 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,10 +131,13 @@ const EditBOM: React.FC = () => {
           <Button
             variant="outline"
             onClick={async () => navigate("/master/bom")}
+            disabled={loading}
           >
             취소
           </Button>
-          <Button onClick={handleSave}>저장</Button>
+          <Button onClick={handleSave} loading={loading}>
+            저장
+          </Button>
         </div>
       </div>
 

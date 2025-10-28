@@ -52,8 +52,8 @@ export default function PartnerMaster() {
     },
     { key: "businessNumber", title: "사업자번호", width: "130px" },
     { key: "representative", title: "대표자", width: "100px" },
-    { key: "contactPerson", title: "담당자", width: "100px" },
-    { key: "phone", title: "연락처", width: "130px" },
+    { key: "contact", title: "연락처", width: "150px" },
+    { key: "phone", title: "전화번호", width: "130px" },
     {
       key: "status",
       title: "상태",
