@@ -349,12 +349,12 @@ export const RoutingMaster = () => {
           • <strong>동적 계산:</strong> 생산 수량 × 단위당 가공시간 + 준비시간 +
           대기시간
         </p>
-        <p className="другой">
+        <p className="mb-1">
           • <strong>작업장 연계:</strong> 각 공정의 작업장 능력을 반영한 정확한
           스케줄링
         </p>
         <p>
-          • <strong>실시간 업데 مورد:</strong> 공정 변경 시 품목 마스터의 생산
+          • <strong>실시간 업데이트:</strong> 공정 변경 시 품목 마스터의 생산
           리드 타임 자동 갱신
         </p>
       </InfoBox>
