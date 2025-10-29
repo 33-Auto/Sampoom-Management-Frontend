@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Button,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { useDepartmentStats } from "../model/useDepartmentStats";
 
 export const DepartmentMaster = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,6 +108,12 @@ export const DepartmentMaster = () => {
     },
   ];
 
+  const statusOptions = [
+    { value: "전체", label: "전체 상태" },
+    { value: "활성", label: "활성" },
+    { value: "비활성", label: "비활성" },
+  ];
+
   const filteredData = departmentData.filter((dept) => {
     const matchesSearch =
       dept.deptName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -146,125 +160,95 @@ export const DepartmentMaster = () => {
     { key: "createdDate", title: "생성일", width: "120px" },
   ];
 
-  // 통계 계산
-  const totalDepts = departmentData.length;
-  const activeDepts = departmentData.filter(
-    (dept) => dept.status === "활성",
-  ).length;
-  const totalEmployees = departmentData.reduce(
-    (sum, dept) => sum + dept.employeeCount,
-    0,
-  );
-  const totalBudget = departmentData.reduce(
-    (sum, dept) => sum + dept.budget,
-    0,
-  );
+  // 통계 계산 (훅으로 분리)
+  const { totalDepts, activeDepts, totalEmployees, totalBudget } =
+    useDepartmentStats(departmentData);
 
   return (
     <>
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-organization-chart text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 부서</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDepts}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-organization-chart"
+          label="전체 부서"
+          value={totalDepts}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">활성 부서</p>
-              <p className="text-2xl font-bold text-gray-900">{activeDepts}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-check-line"
+          label="활성 부서"
+          value={activeDepts}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <i className="ri-team-line text-xl text-purple-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">총 인원</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalEmployees}명
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-team-line"
+          label="총 인원"
+          value={`${totalEmployees}명`}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-money-dollar-circle-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">총 예산</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ₩{(totalBudget / 100000000).toFixed(1)}억
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-money-dollar-circle-line"
+          label="총 예산"
+          value={`₩${(totalBudget / 100000000).toFixed(1)}억`}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
       </div>
+
+      {/* 필터 및 검색 */}
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="부서명, 코드, 부서장으로 검색..."
+        filters={[
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+        ]}
+        actions={
+          <>
+            <Button variant="outline">
+              <i className="ri-download-line mr-2"></i>
+              내보내기
+            </Button>
+            <Button variant="default">
+              <i className="ri-add-line mr-2"></i>새 부서 등록
+            </Button>
+          </>
+        }
+      />
 
       {/* 부서 관리 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">부서 목록</h2>
-            <div className="flex space-x-3">
-              <Button variant="outline">
-                <i className="ri-download-line mr-2"></i>
-                내보내기
-              </Button>
-              <Button variant="default">
-                <i className="ri-add-line mr-2"></i>새 부서 등록
-              </Button>
-            </div>
-          </div>
-
-          {/* 검색 및 필터 */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <Input
-              placeholder="부서명, 코드, 부서장으로 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-              options={[
-                { value: "전체", label: "전체 상태" },
-                { value: "활성", label: "활성" },
-                { value: "비활성", label: "비활성" },
-              ]}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            />
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          </div>
-        </div>
-
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 부서가 없습니다"
-          />
-        </div>
-      </div>
+      <TableSection
+        title="부서 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 부서
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 부서가 없습니다"
+        />
+      </TableSection>
     </>
   );
 };

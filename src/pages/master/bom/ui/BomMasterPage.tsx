@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { bomMasterData } from "@/mocks/factoryData";
-import { Table, Button, Input, Select } from "@/shared/ui";
+import { useTableFilter } from "@/shared/lib/hooks";
+import {
+  Table,
+  Button,
+  StatCard,
+  InfoBox,
+  SearchFilterBar,
+  TableSection,
+} from "@/shared/ui";
+
+import { useBomStats } from "../model/useBomStats";
 
 export const BomMasterPage = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [selectedStatus, setSelectedStatus] = useState("전체");
   const [selectedComplexity, setSelectedComplexity] = useState("전체");
@@ -56,17 +65,21 @@ export const BomMasterPage = () => {
     { value: "복잡", label: "복잡 (16개 이상 구성품)" },
   ];
 
-  const filteredData = bomMasterData.filter((bom) => {
-    const matchesSearch =
-      bom.bomName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bom.bomId?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "전체" || true; // category 필터링은 임시로 비활성화
-    const matchesStatus =
-      selectedStatus === "전체" || bom.status === selectedStatus;
-    const matchesComplexity = selectedComplexity === "전체" || true; // complexity 필터링은 임시로 비활성화
-    return (
-      matchesSearch && matchesCategory && matchesStatus && matchesComplexity
-    );
+  //! data에 대해서 filter를 적용하는 것을 추상화함 ( 커스텀 훅 )
+  //! 이것을 다른 페이지까지 확장해서 추상화 하는 것은 아직 보류
+  //! 서버사이드에서 해결할 수 있는 문제가 있기 때문
+  const { searchTerm, setSearchTerm, filteredData } = useTableFilter({
+    data: bomMasterData,
+    searchFields: ["bomId", "bomName"],
+    filters: [
+      {
+        key: "status",
+        state: selectedStatus,
+        setState: setSelectedStatus,
+        options: statusOptions,
+        matchFn: (item, value) => value === "전체" || item.status === value,
+      },
+    ],
   });
 
   const columns = [
@@ -146,27 +159,15 @@ export const BomMasterPage = () => {
     },
   ];
 
-  // 통계 계산
-  const totalBoms = bomMasterData.length;
-  const activeBoms = bomMasterData.filter(
-    (bom) => bom.status === "활성",
-  ).length;
-  const reviewingBoms = bomMasterData.filter(
-    (bom) => bom.status === "검토중",
-  ).length;
-  const avgCost =
-    bomMasterData.reduce(
-      (sum, bom) =>
-        sum + bom.materials.reduce((s, m) => s + (m.unitCost || 0), 0),
-      0,
-    ) / totalBoms;
-  const avgComponents = Math.round(
-    bomMasterData.reduce((sum, bom) => sum + (bom.materials?.length || 0), 0) /
-      totalBoms,
-  );
-  const complexBoms = bomMasterData.filter(
-    (bom) => (bom.materials?.length || 0) >= 16,
-  ).length;
+  // 통계 계산 (훅으로 분리)
+  const {
+    totalBoms,
+    activeBoms,
+    reviewingBoms,
+    avgCost,
+    avgComponents,
+    complexBoms,
+  } = useBomStats(bomMasterData);
 
   return (
     <>
@@ -174,123 +175,82 @@ export const BomMasterPage = () => {
       <div className="p-6">
         {/* 통계 카드 */}
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-main-100">
-                <i className="ri-file-list-3-line text-xl text-main-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">전체 BOM</p>
-                <p className="text-2xl font-bold text-gray-900">{totalBoms}</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-file-list-3-line"
+            label="전체 BOM"
+            value={totalBoms}
+            iconBgColor="bg-main-100"
+            iconColor="text-main-600"
+          />
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                <i className="ri-check-line text-xl text-green-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">활성 BOM</p>
-                <p className="text-2xl font-bold text-gray-900">{activeBoms}</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-check-line"
+            label="활성 BOM"
+            value={activeBoms}
+            iconBgColor="bg-green-100"
+            iconColor="text-green-600"
+          />
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-                <i className="ri-time-line text-xl text-yellow-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">검토중</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {reviewingBoms}
-                </p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-time-line"
+            label="검토중"
+            value={reviewingBoms}
+            iconBgColor="bg-yellow-100"
+            iconColor="text-yellow-600"
+          />
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <i className="ri-money-dollar-circle-line text-xl text-purple-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">평균 비용</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ₩{Math.round(avgCost).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-money-dollar-circle-line"
+            label="평균 비용"
+            value={`₩${Math.round(avgCost).toLocaleString()}`}
+            iconBgColor="bg-purple-100"
+            iconColor="text-purple-600"
+          />
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                <i className="ri-stack-line text-xl text-blue-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">평균 구성품</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {avgComponents}개
-                </p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-stack-line"
+            label="평균 구성품"
+            value={`${avgComponents}개`}
+            iconBgColor="bg-blue-100"
+            iconColor="text-blue-600"
+          />
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                <i className="ri-alert-line text-xl text-red-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">복잡 BOM</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {complexBoms}
-                </p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-alert-line"
+            label="복잡 BOM"
+            value={complexBoms}
+            iconBgColor="bg-red-100"
+            iconColor="text-red-600"
+          />
         </div>
 
         {/* 필터 및 검색 */}
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-            <div className="w-full">
-              <Input
-                placeholder="BOM 코드 또는 제품명 검색..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-
-            <div className="w-full">
-              <Select
-                options={categoryOptions}
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              />
-            </div>
-
-            <div className="w-full">
-              <Select
-                options={statusOptions}
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-              />
-            </div>
-
-            <div className="w-full">
-              <Select
-                options={complexityOptions}
-                value={selectedComplexity}
-                onChange={(e) => setSelectedComplexity(e.target.value)}
-              />
-            </div>
-
-            <div className="flex space-x-2">
+        <SearchFilterBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="BOM 코드 또는 제품명 검색..."
+          filters={[
+            {
+              key: "category",
+              value: selectedCategory,
+              options: categoryOptions,
+              onChange: setSelectedCategory,
+            },
+            {
+              key: "status",
+              value: selectedStatus,
+              options: statusOptions,
+              onChange: setSelectedStatus,
+            },
+            {
+              key: "complexity",
+              value: selectedComplexity,
+              options: complexityOptions,
+              onChange: setSelectedComplexity,
+            },
+          ]}
+          actions={
+            <>
               <Button
                 variant="default"
                 size="sm"
@@ -303,90 +263,63 @@ export const BomMasterPage = () => {
                 <i className="ri-download-line mr-2"></i>
                 내보내기
               </Button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        />
 
         {/* BOM 관리 안내 */}
-        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <div className="flex items-start">
-            <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-              <i className="ri-information-line text-sm text-blue-600"></i>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-900">
-                BOM 관리 안내
-              </h3>
-              <div className="mt-2 text-sm text-blue-800">
-                <p className="mb-1">
-                  • <strong>BOM 구조:</strong> 제품을 구성하는 모든 원자재,
-                  부품의 계층적 구조와 수량 정보
-                </p>
-                <p className="mb-1">
-                  • <strong>원가 계산:</strong> 구성품의 표준 단가를 기반으로
-                  제품 총 원가 자동 계산
-                </p>
-                <p>
-                  • <strong>생산 계획:</strong> MRP 시스템에서 소요량 계산과
-                  생산 일정 수립의 기준 데이터
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <InfoBox type="info" title="BOM 관리 안내">
+          <p className="mb-1">
+            • <strong>BOM 구조:</strong> 제품을 구성하는 모든 원자재, 부품의
+            계층적 구조와 수량 정보
+          </p>
+          <p className="mb-1">
+            • <strong>원가 계산:</strong> 구성품의 표준 단가를 기반으로 제품 총
+            원가 자동 계산
+          </p>
+          <p>
+            • <strong>생산 계획:</strong> MRP 시스템에서 소요량 계산과 생산 일정
+            수립의 기준 데이터
+          </p>
+        </InfoBox>
 
         {/* 복잡도별 관리 안내 */}
-        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <div className="flex items-start">
-            <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
-              <i className="ri-check-line text-sm text-green-600"></i>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-green-900">
-                BOM 복잡도 분류
-              </h3>
-              <div className="mt-2 text-sm text-green-800">
-                <p className="mb-1">
-                  • <strong>단순 BOM:</strong> 1-5개 구성품, 단일 레벨 구조,
-                  빠른 승인 프로세스
-                </p>
-                <p className="mb-1">
-                  • <strong>보통 BOM:</strong> 6-15개 구성품, 2-3 레벨 구조,
-                  표준 검토 프로세스
-                </p>
-                <p>
-                  • <strong>복잡 BOM:</strong> 16개 이상 구성품, 다단계 구조,
-                  엄격한 승인 프로세스
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <InfoBox type="success" title="BOM 복잡도 분류">
+          <p className="mb-1">
+            • <strong>단순 BOM:</strong> 1-5개 구성품, 단일 레벨 구조, 빠른 승인
+            프로세스
+          </p>
+          <p className="mb-1">
+            • <strong>보통 BOM:</strong> 6-15개 구성품, 2-3 레벨 구조, 표준 검토
+            프로세스
+          </p>
+          <p>
+            • <strong>복잡 BOM:</strong> 16개 이상 구성품, 다단계 구조, 엄격한
+            승인 프로세스
+          </p>
+        </InfoBox>
 
         {/* BOM 목록 테이블 */}
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">BOM 목록</h2>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">
-                  총 {filteredData.length}개 BOM
-                </span>
-                <Button variant="secondary" size="sm">
-                  <i className="ri-refresh-line mr-2"></i>
-                  새로고침
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="p-6">
-            <Table
-              columns={columns}
-              data={filteredData}
-              emptyText="조건에 맞는 BOM이 없습니다"
-            />
-          </div>
-        </div>
+        <TableSection
+          title="BOM 목록"
+          metaRight={
+            <span className="text-sm text-gray-500">
+              총 {filteredData.length}개 BOM
+            </span>
+          }
+          actionsRight={
+            <Button variant="secondary" size="sm">
+              <i className="ri-refresh-line mr-2"></i>
+              새로고침
+            </Button>
+          }
+        >
+          <Table
+            columns={columns}
+            data={filteredData}
+            emptyText="조건에 맞는 BOM이 없습니다"
+          />
+        </TableSection>
       </div>
     </>
   );

@@ -2,11 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { workCenterMasterData } from "@/mocks/factoryData";
-import { Button, Input, Select, Table } from "@/shared/ui";
+import { useTableFilter } from "@/shared/lib/hooks";
+import {
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { useWorkCenterStats } from "../model/useWorkCenterStats";
 
 export const WorkCenterMaster = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("전체");
   const [statusFilter, setStatusFilter] = useState("전체");
 
@@ -24,14 +33,25 @@ export const WorkCenterMaster = () => {
     { value: "중단", label: "중단" },
   ];
 
-  const filteredData = workCenterMasterData.filter((item) => {
-    const matchesSearch =
-      item.workCenterName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.workCenterCode?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = typeFilter === "전체" || item.type === typeFilter;
-    const matchesStatus =
-      statusFilter === "전체" || item.status === statusFilter;
-    return matchesSearch && matchesType && matchesStatus;
+  const { searchTerm, setSearchTerm, filteredData } = useTableFilter({
+    data: workCenterMasterData,
+    searchFields: ["workCenterName", "workCenterCode"],
+    filters: [
+      {
+        key: "type",
+        state: typeFilter,
+        setState: setTypeFilter,
+        options: typeOptions,
+        matchFn: (item, value) => value === "전체" || item.type === value,
+      },
+      {
+        key: "status",
+        state: statusFilter,
+        setState: setStatusFilter,
+        options: statusOptions,
+        matchFn: (item, value) => value === "전체" || item.status === value,
+      },
+    ],
   });
 
   const columns = [
@@ -106,140 +126,91 @@ export const WorkCenterMaster = () => {
     },
   ];
 
-  // 통계 계산
-  const totalWorkCenters = workCenterMasterData.length;
-  const activeWorkCenters = workCenterMasterData.filter(
-    (item) => item.status === "가동",
-  ).length;
-  const internalWorkCenters = workCenterMasterData.filter(
-    (item) => item.type === "내부 설비",
-  ).length;
-  const externalWorkCenters = workCenterMasterData.filter(
-    (item) => item.type === "외주 가공처",
-  ).length;
-  const totalCapacity = workCenterMasterData
-    .filter((item) => item.status === "가동")
-    .reduce(
-      (sum, item) => sum + (item.dailyCapacity * item.efficiency) / 100,
-      0,
-    );
-  const avgHourlyRate = Math.round(
-    workCenterMasterData.reduce((sum, item) => sum + item.hourlyRate, 0) /
-      totalWorkCenters,
-  );
+  // 통계 계산 (훅으로 분리)
+  const {
+    totalWorkCenters,
+    activeWorkCenters,
+    internalWorkCenters,
+    externalWorkCenters,
+    totalCapacity,
+    avgHourlyRate,
+  } = useWorkCenterStats(workCenterMasterData);
 
   return (
     <>
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-main-100">
-              <i className="ri-tools-line text-xl text-main-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 작업장</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalWorkCenters}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-tools-line"
+          label="전체 작업장"
+          value={totalWorkCenters}
+          iconBgColor="bg-main-100"
+          iconColor="text-main-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-play-circle-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">가동 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {activeWorkCenters}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-play-circle-line"
+          label="가동 중"
+          value={activeWorkCenters}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-building-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">내부 설비</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {internalWorkCenters}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-building-line"
+          label="내부 설비"
+          value={internalWorkCenters}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-              <i className="ri-truck-line text-xl text-orange-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">외주 가공처</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {externalWorkCenters}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-truck-line"
+          label="외주 가공처"
+          value={externalWorkCenters}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <i className="ri-time-line text-xl text-purple-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">총 가용능력</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {Math.round(totalCapacity)}h
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-time-line"
+          label="총 가용능력"
+          value={`${Math.round(totalCapacity)}h`}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-100">
-              <i className="ri-money-dollar-circle-line text-xl text-teal-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                평균 시간당 비용
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                ₩{avgHourlyRate.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-money-dollar-circle-line"
+          label="평균 시간당 비용"
+          value={`₩${avgHourlyRate.toLocaleString()}`}
+          iconBgColor="bg-teal-100"
+          iconColor="text-teal-600"
+        />
       </div>
 
       {/* 필터 및 검색 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          <Input
-            placeholder="작업장명 또는 코드 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={typeOptions}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <div></div>
-          <div className="flex space-x-2">
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="작업장명 또는 코드 검색..."
+        filters={[
+          {
+            key: "type",
+            value: typeFilter,
+            options: typeOptions,
+            onChange: setTypeFilter,
+          },
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+        ]}
+        actions={
+          <>
             <Button
               variant="default"
               size="sm"
@@ -252,62 +223,47 @@ export const WorkCenterMaster = () => {
               <i className="ri-download-line mr-2"></i>
               내보내기
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* 작업장 능력 관리 안내 */}
-      <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-        <div className="flex items-start">
-          <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-            <i className="ri-information-line text-sm text-blue-600"></i>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-900">
-              작업장 능력 관리 안내
-            </h3>
-            <div className="mt-2 text-sm text-blue-800">
-              <p className="mb-1">
-                • <strong>가용 능력:</strong> 일일 최대 가동 시간 × 효율(%) =
-                실제 생산 가능 시간
-              </p>
-              <p className="mb-1">
-                • <strong>시간당 비용:</strong> 노무비 + 제조경비 + 설비
-                감가상각비 포함
-              </p>
-              <p>
-                • <strong>생산 스케줄링:</strong> 각 작업장의 능력을 기반으로
-                최적 일정 계획 수립
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <InfoBox type="info" title="작업장 능력 관리 안내">
+        <p className="mb-1">
+          • <strong>가용 능력:</strong> 일일 최대 가동 시간 × 효율(%) = 실제
+          생산 가능 시간
+        </p>
+        <p className="mb-1">
+          • <strong>시간당 비용:</strong> 노무비 + 제조경비 + 설비 감가상각비
+          포함
+        </p>
+        <p>
+          • <strong>생산 스케줄링:</strong> 각 작업장의 능력을 기반으로 최적
+          일정 계획 수립
+        </p>
+      </InfoBox>
 
       {/* 작업장 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">작업장 목록</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 작업장
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 작업장이 없습니다"
-          />
-        </div>
-      </div>
+      <TableSection
+        title="작업장 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 작업장
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 작업장이 없습니다"
+        />
+      </TableSection>
     </>
   );
 };

@@ -1,7 +1,15 @@
 import { useState } from "react";
 
 import { partnerMasterData } from "@/mocks/factoryData";
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Button,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { usePartnerStats } from "../model/usePartnerStats";
 
 export const PartnerMaster = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,95 +80,69 @@ export const PartnerMaster = () => {
     },
   ];
 
-  // 통계 계산
-  const totalPartners = partnerMasterData.length;
-  const activePartners = partnerMasterData.filter(
-    (partner) => partner.status === "활성",
-  ).length;
-  const customers = partnerMasterData.filter(
-    (partner) => partner.partnerType === "고객사",
-  ).length;
-  const suppliers = partnerMasterData.filter(
-    (partner) => partner.partnerType === "공급업체",
-  ).length;
+  // 통계 계산 (훅으로 분리)
+  const { totalPartners, activePartners, customers, suppliers } =
+    usePartnerStats(partnerMasterData);
 
   return (
     <>
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-building-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 거래처</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalPartners}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-building-line"
+          label="전체 거래처"
+          value={totalPartners}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">활성 거래처</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {activePartners}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-check-line"
+          label="활성 거래처"
+          value={activePartners}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <i className="ri-user-line text-xl text-purple-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">고객사</p>
-              <p className="text-2xl font-bold text-gray-900">{customers}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-user-line"
+          label="고객사"
+          value={customers}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-truck-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">공급업체</p>
-              <p className="text-2xl font-bold text-gray-900">{suppliers}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-truck-line"
+          label="공급업체"
+          value={suppliers}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
       </div>
 
       {/* 필터 및 검색 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Input
-            placeholder="거래처명 또는 코드 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={typeOptions}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <div className="flex space-x-2">
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="거래처명 또는 코드 검색..."
+        filters={[
+          {
+            key: "type",
+            value: typeFilter,
+            options: typeOptions,
+            onChange: setTypeFilter,
+          },
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+        ]}
+        actions={
+          <>
             <Button variant="default" size="sm">
               <i className="ri-add-line mr-2"></i>
               신규 등록
@@ -169,34 +151,31 @@ export const PartnerMaster = () => {
               <i className="ri-download-line mr-2"></i>
               내보내기
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* 거래처 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">거래처 목록</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 거래처
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 거래처가 없습니다"
-          />
-        </div>
-      </div>
+      <TableSection
+        title="거래처 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 거래처
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 거래처가 없습니다"
+        />
+      </TableSection>
     </>
   );
 };
