@@ -199,7 +199,7 @@ export const ItemMaster = () => {
     productionItems,
     avgPurchaseLeadTime,
     avgProductionLeadTime,
-  } = useItemStats(materialMasterData as any);
+  } = useItemStats(materialMasterData);
 
   return (
     <>
