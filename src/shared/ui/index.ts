@@ -3,3 +3,7 @@ export { Input } from "./Input";
 export { Table } from "./Table";
 export { Select } from "./Select";
 export { ErrorHandler } from "./ErrorHandler";
+export { StatCard } from "./StatCard";
+export { InfoBox } from "./InfoBox";
+export { SearchFilterBar } from "./SearchFilterBar";
+export { TableSection } from "./TableSection";

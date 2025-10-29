@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { materialMasterData } from "@/mocks/factoryData";
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { useItemStats } from "../model/useItemStats";
 
 export const ItemMaster = () => {
   const navigate = useNavigate();
@@ -182,147 +191,96 @@ export const ItemMaster = () => {
     },
   ];
 
-  // 통계 계산
-  const totalItems = materialMasterData.length;
-  const activeItems = materialMasterData.filter(
-    (item) => item.status === "활성",
-  ).length;
-  const purchaseItems = materialMasterData.filter(
-    (item) => item.procurementType === "구매",
-  ).length;
-  const productionItems = materialMasterData.filter(
-    (item) => item.procurementType === "생산",
-  ).length;
-  const avgPurchaseLeadTime = Math.round(
-    materialMasterData
-      .filter(
-        (item) => item.procurementType === "구매" && item.purchaseLeadTime,
-      )
-      .reduce((sum, item) => sum + (item.purchaseLeadTime || 0), 0) /
-      materialMasterData.filter(
-        (item) => item.procurementType === "구매" && item.purchaseLeadTime,
-      ).length,
-  );
-  const avgProductionLeadTime = Math.round(
-    materialMasterData
-      .filter(
-        (item) => item.procurementType === "생산" && item.productionLeadTime,
-      )
-      .reduce((sum, item) => sum + (item.productionLeadTime || 0), 0) /
-      materialMasterData.filter(
-        (item) => item.procurementType === "생산" && item.productionLeadTime,
-      ).length,
-  );
+  // 통계 계산 (훅으로 분리)
+  const {
+    totalItems,
+    activeItems,
+    purchaseItems,
+    productionItems,
+    avgPurchaseLeadTime,
+    avgProductionLeadTime,
+  } = useItemStats(materialMasterData as any);
 
   return (
     <>
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-main-100">
-              <i className="ri-database-line text-xl text-main-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 품목</p>
-              <p className="text-2xl font-bold text-gray-900">{totalItems}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-database-line"
+          label="전체 품목"
+          value={totalItems}
+          iconBgColor="bg-main-100"
+          iconColor="text-main-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">활성 품목</p>
-              <p className="text-2xl font-bold text-gray-900">{activeItems}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-check-line"
+          label="활성 품목"
+          value={activeItems}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-              <i className="ri-shopping-cart-line text-xl text-orange-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">구매 품목</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {purchaseItems}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-shopping-cart-line"
+          label="구매 품목"
+          value={purchaseItems}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-100">
-              <i className="ri-tools-line text-xl text-teal-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">생산 품목</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {productionItems}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-tools-line"
+          label="생산 품목"
+          value={productionItems}
+          iconBgColor="bg-teal-100"
+          iconColor="text-teal-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-time-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">평균 구매 L/T</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {avgPurchaseLeadTime}일
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-time-line"
+          label="평균 구매 L/T"
+          value={`${avgPurchaseLeadTime}일`}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <i className="ri-timer-line text-xl text-purple-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">평균 생산 L/T</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {avgProductionLeadTime}일
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-timer-line"
+          label="평균 생산 L/T"
+          value={`${avgProductionLeadTime}일`}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
       </div>
 
       {/* 필터 및 검색 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          <Input
-            placeholder="품목명 또는 코드 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={categoryOptions}
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          />
-          <Select
-            options={typeOptions}
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-          />
-          <Select
-            options={procurementOptions}
-            value={selectedProcurement}
-            onChange={(e) => setSelectedProcurement(e.target.value)}
-          />
-          <div className="flex space-x-2">
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="품목명 또는 코드 검색..."
+        filters={[
+          {
+            key: "category",
+            value: selectedCategory,
+            options: categoryOptions,
+            onChange: (value) => setSelectedCategory(value),
+          },
+          {
+            key: "type",
+            value: selectedType,
+            options: typeOptions,
+            onChange: (value) => setSelectedType(value),
+          },
+          {
+            key: "procurement",
+            value: selectedProcurement,
+            options: procurementOptions,
+            onChange: (value) => setSelectedProcurement(value),
+          },
+        ]}
+        actions={
+          <>
             <Button
               variant="default"
               size="sm"
@@ -335,90 +293,63 @@ export const ItemMaster = () => {
               <i className="ri-download-line mr-2"></i>
               내보내기
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* 리드 타임 관리 안내 */}
-      <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-        <div className="flex items-start">
-          <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-            <i className="ri-information-line text-sm text-blue-600"></i>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-900">
-              리드 타임 관리 안내
-            </h3>
-            <div className="mt-2 text-sm text-blue-800">
-              <p className="mb-1">
-                • <strong>구매 리드 타임:</strong> 발주부터 입고까지의 총 일수
-                (공급처 생산 + 운송 + 검사 시간 포함)
-              </p>
-              <p className="mb-1">
-                • <strong>생산 리드 타임:</strong> 생산 지시부터 완성까지의 총
-                일수 (Setup + 가공 + 대기 시간 포함)
-              </p>
-              <p>
-                • <strong>MRP 시스템:</strong> 이 리드 타임을 기반으로 역방향
-                일정 계획(Backward Scheduling)을 수행합니다
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <InfoBox type="info" title="리드 타임 관리 안내">
+        <p className="mb-1">
+          • <strong>구매 리드 타임:</strong> 발주부터 입고까지의 총 일수 (공급처
+          생산 + 운송 + 검사 시간 포함)
+        </p>
+        <p className="mb-1">
+          • <strong>생산 리드 타임:</strong> 생산 지시부터 완성까지의 총 일수
+          (Setup + 가공 + 대기 시간 포함)
+        </p>
+        <p>
+          • <strong>MRP 시스템:</strong> 이 리드 타임을 기반으로 역방향 일정
+          계획(Backward Scheduling)을 수행합니다
+        </p>
+      </InfoBox>
 
       {/* 공정 기반 리드 타임 자동 계산 안내 */}
-      <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-        <div className="flex items-start">
-          <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
-            <i className="ri-check-line text-sm text-green-600"></i>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-green-900">
-              공정 기반 리드 타임 자동 계산
-            </h3>
-            <div className="mt-2 text-sm text-green-800">
-              <p className="mb-1">
-                • <strong>생산 리드 타임:</strong> 공정 마스터의 준비시간 +
-                가공시간 + 대기시간을 자동 합산
-              </p>
-              <p className="mb-1">
-                • <strong>동적 계산:</strong> 생산 수량에 따라 실시간으로 총
-                소요시간 계산
-              </p>
-              <p>
-                • <strong>정확한 일정:</strong> 작업장별 능력을 반영한 정밀한
-                생산 스케줄링 지원
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <InfoBox type="success" title="공정 기반 리드 타임 자동 계산">
+        <p className="mb-1">
+          • <strong>생산 리드 타임:</strong> 공정 마스터의 준비시간 + 가공시간 +
+          대기시간을 자동 합산
+        </p>
+        <p className="mb-1">
+          • <strong>동적 계산:</strong> 생산 수량에 따라 실시간으로 총 소요시간
+          계산
+        </p>
+        <p>
+          • <strong>정확한 일정:</strong> 작업장별 능력을 반영한 정밀한 생산
+          스케줄링 지원
+        </p>
+      </InfoBox>
 
       {/* 품목 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">품목 목록</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 품목
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 품목이 없습니다"
-          />
-        </div>
-      </div>
+      <TableSection
+        title="품목 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 품목
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 품목이 없습니다"
+        />
+      </TableSection>
     </>
   );
 };

@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { routingMasterData } from "@/mocks/factoryData";
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { useRoutingStats } from "../model/useRoutingStats";
 
 export const RoutingMaster = () => {
   const navigate = useNavigate();
@@ -85,19 +94,9 @@ export const RoutingMaster = () => {
     },
   ];
 
-  // 통계 계산
-  const totalRoutings = routingMasterData.length;
-  const activeRoutings = routingMasterData.filter(
-    (item) => item.status === "활성",
-  ).length;
-  const avgLeadTime = Math.round(
-    routingMasterData.reduce((sum, item) => sum + item.totalLeadTime, 0) /
-      totalRoutings,
-  );
-  const avgOperations = Math.round(
-    routingMasterData.reduce((sum, item) => sum + item.operationCount, 0) /
-      totalRoutings,
-  );
+  // 통계 계산 (훅으로 분리)
+  const { totalRoutings, activeRoutings, avgLeadTime, avgOperations } =
+    useRoutingStats(routingMasterData);
 
   return (
     <>
@@ -107,81 +106,53 @@ export const RoutingMaster = () => {
         <div className="lg:col-span-2">
           {/* 통계 카드 */}
           <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-main-100">
-                  <i className="ri-route-line text-xl text-main-600"></i>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">전체 공정</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {totalRoutings}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <StatCard
+              icon="ri-route-line"
+              label="전체 공정"
+              value={totalRoutings}
+              iconBgColor="bg-main-100"
+              iconColor="text-main-600"
+            />
 
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                  <i className="ri-check-line text-xl text-green-600"></i>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">활성 공정</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {activeRoutings}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <StatCard
+              icon="ri-check-line"
+              label="활성 공정"
+              value={activeRoutings}
+              iconBgColor="bg-green-100"
+              iconColor="text-green-600"
+            />
 
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                  <i className="ri-time-line text-xl text-blue-600"></i>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    평균 리드타임
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {avgLeadTime}h
-                  </p>
-                </div>
-              </div>
-            </div>
+            <StatCard
+              icon="ri-time-line"
+              label="평균 리드타임"
+              value={`${avgLeadTime}h`}
+              iconBgColor="bg-blue-100"
+              iconColor="text-blue-600"
+            />
 
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                  <i className="ri-list-check text-xl text-purple-600"></i>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    평균 공정수
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {avgOperations}개
-                  </p>
-                </div>
-              </div>
-            </div>
+            <StatCard
+              icon="ri-list-check"
+              label="평균 공정수"
+              value={`${avgOperations}개`}
+              iconBgColor="bg-purple-100"
+              iconColor="text-purple-600"
+            />
           </div>
 
           {/* 필터 및 검색 */}
-          <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-              <Input
-                placeholder="품목명, 코드 또는 공정 코드 검색..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                // className="md:col-span-2"
-              />
-              <Select
-                options={statusOptions}
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              />
+          <SearchFilterBar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="품목명, 코드 또는 공정 코드 검색..."
+            filters={[
+              {
+                key: "status",
+                value: statusFilter,
+                options: statusOptions,
+                onChange: (value) => setStatusFilter(value),
+              },
+            ]}
+            actions={
               <Button
                 variant="default"
                 size="sm"
@@ -190,35 +161,30 @@ export const RoutingMaster = () => {
                 <i className="ri-add-line mr-2"></i>
                 신규 등록
               </Button>
-            </div>
-          </div>
+            }
+          />
 
           {/* 공정 목록 테이블 */}
-          <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 p-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  공정 목록
-                </h2>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">
-                    총 {filteredData.length}개 공정
-                  </span>
-                  <Button variant="secondary" size="sm">
-                    <i className="ri-refresh-line mr-2"></i>
-                    새로고침
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="p-6">
-              <Table
-                columns={columns}
-                data={filteredData}
-                emptyText="조건에 맞는 공정이 없습니다"
-              />
-            </div>
-          </div>
+          <TableSection
+            title="공정 목록"
+            metaRight={
+              <span className="text-sm text-gray-500">
+                총 {filteredData.length}개 공정
+              </span>
+            }
+            actionsRight={
+              <Button variant="secondary" size="sm">
+                <i className="ri-refresh-line mr-2"></i>
+                새로고침
+              </Button>
+            }
+          >
+            <Table
+              columns={columns}
+              data={filteredData}
+              emptyText="조건에 맞는 공정이 없습니다"
+            />
+          </TableSection>
         </div>
 
         {/* 우측: 공정 상세 정보 */}
@@ -378,32 +344,20 @@ export const RoutingMaster = () => {
       </div>
 
       {/* 공정 관리 안내 */}
-      <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
-        <div className="flex items-start">
-          <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
-            <i className="ri-lightbulb-line text-sm text-green-600"></i>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-green-900">
-              공정 기반 리드 타임 자동 계산
-            </h3>
-            <div className="mt-2 text-sm text-green-800">
-              <p className="mb-1">
-                • <strong>동적 계산:</strong> 생산 수량 × 단위당 가공시간 +
-                준비시간 + 대기시간
-              </p>
-              <p className="mb-1">
-                • <strong>작업장 연계:</strong> 각 공정의 작업장 능력을 반영한
-                정확한 스케줄링
-              </p>
-              <p>
-                • <strong>실시간 업데이트:</strong> 공정 변경 시 품목 마스터의
-                생산 리드 타임 자동 갱신
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <InfoBox type="success" title="공정 기반 리드 타임 자동 계산">
+        <p className="mb-1">
+          • <strong>동적 계산:</strong> 생산 수량 × 단위당 가공시간 + 준비시간 +
+          대기시간
+        </p>
+        <p className="другой">
+          • <strong>작업장 연계:</strong> 각 공정의 작업장 능력을 반영한 정확한
+          스케줄링
+        </p>
+        <p>
+          • <strong>실시간 업데 مورد:</strong> 공정 변경 시 품목 마스터의 생산
+          리드 타임 자동 갱신
+        </p>
+      </InfoBox>
     </>
   );
 };
