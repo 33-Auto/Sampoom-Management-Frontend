@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { materialMasterData } from "@/mocks/factoryData";
 import {
   Button,
   InfoBox,
@@ -11,47 +10,62 @@ import {
   TableSection,
 } from "@/shared/ui";
 
+import { useGetItemsMasterQuery } from "../api/items.api";
+import {
+  useMaterialCategoriesQuery,
+  usePartCategoriesQuery,
+  usePartGroupsQuery,
+} from "../create/api/create.api";
 import { useItemStats } from "../model/useItemStats";
+// Modal-based components removed; using page navigation instead
 
 export const ItemMaster = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const [selectedType, setSelectedType] = useState("전체");
-  const [selectedProcurement, setSelectedProcurement] = useState("전체");
+  const [selectedType, setSelectedType] = useState<"전체" | "원자재" | "부품">(
+    "전체",
+  );
+  // 조달 유형/카테고리 필터는 제거
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 
-  const categoryOptions = [
-    { value: "전체", label: "전체 카테고리" },
-    {
-      value: "원자재 > 금속 > 스테인리스",
-      label: "원자재 > 금속 > 스테인리스",
-    },
-    { value: "원자재 > 금속 > 알루미늄", label: "원자재 > 금속 > 알루미늄" },
-    { value: "원자재 > 고무 > 실리콘", label: "원자재 > 고무 > 실리콘" },
-    { value: "원자재 > 전자부품 > 기판", label: "원자재 > 전자부품 > 기판" },
-    {
-      value: "부품 > 안전 > 제동 > 브레이크",
-      label: "부품 > 안전 > 제동 > 브레이크",
-    },
-    {
-      value: "부품 > 섀시 > 현가장치 > 서스펜션",
-      label: "부품 > 섀시 > 현가장치 > 서스펜션",
-    },
-    {
-      value: "부품 > 기계 > 동력전달 > 기어박스",
-      label: "부품 > 기계 > 동력전달 > 기어박스",
-    },
-    {
-      value: "부품 > 전기 > 조명 > LED모듈",
-      label: "부품 > 전기 > 조명 > LED모듈",
-    },
-    { value: "부품 > 내장 > 시트 > 쿠션", label: "부품 > 내장 > 시트 > 쿠션" },
-    {
-      value: "완제품 > 자동차부품 > 엔진",
-      label: "완제품 > 자동차부품 > 엔진",
-    },
-    { value: "완제품 > 산업기계 > 펌프", label: "완제품 > 산업기계 > 펌프" },
-  ];
+  // API 호출
+  const { data, /* isLoading: _isLoading, */ isError, refetch } =
+    useGetItemsMasterQuery({
+      type: selectedType === "전체" ? "ALL" : selectedType,
+      keyword: searchTerm || undefined,
+      materialCategoryId:
+        selectedType === "원자재" && selectedCategoryId
+          ? Number(selectedCategoryId)
+          : undefined,
+      partCategoryId:
+        selectedType === "부품" && selectedCategoryId
+          ? Number(selectedCategoryId)
+          : undefined,
+      partGroupId:
+        selectedType === "부품" && selectedGroupId
+          ? Number(selectedGroupId)
+          : undefined,
+      page,
+      size,
+    });
+
+  const items = data?.items || [];
+  const totalPages = data?.totalPages ?? 0;
+  const totalElements = data?.totalElements ?? 0;
+
+  // category/group filter options based on type
+  const { data: materialCategories } = useMaterialCategoriesQuery();
+  const { data: partCategories } = usePartCategoriesQuery();
+  const { data: partGroups } = usePartGroupsQuery(
+    selectedType === "부품" && selectedCategoryId
+      ? Number(selectedCategoryId)
+      : undefined,
+  );
+
+  // 카테고리 옵션 제거
 
   const typeOptions = [
     { value: "전체", label: "전체 유형" },
@@ -59,27 +73,10 @@ export const ItemMaster = () => {
     { value: "부품", label: "부품" },
   ];
 
-  const procurementOptions = [
-    { value: "전체", label: "전체 조달 유형" },
-    { value: "구매", label: "구매 (External)" },
-    { value: "생산", label: "생산 (Internal)" },
-    { value: "혼합", label: "혼합 (Both)" },
-  ];
+  // 조달 유형 옵션 제거
 
-  const filteredData = materialMasterData.filter((item) => {
-    const matchesSearch =
-      item.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.itemCode?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "전체" || true;
-    const matchesType =
-      selectedType === "전체" || item.itemType === selectedType;
-    const matchesProcurement =
-      selectedProcurement === "전체" ||
-      item.procurementType === selectedProcurement;
-    return (
-      matchesSearch && matchesCategory && matchesType && matchesProcurement
-    );
-  });
+  // 서버 검색/필터를 사용하므로 클라이언트 필터는 제거
+  const filteredData = items;
 
   const columns = [
     { key: "itemCode", title: "품목 코드", width: "120px" },
@@ -110,9 +107,7 @@ export const ItemMaster = () => {
           className={`rounded-full px-2 py-1 text-xs font-medium ${
             value === "구매"
               ? "bg-orange-100 text-orange-800"
-              : value === "생산"
-                ? "bg-teal-100 text-teal-800"
-                : "bg-indigo-100 text-indigo-800"
+              : "bg-teal-100 text-teal-800"
           }`}
         >
           {value}
@@ -120,73 +115,47 @@ export const ItemMaster = () => {
       ),
     },
     {
-      key: "leadTime",
-      title: "리드 타임",
-      width: "120px",
-      render: (_: any, row: any) => {
-        if (row.procurementType === "구매") {
-          return (
-            <div className="text-center">
-              <div className="text-sm font-medium text-gray-900">
-                {row.purchaseLeadTime}일
-              </div>
-              <div className="text-xs text-gray-500">구매</div>
-            </div>
-          );
-        } else if (row.procurementType === "생산") {
-          return (
-            <div className="text-center">
-              <div className="text-sm font-medium text-gray-900">
-                {row.calculatedProductionLeadTime || row.productionLeadTime}일
-              </div>
-              <div className="text-xs text-gray-500">
-                {row.calculatedProductionLeadTime ? "자동계산" : "수동입력"}
-              </div>
-            </div>
-          );
-        } else if (row.procurementType === "혼합") {
-          return (
-            <div className="text-center">
-              <div className="text-xs text-gray-900">
-                구매: {row.purchaseLeadTime}일
-              </div>
-              <div className="text-xs text-gray-900">
-                생산:{" "}
-                {row.calculatedProductionLeadTime || row.productionLeadTime}일
-              </div>
-            </div>
-          );
-        }
-        return "-";
-      },
+      key: "baseQuantity",
+      title: "기준 수량",
+      width: "100px",
+      render: (value: number) => value || 0,
     },
     { key: "unit", title: "단위", width: "80px" },
     {
-      key: "standardPrice",
-      title: "표준 단가",
-      width: "120px",
-      render: (value: number) => `₩${value?.toLocaleString() || 0}`,
-    },
-    {
-      key: "currentStock",
-      title: "현재고",
+      key: "leadTime",
+      title: "리드 타임",
       width: "100px",
-      render: (value: number, row: any) => `${value || 0} ${row.unit}`,
+      render: (_: any, row: any) => {
+        let leadTime: number | null = null;
+        if (row.procurementType === "구매") {
+          leadTime = row.purchaseLeadTime;
+        } else if (row.procurementType === "생산") {
+          leadTime = row.calculatedProductionLeadTime ?? row.productionLeadTime;
+        }
+        return leadTime ? `${leadTime}일` : "-";
+      },
     },
     {
-      key: "status",
-      title: "상태",
-      width: "80px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "활성"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {value}
-        </span>
+      key: "actions",
+      title: "작업",
+      width: "120px",
+      render: (_: any, row: any) => (
+        <div className="flex space-x-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            aria-label="편집"
+            onClick={(e) => {
+              e.stopPropagation();
+              const type = row.itemType === "원자재" ? "MATERIAL" : "PART";
+              navigate(`/master/items/${type}/${row.id}/edit`, {
+                state: { item: row },
+              });
+            }}
+          >
+            <i className="ri-edit-line" />
+          </Button>
+        </div>
       ),
     },
   ];
@@ -199,10 +168,23 @@ export const ItemMaster = () => {
     productionItems,
     avgPurchaseLeadTime,
     avgProductionLeadTime,
-  } = useItemStats(materialMasterData as any);
+  } = useItemStats(items as any);
 
   return (
     <>
+      {isError && (
+        <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          데이터를 불러오는데 실패했습니다.
+          <Button
+            className="ml-2"
+            variant="default"
+            size="sm"
+            onClick={async () => refetch()}
+          >
+            다시 시도
+          </Button>
+        </div>
+      )}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
         <StatCard
@@ -257,28 +239,82 @@ export const ItemMaster = () => {
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder="품목명 또는 코드 검색..."
-        filters={[
-          {
+        onSearchChange={(v) => {
+          setSearchTerm(v);
+          setPage(0); // 검색 변경 시 1페이지로 이동
+        }}
+        searchPlaceholder="키워드(코드/이름) 검색..."
+        filters={(() => {
+          const list: any[] = [
+            {
+              key: "type",
+              value: selectedType,
+              options: typeOptions,
+              onChange: (value: string) => {
+                setSelectedType(value as "전체" | "원자재" | "부품");
+                setSelectedCategoryId("");
+                setSelectedGroupId("");
+                setPage(0);
+              },
+            },
+          ];
+
+          // Unified Category filter (options depend on type)
+          const categoryOptionsDynamic =
+            selectedType === "원자재"
+              ? [{ value: "", label: "전체 카테고리" }].concat(
+                  (materialCategories || []).map(
+                    (c: { id: number; name: string }) => ({
+                      value: String(c.id),
+                      label: c.name,
+                    }),
+                  ),
+                )
+              : selectedType === "부품"
+                ? [{ value: "", label: "전체 카테고리" }].concat(
+                    (partCategories || []).map(
+                      (c: { categoryId: number; categoryName: string }) => ({
+                        value: String(c.categoryId),
+                        label: c.categoryName,
+                      }),
+                    ),
+                  )
+                : [{ value: "", label: "카테고리 (유형을 먼저 선택)" }];
+
+          list.push({
             key: "category",
-            value: selectedCategory,
-            options: categoryOptions,
-            onChange: (value) => setSelectedCategory(value),
-          },
-          {
-            key: "type",
-            value: selectedType,
-            options: typeOptions,
-            onChange: (value) => setSelectedType(value),
-          },
-          {
-            key: "procurement",
-            value: selectedProcurement,
-            options: procurementOptions,
-            onChange: (value) => setSelectedProcurement(value),
-          },
-        ]}
+            value: selectedCategoryId,
+            options: categoryOptionsDynamic,
+            onChange: (v: string) => {
+              setSelectedCategoryId(v);
+              setSelectedGroupId("");
+              setPage(0);
+            },
+            disabled: selectedType === "전체",
+          });
+
+          // Group filter (only meaningful for PART)
+          const partGrpOptions = [{ value: "", label: "전체 그룹" }].concat(
+            (partGroups || []).map(
+              (g: { groupId: number; groupName: string }) => ({
+                value: String(g.groupId),
+                label: g.groupName,
+              }),
+            ),
+          );
+          list.push({
+            key: "group",
+            value: selectedGroupId,
+            options: partGrpOptions,
+            onChange: (v: string) => {
+              setSelectedGroupId(v);
+              setPage(0);
+            },
+            disabled: !(selectedType === "부품" && selectedCategoryId),
+          });
+
+          return list;
+        })()}
         actions={
           <>
             <Button
@@ -333,15 +369,56 @@ export const ItemMaster = () => {
       <TableSection
         title="품목 목록"
         metaRight={
-          <span className="text-sm text-gray-500">
-            총 {filteredData.length}개 품목
-          </span>
+          <div className="flex items-center gap-3 text-sm text-gray-500">
+            <span>
+              총 {totalElements}개 / 페이지 {page + 1} /{" "}
+              {Math.max(totalPages, 1)}
+            </span>
+            <select
+              className="rounded border border-gray-300 px-2 py-1 text-xs"
+              value={size}
+              onChange={(e) => {
+                setSize(Number(e.target.value));
+                setPage(0);
+              }}
+            >
+              {[10, 20, 50].map((s) => (
+                <option key={s} value={s}>
+                  {s}/page
+                </option>
+              ))}
+            </select>
+          </div>
         }
         actionsRight={
-          <Button variant="secondary" size="sm">
-            <i className="ri-refresh-line mr-2"></i>
-            새로고침
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" size="sm" onClick={async () => refetch()}>
+              <i className="ri-refresh-line mr-2"></i>
+              새로고침
+            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page <= 0}
+              >
+                이전
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  setPage((p) =>
+                    totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
+                  )
+                }
+                disabled={totalPages ? page >= totalPages - 1 : false}
+              >
+                다음
+              </Button>
+            </div>
+          </div>
         }
       >
         <Table

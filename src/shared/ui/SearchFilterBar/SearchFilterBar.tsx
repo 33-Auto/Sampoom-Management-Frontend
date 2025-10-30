@@ -17,6 +17,7 @@ interface SearchFilterBarProps {
     value: string;
     options: SelectOption[];
     onChange: (value: string) => void;
+    disabled?: boolean;
   }>;
   actions?: React.ReactNode;
 }
@@ -42,9 +43,11 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
         {filters.map((filter) => (
           <div key={filter.key} className="w-full">
             <Select
+              label={filter.label}
               options={filter.options}
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
+              disabled={filter.disabled}
             />
           </div>
         ))}

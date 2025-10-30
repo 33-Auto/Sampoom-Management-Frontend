@@ -110,6 +110,12 @@ const routes: RouteObject[] = [
     children: [
       { path: "items", element: <ItemMaster /> },
       { path: "items/create", element: <ItemCreate /> },
+      {
+        path: "items/:type/:id/edit",
+        lazy: async () => ({
+          Component: (await import("@/pages/master/items/edit")).ItemEdit,
+        }),
+      },
       { path: "bom", element: <BomMaster /> },
       { path: "bom/create", element: <BomCreate /> },
       { path: "partners", element: <PartnerMaster /> },
