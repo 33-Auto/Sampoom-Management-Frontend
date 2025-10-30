@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Input, Select } from "@/shared/ui";
+import { Input } from "@/shared/ui/Input";
+import { Select } from "@/shared/ui/Select";
 
 interface SelectOption {
   value: string;
