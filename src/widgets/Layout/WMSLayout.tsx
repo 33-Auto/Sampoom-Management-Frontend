@@ -22,10 +22,11 @@ const WMSLayout: React.FC = () => {
       label: "재고 현황",
       icon: "ri-bar-chart-box-line",
     },
+    { path: "/wms/receiving", label: "입고 관리", icon: "ri-file-list-3-line" },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-purple-600" />
       <div className="p-6">

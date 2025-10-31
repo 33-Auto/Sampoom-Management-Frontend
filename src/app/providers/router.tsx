@@ -12,47 +12,7 @@ import Register from "@/pages/register/ui/Register";
 import { Notfound } from "@/pages/Notfound/Notfound";
 
 // ============================================================================
-// Master Pages - 기준 정보 관리 모듈
-// ============================================================================
-import { BomMasterPage as BomMaster } from "@/pages/master/bom";
-import { CreateBOM as BomCreate } from "@/pages/master/bom/create";
-import { DepartmentMaster } from "@/pages/master/departments";
-import { ItemMaster } from "@/pages/master/items";
-import { ItemCreate } from "@/pages/master/items/create";
-import { PartnerMaster } from "@/pages/master/partners";
-import { PositionMaster } from "@/pages/master/positions";
-import { RoutingMaster } from "@/pages/master/routings";
-import { RoutingCreate } from "@/pages/master/routings/create";
-import { WorkCenterMaster } from "@/pages/master/workcenters";
-import { CreateWorkCenter as WorkCenterCreate } from "@/pages/master/workcenters/create";
-
-// ============================================================================
-// Production Pages - 생산 관리 모듈
-// ============================================================================
-import { WorkOrders } from "@/pages/production/orders";
-import { WorkOrderDetail } from "@/pages/production/orders/detail";
-import { ProductionPlanning } from "@/pages/production/planning";
-
-// ============================================================================
-// Purchasing Pages - 구매 관리 모듈
-// ============================================================================
-import { PurchaseOrders } from "@/pages/purchasing/orders";
-import { PurchaseRequests } from "@/pages/purchasing/requests";
-
-// ============================================================================
-// Sales Pages - 판매 관리 모듈
-// ============================================================================
-import { SalesOrders } from "@/pages/sales/orders";
-
-// ============================================================================
-// WMS Pages - 창고 관리 모듈
-// ============================================================================
-import { loader as warehouseInventoryLoader } from "@/pages/wms/inventory/api/loader";
-import { InventoryDashboard } from "@/pages/wms/inventory";
-import { ShippingTodos } from "@/pages/wms/shipping";
-
-// ============================================================================
-// Layouts - 각 모듈별 레이아웃 컴포넌트
+// Layouts - 각 모듈별 레이아웃 컴포넌트 (즉시 로딩)
 // ============================================================================
 import HRMLayout from "@/widgets/Layout/HRMLayout";
 import MasterLayout from "@/widgets/Layout/MasterLayout";
@@ -60,6 +20,90 @@ import ProductionLayout from "@/widgets/Layout/ProductionLayout";
 import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import SalesLayout from "@/widgets/Layout/SalesLayout";
 import WMSLayout from "@/widgets/Layout/WMSLayout";
+
+// ============================================================================
+// Master Pages - 기준 정보 관리 모듈 (지연 로딩)
+// ============================================================================
+const ItemMaster = lazy(async () => ({
+  default: (await import("@/pages/master/items")).ItemMaster,
+}));
+const ItemCreate = lazy(async () => ({
+  default: (await import("@/pages/master/items/create")).ItemCreate,
+}));
+const BomMaster = lazy(async () => ({
+  default: (await import("@/pages/master/bom")).BomMasterPage,
+}));
+const BomCreate = lazy(async () => ({
+  default: (await import("@/pages/master/bom/create")).CreateBOM,
+}));
+const PartnerMaster = lazy(async () => ({
+  default: (await import("@/pages/master/partners")).PartnerMaster,
+}));
+const DepartmentMaster = lazy(async () => ({
+  default: (await import("@/pages/master/departments")).DepartmentMaster,
+}));
+const PositionMaster = lazy(async () => ({
+  default: (await import("@/pages/master/positions")).PositionMaster,
+}));
+const WorkCenterMaster = lazy(async () => ({
+  default: (await import("@/pages/master/workcenters")).WorkCenterMaster,
+}));
+const WorkCenterCreate = lazy(async () => ({
+  default: (await import("@/pages/master/workcenters/create")).CreateWorkCenter,
+}));
+const RoutingMaster = lazy(async () => ({
+  default: (await import("@/pages/master/routings")).RoutingMaster,
+}));
+const RoutingCreate = lazy(async () => ({
+  default: (await import("@/pages/master/routings/create")).RoutingCreate,
+}));
+
+// ============================================================================
+// Production Pages - 생산 관리 모듈 (지연 로딩)
+// ============================================================================
+const WorkOrders = lazy(async () => ({
+  default: (await import("@/pages/production/orders")).WorkOrders,
+}));
+const WorkOrderDetail = lazy(async () => ({
+  default: (await import("@/pages/production/orders/detail")).WorkOrderDetail,
+}));
+const ProductionPlanning = lazy(async () => ({
+  default: (await import("@/pages/production/planning")).ProductionPlanning,
+}));
+
+// ============================================================================
+// Purchasing Pages - 구매 관리 모듈 (지연 로딩)
+// ============================================================================
+const PurchaseOrders = lazy(async () => ({
+  default: (await import("@/pages/purchasing/orders")).PurchaseOrders,
+}));
+const PurchaseRequests = lazy(async () => ({
+  default: (await import("@/pages/purchasing/requests")).PurchaseRequests,
+}));
+
+// ============================================================================
+// Sales Pages - 판매 관리 모듈 (지연 로딩)
+// ============================================================================
+const SalesOrders = lazy(async () => ({
+  default: (await import("@/pages/sales/orders")).SalesOrders,
+}));
+
+// ============================================================================
+// WMS Pages - 창고 관리 모듈 (지연 로딩)
+// ============================================================================
+const InventoryDashboard = lazy(async () => ({
+  default: (await import("@/pages/wms/inventory")).InventoryDashboard,
+}));
+const ShippingTodos = lazy(async () => ({
+  default: (await import("@/pages/wms/shipping")).ShippingTodos,
+}));
+const ReceivingMaterials = lazy(async () => ({
+  default: (await import("@/pages/wms/receiving")).ReceivingMaterials,
+}));
+
+const ReceivingProcess = lazy(async () => ({
+  default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
+}));
 
 // ============================================================================
 // HRM Pages - 인사 관리 모듈 (지연 로딩)
@@ -164,6 +208,19 @@ const routes: RouteObject[] = [
       {
         path: "inventory",
         element: <InventoryDashboard />,
+      },
+      {
+        path: "receiving",
+        element: <ReceivingMaterials />,
+        lazy: async () => {
+          const { ReceivingMaterials } = await import("@/pages/wms/receiving");
+          const { loader } = await import("@/pages/wms/receiving/api/loader");
+          return { ReceivingMaterials, loader };
+        },
+      },
+      {
+        path: "receiving/process/:id",
+        element: <ReceivingProcess />,
       },
     ],
   },
@@ -272,9 +329,9 @@ const routes: RouteObject[] = [
       const { WarehouseInventory: Component } = await import(
         "@/pages/warehouse/inventory"
       );
-      return { Component };
+      const { loader } = await import("@/pages/wms/inventory/api/loader");
+      return { Component, loader };
     },
-    loader: warehouseInventoryLoader,
   },
 
   // ----------------------------------------------------------------------------

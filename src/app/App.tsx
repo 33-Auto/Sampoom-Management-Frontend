@@ -33,8 +33,12 @@ const App: React.FC = () => {
           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
       </ErrorBoundary>
-      <Analytics />
-      <SpeedInsights />
+      {!import.meta.env.DEV && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
     </>
   );
 };

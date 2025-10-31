@@ -59,14 +59,20 @@ export const InventoryDashboard = () => {
     // ERP로 재고 변경 이벤트 전송
   };
 
-  const handleLocationUpdate = (itemCode: string) => {
-    console.log("위치 변경:", itemCode);
-  };
+  // const handleLocationUpdate = (itemCode: string) => {
+  //   console.log("위치 변경:", itemCode);
+  // };
 
   const columns = [
     { key: "code", title: "품목코드", width: "120px" },
     { key: "name", title: "품목명" },
-    { key: "category", title: "카테고리", width: "100px" },
+    {
+      key: "category",
+      title: "카테고리",
+      width: "250px",
+      render: (_value: string, row: PartResDto) =>
+        `${row.category || "-"} > ${row.group || "-"}`,
+    },
     {
       key: "quantity",
       title: "현재고",
@@ -91,12 +97,6 @@ export const InventoryDashboard = () => {
       width: "100px",
       render: (value: number, row: PartResDto) =>
         `${value} ${row.unit || "EA"}`,
-    },
-    {
-      key: "location",
-      title: "위치",
-      width: "100px",
-      render: () => "-",
     },
     {
       key: "status",
@@ -137,13 +137,13 @@ export const InventoryDashboard = () => {
           >
             입고
           </Button>
-          <Button
+          {/* <Button
             variant="secondary"
             size="sm"
             onClick={() => handleLocationUpdate(row.code || "Error")}
           >
             이동
-          </Button>
+          </Button> */}
         </div>
       ),
     },
@@ -161,9 +161,6 @@ export const InventoryDashboard = () => {
       (sum, item) => sum + Number(item.partValue!),
       0,
     ) || 0;
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error fetching data</div>;
 
   return (
     <>
@@ -281,7 +278,10 @@ export const InventoryDashboard = () => {
             <Table
               columns={columns}
               data={filteredData}
-              emptyText="조건에 맞는 재고가 없습니다"
+              emptyText={
+                isLoading ? "데이터 로딩 중..." : "조건에 맞는 재고가 없습니다"
+              }
+              errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
             />
           </div>
         </div>

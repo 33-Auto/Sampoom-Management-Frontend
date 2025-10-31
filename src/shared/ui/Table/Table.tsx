@@ -13,6 +13,7 @@ interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   dataPromise?: Promise<{ data: any[] }>;
   loading?: boolean;
   emptyText?: string;
+  errorText?: string;
 }
 
 // 현재 Table은 Promise 데이터를 지원한다.
@@ -24,6 +25,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
     dataPromise,
     loading = false,
     emptyText = "데이터가 없습니다.",
+    errorText = "",
     className,
     ...rest
   } = props;
@@ -54,7 +56,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
   const isLoading = loading || isPromiseLoading;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-grey-200 bg-white dark:border-grey-700 dark:bg-bg-card-black">
+    <div className="overflow-hidden rounded-lg border border-grey-200 bg-white dark:border-gray-700 dark:bg-bg-card-black">
       <div className="overflow-x-auto">
         <table ref={ref} className={`w-full ${className || ""}`} {...rest}>
           <thead className="bg-grey-50">
@@ -91,7 +93,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
                   colSpan={columns.length}
                   className="px-6 py-8 text-center text-grey-500 dark:text-white"
                 >
-                  {emptyText}
+                  {errorText.length > 0 ? errorText : emptyText}
                 </td>
               </tr>
             ) : (
