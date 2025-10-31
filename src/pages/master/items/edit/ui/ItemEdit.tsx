@@ -13,6 +13,8 @@ import {
   useUpdatePartMutation,
   useDeleteMaterialMutation,
   useDeletePartMutation,
+  useMaterialDetailQuery,
+  usePartDetailQuery,
 } from "../../create/api/create.api";
 
 interface ItemEditProps {
@@ -36,6 +38,23 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
     sourceItem?.id !== undefined && sourceItem?.id !== null
       ? Number(sourceItem.id)
       : Number(params.id);
+
+  // Fetch detail data when sourceItem is not available (direct URL access, refresh, etc.)
+  const { data: materialDetail } = useMaterialDetailQuery(
+    typeParam === "MATERIAL" ? id : undefined,
+  );
+  const { data: partDetail } = usePartDetailQuery(
+    typeParam === "PART" ? id : undefined,
+  );
+
+  // Resolve item: prefer sourceItem, fallback to detail query data
+  const resolvedItem =
+    sourceItem ??
+    (typeParam === "MATERIAL"
+      ? materialDetail
+      : typeParam === "PART"
+        ? partDetail
+        : materialDetail || partDetail);
 
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -62,7 +81,7 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
   const { data: partGroups } = usePartGroupsQuery(selectedPartCategoryId);
 
   useEffect(() => {
-    const src = sourceItem;
+    const src = resolvedItem;
     if (!src) return;
     const leadTime =
       src.purchaseLeadTime ?? src.productionLeadTime ?? src.leadTime ?? 0;
@@ -70,8 +89,10 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
       setFormData((prev) => ({
         ...prev,
         name: src.itemName || src.name || "",
-        materialCategoryId: String(src.categoryId ?? ""),
-        materialUnit: src.unit || "",
+        materialCategoryId: String(
+          src.categoryId ?? src.materialCategoryId ?? "",
+        ),
+        materialUnit: src.materialUnit ?? src.unit ?? "",
         baseQuantity: String(src.baseQuantity ?? ""),
         leadTime: String(leadTime ?? ""),
       }));
@@ -79,14 +100,14 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
       setFormData((prev) => ({
         ...prev,
         name: src.itemName || src.name || "",
-        partUnit: src.unit || "",
+        partUnit: src.partUnit ?? src.unit ?? "",
         baseQuantity: String(src.baseQuantity ?? ""),
         leadTime: String(leadTime ?? ""),
         partCategoryId: String(src.categoryId ?? ""),
         groupId: String(src.groupId ?? ""),
       }));
     }
-  }, [sourceItem, typeParam]);
+  }, [resolvedItem, typeParam]);
 
   const units = [
     { value: "", label: "단위 선택" },
@@ -185,7 +206,11 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
           id,
           payload: {
             name: formData.name.trim(),
-            status: "ACTIVE",
+            status:
+              (resolvedItem?.status ?? "") === "비활성" ||
+              (resolvedItem?.status ?? "") === "INACTIVE"
+                ? "INACTIVE"
+                : "ACTIVE",
             partUnit: formData.partUnit,
             baseQuantity: Number(formData.baseQuantity),
             leadTime: Number(formData.leadTime),

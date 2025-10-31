@@ -115,7 +115,7 @@ export const mockItemsMaster: ItemMaster[] = [
   {
     itemCode: "FIN001",
     itemName: "자동차 엔진 부품",
-    category: "완제품 > 자동차부품 > 엔진",
+    category: "부품 > 자동차부품 > 엔진",
     itemType: "부품",
     procurementType: "생산",
     purchaseLeadTime: null,
@@ -129,7 +129,7 @@ export const mockItemsMaster: ItemMaster[] = [
   {
     itemCode: "FIN002",
     itemName: "산업용 펌프",
-    category: "완제품 > 산업기계 > 펌프",
+    category: "부품 > 산업기계 > 펌프",
     itemType: "부품",
     procurementType: "생산",
     purchaseLeadTime: null,

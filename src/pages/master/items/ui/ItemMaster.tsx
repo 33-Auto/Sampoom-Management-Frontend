@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { materialMasterData } from "@/mocks/factoryData";
 import {
   Button,
   InfoBox,
@@ -168,7 +169,7 @@ export const ItemMaster = () => {
     productionItems,
     avgPurchaseLeadTime,
     avgProductionLeadTime,
-  } = useItemStats(items as any);
+  } = useItemStats(materialMasterData);
 
   return (
     <>
@@ -392,7 +393,11 @@ export const ItemMaster = () => {
         }
         actionsRight={
           <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" onClick={async () => refetch()}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={async () => refetch()}
+            >
               <i className="ri-refresh-line mr-2"></i>
               새로고침
             </Button>
