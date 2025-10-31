@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/shared/lib";
 
 export const selectVariants = cva(
-  `focus:ring-opacity-50 w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-grey-900 transition-all duration-200 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-grey-100 dark:bg-bg-card-black dark:text-white dark:disabled:bg-grey-900`,
+  `focus:ring-opacity-50 w-full appearance-none rounded-lg border bg-white px-3 py-2 text-sm text-grey-900 transition-all duration-200 focus:border-main-500 focus:ring-2 focus:ring-main-500 focus:outline-none disabled:cursor-not-allowed disabled:bg-grey-100 dark:bg-bg-card-black dark:text-white dark:disabled:bg-grey-900`,
   {
     variants: {
       error: {
@@ -40,14 +40,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className="w-full">
-        {label && (
-          <label
-            className="mb-2 block text-sm font-medium text-grey-700 dark:text-grey-300"
-            htmlFor={selectId}
-          >
-            {label}
-          </label>
-        )}
+        {label && <label htmlFor={selectId}>{label}</label>}
         <select
           id={selectId}
           className={cn(className, selectVariants({ error: hasError }))}

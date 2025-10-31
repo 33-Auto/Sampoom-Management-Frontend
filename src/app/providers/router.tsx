@@ -97,6 +97,13 @@ const InventoryDashboard = lazy(async () => ({
 const ShippingTodos = lazy(async () => ({
   default: (await import("@/pages/wms/shipping")).ShippingTodos,
 }));
+const ReceivingMaterials = lazy(async () => ({
+  default: (await import("@/pages/wms/receiving")).ReceivingMaterials,
+}));
+
+const ReceivingProcess = lazy(async () => ({
+  default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
+}));
 
 // ============================================================================
 // HRM Pages - 인사 관리 모듈 (지연 로딩)
@@ -195,6 +202,19 @@ const routes: RouteObject[] = [
       {
         path: "inventory",
         element: <InventoryDashboard />,
+      },
+      {
+        path: "receiving",
+        element: <ReceivingMaterials />,
+        lazy: async () => {
+          const { ReceivingMaterials } = await import("@/pages/wms/receiving");
+          const { loader } = await import("@/pages/wms/receiving/api/loader");
+          return { ReceivingMaterials, loader };
+        },
+      },
+      {
+        path: "receiving/process/:id",
+        element: <ReceivingProcess />,
       },
     ],
   },

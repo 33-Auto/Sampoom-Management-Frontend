@@ -30,7 +30,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   actions,
 }) => {
   return (
-    <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="mb-6 rounded-lg border border-gray-200 bg-bg-card-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <div className="w-full">
           <Input

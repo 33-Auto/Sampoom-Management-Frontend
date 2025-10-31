@@ -1,2 +1,51 @@
 {
+  // VSCode Tailwind CSS 설정
+  // https://tailwindcss.com/docs/editor-setup#vscode
+  "tailwindCSS.experimental.classRegex": [
+    ["(?:iconBgColor|iconColor)=\"([^\"]*)\""],
+    ["(?:iconBgColor|iconColor)='([^']*)'"],
+    ["(?:iconBgColor|iconColor)=\\{`([^`]*)`\\}"],
+    ["return\\s+['\"]([^'\"]*)['\"]"]
+  ],
+
+  // Prettier 포매터 설정
+  // Cursor IDE와 VS Code 모두에서 작동하는 일반 Prettier 사용
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  // 저장 시 자동으로 ESLint도 실행 (formatOnSave와 함께 사용)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

@@ -36,7 +36,7 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({
   };
 
   return (
-    <div className="border-b border-gray-200 bg-white">
+    <div className="border-b border-gray-200 bg-bg-card-white dark:border-gray-700 dark:bg-bg-card-black">
       <div className="px-6">
         <div className="flex space-x-1">
           {navItems.map((item) => (
@@ -46,7 +46,7 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({
               className={`relative rounded-t-lg px-4 py-3 text-sm font-medium transition-colors ${
                 isActive(item.path)
                   ? `${moduleColor} text-white`
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400"
               }`}
             >
               <i className={`${item.icon} mr-2`}></i>
