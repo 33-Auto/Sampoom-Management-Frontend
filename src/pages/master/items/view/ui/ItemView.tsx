@@ -80,7 +80,7 @@ const ItemView: React.FC<ItemViewProps> = ({ item, onClosed }) => {
           <div className="font-medium dark:text-gray-100">
             {item.purchaseLeadTime ??
               item.productionLeadTime ??
-              item.leadTime ??
+              item.calculatedProductionLeadTime ??
               "-"}
           </div>
         </div>
