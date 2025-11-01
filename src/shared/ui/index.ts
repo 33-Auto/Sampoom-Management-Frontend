@@ -7,3 +7,4 @@ export { StatCard } from "./StatCard";
 export { InfoBox } from "./InfoBox";
 export { SearchFilterBar } from "./SearchFilterBar";
 export { TableSection } from "./TableSection";
+export { Card } from "./Card";

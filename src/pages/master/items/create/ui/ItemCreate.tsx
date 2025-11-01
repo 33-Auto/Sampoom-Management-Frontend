@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useNotification } from "@/app/providers/NotificationContext";
-import { Button, Input, Select } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
 import {
   useCreateMaterialMutation,
@@ -206,7 +206,7 @@ export const ItemCreate = ({ onClose }: ItemCreateProps) => {
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
+          <Card className="dark:border-gray-700 dark:bg-bg-card-black">
             <div className="space-y-8">
               <div>
                 <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -347,7 +347,7 @@ export const ItemCreate = ({ onClose }: ItemCreateProps) => {
                 등록
               </Button>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </>

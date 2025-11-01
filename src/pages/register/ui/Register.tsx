@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import type { SignupRequest } from "@/shared/api/models";
 import Logo from "@/shared/assets/logo_text_dark.svg";
-import { Button, Input, Select } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
 import { useRegister } from "../model/useRegister";
 
@@ -48,7 +48,7 @@ export default function Register() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black">
       <div className="w-full max-w-md">
-        <div className="rounded-lg border border-grey-200 bg-bg-card-white p-8 shadow-lg dark:border-grey-600 dark:bg-bg-card-black">
+        <Card className="p-8 shadow-lg dark:border-grey-600 dark:bg-bg-card-black">
           <div className="mb-8 text-center">
             <img src={Logo} alt="Logo" className="mx-auto mb-4 h-12 w-auto" />
             <p className="mt-2 text-grey-600 dark:text-grey-300">
@@ -136,7 +136,7 @@ export default function Register() {
               이미 계정이 있으신가요? 로그인
             </button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

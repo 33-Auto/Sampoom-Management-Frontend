@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, Input } from "@/shared/ui";
+import { Button, Card, Input } from "@/shared/ui";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black">
       <div className="w-full max-w-md">
-        <div className="rounded-lg border border-grey-200 bg-bg-card-white p-8 shadow-lg dark:border-grey-600 dark:bg-bg-card-black">
+        <Card className="p-8 shadow-lg dark:border-grey-600 dark:bg-bg-card-black">
           {/* Logo */}
           <div className="mb-8 text-center">
             <div className="mb-4 flex justify-center">
@@ -162,7 +162,7 @@ export default function Login() {
               계정이 없으신가요? 회원가입
             </button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
