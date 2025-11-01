@@ -2,6 +2,7 @@ export { Button } from "./Button";
 export { Input } from "./Input";
 export { Table } from "./Table";
 export { Select } from "./Select";
+export { Textarea } from "./Textarea";
 export { ErrorHandler } from "./ErrorHandler";
 export { StatCard } from "./StatCard";
 export { InfoBox } from "./InfoBox";
