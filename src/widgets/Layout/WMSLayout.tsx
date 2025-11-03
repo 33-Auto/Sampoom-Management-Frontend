@@ -16,13 +16,23 @@ const WMSLayout: React.FC = () => {
   };
 
   const navItems = [
-    { path: "/wms/shipping", label: "출고 지시", icon: "ri-truck-line" },
+    {
+      path: "/wms/shipping",
+      label: "출고 지시",
+      icon: "ri-truck-line",
+      active: true,
+    },
     {
       path: "/wms/inventory",
       label: "재고 현황",
       icon: "ri-bar-chart-box-line",
     },
     { path: "/wms/receiving", label: "입고 관리", icon: "ri-file-list-3-line" },
+    {
+      path: "/wms/orders",
+      label: "발주 관리",
+      icon: "ri-shopping-bag-line",
+    },
   ];
 
   return (

@@ -102,6 +102,10 @@ const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
 }));
 
+const WmsPurchaseOrders = lazy(async () => ({
+  default: (await import("@/pages/wms/purchase-orders")).WmsPurchaseOrders,
+}));
+
 // ============================================================================
 // HRM Pages - 인사 관리 모듈 (지연 로딩)
 // ============================================================================
@@ -229,6 +233,10 @@ const routes: RouteObject[] = [
             Number(params.processId),
           );
         },
+      },
+      {
+        path: "orders",
+        element: <WmsPurchaseOrders />,
       },
     ],
   },
