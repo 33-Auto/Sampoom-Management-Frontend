@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { useNotification } from "@/app/providers/NotificationContext";
@@ -51,7 +52,8 @@ export function ReceivingProcessForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    reset,
+    formState: { errors, isValid },
   } = useForm({
     mode: "onTouched",
     resolver: zodResolver(ReceivingProcessSchema),
@@ -63,12 +65,26 @@ export function ReceivingProcessForm({
     },
   });
 
+  // loader로 가져온 데이터를 폼에 채우기
+  useEffect(() => {
+    if (data?.data) {
+      reset({
+        receivingQuantity: data.data.receivingQuantity || 0,
+        receivingDate: data.data.receivingDate || "",
+        receivingTime: data.data.receivingTime || "",
+        note: data.data.note || "",
+      });
+    }
+  }, [data, reset]);
+
   const { showSuccess, showError } = useNotification();
 
   const { mutate, isPending, isError, error } = useReceivingProcessMutation();
 
   const onSubmit = (data: ReceivingProcess) => {
     // TODO: warehouseId와 processId를 실제 값으로 대체해야 함
+
+    console.log("TEst");
     mutate(
       {
         params: {
@@ -104,14 +120,10 @@ export function ReceivingProcessForm({
     );
   }
 
-  console.log(data?.data);
   const {
     orderNumber,
-    receivingDate,
-    receivingTime,
     expectedDate,
     itemCode,
-    memo,
     itemName,
     orderedQuantity,
     receivedQuantity,
@@ -195,12 +207,11 @@ export function ReceivingProcessForm({
               />
               <div>
                 <Input
-                  label="기입고 수량"
+                  label="입고 수량"
                   type="number"
                   {...register("receivingQuantity")}
                   helperText={`최대 ${remainingQuantity || 0}개까지 입고 가능`}
                   errorText={errors.receivingQuantity?.message}
-                  value={receivedQuantity || 0}
                 />
               </div>
 
@@ -209,14 +220,12 @@ export function ReceivingProcessForm({
                 type="date"
                 {...register("receivingDate")}
                 errorText={errors.receivingDate?.message}
-                value={receivingDate || ""}
               />
               <Input
                 label="입고 시간"
                 type="time"
                 {...register("receivingTime")}
                 errorText={errors.receivingTime?.message}
-                value={receivingTime || ""}
               />
             </div>
           </div>
@@ -229,7 +238,6 @@ export function ReceivingProcessForm({
               label="특이사항 및 메모"
               placeholder="입고 과정에서 발견된 특이사항이나 추가 메모를 입력하세요"
               {...register("note")}
-              value={memo || ""}
             />
           </div>
 
@@ -239,7 +247,7 @@ export function ReceivingProcessForm({
             </Button>
             <Button
               variant="default"
-              disabled={!isValid || isPending || !isDirty}
+              disabled={!isValid || isPending}
               loading={isPending}
             >
               입고 처리

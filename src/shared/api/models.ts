@@ -59,12 +59,4 @@ export type OrderResDto = Schemas["OrderResDto"];
 export type PartResDto = Schemas["PartResDto"];
 
 // Receiving Process
-export type ReceivingProcessResponse = Schemas["ReceivingProcessResponse"] & {
-  orderNumber?: string;
-  itemCode?: string;
-  itemName?: string;
-  orderedQuantity?: number;
-  receivedQuantity?: number;
-  remainingQuantity?: number;
-  memo?: string;
-};
+export type ReceivingProcessResponse = Schemas["ReceivingProcessResponse"];

@@ -11,7 +11,7 @@ export const mockReceivingProcessResponse: ReceivingProcessResponse = {
   itemCode: "RM-AL-001",
   itemName: "알루미늄 합금",
   orderedQuantity: 500,
-  receivedQuantity: 300,
+  receivingQuantity: 300,
   remainingQuantity: 200,
   memo: "품질 검사 완료",
   createdAt: "2024-01-15T14:30:00Z",
