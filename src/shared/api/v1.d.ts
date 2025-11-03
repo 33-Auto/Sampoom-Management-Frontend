@@ -2404,6 +2404,16 @@ export interface components {
       note?: string;
       /** Format: date-time */
       createdAt?: string;
+      orderNumber?: string;
+      itemCode?: string;
+      itemName?: string;
+      /** Format: int32 */
+      orderedQuantity?: number;
+      /** Format: int32 */
+      receivedQuantity?: number;
+      /** Format: int32 */
+      remainingQuantity?: number;
+      memo?: string;
     };
     RopReqDto: {
       /** Format: int64 */
