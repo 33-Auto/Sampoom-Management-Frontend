@@ -33,6 +33,11 @@ const WMSLayout: React.FC = () => {
       label: "발주 관리",
       icon: "ri-shopping-bag-line",
     },
+    {
+      path: "/wms/rop-settings",
+      label: "ROP 설정",
+      icon: "ri-settings-3-line",
+    },
   ];
 
   return (

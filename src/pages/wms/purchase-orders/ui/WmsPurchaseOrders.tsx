@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
+  Badge,
   Button,
   Table,
   StatCard,
@@ -191,34 +192,28 @@ export function WmsPurchaseOrders() {
   });
 
   const getStatusBadge = (status: string) => {
-    const statusConfig = {
+    const statusConfig: Record<
+      string,
+      { label: string; variant: "success" | "info" | "error" | "default" }
+    > = {
       auto_approved: {
         label: "자동 승인",
-        color:
-          "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-200 dark:border-green-600",
+        variant: "success",
       },
       completed: {
         label: "입고 완료",
-        color:
-          "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-600",
+        variant: "info",
       },
       rejected: {
         label: "반려",
-        color:
-          "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-200 dark:border-red-600",
+        variant: "error",
       },
     };
 
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = statusConfig[status];
     if (!config) return null;
 
-    return (
-      <span
-        className={`rounded-full border px-3 py-1 text-sm font-medium ${config.color}`}
-      >
-        {config.label}
-      </span>
-    );
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
   const handleViewDetails = (poNumber: string) => {
