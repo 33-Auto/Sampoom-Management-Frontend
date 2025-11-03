@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
 
 // 생산 지시 데이터
 const workOrderData = [
@@ -119,7 +126,7 @@ export const WorkOrders = () => {
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-gray-600 dark:text-white">
               {Math.round(percentage)}%
             </span>
           </div>
@@ -137,57 +144,67 @@ export const WorkOrders = () => {
       key: "priority",
       title: "우선순위",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "높음"
-              ? "bg-red-100 text-red-800"
-              : value === "보통"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getPriorityVariant = (
+          priority: string,
+        ): "error" | "warning" | "success" | "default" => {
+          switch (priority) {
+            case "높음":
+              return "error";
+            case "보통":
+              return "warning";
+            case "낮음":
+              return "success";
+            default:
+              return "default";
+          }
+        };
+        return <Badge variant={getPriorityVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "materialAvailability",
       title: "자재가용성",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "충분"
-              ? "bg-green-100 text-green-800"
-              : value === "부족"
-                ? "bg-red-100 text-red-800"
-                : "bg-yellow-100 text-yellow-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getAvailabilityVariant = (
+          availability: string,
+        ): "success" | "error" | "warning" => {
+          switch (availability) {
+            case "충분":
+              return "success";
+            case "부족":
+              return "error";
+            default:
+              return "warning";
+          }
+        };
+        return <Badge variant={getAvailabilityVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "status",
       title: "상태",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "대기"
-              ? "bg-blue-100 text-blue-800"
-              : value === "진행중"
-                ? "bg-yellow-100 text-yellow-800"
-                : value === "완료"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getStatusVariant = (
+          status: string,
+        ): "info" | "warning" | "success" | "error" | "default" => {
+          switch (status) {
+            case "대기":
+              return "info";
+            case "진행중":
+              return "warning";
+            case "완료":
+              return "success";
+            case "중단":
+              return "error";
+            default:
+              return "default";
+          }
+        };
+        return <Badge variant={getStatusVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "actions",
@@ -229,84 +246,60 @@ export const WorkOrders = () => {
   ).length;
 
   return (
-    <>
-      {/* 메인 컨텐츠 */}
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-file-list-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 지시</p>
-              <p className="text-2xl font-bold text-gray-900">{totalOrders}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-time-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">대기 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {pendingOrders}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-              <i className="ri-play-line text-xl text-orange-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">진행 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {inProgressOrders}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">완료</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {completedOrders}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-file-list-line"
+          label="전체 지시"
+          value={totalOrders}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
+        <StatCard
+          icon="ri-time-line"
+          label="대기 중"
+          value={pendingOrders}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
+        <StatCard
+          icon="ri-play-line"
+          label="진행 중"
+          value={inProgressOrders}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
+        />
+        <StatCard
+          icon="ri-check-line"
+          label="완료"
+          value={completedOrders}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
       </div>
 
       {/* 필터 및 검색 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Input
-            placeholder="생산지시번호, 제품명 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <Select
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-          />
-          <div className="flex space-x-2">
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="생산지시번호, 제품명 검색..."
+        filters={[
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+          {
+            key: "priority",
+            value: priorityFilter,
+            options: priorityOptions,
+            onChange: setPriorityFilter,
+          },
+        ]}
+        actions={
+          <>
             <Button variant="default" size="sm">
               <i className="ri-add-line mr-2"></i>
               신규 지시
@@ -315,36 +308,31 @@ export const WorkOrders = () => {
               <i className="ri-download-line mr-2"></i>
               내보내기
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* 생산 지시 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              생산 지시 목록
-            </h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 지시
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 생산지시가 없습니다"
-          />
-        </div>
-      </div>
-    </>
+      <TableSection
+        title="생산 지시 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 지시
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 생산지시가 없습니다"
+        />
+      </TableSection>
+    </div>
   );
 };

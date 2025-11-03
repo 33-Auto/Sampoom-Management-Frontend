@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
 
 // MRP 계획 데이터
 const mrpPlanData = [
@@ -132,59 +140,69 @@ export const ProductionPlanning = () => {
       key: "priority",
       title: "우선순위",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "높음"
-              ? "bg-red-101 text-red-800"
-              : value === "보통"
-                ? "bg-yellow-101 text-yellow-800"
-                : "bg-green-101 text-green-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getPriorityVariant = (
+          priority: string,
+        ): "error" | "warning" | "success" | "default" => {
+          switch (priority) {
+            case "높음":
+              return "error";
+            case "보통":
+              return "warning";
+            case "낮음":
+              return "success";
+            default:
+              return "default";
+          }
+        };
+        return <Badge variant={getPriorityVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "materialAvailability",
       title: "자재가용성",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "충분"
-              ? "bg-green-101 text-green-800"
-              : value === "부족"
-                ? "bg-red-101 text-red-800"
-                : value === "구매필요"
-                  ? "bg-orange-101 text-orange-800"
-                  : "bg-yellow-101 text-yellow-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getAvailabilityVariant = (
+          availability: string,
+        ): "success" | "error" | "warning" => {
+          switch (availability) {
+            case "충분":
+              return "success";
+            case "부족":
+              return "error";
+            case "구매필요":
+              return "warning";
+            default:
+              return "warning";
+          }
+        };
+        return <Badge variant={getAvailabilityVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "status",
       title: "상태",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "계획확정"
-              ? "bg-green-101 text-green-800"
-              : value === "검토중"
-                ? "bg-yellow-101 text-yellow-800"
-                : value === "구매요청"
-                  ? "bg-blue-101 text-blue-800"
-                  : "bg-gray-101 text-gray-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const getStatusVariant = (
+          status: string,
+        ): "success" | "warning" | "info" | "default" => {
+          switch (status) {
+            case "계획확정":
+              return "success";
+            case "검토중":
+              return "warning";
+            case "구매요청":
+              return "info";
+            case "보류":
+              return "default";
+            default:
+              return "default";
+          }
+        };
+        return <Badge variant={getStatusVariant(value)}>{value}</Badge>;
+      },
     },
     {
       key: "actions",
@@ -231,137 +249,106 @@ export const ProductionPlanning = () => {
   ).length;
 
   return (
-    <>
-      {/* 메인 컨텐츠 */}
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-file-list-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 계획</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPlans}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">확정 계획</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {confirmedPlans}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-time-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">검토 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {reviewingPlans}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-              <i className="ri-shopping-cart-line text-xl text-orange-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">구매 요청</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {purchaseRequests}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-file-list-line"
+          label="전체 계획"
+          value={totalPlans}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
+        <StatCard
+          icon="ri-check-line"
+          label="확정 계획"
+          value={confirmedPlans}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+        <StatCard
+          icon="ri-time-line"
+          label="검토 중"
+          value={reviewingPlans}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
+        <StatCard
+          icon="ri-shopping-cart-line"
+          label="구매 요청"
+          value={purchaseRequests}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
+        />
       </div>
 
       {/* MRP 실행 및 필터 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          <Input
-            placeholder="계획번호, 품목명 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <Select
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-          />
-          <Button variant="default" size="sm" onClick={handleRunMRP}>
-            <i className="ri-play-line mr-2"></i>
-            MRP 실행
-          </Button>
-          <Button variant="secondary" size="sm">
-            <i className="ri-download-line mr-2"></i>
-            내보내기
-          </Button>
-        </div>
-      </div>
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="계획번호, 품목명 검색..."
+        filters={[
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+          {
+            key: "priority",
+            value: priorityFilter,
+            options: priorityOptions,
+            onChange: setPriorityFilter,
+          },
+        ]}
+        actions={
+          <>
+            <Button variant="default" size="sm" onClick={handleRunMRP}>
+              <i className="ri-play-line mr-2"></i>
+              MRP 실행
+            </Button>
+            <Button variant="secondary" size="sm">
+              <i className="ri-download-line mr-2"></i>
+              내보내기
+            </Button>
+          </>
+        }
+      />
 
       {/* MRP 계획 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              MRP 계획 목록
-            </h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 계획
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 계획이 없습니다"
-          />
-        </div>
-      </div>
+      <TableSection
+        title="MRP 계획 목록"
+        metaRight={
+          <span className="text-sm text-gray-500">
+            총 {filteredData.length}개 계획
+          </span>
+        }
+        actionsRight={
+          <Button variant="secondary" size="sm">
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          data={filteredData}
+          emptyText="조건에 맞는 계획이 없습니다"
+        />
+      </TableSection>
 
       {/* MRP 시스템 역할 안내 */}
-      <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
-        <div className="flex items-start space-x-3">
-          <i className="ri-lightbulb-line mt-0.5 text-lg text-green-600"></i>
-          <div>
-            <h3 className="text-sm font-medium text-green-900">
-              MRP (자재 소요 계획) 시스템 역할
-            </h3>
-            <p className="mt-1 text-sm text-green-700">
-              MRP는 WMS로부터 재고 변경 이벤트를 받아 재주문점 분석을 수행하고,
-              생산 계획을 수립하여 생산 지시 및 구매 요청을 결정하는 '두뇌'
-              역할을 담당합니다.
-            </p>
-          </div>
-        </div>
-      </div>
-    </>
+      <InfoBox
+        type="success"
+        title="MRP (자재 소요 계획) 시스템 역할"
+        className="mt-6"
+      >
+        <p>
+          MRP는 WMS로부터 재고 변경 이벤트를 받아 재주문점 분석을 수행하고, 생산
+          계획을 수립하여 생산 지시 및 구매 요청을 결정하는 '두뇌' 역할을
+          담당합니다.
+        </p>
+      </InfoBox>
+    </div>
   );
 };

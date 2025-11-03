@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Badge, Button } from "@/shared/ui";
+
 interface BOMItem {
   id: string;
   itemCode: string;
@@ -95,20 +97,19 @@ export const WorkOrderDetail = () => {
   ]);
 
   const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      sufficient: { label: "충분", color: "bg-green-100 text-green-800" },
-      insufficient: { label: "부족", color: "bg-yellow-100 text-yellow-800" },
-      critical: { label: "긴급", color: "bg-red-100 text-red-800" },
+    const statusConfig: Record<
+      string,
+      { label: string; variant: "success" | "warning" | "error" }
+    > = {
+      sufficient: { label: "충분", variant: "success" },
+      insufficient: { label: "부족", variant: "warning" },
+      critical: { label: "긴급", variant: "error" },
     };
 
-    const config = statusConfig[status as keyof typeof statusConfig];
-    return (
-      <span
-        className={`rounded-full px-2 py-1 text-xs font-medium ${config.color}`}
-      >
-        {config.label}
-      </span>
-    );
+    const config = statusConfig[status];
+    if (!config) return null;
+
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
   const handleMaterialRequest = () => {
@@ -146,12 +147,12 @@ export const WorkOrderDetail = () => {
               {workOrder.workOrderNumber} - {workOrder.itemName}
             </p>
           </div>
-          <button
+          <Button
+            variant="secondary"
             onClick={async () => navigate("/production/orders")}
-            className="rounded-md bg-gray-600 px-4 py-2 whitespace-nowrap text-white transition-colors hover:bg-gray-700"
           >
             목록으로
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -214,12 +215,9 @@ export const WorkOrderDetail = () => {
                 필요 원자재 (BOM 전개)
               </h2>
               {insufficientMaterials.length > 0 && (
-                <button
-                  onClick={handleMaterialRequest}
-                  className="rounded-md bg-orange-600 px-4 py-2 whitespace-nowrap text-white transition-colors hover:bg-orange-700"
-                >
+                <Button variant="default" onClick={handleMaterialRequest}>
                   원자재 불출 요청
-                </button>
+                </Button>
               )}
             </div>
 
@@ -327,12 +325,13 @@ export const WorkOrderDetail = () => {
                 />
               </div>
 
-              <button
+              <Button
+                variant="default"
                 onClick={handleProductionSubmit}
-                className="hover:bg-blue-7 w-full rounded-md bg-blue-600 px-4 py-2 whitespace-nowrap text-white transition-colors"
+                className="w-full"
               >
                 실적 등록
-              </button>
+              </Button>
             </div>
           </div>
 
