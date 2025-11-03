@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
 
 // 출고 지시 데이터
 const shippingTodoData = [
@@ -89,10 +96,10 @@ export const ShippingTodos = () => {
   };
 
   // 생산 요청 기능 제거 - WMS는 보고만 담당
-  const handleStockAlert = (shippingId: string) => {
-    console.log("재고 부족 알림 전송:", shippingId);
-    // ERP 시스템으로 재고 부족 이벤트 전송
-  };
+  // const handleStockAlert = (shippingId: string) => {
+  //   console.log("재고 부족 알림 전송:", shippingId);
+  //   // ERP 시스템으로 재고 부족 이벤트 전송
+  // };
 
   const columns = [
     { key: "shippingId", title: "출고번호", width: "120px" },
@@ -125,17 +132,17 @@ export const ShippingTodos = () => {
       title: "우선순위",
       width: "100px",
       render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
+        <Badge
+          variant={
             value === "높음"
-              ? "bg-red-100 text-red-800"
+              ? "error"
               : value === "보통"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800"
-          }`}
+                ? "warning"
+                : "success"
+          }
         >
           {value}
-        </span>
+        </Badge>
       ),
     },
     {
@@ -143,19 +150,19 @@ export const ShippingTodos = () => {
       title: "상태",
       width: "100px",
       render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
+        <Badge
+          variant={
             value === "출고대기"
-              ? "bg-blue-100 text-blue-800"
+              ? "info"
               : value === "출고진행"
-                ? "bg-yellow-100 text-yellow-800"
+                ? "warning"
                 : value === "출고완료"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-          }`}
+                  ? "success"
+                  : "error"
+          }
         >
           {value}
-        </span>
+        </Badge>
       ),
     },
     {
@@ -174,7 +181,7 @@ export const ShippingTodos = () => {
                 출고확정
               </Button>
             )}
-          {row.status === "재고부족" && (
+          {/* {row.status === "재고부족" && (
             <Button
               variant="outline"
               size="sm"
@@ -185,7 +192,7 @@ export const ShippingTodos = () => {
           )}
           <Button variant="secondary" size="sm">
             상세
-          </Button>
+          </Button> */}
         </div>
       ),
     },
@@ -209,122 +216,86 @@ export const ShippingTodos = () => {
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* 통계 카드 */}
         <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                <i className="ri-truck-line text-xl text-blue-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
-                  전체 출고지시
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {totalShipping}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-                <i className="ri-time-line text-xl text-yellow-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">출고 대기</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {pendingShipping}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                <i className="ri-alert-line text-xl text-red-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">재고 부족</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stockShortage}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-                <i className="ri-fire-line text-xl text-orange-600"></i>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">긴급 출고</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {urgentShipping}
-                </p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            icon="ri-truck-line"
+            label="전체 출고지시"
+            value={totalShipping}
+            iconBgColor="bg-blue-100"
+            iconColor="text-blue-600"
+          />
+          <StatCard
+            icon="ri-time-line"
+            label="출고 대기"
+            value={pendingShipping}
+            iconBgColor="bg-yellow-100"
+            iconColor="text-yellow-600"
+          />
+          <StatCard
+            icon="ri-alert-line"
+            label="재고 부족"
+            value={stockShortage}
+            iconBgColor="bg-red-100"
+            iconColor="text-red-600"
+          />
+          <StatCard
+            icon="ri-fire-line"
+            label="긴급 출고"
+            value={urgentShipping}
+            iconBgColor="bg-orange-100"
+            iconColor="text-orange-600"
+          />
         </div>
 
         {/* 필터 및 검색 */}
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Input
-              placeholder="출고번호, 주문번호, 고객사 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-              options={statusOptions}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            />
-            <Select
-              options={priorityOptions}
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-            />
+        <SearchFilterBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="출고번호, 주문번호, 고객사 검색..."
+          filters={[
+            {
+              key: "status",
+              value: statusFilter,
+              options: statusOptions,
+              onChange: setStatusFilter,
+            },
+            {
+              key: "priority",
+              value: priorityFilter,
+              options: priorityOptions,
+              onChange: setPriorityFilter,
+            },
+          ]}
+          actions={
             <div className="flex space-x-2">
               <Button variant="default" size="sm">
                 <i className="ri-add-line mr-2"></i>
                 수동 출고
               </Button>
-              <Button variant="secondary" size="sm">
-                <i className="ri-download-line mr-2"></i>
-                내보내기
-              </Button>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* 출고 지시 목록 테이블 */}
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                출고 지시 목록
-              </h2>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">
-                  총 {filteredData.length}개 출고지시
-                </span>
-                <Button variant="secondary" size="sm">
-                  <i className="ri-refresh-line mr-2"></i>
-                  새로고침
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="p-6">
-            <Table
-              columns={columns}
-              data={filteredData}
-              emptyText="조건에 맞는 출고지시가 없습니다"
-            />
-          </div>
-        </div>
+        <TableSection
+          title="출고 지시 목록"
+          metaRight={
+            <span className="text-sm text-gray-500">
+              총 {filteredData.length}개 출고지시
+            </span>
+          }
+          actionsRight={
+            <Button variant="secondary" size="sm">
+              <i className="ri-refresh-line mr-2"></i>
+              새로고침
+            </Button>
+          }
+        >
+          <Table
+            columns={columns}
+            data={filteredData}
+            emptyText="조건에 맞는 출고지시가 없습니다"
+          />
+        </TableSection>
       </div>
     </>
   );

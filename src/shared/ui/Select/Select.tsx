@@ -40,7 +40,14 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className="w-full">
-        {label && <label htmlFor={selectId}>{label}</label>}
+        {label && (
+          <label
+            className="mb-1 block text-sm font-medium text-grey-700 dark:text-grey-300"
+            htmlFor={selectId}
+          >
+            {label}
+          </label>
+        )}
         <select
           id={selectId}
           className={cn(className, selectVariants({ error: hasError }))}

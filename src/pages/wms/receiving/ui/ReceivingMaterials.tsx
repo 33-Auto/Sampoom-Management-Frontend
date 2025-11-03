@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import {
+  Badge,
   Button,
   SearchFilterBar,
   StatCard,
@@ -88,29 +89,33 @@ export function ReceivingMaterials() {
     { value: "낮음", label: "낮음" },
   ];
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (
+    status: string,
+  ): "default" | "warning" | "info" | "success" => {
     switch (status) {
       case "입고대기":
-        return "bg-yellow-100 text-yellow-800";
+        return "warning";
       case "부분입고":
-        return "bg-blue-100 text-blue-800";
+        return "info";
       case "입고완료":
-        return "bg-green-100 text-green-800";
+        return "success";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "default";
     }
   };
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityVariant = (
+    priority: string,
+  ): "default" | "error" | "warning" | "success" => {
     switch (priority) {
       case "높음":
-        return "bg-red-100 text-red-800";
+        return "error";
       case "보통":
-        return "bg-yellow-100 text-yellow-800";
+        return "warning";
       case "낮음":
-        return "bg-green-100 text-green-800";
+        return "success";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "default";
     }
   };
 
@@ -130,11 +135,7 @@ export function ReceivingMaterials() {
       title: "상태",
       width: "120px",
       render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(value)}`}
-        >
-          {value}
-        </span>
+        <Badge variant={getStatusVariant(value)}>{value}</Badge>
       ),
     },
     {
@@ -142,11 +143,7 @@ export function ReceivingMaterials() {
       title: "우선순위",
       width: "120px",
       render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${getPriorityColor(value)}`}
-        >
-          {value}
-        </span>
+        <Badge variant={getPriorityVariant(value)}>{value}</Badge>
       ),
     },
     {
@@ -171,7 +168,7 @@ export function ReceivingMaterials() {
   ];
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
         <StatCard

@@ -106,6 +106,18 @@ const WmsPurchaseOrders = lazy(async () => ({
   default: (await import("@/pages/wms/purchase-orders")).WmsPurchaseOrders,
 }));
 
+const RopSettings = lazy(async () => ({
+  default: (await import("@/pages/wms/rop-settings")).RopSettings,
+}));
+
+const CreateRopSettings = lazy(async () => ({
+  default: (await import("@/pages/wms/rop-settings/create")).CreateRopSettings,
+}));
+
+const EditRopSettings = lazy(async () => ({
+  default: (await import("@/pages/wms/rop-settings/edit/[id]")).EditRopSettings,
+}));
+
 // ============================================================================
 // HRM Pages - 인사 관리 모듈 (지연 로딩)
 // ============================================================================
@@ -237,6 +249,18 @@ const routes: RouteObject[] = [
       {
         path: "orders",
         element: <WmsPurchaseOrders />,
+      },
+      {
+        path: "rop-settings",
+        element: <RopSettings />,
+      },
+      {
+        path: "rop-settings/create",
+        element: <CreateRopSettings />,
+      },
+      {
+        path: "rop-settings/edit/:id",
+        element: <EditRopSettings />,
       },
     ],
   },
