@@ -508,6 +508,30 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/warehouse/receiving/{warehouseId}/process/{processId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 입고 처리 조회
+     * @description 특정 입고 처리 정보를 조회합니다.
+     */
+    get: operations["getReceivingProcess"];
+    put?: never;
+    /**
+     * 입고 처리
+     * @description 발주된 자재의 입고 처리를 수행합니다.
+     */
+    post: operations["processReceiving"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}": {
     parameters: {
       query?: never;
@@ -2352,6 +2376,34 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: Record<string, never>;
+    };
+    ReceivingProcessRequest: {
+      /** Format: int32 */
+      receivingQuantity: number;
+      receivingDate: string;
+      receivingTime: string;
+      note?: string;
+    };
+    ApiResponseReceivingProcess: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["ReceivingProcessResponse"];
+    };
+    ReceivingProcessResponse: {
+      /** Format: int64 */
+      processId?: number;
+      /** Format: int64 */
+      warehouseId?: number;
+      /** Format: int32 */
+      receivingQuantity?: number;
+      receivingDate?: string;
+      receivingTime?: string;
+      expectedDate?: string;
+      note?: string;
+      /** Format: date-time */
+      createdAt?: string;
     };
     RopReqDto: {
       /** Format: int64 */
@@ -4228,6 +4280,56 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  getReceivingProcess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        processId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseReceivingProcess"];
+        };
+      };
+    };
+  };
+  processReceiving: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        processId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ReceivingProcessRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseReceivingProcess"];
         };
       };
     };
