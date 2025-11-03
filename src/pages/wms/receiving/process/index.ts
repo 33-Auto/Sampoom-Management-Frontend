@@ -1,1 +1,1 @@
-export { ReceivingProcess } from "./ReceivingProcess";
+export { ReceivingProcess } from "./ui/ReceivingProcess";

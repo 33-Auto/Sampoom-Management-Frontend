@@ -97,9 +97,6 @@ const InventoryDashboard = lazy(async () => ({
 const ShippingTodos = lazy(async () => ({
   default: (await import("@/pages/wms/shipping")).ShippingTodos,
 }));
-const ReceivingMaterials = lazy(async () => ({
-  default: (await import("@/pages/wms/receiving")).ReceivingMaterials,
-}));
 
 const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
@@ -211,16 +208,27 @@ const routes: RouteObject[] = [
       },
       {
         path: "receiving",
-        element: <ReceivingMaterials />,
         lazy: async () => {
           const { ReceivingMaterials } = await import("@/pages/wms/receiving");
           const { loader } = await import("@/pages/wms/receiving/api/loader");
-          return { ReceivingMaterials, loader };
+          return { Component: ReceivingMaterials, loader };
         },
       },
       {
-        path: "receiving/process/:id",
+        path: "receiving/process/:warehouseId/:processId",
         element: <ReceivingProcess />,
+        loader: async ({ params }) => {
+          if (!params.warehouseId || !params.processId) {
+            throw new Error("warehouseId와 processId가 필요합니다.");
+          }
+          const { ReceivingProcessLoader } = await import(
+            "@/features/receiving-process/api/receiving-process.loader"
+          );
+          return ReceivingProcessLoader(
+            Number(params.warehouseId),
+            Number(params.processId),
+          );
+        },
       },
     ],
   },
