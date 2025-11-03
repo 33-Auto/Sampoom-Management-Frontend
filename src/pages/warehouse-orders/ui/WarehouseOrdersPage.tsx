@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import type { OrderResDto } from "@/shared/api/models";
-import { Button, Table } from "@/shared/ui";
+import { Button, Card, Table } from "@/shared/ui";
 
 export default function WarehouseOrdersPage() {
   const { orders: ordersPromise } = useLoaderData() as {
@@ -113,7 +113,7 @@ export default function WarehouseOrdersPage() {
       </div>
 
       {/* 주문 목록 테이블 */}
-      <div className="rounded-xl border border-grey-100 bg-bg-card-white shadow-sm transition-colors duration-200 dark:border-grey-700 dark:bg-bg-card-black">
+      <Card className="border-grey-100 transition-colors duration-200 dark:border-grey-700 dark:bg-bg-card-black">
         <div className="border-b border-grey-100 p-6 dark:border-grey-700">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-grey-500 dark:text-grey-100">
@@ -125,12 +125,12 @@ export default function WarehouseOrdersPage() {
           </div>
         </div>
         <Table dataPromise={ordersPromise} columns={columns} />
-      </div>
+      </Card>
 
       {/* 주문 목록 테이블 모달 */}
       {selectedOrder && (
         <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-          <div className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-bg-card-white p-6 transition-colors duration-200 dark:bg-bg-card-black">
+          <Card className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto transition-colors duration-200 dark:bg-bg-card-black">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-grey-500 dark:text-grey-100">
                 주문 상세정보
@@ -217,7 +217,7 @@ export default function WarehouseOrdersPage() {
                 </Button>
               </div>
             )}
-          </div>
+          </Card>
         </div>
       )}
     </div>

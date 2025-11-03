@@ -153,11 +153,16 @@ export function ReceivingMaterials() {
       key: "actions",
       title: "작업",
       width: "120px",
-      render: (_: any, row: any) => (
+      render: (_: any, _row: any) => (
         <Button
           variant="default"
           size="sm"
-          onClick={async () => navigate(`/wms/receiving/process/${row.id}`)}
+          onClick={() => {
+            // TODO: 실제 warehouseId와 processId를 row 데이터에서 가져오도록 수정 필요
+            const warehouseId = 1; // 현재 하드코딩된 값, 실제로는 row.warehouseId 등을 사용해야 함
+            const processId = 1; // 하드코딩
+            navigate(`/wms/receiving/process/${warehouseId}/${processId}`);
+          }}
         >
           입고처리
         </Button>

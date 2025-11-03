@@ -57,3 +57,6 @@ export type FactoryOrders =
 // Warehouse
 export type OrderResDto = Schemas["OrderResDto"];
 export type PartResDto = Schemas["PartResDto"];
+
+// Receiving Process
+export type ReceivingProcessResponse = Schemas["ReceivingProcessResponse"];

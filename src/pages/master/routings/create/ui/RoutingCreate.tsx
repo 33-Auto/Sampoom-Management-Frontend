@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useNotification } from "@/app/providers/NotificationContext";
 import { workCenterMasterData } from "@/mocks/factoryData";
-import { Button, Input, Select } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
 export const RoutingCreate = () => {
   const navigate = useNavigate();
@@ -187,7 +187,7 @@ export const RoutingCreate = () => {
           </div>
 
           {/* 등록 폼 */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
+          <Card className="dark:border-gray-700 dark:bg-bg-card-black">
             <div className="space-y-8">
               {/* 기본 정보 */}
               <div>
@@ -421,7 +421,7 @@ export const RoutingCreate = () => {
                 등록
               </Button>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </>

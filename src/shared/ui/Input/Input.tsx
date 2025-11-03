@@ -100,7 +100,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {helperText && !errorText && (
-          <p className="mt-1 text-sm text-grey-500 dark:text-grey-400">
+          <p className="mt-1 text-sm text-grey-500 dark:text-grey-300">
             {helperText}
           </p>
         )}
