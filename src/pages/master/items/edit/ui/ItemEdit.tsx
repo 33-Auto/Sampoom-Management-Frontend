@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useNotification } from "@/app/providers/NotificationContext";
-import { Button, Input, Select } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
 import {
   useMaterialCategoriesQuery,
@@ -281,7 +281,7 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
           </p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
+        <Card className="dark:border-gray-700 dark:bg-bg-card-black">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Input
               label="품목명"
@@ -382,7 +382,7 @@ export const ItemEdit = ({ onClose, initialItem }: ItemEditProps) => {
               저장
             </Button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

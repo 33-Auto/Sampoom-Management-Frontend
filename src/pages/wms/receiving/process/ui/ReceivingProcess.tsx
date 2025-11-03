@@ -1,13 +1,28 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { ReceivingProcessForm } from "@/features/receiving-process";
 import { Button } from "@/shared/ui";
 
 // 계획
 // fsd 구조에 따라 데이터(entity)와 로직(feature)를 분리합니다.
 // feature에는 폼에 관련된 내용을 채우기로
 // entity는 데이터 처리 관련된 내용을 채우기로
+
 export function ReceivingProcess() {
+  const { warehouseId, processId } = useParams();
+  if (!warehouseId || !processId) {
+    throw new Error("warehouseId와 processId가 필요합니다.");
+  }
   const navigate = useNavigate();
+
+  const handleSuccess = () => {
+    navigate("/wms/receiving");
+  };
+
+  const handleCancel = () => {
+    console.log("handleCancel");
+    navigate(-1);
+  };
 
   return (
     <div className="p-8">
@@ -34,10 +49,12 @@ export function ReceivingProcess() {
           </p>
         </div>
 
-        {/* 발주 정보를 보여주는 칸 */}
-        <div className="rounded-xl bg-bg-card-white dark:bg-bg-card-black">
-          <div className="h-[400px]"></div>
-        </div>
+        <ReceivingProcessForm
+          warehouseId={Number(warehouseId)}
+          processId={Number(processId)}
+          onSucess={handleSuccess}
+          onCancel={handleCancel}
+        />
       </div>
     </div>
   );

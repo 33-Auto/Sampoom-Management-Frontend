@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Button, Input, Select } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
 export const FactoryOrders = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -218,7 +218,7 @@ export const FactoryOrders = () => {
 
         {/* Stats Cards */}
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-grey-200 bg-bg-card-white p-4 shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+          <Card className="border-grey-200 p-4 dark:border-grey-400 dark:bg-bg-card-black">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-grey-400 dark:text-grey-300">
@@ -233,9 +233,9 @@ export const FactoryOrders = () => {
                 <i className="ri-file-list-line text-main-600"></i>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-grey-200 bg-bg-card-white p-4 shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+          <Card className="border-grey-200 p-4 dark:border-grey-400 dark:bg-bg-card-black">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-grey-400 dark:text-grey-300">
@@ -250,9 +250,9 @@ export const FactoryOrders = () => {
                 <i className="ri-checkbox-circle-line text-success-green"></i>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-grey-200 bg-bg-card-white p-4 shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+          <Card className="border-grey-200 p-4 dark:border-grey-400 dark:bg-bg-card-black">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-grey-400 dark:text-grey-300">
@@ -267,9 +267,9 @@ export const FactoryOrders = () => {
                 <i className="ri-play-circle-line text-main-700"></i>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-grey-200 bg-bg-card-white p-4 shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+          <Card className="border-grey-200 p-4 dark:border-grey-400 dark:bg-bg-card-black">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-grey-400 dark:text-grey-300">
@@ -284,11 +284,11 @@ export const FactoryOrders = () => {
                 <i className="ri-alarm-warning-line text-error-red"></i>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Filters */}
-        <div className="mb-6 rounded-lg border border-grey-200 bg-bg-card-white p-4 shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+        <Card className="mb-6 border-grey-200 p-4 dark:border-grey-400 dark:bg-bg-card-black">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <Input
               placeholder="주문 번호, 고객사, 제품명 검색..."
@@ -310,10 +310,10 @@ export const FactoryOrders = () => {
               고급 필터
             </Button>
           </div>
-        </div>
+        </Card>
 
         {/* Orders List */}
-        <div className="rounded-lg border border-grey-200 bg-bg-card-white shadow-sm dark:border-grey-400 dark:bg-bg-card-black">
+        <Card className="border-grey-200 dark:border-grey-400 dark:bg-bg-card-black">
           <div className="border-b border-grey-200 p-4 dark:border-grey-400">
             <h2 className="text-lg font-semibold text-bg-black dark:text-bg-card-white">
               주문 목록
@@ -432,7 +432,7 @@ export const FactoryOrders = () => {
               ))}
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
