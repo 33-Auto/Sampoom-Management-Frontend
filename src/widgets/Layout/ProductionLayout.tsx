@@ -25,7 +25,7 @@ const ProductionLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-orange-600" />
       <div className="p-6">
