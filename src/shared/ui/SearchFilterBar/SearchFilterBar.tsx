@@ -12,6 +12,7 @@ interface SearchFilterBarProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
+  searchLabel?: string;
   filters?: Array<{
     key: string;
     label?: string;
@@ -27,6 +28,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   searchTerm,
   onSearchChange,
   searchPlaceholder = "검색...",
+  searchLabel,
   filters = [],
   actions,
 }) => {
@@ -35,6 +37,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <div className="w-full">
           <Input
+            label={searchLabel}
             placeholder={searchPlaceholder}
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -53,7 +56,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
           </div>
         ))}
 
-        {actions && <div className="flex space-x-2">{actions}</div>}
+        {actions && <div className="flex items-end space-x-2">{actions}</div>}
       </div>
     </div>
   );

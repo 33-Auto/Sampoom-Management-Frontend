@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-import { Button, Select } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, StatCard } from "@/shared/ui";
+
+import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
 export const HRMEvaluation = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedPeriod, setSelectedPeriod] = useState("2024-Q1");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [showEvaluationModal, setShowEvaluationModal] = useState(false);
@@ -168,15 +171,6 @@ export const HRMEvaluation = () => {
     },
   ];
 
-  const departmentOptions = [
-    { value: "all", label: "전체 부서" },
-    { value: "development", label: "개발팀" },
-    { value: "marketing", label: "마케팅팀" },
-    { value: "sales", label: "영업팀" },
-    { value: "hr", label: "인사팀" },
-    { value: "finance", label: "재무팀" },
-  ];
-
   const periodOptions = [
     { value: "2024-Q1", label: "2024년 1분기" },
     { value: "2023-Q4", label: "2023년 4분기" },
@@ -199,54 +193,31 @@ export const HRMEvaluation = () => {
     return "D";
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "in_progress":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
+  const getStatusBadge = (status: string) => {
+    const statusConfig: Record<
+      string,
+      { label: string; variant: "success" | "info" | "warning" | "default" }
+    > = {
+      completed: { label: "완료", variant: "success" },
+      in_progress: { label: "진행중", variant: "info" },
+      pending: { label: "대기", variant: "warning" },
+    };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "완료";
-      case "in_progress":
-        return "진행중";
-      case "pending":
-        return "대기";
-      default:
-        return "알 수 없음";
-    }
-  };
+    const config = statusConfig[status];
+    if (!config) return null;
 
-  const getDepartmentText = (department: string) => {
-    switch (department) {
-      case "development":
-        return "개발팀";
-      case "marketing":
-        return "마케팅팀";
-      case "sales":
-        return "영업팀";
-      case "hr":
-        return "인사팀";
-      case "finance":
-        return "재무팀";
-      default:
-        return department;
-    }
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
   const filteredEvaluations = evaluationData.filter((evaluation) => {
+    const matchesSearch =
+      !searchTerm ||
+      evaluation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      evaluation.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDepartment =
       departmentFilter === "all" || evaluation.department === departmentFilter;
     const matchesPeriod = evaluation.period === selectedPeriod;
-    return matchesDepartment && matchesPeriod;
+    return matchesSearch && matchesDepartment && matchesPeriod;
   });
 
   const avgScore =
@@ -267,251 +238,388 @@ export const HRMEvaluation = () => {
   };
 
   return (
-    <>
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* Stats Cards */}
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  평균 평가점수
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {avgScore.toFixed(1)}
-                </p>
-                <p className="mt-1 text-xs text-blue-600">5점 만점</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <i className="ri-star-line text-blue-600"></i>
-              </div>
-            </div>
-          </div>
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      {/* Stats Cards */}
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+        <StatCard
+          icon="ri-star-line"
+          label="평균 평가점수"
+          value={avgScore.toFixed(1)}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
+        <StatCard
+          icon="ri-check-line"
+          label="평가 완료"
+          value={completedCount}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+        <StatCard
+          icon="ri-trophy-line"
+          label="우수 평가자"
+          value={highPerformers}
+          iconBgColor="bg-teal-100"
+          iconColor="text-teal-600"
+        />
+        <StatCard
+          icon="ri-progress-line"
+          label="평가 진행률"
+          value={`${Math.round(
+            (completedCount / filteredEvaluations.length) * 100,
+          )}%`}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
+      </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">평가 완료</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {completedCount}
-                </p>
-                <p className="mt-1 text-xs text-green-600">명</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                <i className="ri-check-line text-green-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">우수 평가자</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {highPerformers}
-                </p>
-                <p className="mt-1 text-xs text-teal-600">4.5점 이상</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100">
-                <i className="ri-trophy-line text-teal-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">평가 진행률</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {Math.round(
-                    (completedCount / filteredEvaluations.length) * 100,
-                  )}
-                  %
-                </p>
-                <p className="mt-1 text-xs text-purple-600">완료율</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-                <i className="ri-progress-line text-purple-600"></i>
-              </div>
-            </div>
+      {/* Filters and Actions */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            성과 평가
+          </h2>
+          <div className="flex items-center space-x-3">
+            <Button variant="secondary" size="sm">
+              <i className="ri-download-line mr-2"></i>
+              평가 리포트
+            </Button>
+            <Button variant="default" size="sm">
+              <i className="ri-add-line mr-2"></i>새 평가 시작
+            </Button>
           </div>
         </div>
+        <SearchFilterBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchLabel="검색"
+          searchPlaceholder="직원명 또는 ID 검색..."
+          filters={[
+            {
+              key: "period",
+              label: "평가 기간",
+              value: selectedPeriod,
+              options: periodOptions,
+              onChange: (value) => setSelectedPeriod(value),
+            },
+            {
+              key: "department",
+              label: "부서",
+              value: departmentFilter,
+              options: departmentOptions,
+              onChange: (value) => setDepartmentFilter(value),
+            },
+          ]}
+          actions={
+            <Button variant="default" size="default">
+              <i className="ri-search-line mr-2"></i>
+              조회
+            </Button>
+          }
+        />
+      </div>
 
-        {/* Filters and Actions */}
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">성과 평가</h2>
-            <div className="flex items-center space-x-3">
-              <Button variant="secondary" size="sm">
-                <i className="ri-download-line mr-2"></i>
-                평가 리포트
-              </Button>
-              <Button variant="default" size="sm">
-                <i className="ri-add-line mr-2"></i>새 평가 시작
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <Select
-              label="평가 기간"
-              options={periodOptions}
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-            />
-            <Select
-              label="부서"
-              options={departmentOptions}
-              value={departmentFilter}
-              onChange={(e) => setDepartmentFilter(e.target.value)}
-            />
-            <div className="flex items-end">
-              <Button variant="secondary" size="default" className="w-full">
-                <i className="ri-search-line mr-2"></i>
-                조회
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Evaluation List */}
-        <div className="space-y-4">
-          {filteredEvaluations.map((evaluation) => (
-            <div
-              key={evaluation.id}
-              className="rounded-lg border border-gray-200 bg-white p-6"
-            >
-              <div className="mb-4 flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="mb-2 flex items-center space-x-3">
-                    <span className="text-lg font-semibold text-gray-900">
-                      {evaluation.name}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      ({evaluation.id})
+      {/* Evaluation List */}
+      <div className="space-y-4">
+        {filteredEvaluations.map((evaluation) => (
+          <div
+            key={evaluation.id}
+            className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-bg-card-black"
+          >
+            <div className="mb-4 flex items-start justify-between">
+              <div className="flex-1">
+                <div className="mb-2 flex items-center space-x-3">
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {evaluation.name}
+                  </span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    ({evaluation.id})
+                  </span>
+                  {getStatusBadge(evaluation.status)}
+                  <div className="flex items-center space-x-1">
+                    <span
+                      className={`text-2xl font-bold ${getScoreColor(evaluation.overallScore)}`}
+                    >
+                      {evaluation.overallScore}
                     </span>
                     <span
-                      className={`rounded-full border px-2 py-1 text-xs font-medium ${getStatusColor(evaluation.status)}`}
+                      className={`rounded px-2 py-1 text-xs font-bold ${getScoreColor(evaluation.overallScore)} bg-opacity-10 dark:bg-opacity-20`}
                     >
-                      {getStatusText(evaluation.status)}
+                      {getScoreGrade(evaluation.overallScore)}등급
                     </span>
-                    <div className="flex items-center space-x-1">
-                      <span
-                        className={`text-2xl font-bold ${getScoreColor(evaluation.overallScore)}`}
-                      >
-                        {evaluation.overallScore}
-                      </span>
-                      <span
-                        className={`rounded px-2 py-1 text-xs font-bold ${getScoreColor(evaluation.overallScore)} bg-opacity-10`}
-                      >
-                        {getScoreGrade(evaluation.overallScore)}등급
-                      </span>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
-                    <div>
-                      <p className="text-gray-600">직급/부서</p>
-                      <p className="font-medium text-gray-900">
-                        {evaluation.position}
-                      </p>
-                      <p className="text-gray-600">
-                        {getDepartmentText(evaluation.department)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">평가 기간</p>
-                      <p className="font-medium text-gray-900">
-                        {evaluation.period}
-                      </p>
-                      <p className="text-gray-600">분기별 평가</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">평가자</p>
-                      <p className="font-medium text-gray-900">
-                        {evaluation.evaluator}
-                      </p>
-                    </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleViewEvaluation(evaluation)}
-                  >
-                    <i className="ri-eye-line mr-1"></i>
-                    상세보기
-                  </Button>
-                  <Button variant="secondary" size="sm">
-                    <i className="ri-edit-line"></i>
-                  </Button>
+                <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
+                  <div>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      직급/부서
+                    </p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {evaluation.position}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {getDepartmentText(evaluation.department)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      평가 기간
+                    </p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {evaluation.period}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      분기별 평가
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 dark:text-gray-400">평가자</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {evaluation.evaluator}
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              {/* Score Breakdown */}
-              <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-5">
-                <div className="text-center">
-                  <p className="mb-1 text-xs text-gray-600">업무성과</p>
-                  <p
-                    className={`text-lg font-bold ${getScoreColor(evaluation.scores.performance)}`}
-                  >
-                    {evaluation.scores.performance}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="mb-1 text-xs text-gray-600">팀워크</p>
-                  <p
-                    className={`text-lg font-bold ${getScoreColor(evaluation.scores.teamwork)}`}
-                  >
-                    {evaluation.scores.teamwork}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="mb-1 text-xs text-gray-600">리더십</p>
-                  <p
-                    className={`text-lg font-bold ${getScoreColor(evaluation.scores.leadership)}`}
-                  >
-                    {evaluation.scores.leadership}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="mb-1 text-xs text-gray-600">소통능력</p>
-                  <p
-                    className={`text-lg font-bold ${getScoreColor(evaluation.scores.communication)}`}
-                  >
-                    {evaluation.scores.communication}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="mb-1 text-xs text-gray-600">혁신성</p>
-                  <p
-                    className={`text-lg font-bold ${getScoreColor(evaluation.scores.innovation)}`}
-                  >
-                    {evaluation.scores.innovation}
-                  </p>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleViewEvaluation(evaluation)}
+                >
+                  <i className="ri-eye-line mr-1"></i>
+                  상세보기
+                </Button>
+                <Button variant="secondary" size="sm">
+                  <i className="ri-edit-line"></i>
+                </Button>
               </div>
+            </div>
 
-              {/* Goals Progress */}
-              <div className="mb-4">
-                <p className="mb-2 text-sm font-medium text-gray-900">
-                  목표 달성 현황
+            {/* Score Breakdown */}
+            <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-5">
+              <div className="text-center">
+                <p className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  업무성과
                 </p>
-                <div className="space-y-2">
-                  {evaluation.goals.slice(0, 2).map((goal, index) => (
+                <p
+                  className={`text-lg font-bold ${getScoreColor(evaluation.scores.performance)}`}
+                >
+                  {evaluation.scores.performance}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  팀워크
+                </p>
+                <p
+                  className={`text-lg font-bold ${getScoreColor(evaluation.scores.teamwork)}`}
+                >
+                  {evaluation.scores.teamwork}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  리더십
+                </p>
+                <p
+                  className={`text-lg font-bold ${getScoreColor(evaluation.scores.leadership)}`}
+                >
+                  {evaluation.scores.leadership}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  소통능력
+                </p>
+                <p
+                  className={`text-lg font-bold ${getScoreColor(evaluation.scores.communication)}`}
+                >
+                  {evaluation.scores.communication}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  혁신성
+                </p>
+                <p
+                  className={`text-lg font-bold ${getScoreColor(evaluation.scores.innovation)}`}
+                >
+                  {evaluation.scores.innovation}
+                </p>
+              </div>
+            </div>
+
+            {/* Goals Progress */}
+            <div className="mb-4">
+              <p className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                목표 달성 현황
+              </p>
+              <div className="space-y-2">
+                {evaluation.goals.slice(0, 2).map((goal, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {goal.title}
+                    </span>
+                    <div className="flex items-center space-x-2">
+                      <div className="h-2 w-20 rounded-full bg-gray-200 dark:bg-gray-700">
+                        <div
+                          className={`h-2 rounded-full ${goal.status === "completed" ? "bg-green-500 dark:bg-green-400" : "bg-blue-500 dark:bg-blue-400"}`}
+                          style={{ width: `${goal.progress}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        {goal.progress}%
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Feedback Preview */}
+            <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
+              <p className="line-clamp-2 text-sm text-gray-700 dark:text-gray-300">
+                {evaluation.feedback}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Evaluation Detail Modal */}
+      {showEvaluationModal && selectedEmployee && (
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="mx-4 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white p-6 dark:bg-bg-card-black">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                성과 평가 상세
+              </h2>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setShowEvaluationModal(false);
+                  setSelectedEmployee(null);
+                }}
+              >
+                <i className="ri-close-line"></i>
+              </Button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Employee Info */}
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
+                <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
+                  <div>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      이름:
+                    </span>
+                    <span className="ml-2 font-medium dark:text-white">
+                      {selectedEmployee.name}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      직급:
+                    </span>
+                    <span className="ml-2 font-medium dark:text-white">
+                      {selectedEmployee.position}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      부서:
+                    </span>
+                    <span className="ml-2 font-medium dark:text-white">
+                      {getDepartmentText(selectedEmployee.department)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      평가기간:
+                    </span>
+                    <span className="ml-2 font-medium dark:text-white">
+                      {selectedEmployee.period}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Overall Score */}
+              <div className="rounded-lg bg-blue-50 p-6 text-center dark:bg-blue-900/20">
+                <div
+                  className={`mb-2 text-4xl font-bold ${getScoreColor(selectedEmployee.overallScore)}`}
+                >
+                  {selectedEmployee.overallScore}
+                </div>
+                <div
+                  className={`text-lg font-semibold ${getScoreColor(selectedEmployee.overallScore)}`}
+                >
+                  {getScoreGrade(selectedEmployee.overallScore)}등급
+                </div>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  종합 평가 점수
+                </p>
+              </div>
+
+              {/* Detailed Scores */}
+              <div>
+                <h3 className="mb-3 font-semibold text-gray-900 dark:text-white">
+                  세부 평가 항목
+                </h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {Object.entries(selectedEmployee.scores).map(
+                    ([key, score]) => (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-800"
+                      >
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {key === "performance" && "업무 성과"}
+                          {key === "teamwork" && "팀워크"}
+                          {key === "leadership" && "리더십"}
+                          {key === "communication" && "소통 능력"}
+                          {key === "innovation" && "혁신성"}
+                        </span>
+                        <span
+                          className={`text-xl font-bold ${getScoreColor(score as number)}`}
+                        >
+                          {String(score)}
+                        </span>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {/* Goals */}
+              <div>
+                <h3 className="mb-3 font-semibold text-gray-900 dark:text-white">
+                  목표 달성 현황
+                </h3>
+                <div className="space-y-3">
+                  {selectedEmployee.goals.map((goal: any, index: number) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between text-sm"
+                      className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800"
                     >
-                      <span className="text-gray-700">{goal.title}</span>
-                      <div className="flex items-center space-x-2">
-                        <div className="h-2 w-20 rounded-full bg-gray-200">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          {goal.title}
+                        </span>
+                        {getStatusBadge(goal.status)}
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
                           <div
-                            className={`h-2 rounded-full ${goal.status === "completed" ? "bg-green-500" : "bg-blue-500"}`}
+                            className={`h-2 rounded-full ${goal.status === "completed" ? "bg-green-500 dark:bg-green-400" : "bg-blue-500 dark:bg-blue-400"}`}
                             style={{ width: `${goal.progress}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs text-gray-600">
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                           {goal.progress}%
                         </span>
                       </div>
@@ -520,192 +628,51 @@ export const HRMEvaluation = () => {
                 </div>
               </div>
 
-              {/* Feedback Preview */}
-              <div className="rounded-lg bg-gray-50 p-3">
-                <p className="line-clamp-2 text-sm text-gray-700">
-                  {evaluation.feedback}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Evaluation Detail Modal */}
-        {showEvaluationModal && selectedEmployee && (
-          <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-            <div className="mx-4 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  성과 평가 상세
-                </h2>
-                <button
-                  onClick={() => {
-                    setShowEvaluationModal(false);
-                    setSelectedEmployee(null);
-                  }}
-                  className="text-gray-400 hover:text-gray-500"
-                >
-                  <i className="ri-close-line text-xl"></i>
-                </button>
+              {/* Feedback */}
+              <div>
+                <h3 className="mb-3 font-semibold text-gray-900 dark:text-white">
+                  평가 피드백
+                </h3>
+                <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
+                  <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                    {selectedEmployee.feedback}
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-6">
-                {/* Employee Info */}
-                <div className="rounded-lg bg-gray-50 p-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
-                    <div>
-                      <span className="text-gray-600">이름:</span>
-                      <span className="ml-2 font-medium">
-                        {selectedEmployee.name}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">직급:</span>
-                      <span className="ml-2 font-medium">
-                        {selectedEmployee.position}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">부서:</span>
-                      <span className="ml-2 font-medium">
-                        {getDepartmentText(selectedEmployee.department)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">평가기간:</span>
-                      <span className="ml-2 font-medium">
-                        {selectedEmployee.period}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Overall Score */}
-                <div className="rounded-lg bg-blue-50 p-6 text-center">
-                  <div
-                    className={`mb-2 text-4xl font-bold ${getScoreColor(selectedEmployee.overallScore)}`}
-                  >
-                    {selectedEmployee.overallScore}
-                  </div>
-                  <div
-                    className={`text-lg font-semibold ${getScoreColor(selectedEmployee.overallScore)}`}
-                  >
-                    {getScoreGrade(selectedEmployee.overallScore)}등급
-                  </div>
-                  <p className="mt-1 text-sm text-gray-600">종합 평가 점수</p>
-                </div>
-
-                {/* Detailed Scores */}
-                <div>
-                  <h3 className="mb-3 font-semibold text-gray-900">
-                    세부 평가 항목
-                  </h3>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {Object.entries(selectedEmployee.scores).map(
-                      ([key, score]) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
-                        >
-                          <span className="text-gray-700">
-                            {key === "performance" && "업무 성과"}
-                            {key === "teamwork" && "팀워크"}
-                            {key === "leadership" && "리더십"}
-                            {key === "communication" && "소통 능력"}
-                            {key === "innovation" && "혁신성"}
-                          </span>
-                          <span
-                            className={`text-xl font-bold ${getScoreColor(score as number)}`}
-                          >
-                            {String(score)}
-                          </span>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-
-                {/* Goals */}
-                <div>
-                  <h3 className="mb-3 font-semibold text-gray-900">
-                    목표 달성 현황
-                  </h3>
-                  <div className="space-y-3">
-                    {selectedEmployee.goals.map((goal: any, index: number) => (
-                      <div key={index} className="rounded-lg bg-gray-50 p-3">
-                        <div className="mb-2 flex items-center justify-between">
-                          <span className="font-medium text-gray-900">
-                            {goal.title}
-                          </span>
-                          <span
-                            className={`rounded px-2 py-1 text-xs font-medium ${getStatusColor(goal.status)}`}
-                          >
-                            {getStatusText(goal.status)}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <div className="h-2 flex-1 rounded-full bg-gray-200">
-                            <div
-                              className={`h-2 rounded-full ${goal.status === "completed" ? "bg-green-500" : "bg-blue-500"}`}
-                              style={{ width: `${goal.progress}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium text-gray-600">
-                            {goal.progress}%
-                          </span>
-                        </div>
+              {/* Next Goals */}
+              <div>
+                <h3 className="mb-3 font-semibold text-gray-900 dark:text-white">
+                  다음 분기 목표
+                </h3>
+                <div className="space-y-2">
+                  {selectedEmployee.nextGoals.map(
+                    (goal: string, index: number) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <i className="ri-arrow-right-line text-gray-400 dark:text-gray-500"></i>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {goal}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                    ),
+                  )}
                 </div>
+              </div>
 
-                {/* Feedback */}
-                <div>
-                  <h3 className="mb-3 font-semibold text-gray-900">
-                    평가 피드백
-                  </h3>
-                  <div className="rounded-lg bg-gray-50 p-4">
-                    <p className="leading-relaxed text-gray-700">
-                      {selectedEmployee.feedback}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Next Goals */}
-                <div>
-                  <h3 className="mb-3 font-semibold text-gray-900">
-                    다음 분기 목표
-                  </h3>
-                  <div className="space-y-2">
-                    {selectedEmployee.nextGoals.map(
-                      (goal: string, index: number) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-2"
-                        >
-                          <i className="ri-arrow-right-line text-gray-400"></i>
-                          <span className="text-gray-700">{goal}</span>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex space-x-3">
-                  <Button variant="default" className="flex-1">
-                    <i className="ri-download-line mr-2"></i>
-                    평가서 다운로드
-                  </Button>
-                  <Button variant="secondary" className="flex-1">
-                    <i className="ri-edit-line mr-2"></i>
-                    평가 수정
-                  </Button>
-                </div>
+              <div className="flex space-x-3">
+                <Button variant="default" className="flex-1">
+                  <i className="ri-download-line mr-2"></i>
+                  평가서 다운로드
+                </Button>
+                <Button variant="secondary" className="flex-1">
+                  <i className="ri-edit-line mr-2"></i>
+                  평가 수정
+                </Button>
               </div>
             </div>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };

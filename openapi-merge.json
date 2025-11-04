@@ -47,6 +47,18 @@
       "pathModification": {
         "prepend": "/api/material"
       }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/purchase/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/purchase"
+      }
+    },
+    {
+      "inputURL": "https://sampoom.store/api/site/v3/api-docs",
+      "pathModification": {
+        "prepend": "/api/site"
+      }
     }
   ],
   "output": "dist/combined-api.yaml"

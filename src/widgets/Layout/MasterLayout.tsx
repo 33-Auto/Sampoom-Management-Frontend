@@ -33,7 +33,7 @@ const MasterLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-main-500" />
       <div className="p-6">

@@ -22,8 +22,12 @@ const renderApp = () => {
   );
 };
 
-// 개발 환경에서만 MSW(Mock Service Worker)를 활성화합니다.
-if (import.meta.env.DEV) {
+// MSW(Mock Service Worker) 활성화 여부를 환경 변수로 제어합니다.
+// VITE_USE_MOCK=true로 설정하면 MSW가 활성화됩니다.
+const shouldUseMock =
+  import.meta.env.DEV && import.meta.env.VITE_USE_MOCK === "true";
+
+if (shouldUseMock) {
   import("./mocks/browser")
     .then(({ worker }) => {
       worker.start();
@@ -33,6 +37,6 @@ if (import.meta.env.DEV) {
       renderApp();
     });
 } else {
-  // 프로덕션 환경에서는 MSW 없이 바로 앱을 렌더링합니다.
+  // MSW 없이 바로 앱을 렌더링합니다.
   renderApp();
 }
