@@ -48,15 +48,97 @@ export interface SignupResponse {
 }
 
 // Mock
-export type ApiResponseLoginResponse = Schemas["ApiResponseLoginResponse"];
+export interface ApiResponseLoginResponse {
+  status?: number;
+  success?: boolean;
+  code?: number;
+  message?: string;
+  data?: LoginResponse;
+}
 
 // Factory
-export type FactoryOrders =
-  Schemas["ApiResponsePageResponseDtoPartOrderResponseDto"];
+export interface PartOrderItemDto {
+  partId?: number;
+  partName?: string;
+  partCode?: string;
+  partGroup?: string;
+  partCategory?: string;
+  quantity?: number;
+}
+
+export interface PartOrderResponseDto {
+  orderId?: number;
+  warehouseName?: string;
+  orderDate?: string;
+  status?: string;
+  factoryName?: string;
+  factoryId?: number;
+  items?: PartOrderItemDto[];
+}
+
+export interface PageResponseDtoPartOrderResponseDto {
+  content?: PartOrderResponseDto[];
+  totalElements?: number;
+  totalPages?: number;
+}
+
+export interface FactoryOrders {
+  status?: number;
+  success?: boolean;
+  code?: number;
+  message?: string;
+  data?: PageResponseDtoPartOrderResponseDto;
+}
 
 // Warehouse
-export type OrderResDto = Schemas["OrderResDto"];
-export type PartResDto = Schemas["PartResDto"];
+export interface ItemDto {
+  code?: string;
+  quantity?: number;
+}
+
+export interface OrderResDto {
+  id?: number;
+  requester?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+  branch?: string;
+  items?: ItemDto[];
+  status?:
+    | "PENDING"
+    | "CONFIRMED"
+    | "SHIPPING"
+    | "DELAYED"
+    | "PRODUCING"
+    | "COMPLETED"
+    | "CANCELED";
+}
+
+export interface PartResDto {
+  id?: number;
+  category?: string;
+  group?: string;
+  name?: string;
+  code?: string;
+  quantity?: number;
+  rop?: number;
+  unit?: string;
+  partValue?: number;
+  status?: string;
+}
 
 // Receiving Process
-export type ReceivingProcessResponse = Schemas["ReceivingProcessResponse"];
+export interface ReceivingProcessResponse {
+  processId?: number;
+  warehouseId?: number;
+  receivingQuantity?: number;
+  receivingDate?: string;
+  receivingTime?: string;
+  expectedDate?: string;
+  note?: string;
+  createdAt?: string;
+  orderNumber?: string;
+  itemCode?: string;
+  itemName?: string;
+  orderedQuantity?: number;
+  receivedQuantity?: number;
+  remainingQuantity?: number;
+  memo?: string;
+}
