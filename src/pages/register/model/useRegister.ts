@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "@/entities/user";
-import type { SignupRequest } from "@/shared/api/models";
+import type { SignupRequest } from "@/shared/model/models";
 
 export function useRegister() {
   const navigate = useNavigate();

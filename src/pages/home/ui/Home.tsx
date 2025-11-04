@@ -304,6 +304,7 @@ export const Home = () => {
                     <div
                       key={index}
                       onClick={(e) => {
+                        // 이벤트 전파 방지를 위해 이벤트 스톱
                         e.stopPropagation();
                         navigate(subMenu.path);
                       }}

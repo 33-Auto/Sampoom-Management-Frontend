@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
-import type { OrderResDto } from "@/shared/api/models";
+import type { OrderResDto } from "@/shared/model/models";
 import { Button, Card, Table } from "@/shared/ui";
 
 export default function WarehouseOrdersPage() {

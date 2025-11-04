@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { SignupRequest } from "@/shared/api/models";
 import Logo from "@/shared/assets/logo_text_dark.svg";
+import type { SignupRequest } from "@/shared/model/models";
 import { Button, Card, Input, Select } from "@/shared/ui";
 
 import { useRegister } from "../model/useRegister";

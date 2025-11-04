@@ -95,9 +95,9 @@ const SalesOrders = lazy(async () => ({
 const InventoryDashboard = lazy(async () => ({
   default: (await import("@/pages/wms/inventory")).InventoryDashboard,
 }));
-const ShippingTodos = lazy(async () => ({
-  default: (await import("@/pages/wms/shipping")).ShippingTodos,
-}));
+// const ShippingTodos = lazy(async () => ({
+//   default: (await import("@/pages/wms/shipping")).ShippingTodos,
+// }));
 
 const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
@@ -220,7 +220,13 @@ const routes: RouteObject[] = [
           },
           {
             path: "shipping",
-            element: <ShippingTodos />,
+            lazy: async () => {
+              const { ShippingTodos } = await import("@/pages/wms/shipping");
+              const { loader } = await import(
+                "@/pages/wms/shipping/api/loader"
+              );
+              return { Component: ShippingTodos, loader };
+            },
           },
           {
             path: "inventory",
