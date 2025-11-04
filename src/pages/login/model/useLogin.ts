@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { login, useAuthStore } from "@/entities/user";
-import type { LoginRequest, UserResponse } from "@/shared/api/models";
+import type { LoginRequest, UserResponse } from "@/shared/model/models";
 
 export function useLogin() {
   const navigate = useNavigate();
