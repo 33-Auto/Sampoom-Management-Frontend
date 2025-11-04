@@ -12,7 +12,7 @@ import {
 } from "@/shared/ui";
 
 import { shippingListQueryOptions } from "../api/order.api";
-import type { ShippingListResponse } from "../model/shipping.model";
+import type { PartResDto } from "../model/shipping.model";
 // 출고 지시 데이터
 const shippingTodoData = [
   {
@@ -72,15 +72,25 @@ export const ShippingTodos = () => {
   // loader로 불러진 데이터 사용하기
   const { data, isFetching } = useQuery(
     shippingListQueryOptions({ page: page }),
-  ) as { data: ShippingListResponse; isFetching: boolean };
+  );
 
-  // const shippingList: PartResDto[] = data?.data?.content || [];
+  const shippingList = data?.data?.content || [];
+
+  // 이거 공통 컴포넌트화
+  const keys =
+    shippingList.length > 0
+      ? (Object.fromEntries(
+          Object.keys(shippingList[0]).map((key) => [key, key]),
+        ) as Record<keyof PartResDto, keyof PartResDto>)
+      : ({} as Record<keyof PartResDto, keyof PartResDto>);
 
   const handleNextPage = () => {
     setPage(page + 1);
     tanstackQueryClient.prefetchQuery(
       shippingListQueryOptions({ page: page + 2 }),
     );
+
+    console.log(keys);
   };
 
   const statusOptions = [
@@ -113,6 +123,7 @@ export const ShippingTodos = () => {
 
   const handleShipConfirm = (shippingId: string) => {
     console.log("출고 확정:", shippingId);
+    console.log(keys.code);
   };
 
   // 생산 요청 기능 제거 - WMS는 보고만 담당
@@ -123,8 +134,8 @@ export const ShippingTodos = () => {
 
   const columns = [
     // { key: "id", title: "출고번호", width: "120px" },
-    { key: "code", title: "주문번호", width: "120px" },
-    { key: "name", title: "제품명" },
+    { key: keys.code, title: "주문번호", width: "120px" },
+    { key: keys.name, title: "제품명" },
     {
       key: "requestedQty",
       title: "요청수량",
