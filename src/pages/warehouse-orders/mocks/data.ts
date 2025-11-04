@@ -1,4 +1,4 @@
-import type { OrderResDto } from "@/shared/api/models";
+import type { OrderResDto } from "@/shared/model/models";
 
 export const mockWarehouseOrders: OrderResDto[] = [
   {

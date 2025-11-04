@@ -29,7 +29,7 @@
     "prepare": "husky",
     "fsd": "npx steiger ./src",
     "diagram": "npx fsd-cruise",
-    "generate-api-types": "openapi-typescript dist/combined-api.yaml --output src/shared/api/v1.d.ts",
+    "generate-api-types": "openapi-typescript dist/combined-api.yaml --output src/shared/model/v1.d.ts",
     "merge-api-schemas": "pnpm dlx openapi-merge-cli --config openapi-merge.json",
     "generate:api:all": "pnpm merge-api-schemas && pnpm generate-api-types"
   },
