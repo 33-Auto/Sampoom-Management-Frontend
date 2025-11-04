@@ -52,6 +52,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
               disabled={filter.disabled}
+              className="cursor-pointer"
             />
           </div>
         ))}

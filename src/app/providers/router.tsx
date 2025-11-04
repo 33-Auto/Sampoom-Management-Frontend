@@ -88,6 +88,9 @@ const PurchaseRequests = lazy(async () => ({
 const SalesOrders = lazy(async () => ({
   default: (await import("@/pages/sales/orders")).SalesOrders,
 }));
+const SalesOrderDetail = lazy(async () => ({
+  default: (await import("@/pages/sales/orders/detail")).SalesOrderDetail,
+}));
 
 // ============================================================================
 // WMS Pages - 창고 관리 모듈 (지연 로딩)
@@ -203,6 +206,10 @@ const routes: RouteObject[] = [
           {
             path: "orders",
             element: <SalesOrders />,
+          },
+          {
+            path: "orders/:id",
+            element: <SalesOrderDetail />,
           },
         ],
       },
