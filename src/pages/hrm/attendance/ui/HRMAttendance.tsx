@@ -1,6 +1,16 @@
 import { useState } from "react";
 
-import { Button, Input, Select } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  StatCard,
+  Table,
+  TableSection,
+} from "@/shared/ui";
+
+import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
 export const HRMAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(
@@ -124,18 +134,6 @@ export const HRMAttendance = () => {
     },
   ];
 
-  const departmentOptions = [
-    { value: "all", label: "전체 부서" },
-    { value: "development", label: "개발팀" },
-    { value: "marketing", label: "마케팅팀" },
-    { value: "sales", label: "영업팀" },
-    { value: "hr", label: "인사팀" },
-    { value: "finance", label: "재무팀" },
-    { value: "design", label: "디자인팀" },
-    { value: "quality", label: "품질관리팀" },
-    { value: "cs", label: "고객서비스팀" },
-  ];
-
   const statusOptions = [
     { value: "all", label: "전체 상태" },
     { value: "present", label: "출근" },
@@ -145,61 +143,25 @@ export const HRMAttendance = () => {
     { value: "absent", label: "결근" },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "present":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "working":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "annual_leave":
-        return "bg-purple-100 text-purple-800 border-purple-200";
-      case "sick_leave":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "absent":
-        return "bg-red-100 text-red-800 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
+  const getStatusBadge = (status: string) => {
+    const statusConfig: Record<
+      string,
+      {
+        label: string;
+        variant: "success" | "info" | "warning" | "error" | "default";
+      }
+    > = {
+      present: { label: "출근완료", variant: "success" },
+      working: { label: "근무중", variant: "info" },
+      annual_leave: { label: "연차", variant: "warning" },
+      sick_leave: { label: "병가", variant: "warning" },
+      absent: { label: "결근", variant: "error" },
+    };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "present":
-        return "출근완료";
-      case "working":
-        return "근무중";
-      case "annual_leave":
-        return "연차";
-      case "sick_leave":
-        return "병가";
-      case "absent":
-        return "결근";
-      default:
-        return "알 수 없음";
-    }
-  };
+    const config = statusConfig[status];
+    if (!config) return null;
 
-  const getDepartmentText = (department: string) => {
-    switch (department) {
-      case "development":
-        return "개발팀";
-      case "marketing":
-        return "마케팅팀";
-      case "sales":
-        return "영업팀";
-      case "hr":
-        return "인사팀";
-      case "finance":
-        return "재무팀";
-      case "design":
-        return "디자인팀";
-      case "quality":
-        return "품질관리팀";
-      case "cs":
-        return "고객서비스팀";
-      default:
-        return department;
-    }
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
   const filteredAttendance = attendanceData.filter((attendance) => {
@@ -223,83 +185,57 @@ export const HRMAttendance = () => {
   );
 
   return (
-    <>
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* Stats Cards */}
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">출근 인원</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {presentCount}
-                </p>
-                <p className="mt-1 text-xs text-green-600">명</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                <i className="ri-user-line text-green-600"></i>
-              </div>
-            </div>
-          </div>
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      {/* Stats Cards */}
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+        <StatCard
+          icon="ri-user-line"
+          label="출근 인원"
+          value={presentCount}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+        <StatCard
+          icon="ri-calendar-line"
+          label="휴가 인원"
+          value={leaveCount}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
+        <StatCard
+          icon="ri-time-line"
+          label="지각 인원"
+          value={lateCount}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
+        <StatCard
+          icon="ri-timer-line"
+          label="총 연장근무"
+          value={`${totalOvertimeHours}시간`}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
+      </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">휴가 인원</p>
-                <p className="text-2xl font-bold text-gray-900">{leaveCount}</p>
-                <p className="mt-1 text-xs text-purple-600">명</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-                <i className="ri-calendar-line text-purple-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">지각 인원</p>
-                <p className="text-2xl font-bold text-gray-900">{lateCount}</p>
-                <p className="mt-1 text-xs text-yellow-600">명</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
-                <i className="ri-time-line text-yellow-600"></i>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">총 연장근무</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {totalOvertimeHours}
-                </p>
-                <p className="mt-1 text-xs text-blue-600">시간</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <i className="ri-timer-line text-blue-600"></i>
-              </div>
-            </div>
+      {/* Filters and Actions */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            근태 현황
+          </h2>
+          <div className="flex items-center space-x-3">
+            <Button variant="secondary" size="sm">
+              <i className="ri-download-line mr-2"></i>
+              근태 리포트
+            </Button>
+            <Button variant="default" size="sm">
+              <i className="ri-add-line mr-2"></i>
+              수동 출퇴근
+            </Button>
           </div>
         </div>
-
-        {/* Filters and Actions */}
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">근태 현황</h2>
-            <div className="flex items-center space-x-3">
-              <Button variant="secondary" size="sm">
-                <i className="ri-download-line mr-2"></i>
-                근태 리포트
-              </Button>
-              <Button variant="default" size="sm">
-                <i className="ri-add-line mr-2"></i>
-                수동 출퇴근
-              </Button>
-            </div>
-          </div>
-
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <Input
               label="조회 날짜"
@@ -320,136 +256,151 @@ export const HRMAttendance = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
             />
             <div className="flex items-end">
-              <Button variant="secondary" size="default" className="w-full">
+              <Button variant="default" size="default" className="w-full">
                 <i className="ri-search-line mr-2"></i>
                 조회
               </Button>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Attendance List */}
-        <div className="rounded-lg border border-gray-200 bg-white">
-          <div className="border-b border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900">근태 목록</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    직원
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    출근시간
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    퇴근시간
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    근무시간
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    연장근무
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    지각
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    근무지
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase">
-                    상태
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {filteredAttendance.map((attendance) => (
-                  <tr key={attendance.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {attendance.name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {attendance.position}
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          {getDepartmentText(attendance.department)}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap text-gray-900">
-                      {attendance.checkIn || "-"}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap text-gray-900">
-                      {attendance.checkOut || "-"}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap text-gray-900">
-                      {attendance.workHours > 0
-                        ? `${attendance.workHours}시간`
-                        : "-"}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap">
-                      {attendance.overtime > 0 ? (
-                        <span className="font-medium text-blue-600">
-                          {attendance.overtime}시간
-                        </span>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap">
-                      {attendance.lateMinutes > 0 ? (
-                        <span className="font-medium text-red-600">
-                          {attendance.lateMinutes}분
-                        </span>
-                      ) : (
-                        <span className="text-green-600">정시</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center text-sm whitespace-nowrap text-gray-900">
-                      {attendance.location}
-                    </td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">
-                      <span
-                        className={`rounded-full border px-2 py-1 text-xs font-medium ${getStatusColor(attendance.status)}`}
-                      >
-                        {getStatusText(attendance.status)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      {/* Attendance List */}
+      <TableSection title="근태 목록">
+        <Table
+          columns={[
+            {
+              key: "employee",
+              title: "직원",
+              render: (_value: any, record: any) => (
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    {record.name}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {record.position}
+                  </div>
+                  <div className="text-xs text-gray-400 dark:text-gray-500">
+                    {getDepartmentText(record.department)}
+                  </div>
+                </div>
+              ),
+            },
+            {
+              key: "checkIn",
+              title: "출근시간",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm text-gray-900 dark:text-white">
+                  {record.checkIn || "-"}
+                </div>
+              ),
+            },
+            {
+              key: "checkOut",
+              title: "퇴근시간",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm text-gray-900 dark:text-white">
+                  {record.checkOut || "-"}
+                </div>
+              ),
+            },
+            {
+              key: "workHours",
+              title: "근무시간",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm text-gray-900 dark:text-white">
+                  {record.workHours > 0 ? `${record.workHours}시간` : "-"}
+                </div>
+              ),
+            },
+            {
+              key: "overtime",
+              title: "연장근무",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm">
+                  {record.overtime > 0 ? (
+                    <span className="font-medium text-blue-600 dark:text-blue-400">
+                      {record.overtime}시간
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </div>
+              ),
+            },
+            {
+              key: "lateMinutes",
+              title: "지각",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm">
+                  {record.lateMinutes > 0 ? (
+                    <span className="font-medium text-red-600 dark:text-red-400">
+                      {record.lateMinutes}분
+                    </span>
+                  ) : (
+                    <span className="text-green-600 dark:text-green-400">
+                      정시
+                    </span>
+                  )}
+                </div>
+              ),
+            },
+            {
+              key: "location",
+              title: "근무지",
+              render: (_value: any, record: any) => (
+                <div className="text-center text-sm text-gray-900 dark:text-white">
+                  {record.location}
+                </div>
+              ),
+            },
+            {
+              key: "status",
+              title: "상태",
+              render: (_value: any, record: any) => (
+                <div className="text-center">
+                  {getStatusBadge(record.status)}
+                </div>
+              ),
+            },
+          ]}
+          data={filteredAttendance}
+          emptyText="근태 데이터가 없습니다"
+        />
+      </TableSection>
 
-        {/* Weekly Summary */}
-        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
-            주간 근태 요약
-          </h3>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="rounded-lg bg-green-50 p-4 text-center">
-              <div className="mb-1 text-2xl font-bold text-green-600">
-                98.5%
-              </div>
-              <div className="text-sm text-gray-600">출근율</div>
+      {/* Weekly Summary */}
+      <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-bg-card-black">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+          주간 근태 요약
+        </h3>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="rounded-lg bg-green-50 p-4 text-center dark:bg-green-900/20">
+            <div className="mb-1 text-2xl font-bold text-green-600 dark:text-green-400">
+              98.5%
             </div>
-            <div className="rounded-lg bg-blue-50 p-4 text-center">
-              <div className="mb-1 text-2xl font-bold text-blue-600">42.5</div>
-              <div className="text-sm text-gray-600">평균 근무시간</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              출근율
             </div>
-            <div className="rounded-lg bg-yellow-50 p-4 text-center">
-              <div className="mb-1 text-2xl font-bold text-yellow-600">
-                12.5
-              </div>
-              <div className="text-sm text-gray-600">총 연장근무시간</div>
+          </div>
+          <div className="rounded-lg bg-blue-50 p-4 text-center dark:bg-blue-900/20">
+            <div className="mb-1 text-2xl font-bold text-blue-600 dark:text-blue-400">
+              42.5
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              평균 근무시간
+            </div>
+          </div>
+          <div className="rounded-lg bg-yellow-50 p-4 text-center dark:bg-yellow-900/20">
+            <div className="mb-1 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+              12.5
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              총 연장근무시간
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, Input, Select } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  Input,
+  SearchFilterBar,
+  Select,
+  StatCard,
+} from "@/shared/ui";
+
+import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
 interface Employee {
   id: string;
@@ -35,7 +45,7 @@ export const HRMEmployees = () => {
   );
 
   // ------------------------------------------------------------
-  // Helper: calculate years of service safely (with error handling)
+  // 헬퍼 함수 : 입사일을 기준으로 년차를 계산하는 함수 ( 에러 핸들링 처리 )
   // ------------------------------------------------------------
   const getYearsOfService = (hireDateStr: string): string => {
     try {
@@ -209,18 +219,6 @@ export const HRMEmployees = () => {
     },
   ];
 
-  const departmentOptions = [
-    { value: "all", label: "전체 부서" },
-    { value: "development", label: "개발팀" },
-    { value: "marketing", label: "마케팅팀" },
-    { value: "sales", label: "영업팀" },
-    { value: "hr", label: "인사팀" },
-    { value: "finance", label: "재무팀" },
-    { value: "design", label: "디자인팀" },
-    { value: "quality", label: "품질관리팀" },
-    { value: "cs", label: "고객서비스팀" },
-  ];
-
   const statusOptions = [
     { value: "all", label: "전체 상태" },
     { value: "active", label: "재직중" },
@@ -228,68 +226,37 @@ export const HRMEmployees = () => {
     { value: "resigned", label: "퇴사" },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "leave":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "resigned":
-        return "bg-red-100 text-red-800 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
+  const getStatusBadge = (status: string) => {
+    const statusConfig: Record<
+      string,
+      { label: string; variant: "success" | "warning" | "error" | "default" }
+    > = {
+      active: { label: "재직중", variant: "success" },
+      leave: { label: "휴직중", variant: "warning" },
+      resigned: { label: "퇴사", variant: "error" },
+    };
+
+    const config = statusConfig[status];
+    if (!config) return null;
+
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "active":
-        return "재직중";
-      case "leave":
-        return "휴직중";
-      case "resigned":
-        return "퇴사";
-      default:
-        return "알 수 없음";
-    }
-  };
+  const getPerformanceBadge = (performance: string) => {
+    const performanceConfig: Record<
+      string,
+      { variant: "success" | "info" | "warning" | "error" }
+    > = {
+      A: { variant: "success" },
+      B: { variant: "info" },
+      C: { variant: "warning" },
+      D: { variant: "error" },
+    };
 
-  const getDepartmentText = (department: string) => {
-    switch (department) {
-      case "development":
-        return "개발팀";
-      case "marketing":
-        return "마케팅팀";
-      case "sales":
-        return "영업팀";
-      case "hr":
-        return "인사팀";
-      case "finance":
-        return "재무팀";
-      case "design":
-        return "디자인팀";
-      case "quality":
-        return "품질관리팀";
-      case "cs":
-        return "고객서비스팀";
-      default:
-        return department;
-    }
-  };
+    const config = performanceConfig[performance];
+    if (!config) return null;
 
-  const getPerformanceColor = (performance: string) => {
-    switch (performance) {
-      case "A":
-        return "bg-green-100 text-green-800";
-      case "B":
-        return "bg-blue-100 text-blue-800";
-      case "C":
-        return "bg-yellow-100 text-yellow-800";
-      case "D":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+    return <Badge variant={config.variant}>평가: {performance}</Badge>;
   };
 
   const filteredEmployees = employees.filter((employee) => {
@@ -344,75 +311,60 @@ export const HRMEmployees = () => {
   };
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* Stats Cards */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">총 직원 수</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalEmployees}
-              </p>
-              <p className="mt-1 text-xs text-teal-600">등록된 직원</p>
-            </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100">
-              <i className="ri-team-line text-teal-600"></i>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">재직 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {activeEmployees}
-              </p>
-              <p className="mt-1 text-xs text-green-600">활동 중</p>
-            </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-user-line text-green-600"></i>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">휴직 중</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {onLeaveEmployees}
-              </p>
-              <p className="mt-1 text-xs text-yellow-600">일시 휴직</p>
-            </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-pause-circle-line text-yellow-600"></i>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">평균 급여</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {avgSalary.toLocaleString()}
-              </p>
-              <p className="mt-1 text-xs text-blue-600">원/월</p>
-            </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-money-dollar-circle-line text-blue-600"></i>
-            </div>
-          </div>
-        </div>
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+        <StatCard
+          icon="ri-team-line"
+          label="총 직원 수"
+          value={totalEmployees}
+          iconBgColor="bg-teal-100"
+          iconColor="text-teal-600"
+        />
+        <StatCard
+          icon="ri-user-line"
+          label="재직 중"
+          value={activeEmployees}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+        <StatCard
+          icon="ri-pause-circle-line"
+          label="휴직 중"
+          value={onLeaveEmployees}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
+        <StatCard
+          icon="ri-money-dollar-circle-line"
+          label="평균 급여"
+          value={`${avgSalary.toLocaleString()}원`}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
       </div>
 
       {/* Filters and Actions */}
-      <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">직원 목록</h2>
-          <div className="flex items-center space-x-3">
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="이름, 직급, 사번 검색..."
+        filters={[
+          {
+            key: "department",
+            value: departmentFilter,
+            options: departmentOptions,
+            onChange: setDepartmentFilter,
+          },
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: setStatusFilter,
+          },
+        ]}
+        actions={
+          <>
             <Button
               variant="secondary"
               size="sm"
@@ -425,85 +377,58 @@ export const HRMEmployees = () => {
               <i className="ri-user-add-line mr-2"></i>
               직원 등록
             </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Input
-            placeholder="이름, 직급, 사번 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={departmentOptions}
-            value={departmentFilter}
-            onChange={(e) => setDepartmentFilter(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Employee List */}
       <div className="space-y-4">
         {filteredEmployees.map((employee) => (
-          <div
-            key={employee.id}
-            className="rounded-lg border border-gray-200 bg-white p-6"
-          >
+          <Card key={employee.id}>
             <div className="mb-4 flex items-start justify-between">
               <div className="flex-1">
                 <div className="mb-2 flex items-center space-x-3">
-                  <span className="text-lg font-semibold text-gray-900">
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
                     {employee.name}
                   </span>
-                  <span className="text-sm text-gray-600">({employee.id})</span>
-                  <span
-                    className={`rounded-full border px-2 py-1 text-xs font-medium ${getStatusColor(employee.status)}`}
-                  >
-                    {getStatusText(employee.status)}
+                  <span className="text-sm text-gray-600 dark:text-white">
+                    ({employee.id})
                   </span>
-                  <span
-                    className={`rounded px-2 py-1 text-xs font-medium ${getPerformanceColor(employee.performance)}`}
-                  >
-                    평가: {employee.performance}
-                  </span>
+                  {getStatusBadge(employee.status)}
+                  {getPerformanceBadge(employee.performance)}
                 </div>
                 <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-4">
                   <div>
-                    <p className="text-gray-600">직급/부서</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-gray-600 dark:text-white">직급/부서</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
                       {employee.level} · {employee.position}
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-white">
                       {getDepartmentText(employee.department)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600">입사일/경력</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-gray-600 dark:text-white">입사일/경력</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
                       {employee.hireDate}
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-white">
                       {getYearsOfService(employee.hireDate)}년차
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600">급여</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-gray-600 dark:text-white">급여</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
                       {employee.salary.toLocaleString()}원
                     </p>
-                    <p className="text-gray-600">월급</p>
+                    <p className="text-gray-600 dark:text-white">월급</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">연차 사용</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-gray-600 dark:text-white">연차 사용</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
                       {employee.usedLeave}/{employee.annualLeave}일
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-white">
                       잔여: {employee.annualLeave - employee.usedLeave}일
                     </p>
                   </div>
@@ -525,20 +450,25 @@ export const HRMEmployees = () => {
                 </Button>
               </div>
             </div>
-
             <div className="mb-4 grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
               <div>
-                <p className="text-gray-600">연락처</p>
-                <p className="font-medium text-gray-900">{employee.phone}</p>
-                <p className="text-gray-600">{employee.email}</p>
+                <p className="text-gray-600 dark:text-white">연락처</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {employee.phone}
+                </p>
+                <p className="text-gray-600 dark:text-white">
+                  {employee.email}
+                </p>
               </div>
               <div>
-                <p className="text-gray-600">주소</p>
-                <p className="font-medium text-gray-900">{employee.address}</p>
+                <p className="text-gray-600 dark:text-white">주소</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {employee.address}
+                </p>
               </div>
               <div>
-                <p className="text-gray-600">비상연락처</p>
-                <p className="font-medium text-gray-900">
+                <p className="text-gray-600 dark:text-white">비상연락처</p>
+                <p className="font-medium text-gray-900 dark:text-white">
                   {employee.emergencyContact}
                 </p>
               </div>
@@ -546,18 +476,18 @@ export const HRMEmployees = () => {
 
             <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
               <div>
-                <p className="mb-1 text-gray-600">학력</p>
-                <p className="font-medium text-gray-900">
+                <p className="mb-1 text-gray-600 dark:text-white">학력</p>
+                <p className="font-medium text-gray-900 dark:text-white">
                   {employee.education}
                 </p>
               </div>
               <div>
-                <p className="mb-1 text-gray-600">보유 스킬</p>
+                <p className="mb-1 text-gray-600 dark:text-white">보유 스킬</p>
                 <div className="flex flex-wrap gap-1">
                   {employee.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="rounded bg-teal-100 px-2 py-1 text-xs text-teal-800"
+                      className="rounded-md bg-teal-100 px-3 py-1.5 text-sm font-medium text-teal-800 dark:bg-teal-700 dark:text-white"
                     >
                       {skill}
                     </span>
@@ -565,19 +495,21 @@ export const HRMEmployees = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
       {/* Add Employee Modal */}
       {showAddModal && (
         <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-          <div className="mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6">
+          <div className="mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 dark:bg-bg-card-black">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">직원 등록</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                직원 등록
+              </h2>
               <button
                 onClick={handleCloseAddModal}
-                className="hover:text-gray-5 text-gray-400"
+                className="text-gray-400 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300"
               >
                 <i className="ri-close-line text-2xl"></i>
               </button>
@@ -626,14 +558,14 @@ export const HRMEmployees = () => {
       {/* Edit Employee Modal */}
       {showEditModal && selectedEmployee && (
         <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-          <div className="mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6">
+          <div className="mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 dark:bg-bg-card-black">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 직원 정보 수정
               </h2>
               <button
                 onClick={handleCloseEditModal}
-                className="hover:text-gray-5 text-gray-400"
+                className="text-gray-400 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300"
               >
                 <i className="ri-close-line text-2xl"></i>
               </button>
@@ -707,6 +639,6 @@ export const HRMEmployees = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "@/shared/ui";
+import { Button, Card } from "@/shared/ui";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -76,6 +76,21 @@ export const Home = () => {
           path: "/wms/inventory",
           icon: "ri-bar-chart-box-line",
         },
+        {
+          title: "입고 관리",
+          path: "/wms/receiving",
+          icon: "ri-file-list-3-line",
+        },
+        {
+          title: "발주 관리",
+          path: "/wms/orders",
+          icon: "ri-shopping-bag-line",
+        },
+        {
+          title: "ROP 설정",
+          path: "/wms/rop-settings",
+          icon: "ri-settings-3-line",
+        },
       ],
     },
     {
@@ -90,6 +105,11 @@ export const Home = () => {
           title: "생산 지시",
           path: "/production/orders",
           icon: "ri-hammer-line",
+        },
+        {
+          title: "생산 계획",
+          path: "/production/planning",
+          icon: "ri-calendar-line",
         },
       ],
     },
@@ -138,16 +158,16 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="border-b bg-white shadow-sm">
+    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
+      {/* 헤더 */}
+      <div className="border-b border-gray-200 bg-bg-card-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                B2B 부품 공급망 관리 시스템
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                삼삼오토
               </h1>
-              <p className="mt-1 text-gray-600">
+              <p className="mt-1 text-gray-600 dark:text-gray-400">
                 {currentTime.toLocaleDateString("ko-KR", {
                   year: "numeric",
                   month: "long",
@@ -179,133 +199,177 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* 메인 콘텐츠 */}
       <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* System Overview */}
+        {/* 시스템 개요 */}
         <div className="mb-8">
-          <div className="rounded-lg border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+          <Card>
+            <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
               시스템 개요
             </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-              <div className="rounded-lg bg-blue-50 p-4 text-center">
+              <div className="rounded-lg bg-blue-50 p-4 text-center dark:bg-blue-900/20">
                 <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500">
                   <i className="ri-smartphone-line text-xl text-white"></i>
                 </div>
-                <h3 className="font-medium text-gray-900">대리점 주문</h3>
-                <p className="mt-1 text-sm text-gray-600">App으로 부품 주문</p>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                  대리점 주문
+                </h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  App으로 부품 주문
+                </p>
               </div>
-              <div className="rounded-lg bg-purple-50 p-4 text-center">
+              <div className="rounded-lg bg-purple-50 p-4 text-center dark:bg-purple-900/20">
                 <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500">
                   <i className="ri-truck-line text-xl text-white"></i>
                 </div>
-                <h3 className="font-medium text-gray-900">창고 출고</h3>
-                <p className="mt-1 text-sm text-gray-600">재고 관리 및 출고</p>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                  창고 출고
+                </h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  재고 관리 및 출고
+                </p>
               </div>
-              <div className="rounded-lg bg-orange-50 p-4 text-center">
+              <div className="rounded-lg bg-orange-50 p-4 text-center dark:bg-orange-900/20">
                 <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500">
                   <i className="ri-hammer-line text-xl text-white"></i>
                 </div>
-                <h3 className="font-medium text-gray-900">공장 생산</h3>
-                <p className="mt-1 text-sm text-gray-600">BOM 기반 생산</p>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                  공장 생산
+                </h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  BOM 기반 생산
+                </p>
               </div>
-              <div className="rounded-lg bg-red-50 p-4 text-center">
+              <div className="rounded-lg bg-red-50 p-4 text-center dark:bg-red-900/20">
                 <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-red-500">
                   <i className="ri-shopping-bag-line text-xl text-white"></i>
                 </div>
-                <h3 className="font-medium text-gray-900">원자재 구매</h3>
-                <p className="mt-1 text-sm text-gray-600">외부 조달 관리</p>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                  원자재 구매
+                </h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  외부 조달 관리
+                </p>
               </div>
-              <div className="rounded-lg bg-teal-50 p-4 text-center">
+              <div className="rounded-lg bg-teal-50 p-4 text-center dark:bg-teal-900/20">
                 <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-teal-500">
                   <i className="ri-team-line text-xl text-white"></i>
                 </div>
-                <h3 className="font-medium text-gray-900">인사 관리</h3>
-                <p className="mt-1 text-sm text-gray-600">직원 정보 및 급여</p>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                  인사 관리
+                </h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  직원 정보 및 급여
+                </p>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
-        {/* Module Cards */}
+        {/* 모듈 카드 */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {modules.map((module) => (
-            <div
+            <Card
               key={module.id}
-              className="rounded-lg border bg-white shadow-sm transition-shadow hover:shadow-md"
+              onClick={() => handleModuleClick(module.path)}
+              className="group cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-lg dark:hover:shadow-xl"
             >
-              <div className="p-6">
+              <div className="relative">
+                {/* 우측 상단 화살표 아이콘 */}
+                <div className="absolute top-0 right-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                    <i className="ri-arrow-right-up-line text-lg text-gray-600 dark:text-gray-300"></i>
+                  </div>
+                </div>
+
                 <div className="mb-4 flex items-center">
                   <div
-                    className={`h-12 w-12 ${module.color} mr-4 flex items-center justify-center rounded-lg`}
+                    className={`h-12 w-12 ${module.color} mr-4 flex items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110`}
                   >
                     <i className={`${module.icon} text-xl text-white`}></i>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
                       {module.title}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {module.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="mb-4 space-y-2">
+                <div className="space-y-2">
                   {module.subMenus.map((subMenu, index) => (
                     <div
                       key={index}
-                      className="flex items-center text-sm text-gray-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(subMenu.path);
+                      }}
+                      className="group/item flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm text-gray-600 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                     >
-                      <i className={`${subMenu.icon} mr-2`}></i>
+                      <i
+                        className={`${subMenu.icon} mr-2 transition-transform duration-150 group-hover/item:translate-x-0.5`}
+                      ></i>
                       <span>{subMenu.title}</span>
                     </div>
                   ))}
                 </div>
-
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => handleModuleClick(module.path)}
-                  className="w-full"
-                >
-                  <i className="ri-arrow-right-line mr-2"></i>
-                  모듈 접속
-                </Button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
-        {/* Quick Stats */}
+        {/* 빠른 통계 */}
         <div className="mt-8">
-          <div className="rounded-lg border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+          <Card>
+            <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
               시스템 현황
             </h2>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">156</div>
-                <div className="text-sm text-gray-600">등록된 품목</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  156
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  등록된 품목
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">23</div>
-                <div className="text-sm text-gray-600">대기 중인 주문</div>
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  23
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  대기 중인 주문
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">8</div>
-                <div className="text-sm text-gray-600">생산 지시</div>
+                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  8
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  생산 지시
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">12</div>
-                <div className="text-sm text-gray-600">구매 요청</div>
+                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                  12
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  구매 요청
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-teal-600">87</div>
-                <div className="text-sm text-gray-600">등록된 직원</div>
+                <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                  87
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  등록된 직원
+                </div>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
