@@ -1,5 +1,5 @@
 import { fetchClient } from "@/shared/api";
-import type { LoginRequest, SignupRequest } from "@/shared/api/models";
+import type { LoginRequest, SignupRequest } from "@/shared/model/models";
 
 // 로그인 로직 수행
 export const login = async (credentials: LoginRequest) => {

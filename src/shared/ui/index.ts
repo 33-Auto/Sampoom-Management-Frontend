@@ -10,3 +10,4 @@ export { SearchFilterBar } from "./SearchFilterBar";
 export { TableSection } from "./TableSection";
 export { Card } from "./Card";
 export { Badge } from "./Badge";
+export { ThemeToggle } from "./ThemeToggle";

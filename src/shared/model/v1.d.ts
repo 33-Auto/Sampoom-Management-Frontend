@@ -380,6 +380,282 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/warehouse/rop/{warehouseId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getAllRops"];
+    put?: never;
+    post: operations["createRop"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/rop/create": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["createSingleRop"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/stocking": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["stockingParts"];
+    trace?: never;
+  };
+  "/api/warehouse/rop": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["updateRop"];
+    trace?: never;
+  };
+  "/api/warehouse/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["orderProcess"];
+    trace?: never;
+  };
+  "/api/warehouse/delivery": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["deliveryParts"];
+    trace?: never;
+  };
+  "/api/warehouse/{warehouseId}/group/{groupId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getPartsByGroup"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/{warehouseId}/category": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getCategoriesByWarehouse"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/{warehouseId}/category/{categoryId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getGroupsByCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HealthCheck API
+     * @description 서버 상태 체크 API입니다.
+     */
+    get: operations["healthCheck1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-unauthorized": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["unauthorizedTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-notfound": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["notFoundTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-forbidden": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["forbiddenTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-error": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-data": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData_11"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["search"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/rop/{ropId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["deleteRop"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}": {
     parameters: {
       query?: never;
@@ -422,6 +698,46 @@ export interface paths {
      */
     put: operations["receiveMaterialOrder"];
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders/mrp/batch": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 일괄 MRP 실행
+     * @description 여러 부품 주문에 대해 MRP를 일괄 실행합니다.
+     */
+    post: operations["executeBatchMRP"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders/apply-mrp/batch": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 일괄 MRP 결과 적용
+     * @description 여러 부품 주문에 대해 MRP 결과를 일괄 적용합니다.
+     */
+    post: operations["applyBatchMRPResult"];
     delete?: never;
     options?: never;
     head?: never;
@@ -519,7 +835,7 @@ export interface paths {
     put?: never;
     /**
      * 부품 주문 생성
-     * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다.
+     * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다. 여러 아이템이 있는 경우 각각 단건으로 나누어 개별 주문을 생성합니다.
      */
     post: operations["createPartOrder"];
     delete?: never;
@@ -601,7 +917,7 @@ export interface paths {
     };
     /**
      * 부품 주문 목록 조회
-     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태를 동시에 필터링할 수 있습니다.
+     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있습니다.
      */
     get: operations["getPartOrders"];
     put?: never;
@@ -683,7 +999,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck1"];
+    get: operations["healthCheck2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -699,7 +1015,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest1"];
+    get: operations["unauthorizedTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -715,7 +1031,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest1"];
+    get: operations["notFoundTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -731,7 +1047,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest1"];
+    get: operations["forbiddenTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -747,7 +1063,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData1"];
+    get: operations["healthCheckData2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -763,7 +1079,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_11"];
+    get: operations["healthCheckData_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1036,7 +1352,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck2"];
+    get: operations["healthCheck3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1052,7 +1368,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest2"];
+    get: operations["unauthorizedTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1068,7 +1384,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest2"];
+    get: operations["notFoundTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1084,7 +1400,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest2"];
+    get: operations["forbiddenTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1100,7 +1416,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData2"];
+    get: operations["healthCheckData3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1116,7 +1432,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_12"];
+    get: operations["healthCheckData_13"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1320,7 +1636,7 @@ export interface paths {
      * 공정 검색/목록 조회
      * @description 공정명 또는 공정 코드로 검색하거나, 상태별로 필터링하여 공정 목록을 페이징 조회합니다.
      */
-    get: operations["search"];
+    get: operations["search1"];
     put?: never;
     /**
      * 공정 등록
@@ -1344,7 +1660,7 @@ export interface paths {
      * 그룹별 부품 목록 조회
      * @description 특정 그룹에 속한 부품 목록 조회
      */
-    get: operations["getPartsByGroup"];
+    get: operations["getPartsByGroup1"];
     put?: never;
     /**
      * 부품 등록
@@ -1444,7 +1760,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck3"];
+    get: operations["healthCheck4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1460,7 +1776,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest3"];
+    get: operations["unauthorizedTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1476,7 +1792,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest3"];
+    get: operations["notFoundTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1492,7 +1808,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest3"];
+    get: operations["forbiddenTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1508,7 +1824,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData3"];
+    get: operations["healthCheckData4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1524,7 +1840,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_13"];
+    get: operations["healthCheckData_14"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1759,7 +2075,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck4"];
+    get: operations["healthCheck5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1775,7 +2091,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest4"];
+    get: operations["unauthorizedTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1791,7 +2107,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest4"];
+    get: operations["notFoundTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1807,7 +2123,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest4"];
+    get: operations["forbiddenTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1823,7 +2139,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData4"];
+    get: operations["healthCheckData5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1839,7 +2155,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_14"];
+    get: operations["healthCheckData_15"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1987,7 +2303,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck5"];
+    get: operations["healthCheck6"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2111,7 +2427,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck6"];
+    get: operations["healthCheck7"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2499,6 +2815,180 @@ export interface components {
       message?: string;
       data?: string;
     };
+    ApiResponseVoid2: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: Record<string, never>;
+    };
+    RopReqDto: {
+      /** Format: int64 */
+      warehouseId?: number;
+      partCode?: string;
+      /** @enum {string} */
+      autoCalStatus?: "ACTIVE" | "INACTIVE";
+      /** @enum {string} */
+      autoOrderStatus?: "ACTIVE" | "INACTIVE";
+      /** Format: int32 */
+      leadTime?: number;
+      /** Format: int32 */
+      averageDaily?: number;
+      /** Format: int32 */
+      maxStock?: number;
+    };
+    PartDeltaDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: int32 */
+      delta: number;
+    };
+    PartUpdateReqDto: {
+      /** Format: int64 */
+      warehouseId: number;
+      items?: components["schemas"]["PartDeltaDto"][];
+    };
+    UpdateRopReqDto: {
+      /** Format: int64 */
+      ropId?: number;
+      /** @enum {string} */
+      autoCalStatus?: "ACTIVE" | "INACTIVE";
+      /** @enum {string} */
+      autoOrderStatus?: "ACTIVE" | "INACTIVE";
+      /** Format: int32 */
+      leadTime?: number;
+      /** Format: int32 */
+      averageDaily?: number;
+      /** Format: int32 */
+      maxStock?: number;
+    };
+    ItemDto: {
+      code: string;
+      /** Format: int32 */
+      quantity: number;
+    };
+    OrderReqDto1: {
+      /** Format: int64 */
+      orderId: number;
+      /** Format: int64 */
+      branchId: number;
+      items: components["schemas"]["ItemDto"][];
+      /** Format: int64 */
+      version?: number;
+      /** Format: date-time */
+      sourceUpdatedAt?: string;
+    };
+    ApiResponseOrderStatus: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      /** @enum {string} */
+      data?:
+        | "PENDING"
+        | "CONFIRMED"
+        | "SHIPPING"
+        | "DELAYED"
+        | "PRODUCING"
+        | "COMPLETED"
+        | "CANCELED";
+    };
+    DeliveryReqDto: {
+      /** Format: int64 */
+      warehouseId: number;
+      /** Format: int64 */
+      orderId?: number;
+      items?: components["schemas"]["PartDeltaDto"][];
+    };
+    ApiResponseListPartResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PartResDto"][];
+    };
+    PartResDto: {
+      /** Format: int64 */
+      id?: number;
+      category?: string;
+      group?: string;
+      name?: string;
+      code?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      unit?: string;
+      /** Format: int32 */
+      partValue?: number;
+      /** @enum {string} */
+      status?: "ENOUGH" | "SHORT" | "DANGER" | "OVER";
+    };
+    ApiResponseListCategoryResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["CategoryResDto"][];
+    };
+    CategoryResDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    ApiResponseListGroupResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["GroupResDto"][];
+    };
+    GroupResDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    ApiResponseRopResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["RopResDto"];
+    };
+    RopItem: {
+      /** Format: int64 */
+      ropId?: number;
+      /** Format: int32 */
+      rop?: number;
+    };
+    RopResDto: {
+      ropItems?: components["schemas"]["RopItem"][];
+    };
+    ApiResponsePagePartResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PagePartResDto"];
+    };
+    PagePartResDto: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["PartResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
     FactoryRequestDto: {
       name: string;
       address: string;
@@ -2550,14 +3040,14 @@ export interface components {
       receivedAt?: string;
       items?: components["schemas"]["MaterialOrderItemDto"][];
     };
-    ApiResponsePartOrderResponseDto: {
+    ApiResponseListPartOrderResponseDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       /** Format: int32 */
       code?: number;
       message?: string;
-      data?: components["schemas"]["PartOrderResponseDto"];
+      data?: components["schemas"]["PartOrderResponseDto"][];
     };
     PartOrderItemDto: {
       /** Format: int64 */
@@ -2592,6 +3082,15 @@ export interface components {
       items?: components["schemas"]["PartOrderItemDto"][];
       /** Format: int32 */
       dday?: number;
+    };
+    ApiResponsePartOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PartOrderResponseDto"];
     };
     MaterialOrderItemRequestDto: {
       /** Format: int64 */
@@ -4128,6 +4627,410 @@ export interface operations {
       };
     };
   };
+  getAllRops: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseRopResDto"];
+        };
+      };
+    };
+  };
+  createRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  createSingleRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RopReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  stockingParts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartUpdateReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  updateRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateRopReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  orderProcess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["OrderReqDto1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseOrderStatus"];
+        };
+      };
+    };
+  };
+  deliveryParts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DeliveryReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  getPartsByGroup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        groupId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartResDto"];
+        };
+      };
+    };
+  };
+  getCategoriesByWarehouse: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListCategoryResDto"];
+        };
+      };
+    };
+  };
+  getGroupsByCategory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        categoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListGroupResDto"];
+        };
+      };
+    };
+  };
+  healthCheck1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  unauthorizedTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  notFoundTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  forbiddenTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData1: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData_11: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
+  search: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        categoryId?: number;
+        groupId?: number;
+        keyword?: string;
+        quantityStatus?: "ENOUGH" | "SHORT" | "DANGER" | "OVER";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePagePartResDto"];
+        };
+      };
+    };
+  };
+  deleteRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ropId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
   getFactory: {
     parameters: {
       query?: never;
@@ -4244,6 +5147,76 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseMaterialOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  executeBatchMRP: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": number[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  applyBatchMRPResult: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": number[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
         };
       };
       /** @description Conflict */
@@ -4407,7 +5380,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
         };
       };
       /** @description Conflict */
@@ -4559,6 +5532,7 @@ export interface operations {
           | "IN_PROGRESS"
           | "COMPLETED"
         )[];
+        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
         page?: number;
         size?: number;
       };
@@ -4693,7 +5667,7 @@ export interface operations {
       };
     };
   };
-  healthCheck1: {
+  healthCheck2: {
     parameters: {
       query?: never;
       header?: never;
@@ -4722,7 +5696,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest1: {
+  unauthorizedTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -4751,7 +5725,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest1: {
+  notFoundTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -4780,7 +5754,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest1: {
+  forbiddenTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -4809,7 +5783,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData1: {
+  healthCheckData2: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -4840,7 +5814,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_11: {
+  healthCheckData_12: {
     parameters: {
       query?: never;
       header?: never;
@@ -5321,7 +6295,7 @@ export interface operations {
       };
     };
   };
-  healthCheck2: {
+  healthCheck3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5341,7 +6315,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest2: {
+  unauthorizedTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5361,7 +6335,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest2: {
+  notFoundTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5381,7 +6355,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest2: {
+  forbiddenTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5401,7 +6375,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData2: {
+  healthCheckData3: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -5423,7 +6397,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_12: {
+  healthCheckData_13: {
     parameters: {
       query?: never;
       header?: never;
@@ -5771,7 +6745,7 @@ export interface operations {
       };
     };
   };
-  search: {
+  search1: {
     parameters: {
       query?: {
         query?: string;
@@ -5820,7 +6794,7 @@ export interface operations {
       };
     };
   };
-  getPartsByGroup: {
+  getPartsByGroup1: {
     parameters: {
       query: {
         groupId: number;
@@ -6036,7 +7010,7 @@ export interface operations {
       };
     };
   };
-  healthCheck3: {
+  healthCheck4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6056,7 +7030,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest3: {
+  unauthorizedTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6076,7 +7050,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest3: {
+  notFoundTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6096,7 +7070,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest3: {
+  forbiddenTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6116,7 +7090,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData3: {
+  healthCheckData4: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -6138,7 +7112,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_13: {
+  healthCheckData_14: {
     parameters: {
       query?: never;
       header?: never;
@@ -6468,7 +7442,7 @@ export interface operations {
       };
     };
   };
-  healthCheck4: {
+  healthCheck5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6488,7 +7462,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest4: {
+  unauthorizedTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6508,7 +7482,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest4: {
+  notFoundTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6528,7 +7502,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest4: {
+  forbiddenTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6548,7 +7522,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData4: {
+  healthCheckData5: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -6570,7 +7544,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_14: {
+  healthCheckData_15: {
     parameters: {
       query?: never;
       header?: never;
@@ -6820,7 +7794,7 @@ export interface operations {
       };
     };
   };
-  healthCheck5: {
+  healthCheck6: {
     parameters: {
       query?: never;
       header?: never;
@@ -7077,7 +8051,7 @@ export interface operations {
       };
     };
   };
-  healthCheck6: {
+  healthCheck7: {
     parameters: {
       query?: never;
       header?: never;

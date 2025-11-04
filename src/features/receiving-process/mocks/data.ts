@@ -1,4 +1,4 @@
-import type { ReceivingProcessResponse } from "@/shared/api/models";
+import type { ReceivingProcessResponse } from "@/shared/model/models";
 
 // Mock 입고 처리 응답 데이터
 export const mockReceivingProcessResponse: ReceivingProcessResponse = {

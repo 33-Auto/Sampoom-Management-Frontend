@@ -1,10 +1,10 @@
-import { queryClient } from "@/shared/api/query";
+import { queryClient as tanstackQueryClient } from "@/shared/api/query";
 
-import { requestedOrdersQueryOptions } from "./order.api";
+import { shippingListQueryOptions } from "./order.api";
 
 export function loader() {
-  const ordersPromise = queryClient.ensureQueryData(
-    requestedOrdersQueryOptions,
-  );
-  return { orders: ordersPromise };
+  tanstackQueryClient.prefetchQuery(shippingListQueryOptions({}));
+  tanstackQueryClient.prefetchQuery(shippingListQueryOptions({ page: 1 }));
+
+  return null;
 }

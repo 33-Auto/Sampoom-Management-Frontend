@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { PartResDto } from "@/shared/api/models";
+import type { PartResDto } from "@/shared/model/models";
 import {
   Badge,
   Button,

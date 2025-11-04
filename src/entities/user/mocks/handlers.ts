@@ -1,12 +1,12 @@
 import { http } from "msw";
 
+import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 import type {
   LoginRequest,
   LoginResponse,
   SignupRequest,
   SignupResponse,
-} from "@/shared/api/models";
-import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
+} from "@/shared/model/models";
 
 import { addUser, findUser, findUserIndex, userExists } from "./data";
 

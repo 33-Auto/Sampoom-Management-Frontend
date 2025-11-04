@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { fetchClient } from "@/shared/api";
+import { fetchClient, queryClient } from "@/shared/api";
 
 export const getRequestedOrders = async () => {
   const { data, error } = await fetchClient.GET(
@@ -28,3 +28,23 @@ export const requestedOrdersQueryOptions = {
 
 export const useGetRequestedOrdersQuery = () =>
   useQuery(requestedOrdersQueryOptions);
+
+export const shippingListQueryOptions = (params?: {
+  warehouseId?: number;
+  keyword?: string;
+  categoryId?: number;
+  groupId?: number;
+  quantityStatus?: "ENOUGH" | "SHORT" | "DANGER" | "OVER";
+  page?: number;
+  size?: number;
+}) =>
+  queryClient.queryOptions("get", "/api/warehouse/", {
+    params: {
+      query: {
+        warehouseId: params?.warehouseId ?? 40,
+
+        page: params?.page ?? 0,
+        size: params?.size ?? 10,
+      },
+    },
+  });
