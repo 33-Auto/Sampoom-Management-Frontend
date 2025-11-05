@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import {
   usePurchaseOrderQuery,
   useMaterialCategoryQuery,
@@ -19,7 +21,6 @@ import {
   StatCard,
   InfoBox,
   SearchFilterBar,
-  TableSection,
 } from "@/shared/ui";
 
 export function WmsPurchaseOrders() {
@@ -29,14 +30,24 @@ export function WmsPurchaseOrders() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
 
-  const { data, isLoading, isError } = usePurchaseOrderQuery({
+  // Pagination 처리를 위한 커스텀 훅
+  const { page, size, setPage, onPageChange, onSizeChange } =
+    usePaginationTable({});
+
+  const { data, isLoading, isError, refetch } = usePurchaseOrderQuery({
     warehouseId: 40,
     keyword: searchTerm === "" ? undefined : searchTerm,
     categoryId: selectedCategory === "" ? undefined : Number(selectedCategory),
     groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
     status:
       statusFilter === "" ? undefined : (statusFilter as PurchaseOrderStatus),
+    page,
+    size,
   });
+
+  const purchaseOrdersData = data?.data?.content ?? [];
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
 
   const { data: categoryData } = useMaterialCategoryQuery();
 
@@ -266,7 +277,6 @@ export function WmsPurchaseOrders() {
   ];
 
   // 통계 계산
-  const purchaseOrdersData = data?.data?.content ?? [];
   const completedCount = purchaseOrdersData.filter(
     (item) => item.orderStatus === "COMPLETED",
   ).length;
@@ -332,8 +342,8 @@ export function WmsPurchaseOrders() {
         <SearchFilterBar
           searchTerm={searchTerm}
           onSearchChange={(value) => {
-            console.log("value", value);
             setSearchTerm(value);
+            setPage(0); // 검색 변경 시 1페이지로 이동
           }}
           searchPlaceholder="발주번호, 품목명 검색..."
           filters={[
@@ -344,20 +354,27 @@ export function WmsPurchaseOrders() {
               onChange: (e) => {
                 setSelectedCategory(e);
                 setSelectedGroup("");
+                setPage(0);
               },
             },
             {
               key: "group",
               value: selectedGroup,
               options: groupOptions,
-              onChange: setSelectedGroup,
+              onChange: (value) => {
+                setSelectedGroup(value);
+                setPage(0);
+              },
               disabled: selectedCategory === "",
             },
             {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: setStatusFilter,
+              onChange: (value) => {
+                setStatusFilter(value);
+                setPage(0);
+              },
             },
           ]}
           actions={
@@ -370,6 +387,7 @@ export function WmsPurchaseOrders() {
                   setSelectedCategory("");
                   setSelectedGroup("");
                   setStatusFilter("");
+                  setPage(0);
                 }}
               >
                 <i className="ri-refresh-line mr-2"></i>
@@ -380,24 +398,20 @@ export function WmsPurchaseOrders() {
         />
 
         {/* 발주 모니터링 테이블 */}
-
-        <TableSection
+        <PaginationTableSection
           title="발주 모니터링"
-          metaRight={
-            <span className="text-sm text-gray-500">
-              총 {data?.data?.content?.length ?? 0}개 발주건
-            </span>
-          }
-          actionsRight={
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          }
+          totalElements={totalElements}
+          page={page}
+          totalPages={totalPages}
+          size={size}
+          onSizeChange={onSizeChange}
+          onPageChange={onPageChange}
+          showRefresh
+          onRefresh={refetch}
         >
           <Table
             columns={columns}
-            data={data?.data?.content ?? []}
+            data={purchaseOrdersData}
             loading={isLoading && data === undefined}
             emptyText={
               isLoading && data === undefined
@@ -406,7 +420,7 @@ export function WmsPurchaseOrders() {
             }
             errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
           />
-        </TableSection>
+        </PaginationTableSection>
       </div>
     </>
   );
