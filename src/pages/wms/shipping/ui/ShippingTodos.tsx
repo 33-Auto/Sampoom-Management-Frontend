@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
+import { queryClient as tanstackQueryClient } from "@/shared/api/query";
 import {
   Badge,
   Button,
@@ -9,6 +11,8 @@ import {
   TableSection,
 } from "@/shared/ui";
 
+import { shippingListQueryOptions } from "../api/order.api";
+import type { PartResDto } from "../model/shipping.model";
 // 출고 지시 데이터
 const shippingTodoData = [
   {
@@ -63,6 +67,32 @@ export const ShippingTodos = () => {
   const [statusFilter, setStatusFilter] = useState("전체");
   const [priorityFilter, setPriorityFilter] = useState("전체");
 
+  const [page, setPage] = useState(0);
+
+  // loader로 불러진 데이터 사용하기
+  const { data, isFetching } = useQuery(
+    shippingListQueryOptions({ page: page }),
+  );
+
+  const shippingList = data?.data?.content || [];
+
+  // 이거 공통 컴포넌트화
+  const keys =
+    shippingList.length > 0
+      ? (Object.fromEntries(
+          Object.keys(shippingList[0]).map((key) => [key, key]),
+        ) as Record<keyof PartResDto, keyof PartResDto>)
+      : ({} as Record<keyof PartResDto, keyof PartResDto>);
+
+  const handleNextPage = () => {
+    setPage(page + 1);
+    tanstackQueryClient.prefetchQuery(
+      shippingListQueryOptions({ page: page + 2 }),
+    );
+
+    console.log(keys);
+  };
+
   const statusOptions = [
     { value: "전체", label: "전체 상태" },
     { value: "출고대기", label: "출고대기" },
@@ -93,6 +123,7 @@ export const ShippingTodos = () => {
 
   const handleShipConfirm = (shippingId: string) => {
     console.log("출고 확정:", shippingId);
+    console.log(keys.code);
   };
 
   // 생산 요청 기능 제거 - WMS는 보고만 담당
@@ -102,15 +133,19 @@ export const ShippingTodos = () => {
   // };
 
   const columns = [
-    { key: "shippingId", title: "출고번호", width: "120px" },
-    { key: "orderId", title: "주문번호", width: "120px" },
-    { key: "customerName", title: "고객사", width: "120px" },
-    { key: "productName", title: "제품명" },
+    // { key: "id", title: "출고번호", width: "120px" },
+    { key: keys.code, title: "주문번호", width: "120px" },
+    { key: keys.name, title: "제품명" },
     {
       key: "requestedQty",
       title: "요청수량",
       width: "80px",
       render: (value: number) => `${value}개`,
+    },
+    {
+      key: "unit",
+      title: "단위",
+      width: "80px",
     },
     {
       key: "availableStock",
@@ -124,25 +159,6 @@ export const ShippingTodos = () => {
         >
           {value}개
         </span>
-      ),
-    },
-    { key: "warehouseLocation", title: "창고위치", width: "100px" },
-    {
-      key: "priority",
-      title: "우선순위",
-      width: "100px",
-      render: (value: string) => (
-        <Badge
-          variant={
-            value === "높음"
-              ? "error"
-              : value === "보통"
-                ? "warning"
-                : "success"
-          }
-        >
-          {value}
-        </Badge>
       ),
     },
     {
@@ -267,8 +283,8 @@ export const ShippingTodos = () => {
           ]}
           actions={
             <div className="flex space-x-2">
-              <Button variant="default" size="sm">
-                <i className="ri-add-line mr-2"></i>
+              <Button variant="default" size="sm" onClick={handleNextPage}>
+                <i className="ri1-add-line mr-2"></i>
                 수동 출고
               </Button>
             </div>
@@ -292,8 +308,9 @@ export const ShippingTodos = () => {
         >
           <Table
             columns={columns}
-            data={filteredData}
+            data={data?.data?.content || []}
             emptyText="조건에 맞는 출고지시가 없습니다"
+            loading={isFetching}
           />
         </TableSection>
       </div>

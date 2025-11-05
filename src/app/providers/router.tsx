@@ -95,12 +95,12 @@ const SalesOrderDetail = lazy(async () => ({
 // ============================================================================
 // WMS Pages - 창고 관리 모듈 (지연 로딩)
 // ============================================================================
-const InventoryDashboard = lazy(async () => ({
-  default: (await import("@/pages/wms/inventory")).InventoryDashboard,
-}));
-const ShippingTodos = lazy(async () => ({
-  default: (await import("@/pages/wms/shipping")).ShippingTodos,
-}));
+// const InventoryDashboard = lazy(async () => ({
+//   default: (await import("@/pages/wms/inventory")).InventoryDashboard,
+// }));
+// const ShippingTodos = lazy(async () => ({
+//   default: (await import("@/pages/wms/shipping")).ShippingTodos,
+// }));
 
 const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
@@ -227,11 +227,25 @@ const routes: RouteObject[] = [
           },
           {
             path: "shipping",
-            element: <ShippingTodos />,
+            lazy: async () => {
+              const { ShippingTodos } = await import("@/pages/wms/shipping");
+              const { loader } = await import(
+                "@/pages/wms/shipping/api/loader"
+              );
+              return { Component: ShippingTodos, loader };
+            },
           },
           {
             path: "inventory",
-            element: <InventoryDashboard />,
+            lazy: async () => {
+              const { InventoryDashboard } = await import(
+                "@/pages/wms/inventory"
+              );
+              const { loader } = await import(
+                "@/pages/wms/inventory/api/loader"
+              );
+              return { Component: InventoryDashboard, loader };
+            },
           },
           {
             path: "receiving",

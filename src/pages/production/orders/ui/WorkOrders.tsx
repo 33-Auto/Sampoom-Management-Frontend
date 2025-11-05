@@ -44,7 +44,7 @@ const workOrderData = [
     status: "진행중",
     bomVersion: "v1.5",
     productionLine: "LINE-B",
-    assignedWorker: "마구박아생산",
+    assignedWorker: "이생산",
     estimatedHours: 45,
     materialAvailability: "충분",
   },

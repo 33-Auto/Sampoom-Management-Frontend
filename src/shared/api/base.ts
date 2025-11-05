@@ -1,7 +1,7 @@
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 
-import type { paths } from "@/shared/api/v1";
+import type { paths } from "@/shared/model/v1";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 

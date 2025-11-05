@@ -1,6 +1,6 @@
 import type { z } from "zod";
 
-import type { ReceivingProcessResponse } from "@/shared/api/models";
+import type { ReceivingProcessResponse } from "@/shared/model/models";
 
 import type { ReceivingProcessSchema } from "./receiving-process.contract";
 

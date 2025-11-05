@@ -1,4 +1,4 @@
-import type { SignupRequest } from "@/shared/api/models";
+import type { SignupRequest } from "@/shared/model/models";
 
 // 메모리 상에 사용자 데이터 저장
 export const users: SignupRequest[] = [
