@@ -1,142 +1,77 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  Button,
+  Table,
+  SearchFilterBar,
+  TableSection,
+  StatCard,
+} from "@/shared/ui";
 
-// 판매 주문 데이터
-const salesOrderData = [
-  {
-    orderId: "SO-2024-001",
-    orderDate: "2024-01-15",
-    customerName: "서울대리점",
-    customerCode: "CUST-001",
-    productName: "엔진 어셈블리 A-Type",
-    quantity: 5,
-    unitPrice: 2500000,
-    totalAmount: 12500000,
-    status: "신규",
-    priority: "높음",
-    requestedDate: "2024-01-20",
-    salesManager: "김영업",
-  },
-  {
-    orderId: "SO-2024-002",
-    orderDate: "2024-01-15",
-    customerName: "부산대리점",
-    customerCode: "CUST-002",
-    productName: "브레이크 시스템",
-    quantity: 10,
-    unitPrice: 850000,
-    totalAmount: 8500000,
-    status: "승인",
-    priority: "보통",
-    requestedDate: "2024-01-22",
-    salesManager: "이판매",
-  },
-  {
-    orderId: "SO-2024-003",
-    orderDate: "2024-01-14",
-    customerName: "대구대리점",
-    customerCode: "CUST-003",
-    productName: "전자제어 모듈",
-    quantity: 8,
-    unitPrice: 1200000,
-    totalAmount: 9600000,
-    status: "출고대기",
-    priority: "높음",
-    requestedDate: "2024-01-18",
-    salesManager: "박영업",
-  },
-  {
-    orderId: "SO-2024-004",
-    orderDate: "2024-01-14",
-    customerName: "광주대리점",
-    customerCode: "CUST-004",
-    productName: "서스펜션 키트",
-    quantity: 3,
-    unitPrice: 1800000,
-    totalAmount: 5400000,
-    status: "완료",
-    priority: "보통",
-    requestedDate: "2024-01-16",
-    salesManager: "최판매",
-  },
-];
+import {
+  useSalesOrdersQuery,
+  useCancelOrderMutation,
+} from "../api/sales-orders.api";
+
+// 판매 주문 데이터는 API로부터 조회
 
 export const SalesOrders = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
-  const [priorityFilter, setPriorityFilter] = useState("전체");
+  const navigate = useNavigate();
+  const [fromText, setFromText] = useState(""); // 고객사 필터
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(20);
+  const warehouseId = 1;
+
+  const statusLabelMap: Record<string, string> = {
+    PENDING: "대기 중",
+    CONFIRMED: "주문 확인",
+    SHIPPING: "배송 중",
+    DELAYED: "배송 지연",
+    PRODUCING: "생산 중",
+    COMPLETED: "배송 완료",
+    CANCELED: "주문 취소",
+  };
 
   const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "신규", label: "신규" },
-    { value: "승인", label: "승인" },
-    { value: "출고대기", label: "출고대기" },
-    { value: "완료", label: "완료" },
-    { value: "취소", label: "취소" },
+    { value: "ALL", label: "전체 상태" },
+    { value: "PENDING", label: "대기 중" },
+    { value: "CONFIRMED", label: "주문 확인" },
+    { value: "SHIPPING", label: "배송 중" },
+    { value: "DELAYED", label: "배송 지연" },
+    { value: "PRODUCING", label: "생산 중" },
+    { value: "COMPLETED", label: "배송 완료" },
+    { value: "CANCELED", label: "주문 취소" },
   ];
 
-  const priorityOptions = [
-    { value: "전체", label: "전체 우선순위" },
-    { value: "높음", label: "높음" },
-    { value: "보통", label: "보통" },
-    { value: "낮음", label: "낮음" },
-  ];
+  // 우선순위는 추후 확장 예정
 
-  const filteredData = salesOrderData.filter((order) => {
-    const matchesSearch =
-      order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.productName?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "전체" || order.status === statusFilter;
-    const matchesPriority =
-      priorityFilter === "전체" || order.priority === priorityFilter;
-    return matchesSearch && matchesStatus && matchesPriority;
+  const { data, refetch } = useSalesOrdersQuery({
+    warehouseId,
+    page,
+    size,
+    ...(fromText ? { from: fromText } : {}),
+    ...(statusFilter !== "ALL" ? { status: statusFilter as any } : {}),
   });
+  const orders = data?.orders ?? [];
+  const rawContent = data?.rawContent ?? [];
+  const totalPages = data?.totalPages ?? 0;
+  const totalElements = data?.totalElements ?? 0;
 
-  const handleApprove = (orderId: string) => {
-    console.log("주문 승인:", orderId);
-  };
-
-  const handleReject = (orderId: string) => {
-    console.log("주문 반려:", orderId);
-  };
+  // 작업 버튼 - 취소/상세
+  const cancelMutation = useCancelOrderMutation();
 
   const columns = [
-    { key: "orderId", title: "주문번호", width: "120px" },
-    { key: "orderDate", title: "주문일", width: "100px" },
-    { key: "customerName", title: "고객사" },
+    { key: "orderNumber", title: "주문번호", width: "160px" },
+    { key: "createdDate", title: "주문일", width: "110px" },
+    { key: "agencyName", title: "고객사" },
     { key: "productName", title: "제품명" },
     {
-      key: "quantity",
+      key: "totalQuantity",
       title: "수량",
       width: "80px",
       render: (value: number) => `${value}개`,
-    },
-    {
-      key: "totalAmount",
-      title: "총액",
-      width: "120px",
-      render: (value: number) => `₩${value.toLocaleString()}`,
-    },
-    {
-      key: "priority",
-      title: "우선순위",
-      width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "높음"
-              ? "bg-red-100 text-red-800"
-              : value === "보통"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
     },
     {
       key: "status",
@@ -145,51 +80,54 @@ export const SalesOrders = () => {
       render: (value: string) => (
         <span
           className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "신규"
-              ? "bg-blue-100 text-blue-800"
-              : value === "승인"
-                ? "bg-green-100 text-green-800"
-                : value === "출고대기"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : value === "완료"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-red-100 text-red-800"
+            value === "PENDING"
+              ? "bg-yellow-100 text-yellow-800"
+              : value === "CONFIRMED"
+                ? "bg-blue-100 text-blue-800"
+                : value === "SHIPPING"
+                  ? "bg-indigo-100 text-indigo-800"
+                  : value === "DELAYED"
+                    ? "bg-orange-100 text-orange-800"
+                    : value === "PRODUCING"
+                      ? "bg-purple-100 text-purple-800"
+                      : value === "COMPLETED"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
           }`}
         >
-          {value}
+          {statusLabelMap[value] || value}
         </span>
       ),
     },
     {
       key: "actions",
       title: "작업",
-      width: "150px",
-      render: (value: any, row: any) => (
-        <div className="flex space-x-1">
-          {row.status === "신규" && (
-            <>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => handleApprove(row.orderId)}
-              >
-                승인
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleReject(row.orderId)}
-              >
-                반려
-              </Button>
-            </>
-          )}
-          {row.status === "승인" && (
-            <Button variant="secondary" size="sm">
-              출고지시
-            </Button>
-          )}
-          <Button variant="secondary" size="sm">
+      width: "220px",
+      render: (_: any, row: any) => (
+        <div className="flex items-center gap-1">
+          <Button
+            variant="destructive"
+            size="sm"
+            className="cursor-pointer"
+            disabled={cancelMutation.isPending || row.status !== "PENDING"}
+            onClick={async () => {
+              await cancelMutation.mutateAsync(row.orderId);
+              await refetch();
+            }}
+          >
+            취소
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="cursor-pointer"
+            onClick={() => {
+              const full = rawContent.find((r) => r.orderId === row.orderId);
+              navigate(`/sales/orders/${row.orderId}`, {
+                state: { order: full },
+              });
+            }}
+          >
             상세
           </Button>
         </div>
@@ -197,134 +135,138 @@ export const SalesOrders = () => {
     },
   ];
 
-  // 통계 계산
-  const totalOrders = salesOrderData.length;
-  const newOrders = salesOrderData.filter(
-    (order) => order.status === "신규",
+  // 통계 계산 (현재 페이지 기준 간단 집계)
+  const totalOrders = totalElements;
+  const confirmedOrders = orders.filter((o) => o.status === "CONFIRMED").length;
+  const shippingOrPending = orders.filter(
+    (o) => o.status === "SHIPPING" || o.status === "PENDING",
   ).length;
-  const pendingOrders = salesOrderData.filter(
-    (order) => order.status === "출고대기",
-  ).length;
-  const totalAmount = salesOrderData.reduce(
-    (sum, order) => sum + order.totalAmount,
-    0,
-  );
+  const completedOrders = orders.filter((o) => o.status === "COMPLETED").length;
 
   return (
-    <>
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
+    <div className="p-6">
+      {/* 통계 카드 - 공통 StatCard 사용 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-file-list-line text-xl text-blue-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 주문</p>
-              <p className="text-2xl font-bold text-gray-900">{totalOrders}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-file-list-line"
+          label="전체 주문"
+          value={totalOrders}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-              <i className="ri-notification-line text-xl text-red-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">신규 주문</p>
-              <p className="text-2xl font-bold text-gray-900">{newOrders}</p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-notification-line"
+          label="확인된 주문"
+          value={confirmedOrders}
+          iconBgColor="bg-red-100"
+          iconColor="text-red-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-time-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">출고 대기</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {pendingOrders}
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-time-line"
+          label="진행 중(PENDING/SHIPPING)"
+          value={shippingOrPending}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-money-dollar-circle-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">총 주문액</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ₩{(totalAmount / 1000000).toFixed(0)}M
-              </p>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          icon="ri-check-double-line"
+          label="완료된 주문"
+          value={completedOrders}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
       </div>
 
-      {/* 필터 및 검색 */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Input
-            placeholder="주문번호, 고객사, 제품명 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Select
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <Select
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-          />
-          <div className="flex space-x-2">
-            <Button variant="default" size="sm">
-              <i className="ri-add-line mr-2"></i>
-              수동 주문
-            </Button>
-            <Button variant="secondary" size="sm">
-              <i className="ri-download-line mr-2"></i>
-              내보내기
-            </Button>
-          </div>
-        </div>
-      </div>
+      {/* 필터 및 검색 - 공통 컴포넌트 사용 */}
+      <SearchFilterBar
+        searchTerm={fromText}
+        onSearchChange={(v) => {
+          setFromText(v);
+          setPage(0);
+        }}
+        searchPlaceholder="고객사(From) 검색..."
+        filters={[
+          {
+            key: "status",
+            value: statusFilter,
+            options: statusOptions,
+            onChange: (v: string) => {
+              setStatusFilter(v);
+              setPage(0);
+            },
+          },
+        ]}
+      />
 
-      {/* 주문 목록 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              판매 주문 목록
-            </h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 주문
-              </span>
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
+      {/* 주문 목록 테이블 - TableSection 사용 */}
+      <TableSection
+        title="판매 주문 목록"
+        metaRight={
+          <div className="flex items-center gap-3 text-sm text-gray-500">
+            <span>
+              총 {totalElements}개 / 페이지 {page + 1} /{" "}
+              {Math.max(totalPages, 1)}
+            </span>
+            <select
+              className="cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs"
+              value={size}
+              onChange={(e) => {
+                setSize(Number(e.target.value));
+                setPage(0);
+              }}
+            >
+              {[10, 20, 50].map((s) => (
+                <option key={s} value={s}>
+                  {s}/page
+                </option>
+              ))}
+            </select>
+          </div>
+        }
+        actionsRight={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={async () => refetch()}
+            >
+              <i className="ri-refresh-line mr-2"></i>
+              새로고침
+            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page <= 0}
+              >
+                이전
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  setPage((p) =>
+                    totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
+                  )
+                }
+                disabled={totalPages ? page >= totalPages - 1 : false}
+              >
+                다음
               </Button>
             </div>
           </div>
-        </div>
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 주문이 없습니다"
-          />
-        </div>
-      </div>
-    </>
+        }
+      >
+        <Table
+          columns={columns}
+          data={orders}
+          emptyText="조건에 맞는 주문이 없습니다"
+        />
+      </TableSection>
+    </div>
   );
 };

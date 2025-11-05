@@ -145,6 +145,7 @@ export const ItemMaster = () => {
           <Button
             variant="secondary"
             size="sm"
+            className="cursor-pointer"
             aria-label="편집"
             onClick={(e) => {
               e.stopPropagation();
@@ -172,7 +173,7 @@ export const ItemMaster = () => {
   } = useItemStats(materialMasterData);
 
   return (
-    <>
+    <div className="p-6">
       {isError && (
         <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           데이터를 불러오는데 실패했습니다.
@@ -321,14 +322,11 @@ export const ItemMaster = () => {
             <Button
               variant="default"
               size="sm"
+              className="cursor-pointer"
               onClick={async () => navigate("/master/items/create")}
             >
               <i className="ri-add-line mr-2"></i>
               신규 등록
-            </Button>
-            <Button variant="secondary" size="sm">
-              <i className="ri-download-line mr-2"></i>
-              내보내기
             </Button>
           </>
         }
@@ -376,7 +374,7 @@ export const ItemMaster = () => {
               {Math.max(totalPages, 1)}
             </span>
             <select
-              className="rounded border border-gray-300 px-2 py-1 text-xs"
+              className="cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs"
               value={size}
               onChange={(e) => {
                 setSize(Number(e.target.value));
@@ -432,6 +430,6 @@ export const ItemMaster = () => {
           emptyText="조건에 맞는 품목이 없습니다"
         />
       </TableSection>
-    </>
+    </div>
   );
 };
