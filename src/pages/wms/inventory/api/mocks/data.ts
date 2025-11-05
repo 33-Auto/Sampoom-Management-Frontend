@@ -1,4 +1,4 @@
-import type { PartResDto } from "@/shared/api/models";
+import type { PartResDto } from "@/shared/model/models";
 
 export const mockInventoryData: PartResDto[] = [
   {
@@ -98,4 +98,3 @@ export const mockInventoryData: PartResDto[] = [
     status: "과다",
   },
 ];
-
