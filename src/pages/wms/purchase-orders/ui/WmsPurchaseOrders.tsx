@@ -2,6 +2,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
+  usePurchaseOrderQuery,
+  useMaterialCategoryQuery,
+  useMaterialGroupQuery,
+} from "@/pages/wms/purchase-orders/api";
+import type {
+  PurchaseOrderStatus,
+  POResDto,
+} from "@/pages/wms/purchase-orders/model";
+import { PURCHASE_ORDER_STATUS } from "@/pages/wms/purchase-orders/model";
+import { createKeyRecord } from "@/shared/lib/utils";
+import {
   Badge,
   Button,
   Table,
@@ -11,201 +22,85 @@ import {
   TableSection,
 } from "@/shared/ui";
 
-// 발주 관리 데이터
-const purchaseOrders = [
-  {
-    id: "PO-2024-001",
-    poNumber: "PO-2024-001",
-    itemCode: "RM-AL-001",
-    itemName: "알루미늄 합금 판재",
-    supplier: "한국금속공업",
-    category: "안전",
-    group: "제동",
-    orderedQty: 500,
-    receivedQty: 0,
-    unit: "KG",
-    totalAmount: 7500000,
-    orderDate: "2024-01-20",
-    expectedDate: "2024-01-25",
-    status: "auto_approved",
-    creationType: "auto",
-    ropTriggered: true,
-    currentStock: 45,
-    reorderPoint: 50,
-    autoProcessed: true,
-    processedAt: "2024-01-20",
-  },
-  {
-    id: "PO-2024-002",
-    poNumber: "PO-2024-002",
-    itemCode: "RM-ST-002",
-    itemName: "스테인리스 스틸 봉재",
-    supplier: "대한철강",
-    category: "기계",
-    group: "동력전달",
-    orderedQty: 200,
-    receivedQty: 200,
-    unit: "KG",
-    totalAmount: 3200000,
-    orderDate: "2024-01-18",
-    expectedDate: "2024-01-23",
-    status: "completed",
-    creationType: "auto",
-    ropTriggered: true,
-    currentStock: 180,
-    reorderPoint: 100,
-    autoProcessed: true,
-    processedAt: "2024-01-18",
-  },
-  {
-    id: "PO-2024-003",
-    poNumber: "PO-2024-003",
-    itemCode: "RM-PL-003",
-    itemName: "플라스틱 원료",
-    supplier: "케미칼코리아",
-    category: "플라스틱",
-    group: "외장재",
-    orderedQty: 1000,
-    receivedQty: 0,
-    unit: "KG",
-    totalAmount: 2500000,
-    orderDate: "2024-01-19",
-    expectedDate: "2024-01-26",
-    status: "rejected",
-    creationType: "manual",
-    ropTriggered: false,
-    currentStock: 250,
-    reorderPoint: 300,
-    autoProcessed: false,
-    processedAt: "2024-01-19",
-  },
-  {
-    id: "PO-2024-004",
-    poNumber: "PO-2024-004",
-    itemCode: "RM-RU-004",
-    itemName: "고무 시트",
-    supplier: "한국고무",
-    category: "시트",
-    group: "시트",
-    orderedQty: 150,
-    receivedQty: 0,
-    unit: "EA",
-    totalAmount: 1800000,
-    orderDate: "2024-01-21",
-    expectedDate: "2024-01-28",
-    status: "auto_approved",
-    creationType: "auto",
-    ropTriggered: true,
-    currentStock: 25,
-    reorderPoint: 30,
-    autoProcessed: true,
-    processedAt: "2024-01-21",
-  },
-  {
-    id: "PO-2024-005",
-    poNumber: "PO-2024-005",
-    itemCode: "RM-GL-005",
-    itemName: "강화유리",
-    supplier: "유리공업사",
-    category: "전자",
-    group: "제어",
-    orderedQty: 80,
-    receivedQty: 80,
-    unit: "EA",
-    totalAmount: 4800000,
-    orderDate: "2024-01-17",
-    expectedDate: "2024-01-22",
-    status: "completed",
-    creationType: "manual",
-    ropTriggered: false,
-    currentStock: 120,
-    reorderPoint: 50,
-    autoProcessed: false,
-    processedAt: "2024-01-17",
-  },
-];
-
 export function WmsPurchaseOrders() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedCreation, setSelectedCreation] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const [selectedGroup, setSelectedGroup] = useState("전체");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
+
+  const { data, isLoading, isError } = usePurchaseOrderQuery({
+    warehouseId: 40,
+    keyword: searchTerm === "" ? undefined : searchTerm,
+    categoryId: selectedCategory === "" ? undefined : Number(selectedCategory),
+    groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
+    status:
+      statusFilter === "" ? undefined : (statusFilter as PurchaseOrderStatus),
+  });
+
+  const { data: categoryData } = useMaterialCategoryQuery();
 
   const categoryOptions = [
-    { value: "전체", label: "전체 카테고리" },
-    { value: "안전", label: "안전" },
-    { value: "섀시", label: "섀시" },
-    { value: "기계", label: "기계" },
-    { value: "전기", label: "전기" },
-    { value: "내장", label: "내장" },
-    { value: "플라스틱", label: "플라스틱" },
-    { value: "전자", label: "전자" },
+    { value: "", label: "전체 카테고리" },
+    ...(categoryData?.data?.map((item) => {
+      return { value: String(item.categoryId), label: item.categoryName ?? "" };
+    }) ?? []),
   ];
 
+  const { data: groupData } = useMaterialGroupQuery(Number(selectedCategory));
   const groupOptions = [
-    { value: "전체", label: "전체 그룹" },
-    { value: "제동", label: "제동" },
-    { value: "현가장치", label: "현가장치" },
-    { value: "동력전달", label: "동력전달" },
-    { value: "조명", label: "조명" },
-    { value: "시트", label: "시트" },
-    { value: "외장재", label: "외장재" },
-    { value: "제어", label: "제어" },
+    { value: "", label: "전체 그룹" },
+    ...(groupData?.data?.map((item) => {
+      return { value: String(item.groupId), label: item.groupName ?? "" };
+    }) ?? []),
   ];
 
   const statusOptions = [
-    { value: "all", label: "전체 상태" },
-    { value: "auto_approved", label: "자동 승인" },
-    { value: "completed", label: "입고 완료" },
-    { value: "rejected", label: "반려" },
+    { value: "", label: "전체 상태" },
+    ...Object.entries(PURCHASE_ORDER_STATUS)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        return { value: value as string, label: key };
+      }),
   ];
 
-  const creationTypeOptions = [
-    { value: "all", label: "전체 생성구분" },
-    { value: "auto", label: "자동 생성" },
-    { value: "manual", label: "수동 생성" },
-  ];
+  const getStatusBadge = (status?: string) => {
+    if (!status) return null;
 
-  const filteredData = purchaseOrders.filter((item) => {
-    const matchesSearch =
-      item.poNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "전체" || item.category === selectedCategory;
-    const matchesGroup =
-      selectedGroup === "전체" || item.group === selectedGroup;
-    const matchesStatus =
-      statusFilter === "all" || item.status === statusFilter;
-    const matchesCreationType =
-      selectedCreation === "all" || item.creationType === selectedCreation;
-
-    return (
-      matchesSearch &&
-      matchesStatus &&
-      matchesCategory &&
-      matchesGroup &&
-      matchesCreationType
-    );
-  });
-
-  const getStatusBadge = (status: string) => {
     const statusConfig: Record<
       string,
       { label: string; variant: "success" | "info" | "error" | "default" }
     > = {
-      auto_approved: {
-        label: "자동 승인",
-        variant: "success",
+      PENDING: {
+        label: "대기",
+        variant: "default",
       },
-      completed: {
-        label: "입고 완료",
+      CONFIRMED: {
+        label: "확인됨",
         variant: "info",
       },
-      rejected: {
-        label: "반려",
+      SHIPPING: {
+        label: "배송중",
+        variant: "info",
+      },
+      DELAYED: {
+        label: "지연",
+        variant: "error",
+      },
+      PRODUCING: {
+        label: "생산중",
+        variant: "info",
+      },
+      ARRIVED: {
+        label: "도착",
+        variant: "info",
+      },
+      COMPLETED: {
+        label: "완료",
+        variant: "success",
+      },
+      CANCELED: {
+        label: "취소",
         variant: "error",
       },
     };
@@ -216,113 +111,129 @@ export function WmsPurchaseOrders() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const handleViewDetails = (poNumber: string) => {
-    navigate(`/wms/purchase-orders/detail/${poNumber}`);
+  const handleViewDetails = (orderNumber?: string) => {
+    if (orderNumber) {
+      navigate(`/wms/purchase-orders/detail/${orderNumber}`);
+    }
   };
 
+  const keys = createKeyRecord<POResDto>(data?.data?.content ?? []);
   const columns = [
     {
-      key: "poNumber",
+      key: keys.orderNumber,
       title: "발주번호",
       width: "120px",
-      render: (value: string, row: any) => (
+      render: (value: string) => (
         <div>
           <div className="font-medium text-gray-900 dark:text-grey-100">
-            {value}
+            {value || "-"}
           </div>
-          {row.ropTriggered && (
-            <div className="text-xs text-purple-600 dark:text-purple-400">
-              ROP 트리거
-            </div>
-          )}
-          {row.autoProcessed && (
-            <div className="text-xs text-green-600 dark:text-green-400">
-              자동 처리
-            </div>
-          )}
         </div>
       ),
     },
     {
-      key: "itemName",
-      title: "품목명",
-      render: (value: string, row: any) => (
+      key: keys.partCode,
+      title: "품목코드",
+      render: (value: string) => (
         <div>
           <div className="font-medium text-gray-900 dark:text-grey-100">
-            {value}
-          </div>
-          <div className="text-sm text-gray-500 dark:text-grey-300">
-            {row.itemCode}
-          </div>
-          <div className="text-xs text-gray-400 dark:text-grey-400">
-            현재: {row.currentStock} / ROP: {row.reorderPoint}
+            {value || "-"}
           </div>
         </div>
       ),
+    },
+    // {
+    //   key: keys.partName,
+    //   title: "품목명",
+    //   render: (value: string, row: POResDto) => (
+    //     <div>
+    //       <div className="font-medium text-gray-900 dark:text-grey-100">
+    //         {value || "-"}
+    //       </div>
+    //       <div className="text-xs text-gray-400 dark:text-grey-400">
+    //         현재: {row.currQuantity || 0} / ROP: {row.rop || 0}
+    //       </div>
+    //     </div>
+    //   ),
+    // },
+    {
+      key: keys.partName,
+      title: "품목명",
+      // render: (value: string, row: POResDto) => (
+      //   <div>
+      //     <div className="font-medium text-gray-900 dark:text-grey-100">
+      //       {value || "-"}
+      //     </div>
+      //     <div className="text-xs text-gray-400 dark:text-grey-400">
+      //       현재: {row.currQuantity || 0} / ROP: {row.rop || 0}
+      //     </div>
+      //   </div>
+      // ),
     },
     {
       key: "category",
       title: "카테고리",
       width: "250px",
-      render: (_: any, row: any) => `${row.category} > ${row.group}`,
+      render: (_: any, row: POResDto) =>
+        `${row.categoryName || "-"} > ${row.groupName || "-"}`,
     },
     {
-      key: "orderedQty",
+      key: keys.orderQuantity,
       title: "발주수량",
       width: "100px",
-      render: (value: number, row: any) =>
-        `${value.toLocaleString()} ${row.unit}`,
+      render: (value: number, row: POResDto) =>
+        `${(value || 0).toLocaleString()} ${row.unit || ""}`,
     },
     {
-      key: "receivedQty",
+      key: keys.inboundQuantity,
       title: "입고수량",
       width: "100px",
-      render: (value: number, row: any) => (
+      render: (value: number, row: POResDto) => (
         <span
           className={
-            value > 0
+            (value || 0) > 0
               ? "font-medium text-green-600 dark:text-green-400"
               : "text-gray-500 dark:text-grey-300"
           }
         >
-          {value.toLocaleString()} {row.unit}
+          {(value || 0).toLocaleString()} {row.unit || ""}
         </span>
       ),
     },
     {
-      key: "pendingQty",
+      key: keys.restQuantity,
       title: "미입고수량",
       width: "100px",
-      render: (value: number, row: any) => {
-        const pendingQty = row.orderedQty - row.receivedQty;
+      render: (value: number, row: POResDto) => {
+        const restQty = value || 0;
         return (
           <span
             className={
-              pendingQty > 0
+              restQty > 0
                 ? "font-medium text-orange-600 dark:text-orange-400"
                 : "text-gray-500 dark:text-grey-300"
             }
           >
-            {pendingQty.toLocaleString()} {row.unit}
+            {restQty.toLocaleString()} {row.unit || ""}
           </span>
         );
       },
     },
     {
-      key: "totalAmount",
+      key: keys.price,
       title: "발주금액",
       width: "120px",
-      render: (value: number) => `₩${value.toLocaleString()}`,
+      render: (value: number) => `₩${(value || 0).toLocaleString()}`,
     },
     {
-      key: "processedAt",
+      key: keys.createdAt,
       title: "처리일",
       width: "100px",
       render: (value: string | null) => (
         <div>
           {value ? (
             <div className="text-sm text-gray-900 dark:text-grey-100">
-              {value}
+              {new Date(value).toLocaleDateString()}
             </div>
           ) : (
             <div className="text-sm text-gray-500 dark:text-grey-300">-</div>
@@ -331,21 +242,21 @@ export function WmsPurchaseOrders() {
       ),
     },
     {
-      key: "status",
+      key: keys.orderStatus,
       title: "상태",
       width: "100px",
-      render: (value: string) => getStatusBadge(value),
+      render: (_: any, row: POResDto) => getStatusBadge(row.orderStatus),
     },
     {
       key: "actions",
       title: "작업",
       width: "100px",
-      render: (value: any, row: any) => (
+      render: (_: any, row: POResDto) => (
         <div className="flex space-x-1">
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => handleViewDetails(row.poNumber)}
+            onClick={() => handleViewDetails(row.orderNumber)}
           >
             상세
           </Button>
@@ -355,15 +266,17 @@ export function WmsPurchaseOrders() {
   ];
 
   // 통계 계산
-  const autoApproved = purchaseOrders.filter(
-    (item) => item.status === "auto_approved",
+  const purchaseOrdersData = data?.data?.content ?? [];
+  const completedCount = purchaseOrdersData.filter(
+    (item) => item.orderStatus === "COMPLETED",
   ).length;
-  const rejected = purchaseOrders.filter(
-    (item) => item.status === "rejected",
+  const canceledCount = purchaseOrdersData.filter(
+    (item) => item.orderStatus === "CANCELED",
   ).length;
-  const autoProcessedCount = purchaseOrders.filter(
-    (item) => item.autoProcessed,
-  ).length;
+  const totalAmount = purchaseOrdersData.reduce(
+    (sum, item) => sum + (item.price || 0),
+    0,
+  );
 
   return (
     <>
@@ -373,30 +286,30 @@ export function WmsPurchaseOrders() {
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
           <StatCard
-            icon="ri-check-line"
-            label="자동 처리율"
-            value={94.2}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
-          />
-          <StatCard
-            icon="ri-check-line"
-            label="자동 승인"
-            value={autoApproved}
+            icon="ri-file-list-line"
+            label="전체 발주"
+            value={purchaseOrdersData.length}
             iconBgColor="bg-blue-100"
             iconColor="text-blue-600"
           />
           <StatCard
+            icon="ri-check-line"
+            label="완료"
+            value={completedCount}
+            iconBgColor="bg-green-100"
+            iconColor="text-green-600"
+          />
+          <StatCard
             icon="ri-close-line"
-            label="반려"
-            value={rejected}
+            label="취소"
+            value={canceledCount}
             iconBgColor="bg-red-100"
             iconColor="text-red-600"
           />
           <StatCard
             icon="ri-money-dollar-circle-line"
             label="총 발주액"
-            value={94.2}
+            value={`₩${(totalAmount / 1000000).toFixed(1)}M`}
             iconBgColor="bg-purple-100"
             iconColor="text-purple-600"
           />
@@ -404,24 +317,13 @@ export function WmsPurchaseOrders() {
 
         {/* 실시간 모니터링 알림 */}
         <InfoBox
-          type="success"
-          title="실시간 자동 발주 모니터링"
+          type="info"
+          title="발주 관리 시스템"
           children={
             <div className="flex-1">
-              <p className="mt-1 text-sm text-green-700">
-                시스템이 ROP 기반으로 자동 발주를 처리하고 있습니다.
-                <span className="font-medium">오늘 {autoProcessedCount}건</span>
-                이 자동 처리되었습니다.
+              <p className="mt-1 text-sm">
+                발주 현황을 모니터링하고 관리할 수 있습니다.
               </p>
-              <div className="mt-2 flex items-center space-x-4">
-                <div className="flex items-center space-x-1">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
-                  <span className="text-xs text-green-600">자동 처리 활성</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  마지막 업데이트: 방금 전
-                </div>
-              </div>
             </div>
           }
         />
@@ -429,20 +331,27 @@ export function WmsPurchaseOrders() {
         {/* 필터 및 검색 */}
         <SearchFilterBar
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          searchPlaceholder="발주번호, 품목명, 공급업체 검색..."
+          onSearchChange={(value) => {
+            console.log("value", value);
+            setSearchTerm(value);
+          }}
+          searchPlaceholder="발주번호, 품목명 검색..."
           filters={[
             {
               key: "category",
               value: selectedCategory,
               options: categoryOptions,
-              onChange: setSelectedCategory,
+              onChange: (e) => {
+                setSelectedCategory(e);
+                setSelectedGroup("");
+              },
             },
             {
               key: "group",
               value: selectedGroup,
               options: groupOptions,
               onChange: setSelectedGroup,
+              disabled: selectedCategory === "",
             },
             {
               key: "status",
@@ -450,37 +359,34 @@ export function WmsPurchaseOrders() {
               options: statusOptions,
               onChange: setStatusFilter,
             },
-            {
-              key: "creation",
-              value: selectedCreation,
-              options: creationTypeOptions,
-              onChange: setSelectedCreation,
-            },
           ]}
           actions={
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCategory("전체");
-                setSelectedGroup("전체");
-                setStatusFilter("all");
-                setSelectedCreation("all");
-              }}
-            >
-              <i className="ri-refresh-line mr-2"></i>
-              초기화
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("");
+                  setSelectedGroup("");
+                  setStatusFilter("");
+                }}
+              >
+                <i className="ri-refresh-line mr-2"></i>
+                초기화
+              </Button>
+            </div>
           }
         />
 
         {/* 발주 모니터링 테이블 */}
 
         <TableSection
-          title="자동 발주 모니터링"
+          title="발주 모니터링"
           metaRight={
-            <span className="text-sm text-gray-500">총 100000개 입고건</span>
+            <span className="text-sm text-gray-500">
+              총 {data?.data?.content?.length ?? 0}개 발주건
+            </span>
           }
           actionsRight={
             <Button variant="secondary" size="sm">
@@ -491,8 +397,14 @@ export function WmsPurchaseOrders() {
         >
           <Table
             columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 발주서가 없습니다"
+            data={data?.data?.content ?? []}
+            loading={isLoading && data === undefined}
+            emptyText={
+              isLoading && data === undefined
+                ? "데이터 로딩 중..."
+                : "조건에 맞는 발주서가 없습니다"
+            }
+            errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
           />
         </TableSection>
       </div>

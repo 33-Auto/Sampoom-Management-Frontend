@@ -161,7 +161,7 @@ export interface paths {
      * 로그인 유저 프로필 정보 수정
      * @description 토큰으로 로그인한 유저의 프로필 정보를 수정합니다.
      */
-    patch: operations["patchMyProfile"];
+    patch: operations["updateMyProfile"];
     trace?: never;
   };
   "/api/user/info": {
@@ -173,9 +173,14 @@ export interface paths {
     };
     /**
      * 모든 회원의 전체 회원 정보를 조회
-     * @description 모든 회원의 전체 정보를 페이지 형태로 불러옵니다.<br><br> page: n번째 페이지부터 불러오기 <br> size: 페이지 당 사이즈 <br> sort: 정렬기준(id, userName),정렬순서(ASC,DESC)
+     * @description 모든 회원의 전체 정보를 페이지 형태로 불러옵니다.
+     *     <br><br> **page**: n번째 페이지부터 불러오기
+     *     <br> **size**: 페이지 당 사이즈
+     *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
+     *     <br><br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
+     *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
      */
-    get: operations["getAllUsersInfo"];
+    get: operations["getUsersInfo"];
     put?: never;
     post?: never;
     delete?: never;
@@ -387,7 +392,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["getAllRops"];
+    get?: never;
     put?: never;
     post: operations["createRop"];
     delete?: never;
@@ -435,29 +440,13 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    get: operations["getRops"];
     put?: never;
     post?: never;
     delete?: never;
     options?: never;
     head?: never;
     patch: operations["updateRop"];
-    trace?: never;
-  };
-  "/api/warehouse/order": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations["orderProcess"];
     trace?: never;
   };
   "/api/warehouse/delivery": {
@@ -474,22 +463,6 @@ export interface paths {
     options?: never;
     head?: never;
     patch: operations["deliveryParts"];
-    trace?: never;
-  };
-  "/api/warehouse/{warehouseId}/group/{groupId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["getPartsByGroup"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
     trace?: never;
   };
   "/api/warehouse/{warehouseId}/category": {
@@ -516,6 +489,38 @@ export interface paths {
       cookie?: never;
     };
     get: operations["getGroupsByCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/po": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getPurchaseOrders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getInventoryBrief"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1147,30 +1152,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/agency/{agencyId}/orders": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 주문 목록 조회
-     * @description 대리점의 모든 주문 내역을 조회합니다.
-     */
-    get: operations["getOrders"];
-    put?: never;
-    /**
-     * 주문 생성
-     * @description 장바구니에 담긴 품목을 기반으로 새 주문을 생성합니다.
-     */
-    post: operations["createOrder1"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/agency/{agencyId}/cart": {
     parameters: {
       query?: never;
@@ -1195,50 +1176,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/agency/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 대리점 생성
-     * @description 새로운 대리점을 등록합니다.
-     */
-    post: operations["createAgency_1"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/agency/{agencyId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * 대리점 삭제
-     * @description 대리점을 삭제하고 Outbox 이벤트를 기록합니다.
-     */
-    delete: operations["deleteAgency"];
-    options?: never;
-    head?: never;
-    /**
-     * 대리점 정보 수정
-     * @description 대리점 정보를 수정하고 Outbox 이벤트를 기록합니다.
-     */
-    patch: operations["updateAgency"];
-    trace?: never;
-  };
   "/api/agency/{agencyId}/outbound/{outboundId}": {
     parameters: {
       query?: never;
@@ -1257,26 +1194,6 @@ export interface paths {
     patch: operations["updateQuantity"];
     trace?: never;
   };
-  "/api/agency/{agencyId}/orders/{orderId}/receive": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 주문 입고 처리
-     * @description 주문 상태를 입고 완료(COMPLETED)로 변경합니다.
-     */
-    patch: operations["markOrderReceived"];
-    trace?: never;
-  };
   "/api/agency/{agencyId}/search": {
     parameters: {
       query?: never;
@@ -1292,30 +1209,6 @@ export interface paths {
     put?: never;
     post?: never;
     delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/agency/{agencyId}/orders/{orderId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 주문 상세 조회
-     * @description 특정 주문의 상세 정보를 조회합니다.
-     */
-    get: operations["getOrderDetail"];
-    put?: never;
-    post?: never;
-    /**
-     * 주문 취소
-     * @description 특정 주문을 취소합니다.
-     */
-    delete: operations["cancelOrder1"];
     options?: never;
     head?: never;
     patch?: never;
@@ -1660,7 +1553,7 @@ export interface paths {
      * 그룹별 부품 목록 조회
      * @description 특정 그룹에 속한 부품 목록 조회
      */
-    get: operations["getPartsByGroup1"];
+    get: operations["getPartsByGroup"];
     put?: never;
     /**
      * 부품 등록
@@ -2235,7 +2128,7 @@ export interface paths {
      * 자재 주문 목록 조회
      * @description 주문 상태 필터와 검색(자재명/자재코드/주문코드), 긴급도 필터로 목록을 조회합니다.
      */
-    get: operations["getOrders1"];
+    get: operations["getOrders"];
     put?: never;
     /**
      * 자재 주문 생성
@@ -2265,7 +2158,7 @@ export interface paths {
      * 자재 주문 취소
      * @description 주문을 취소 처리합니다.
      */
-    patch: operations["cancelOrder2"];
+    patch: operations["cancelOrder1"];
     trace?: never;
   };
   "/api/purchase/{orderId}": {
@@ -2530,7 +2423,7 @@ export interface components {
     RefreshResponse: {
       accessToken?: string;
       refreshToken?: string;
-      /** Format: int32 */
+      /** Format: int64 */
       expiresIn?: number;
     };
     ApiResponseVoid: {
@@ -2598,13 +2491,13 @@ export interface components {
     InvitationCreateResponseDto: {
       inviteCode?: string;
     };
-    LoginUserRequest: {
+    LoginRequest1: {
       /** Format: int64 */
       userId: number;
       /** @enum {string} */
       workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
     };
-    LoginUserResponse: {
+    LoginResponse1: {
       /** Format: int64 */
       userId: number;
       /** @enum {string} */
@@ -2648,16 +2541,16 @@ export interface components {
       userId?: number;
       userName?: string;
     };
-    ApiResponseUserInfoResponse: {
+    ApiResponseUserLoginResponse: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       /** Format: int32 */
       code?: number;
       message?: string;
-      data?: components["schemas"]["UserInfoResponse"];
+      data?: components["schemas"]["UserLoginResponse"];
     };
-    UserInfoResponse: {
+    UserLoginResponse: {
       /** Format: int64 */
       userId?: number;
       email?: string;
@@ -2710,6 +2603,35 @@ export interface components {
     UserInfoListResponse: {
       users?: components["schemas"]["UserInfoResponse"][];
       meta?: components["schemas"]["PageMeta"];
+    };
+    UserInfoResponse: {
+      /** Format: int64 */
+      userId?: number;
+      email?: string;
+      /** @enum {string} */
+      role?: "USER" | "ADMIN";
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** Format: int64 */
+      organizationId?: number;
+      branch?: string;
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+      /** Format: date-time */
+      startedAt?: string;
+      /** Format: date-time */
+      endedAt?: string;
     };
     ItemCategoryDto: {
       /** Format: int64 */
@@ -2862,67 +2784,12 @@ export interface components {
       /** Format: int32 */
       maxStock?: number;
     };
-    ItemDto: {
-      code: string;
-      /** Format: int32 */
-      quantity: number;
-    };
-    OrderReqDto1: {
-      /** Format: int64 */
-      orderId: number;
-      /** Format: int64 */
-      branchId: number;
-      items: components["schemas"]["ItemDto"][];
-      /** Format: int64 */
-      version?: number;
-      /** Format: date-time */
-      sourceUpdatedAt?: string;
-    };
-    ApiResponseOrderStatus: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      /** @enum {string} */
-      data?:
-        | "PENDING"
-        | "CONFIRMED"
-        | "SHIPPING"
-        | "DELAYED"
-        | "PRODUCING"
-        | "COMPLETED"
-        | "CANCELED";
-    };
     DeliveryReqDto: {
       /** Format: int64 */
       warehouseId: number;
       /** Format: int64 */
       orderId?: number;
       items?: components["schemas"]["PartDeltaDto"][];
-    };
-    ApiResponseListPartResDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: components["schemas"]["PartResDto"][];
-    };
-    PartResDto: {
-      /** Format: int64 */
-      id?: number;
-      category?: string;
-      group?: string;
-      name?: string;
-      code?: string;
-      /** Format: int32 */
-      quantity?: number;
-      /** Format: int32 */
-      rop?: number;
-      unit?: string;
-      /** Format: int32 */
-      partValue?: number;
-      /** @enum {string} */
-      status?: "ENOUGH" | "SHORT" | "DANGER" | "OVER";
     };
     ApiResponseListCategoryResDto: {
       /** Format: int32 */
@@ -2948,21 +2815,111 @@ export interface components {
       id?: number;
       name?: string;
     };
-    ApiResponseRopResDto: {
+    ApiResponsePageRopResDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       message?: string;
-      data?: components["schemas"]["RopResDto"];
+      data?: components["schemas"]["PageRopResDto"];
     };
-    RopItem: {
+    PageRopResDto: {
       /** Format: int64 */
-      ropId?: number;
+      totalElements?: number;
       /** Format: int32 */
-      rop?: number;
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["RopResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
     };
     RopResDto: {
-      ropItems?: components["schemas"]["RopItem"][];
+      /** Format: int64 */
+      partId?: number;
+      partCode?: string;
+      partName?: string;
+      categoryName?: string;
+      groupName?: string;
+      unit?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      /** Format: int32 */
+      maxStock?: number;
+      /** Format: int32 */
+      leadTime?: number;
+      autoOrderStatus?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ApiResponsePagePOResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PagePOResDto"];
+    };
+    POResDto: {
+      orderNumber?: string;
+      categoryName?: string;
+      groupName?: string;
+      partName?: string;
+      partCode?: string;
+      /** Format: int32 */
+      currQuantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      unit?: string;
+      /** Format: int32 */
+      orderQuantity?: number;
+      /** Format: int32 */
+      inboundQuantity?: number;
+      /** Format: int32 */
+      restQuantity?: number;
+      /** Format: int32 */
+      price?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      orderStatus?: string;
+    };
+    PagePOResDto: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["POResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
+    ApiResponseListPartItemDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PartItemDto"][];
+    };
+    PartItemDto: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: int32 */
+      quantity?: number;
     };
     ApiResponsePagePartResDto: {
       /** Format: int32 */
@@ -2988,6 +2945,22 @@ export interface components {
       first?: boolean;
       last?: boolean;
       empty?: boolean;
+    };
+    PartResDto: {
+      /** Format: int64 */
+      id?: number;
+      category?: string;
+      group?: string;
+      name?: string;
+      code?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      unit?: string;
+      /** Format: int32 */
+      partValue?: number;
+      status?: string;
     };
     FactoryRequestDto: {
       name: string;
@@ -3185,67 +3158,11 @@ export interface components {
       /** Format: int32 */
       quantity: number;
     };
-    AgencyOrderResponseDTO: {
-      /** Format: int64 */
-      orderId?: number;
-      orderNumber?: string;
-      /** Format: date-time */
-      createdAt?: string;
-      /** @enum {string} */
-      status?: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELED";
-      agencyName?: string;
-      items?: components["schemas"]["CategoryResponseDTO"][];
-    };
-    ApiResponseListAgencyOrderResponseDTO: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["AgencyOrderResponseDTO"][];
-    };
-    CategoryResponseDTO: {
-      /** Format: int64 */
-      categoryId?: number;
-      categoryName?: string;
-      groups?: components["schemas"]["GroupResponseDTO"][];
-    };
-    GroupResponseDTO: {
-      /** Format: int64 */
-      groupId?: number;
-      groupName?: string;
-      parts?: components["schemas"]["PartResponseDTO"][];
-    };
-    PartResponseDTO: {
-      /** Format: int64 */
-      cartItemId?: number;
-      /** Format: int64 */
-      outboundId?: number;
-      /** Format: int64 */
-      partId?: number;
-      code?: string;
-      name?: string;
-      /** Format: int32 */
-      quantity?: number;
-    };
     AgencyCartRequestDTO: {
       /** Format: int64 */
       partId: number;
       /** Format: int32 */
       quantity: number;
-    };
-    AgencyCreateRequestDTO: {
-      name?: string;
-      address?: string;
-      /** @enum {string} */
-      status?: "ACTIVE" | "INACTIVE";
-    };
-    AgencyUpdateRequestDTO: {
-      name?: string;
-      address?: string;
-      /** @enum {string} */
-      status?: "ACTIVE" | "INACTIVE";
     };
     AgencyOutboundUpdateRequestDTO: {
       /** Format: int32 */
@@ -3260,6 +3177,18 @@ export interface components {
       message?: string;
       data?: components["schemas"]["PageResponseDTOCategoryResponseDTO"];
     };
+    CategoryResponseDTO: {
+      /** Format: int64 */
+      categoryId?: number;
+      categoryName?: string;
+      groups?: components["schemas"]["GroupResponseDTO"][];
+    };
+    GroupResponseDTO: {
+      /** Format: int64 */
+      groupId?: number;
+      groupName?: string;
+      parts?: components["schemas"]["PartResponseDTO"][];
+    };
     PageResponseDTOCategoryResponseDTO: {
       content?: components["schemas"]["CategoryResponseDTO"][];
       /** Format: int64 */
@@ -3268,6 +3197,20 @@ export interface components {
       totalPages?: number;
       /** Format: int32 */
       currentPage?: number;
+    };
+    PartResponseDTO: {
+      /** Format: int64 */
+      cartItemId?: number;
+      /** Format: int64 */
+      outboundId?: number;
+      /** Format: int64 */
+      partId?: number;
+      code?: string;
+      name?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int32 */
+      standardCost?: number;
     };
     ApiResponseListCategoryResponseDTO: {
       /** Format: int32 */
@@ -3294,6 +3237,8 @@ export interface components {
       name?: string;
       /** Format: int32 */
       quantity?: number;
+      /** Format: int32 */
+      standardCost?: number;
     };
     ApiResponseString2: {
       /** Format: int32 */
@@ -4246,7 +4191,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["LoginUserRequest"];
+        "application/json": components["schemas"]["LoginRequest1"];
       };
     };
     responses: {
@@ -4256,7 +4201,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["LoginUserResponse"];
+          "*/*": components["schemas"]["LoginResponse1"];
         };
       };
     };
@@ -4300,12 +4245,12 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseUserInfoResponse"];
+          "*/*": components["schemas"]["ApiResponseUserLoginResponse"];
         };
       };
     };
   };
-  patchMyProfile: {
+  updateMyProfile: {
     parameters: {
       query?: never;
       header?: never;
@@ -4329,7 +4274,7 @@ export interface operations {
       };
     };
   };
-  getAllUsersInfo: {
+  getUsersInfo: {
     parameters: {
       query?: {
         /** @description Zero-based page index (0..N) */
@@ -4338,6 +4283,8 @@ export interface operations {
         size?: number;
         /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
         sort?: string[];
+        workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        organizationId?: number;
       };
       header?: never;
       path?: never;
@@ -4627,28 +4574,6 @@ export interface operations {
       };
     };
   };
-  getAllRops: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        warehouseId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseRopResDto"];
-        };
-      };
-    };
-  };
   createRop: {
     parameters: {
       query?: never;
@@ -4719,6 +4644,34 @@ export interface operations {
       };
     };
   };
+  getRops: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        categoryId?: number;
+        groupId?: number;
+        keyword?: string;
+        autoOrderStatus?: "ACTIVE" | "INACTIVE";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageRopResDto"];
+        };
+      };
+    };
+  };
   updateRop: {
     parameters: {
       query?: never;
@@ -4743,30 +4696,6 @@ export interface operations {
       };
     };
   };
-  orderProcess: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["OrderReqDto1"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseOrderStatus"];
-        };
-      };
-    };
-  };
   deliveryParts: {
     parameters: {
       query?: never;
@@ -4787,29 +4716,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  getPartsByGroup: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        warehouseId: number;
-        groupId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartResDto"];
         };
       };
     };
@@ -4855,6 +4761,65 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseListGroupResDto"];
+        };
+      };
+    };
+  };
+  getPurchaseOrders: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        keyword?: string;
+        categoryId?: number;
+        groupId?: number;
+        status?:
+          | "PENDING"
+          | "CONFIRMED"
+          | "SHIPPING"
+          | "DELAYED"
+          | "PRODUCING"
+          | "ARRIVED"
+          | "COMPLETED"
+          | "CANCELED";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePagePOResDto"];
+        };
+      };
+    };
+  };
+  getInventoryBrief: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        partIds: number[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartItemDto"];
         };
       };
     };
@@ -5963,50 +5928,6 @@ export interface operations {
       };
     };
   };
-  getOrders: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListAgencyOrderResponseDTO"];
-        };
-      };
-    };
-  };
-  createOrder1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListAgencyOrderResponseDTO"];
-        };
-      };
-    };
-  };
   getCartItems: {
     parameters: {
       query?: never;
@@ -6041,78 +5962,6 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["AgencyCartRequestDTO"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createAgency_1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AgencyCreateRequestDTO"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  deleteAgency: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  updateAgency: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AgencyUpdateRequestDTO"];
       };
     };
     responses: {
@@ -6177,29 +6026,6 @@ export interface operations {
       };
     };
   };
-  markOrderReceived: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
   searchParts: {
     parameters: {
       query: {
@@ -6222,52 +6048,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePageResponseDTOCategoryResponseDTO"];
-        };
-      };
-    };
-  };
-  getOrderDetail: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListAgencyOrderResponseDTO"];
-        };
-      };
-    };
-  };
-  cancelOrder1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        agencyId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -6794,7 +6574,7 @@ export interface operations {
       };
     };
   };
-  getPartsByGroup1: {
+  getPartsByGroup: {
     parameters: {
       query: {
         groupId: number;
@@ -7633,7 +7413,7 @@ export interface operations {
       };
     };
   };
-  getOrders1: {
+  getOrders: {
     parameters: {
       query?: {
         status?: "ORDERED" | "RECEIVED" | "CANCELED";
@@ -7701,7 +7481,7 @@ export interface operations {
       };
     };
   };
-  cancelOrder2: {
+  cancelOrder1: {
     parameters: {
       query?: never;
       header?: never;
