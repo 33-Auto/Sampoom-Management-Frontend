@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { PaginationTableSection } from "@/features/table-pagination";
 import { materialMasterData } from "@/mocks/factoryData";
-import {
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-  TableSection,
-} from "@/shared/ui";
+import { Button, InfoBox, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
 import { useGetItemsMasterQuery } from "../api/items.api";
 import {
@@ -365,71 +359,23 @@ export const ItemMaster = () => {
       </InfoBox>
 
       {/* 품목 목록 테이블 */}
-      <TableSection
+      <PaginationTableSection
         title="품목 목록"
-        metaRight={
-          <div className="flex items-center gap-3 text-sm text-gray-500">
-            <span>
-              총 {totalElements}개 / 페이지 {page + 1} /{" "}
-              {Math.max(totalPages, 1)}
-            </span>
-            <select
-              className="cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs"
-              value={size}
-              onChange={(e) => {
-                setSize(Number(e.target.value));
-                setPage(0);
-              }}
-            >
-              {[10, 20, 50].map((s) => (
-                <option key={s} value={s}>
-                  {s}/page
-                </option>
-              ))}
-            </select>
-          </div>
-        }
-        actionsRight={
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={async () => refetch()}
-            >
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-                disabled={page <= 0}
-              >
-                이전
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  setPage((p) =>
-                    totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
-                  )
-                }
-                disabled={totalPages ? page >= totalPages - 1 : false}
-              >
-                다음
-              </Button>
-            </div>
-          </div>
-        }
+        totalElements={totalElements}
+        page={page}
+        totalPages={totalPages}
+        size={size}
+        onSizeChange={setSize}
+        onPageChange={setPage}
+        showRefresh
+        onRefresh={refetch}
       >
         <Table
           columns={columns}
           data={filteredData}
           emptyText="조건에 맞는 품목이 없습니다"
         />
-      </TableSection>
+      </PaginationTableSection>
     </div>
   );
 };
