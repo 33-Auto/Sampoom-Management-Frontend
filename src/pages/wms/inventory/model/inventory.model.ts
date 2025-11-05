@@ -4,7 +4,7 @@ export type InventoryListParams = Operations["search"]["parameters"]["query"];
 export type InventoryListResponse = Schemas["ApiResponsePagePartResDto"];
 export type PartResDto = Schemas["PartResDto"];
 export type InventoryStatus = InventoryListParams["quantityStatus"];
-export const QUNTITY_STATUS = {
+export const QUANTITY_STATUS = {
   ENOUGH: "ENOUGH",
   SHORT: "SHORT",
   DANGER: "DANGER",

@@ -6,7 +6,7 @@ import {
   useMaterialGroupQuery,
 } from "@/pages/wms/inventory/api";
 import type { InventoryStatus, PartResDto } from "@/pages/wms/inventory/model";
-import { QUNTITY_STATUS } from "@/pages/wms/inventory/model";
+import { QUANTITY_STATUS } from "@/pages/wms/inventory/model";
 import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
@@ -52,7 +52,7 @@ export const InventoryDashboard = () => {
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
-    ...Object.entries(QUNTITY_STATUS)
+    ...Object.entries(QUANTITY_STATUS)
       .filter(([_, value]) => value !== undefined)
       .map(([key, value]) => {
         return { value: value as string, label: key };
