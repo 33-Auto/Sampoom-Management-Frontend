@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-import type { PartResDto } from "@/shared/model/models";
+import {
+  useWarehouseInventoryQuery,
+  useMaterialCategoryQuery,
+  useMaterialGroupQuery,
+} from "@/pages/wms/inventory/api";
+import type { InventoryStatus, PartResDto } from "@/pages/wms/inventory/model";
+import { QUNTITY_STATUS } from "@/pages/wms/inventory/model";
+import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
   Button,
@@ -11,32 +18,61 @@ import {
   TableSection,
 } from "@/shared/ui";
 
-import { useWarehouseInventoryQuery } from "../api/inventory.api";
-
 export const InventoryDashboard = () => {
-  const {
-    data: apiResponse,
-    isLoading,
-    isError,
-  } = useWarehouseInventoryQuery();
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("전체");
-  const [statusFilter, setStatusFilter] = useState("전체");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const { data, isLoading, isError } = useWarehouseInventoryQuery({
+    warehouseId: 40,
+    keyword: searchTerm === "" ? undefined : searchTerm,
+    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+    groupId: groupFilter === "" ? undefined : Number(groupFilter),
+    quantityStatus:
+      statusFilter === "" ? undefined : (statusFilter as InventoryStatus),
+  });
+  // const categoryOptions = [
+  //   { value: "전체", label: "전체 카테고리" },
+  //   { value: "완제품", label: "완제품" },
+  //   { value: "원자재", label: "원자재" },
+  //   { value: "부품", label: "부품" },
+  // ];
+
+  const { data: categoryData } = useMaterialCategoryQuery();
 
   const categoryOptions = [
-    { value: "전체", label: "전체 카테고리" },
-    { value: "완제품", label: "완제품" },
-    { value: "원자재", label: "원자재" },
-    { value: "부품", label: "부품" },
+    { value: "", label: "전체 카테고리" },
+    ...(categoryData?.data?.map((item) => {
+      return { value: String(item.categoryId), label: item.categoryName ?? "" };
+    }) ?? []),
+  ];
+
+  const { data: groupData } =
+    useMaterialGroupQuery(Number(categoryFilter)) || [];
+  const groupOptions = [
+    { value: "", label: "전체 그룹" },
+    ...(groupData?.data?.map((item) => {
+      return { value: String(item.groupId), label: item.groupName ?? "" };
+    }) ?? []),
   ];
 
   const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "정상", label: "정상" },
-    { value: "부족", label: "부족" },
-    { value: "위험", label: "위험" },
-    { value: "과다", label: "과다" },
+    { value: "", label: "전체 상태" },
+    ...Object.entries(QUNTITY_STATUS)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        return { value: value as string, label: key };
+      }),
   ];
+
+  // InventoryStatus["ENOUGH"];
+  // const statusOptions = [
+  //   { value: "전체", label: "전체 상태" },
+  //   { value: "정상", label: "정상" },
+  //   { value: "부족", label: "부족" },
+  //   { value: "위험", label: "위험" },
+  //   { value: "과다", label: "과다" },
+  // ];
 
   // const inventoryData: PartResDto[] = (apiResponse?.data || []).map((item) => ({
   //   ...item,
@@ -50,30 +86,31 @@ export const InventoryDashboard = () => {
   //   location: "A-1", // Placeholder
   // }));
 
-  const filteredData =
-    apiResponse?.data?.filter((item: PartResDto) => {
-      const matchesSearch =
-        item.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.name?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        categoryFilter === "전체" || item.category === categoryFilter;
-      const matchesStatus =
-        statusFilter === "전체" || item.status === statusFilter;
-      return matchesSearch && matchesCategory && matchesStatus;
-    }) || [];
+  // const filteredData =
+  //   apiResponse?.data?.filter((item: PartResDto) => {
+  //     const matchesSearch =
+  //       item.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       item.name?.toLowerCase().includes(searchTerm.toLowerCase());
+  //     const matchesCategory =
+  //       categoryFilter === "전체" || item.category === categoryFilter;
+  //     const matchesStatus =
+  //       statusFilter === "전체" || item.status === statusFilter;
+  //     return matchesSearch && matchesCategory && matchesStatus;
+  //   }) || [];
 
-  const handleStockMovement = (itemCode: string, type: "in" | "out") => {
-    console.log("재고 이동 기록:", itemCode, type);
-    // ERP로 재고 변경 이벤트 전송
-  };
+  // const handleStockMovement = (itemCode: string, type: "in" | "out") => {
+  //   console.log("재고 이동 기록:", itemCode, type);
+  //   // ERP로 재고 변경 이벤트 전송
+  // };
 
   // const handleLocationUpdate = (itemCode: string) => {
   //   console.log("위치 변경:", itemCode);
   // };
 
+  const keys = createKeyRecord<PartResDto>(data?.data?.content ?? []);
   const columns = [
-    { key: "code", title: "품목코드", width: "120px" },
-    { key: "name", title: "품목명" },
+    { key: keys.code, title: "품목코드", width: "120px" },
+    { key: keys.name, title: "품목명" },
     {
       key: "category",
       title: "카테고리",
@@ -82,7 +119,7 @@ export const InventoryDashboard = () => {
         `${row.category || "-"} > ${row.group || "-"}`,
     },
     {
-      key: "quantity",
+      key: keys.quantity,
       title: "현재고",
       width: "100px",
       render: (value: number, row: PartResDto) => (
@@ -100,14 +137,14 @@ export const InventoryDashboard = () => {
       ),
     },
     {
-      key: "rop",
+      key: keys.rop,
       title: "재주문점",
       width: "100px",
       render: (value: number, row: PartResDto) =>
         `${value} ${row.unit || "EA"}`,
     },
     {
-      key: "status",
+      key: keys.status,
       title: "상태",
       width: "100px",
       render: (value: string) => (
@@ -127,49 +164,49 @@ export const InventoryDashboard = () => {
       ),
     },
     {
-      key: "partValue",
+      key: keys.partValue,
       title: "재고가치",
       width: "120px",
       render: (value: number) => `₩${Number(value).toLocaleString()}`,
     },
-    {
-      key: "actions",
-      title: "작업",
-      width: "150px",
-      render: (value: any, row: PartResDto) => (
-        <div className="flex space-x-1">
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() => handleStockMovement(row.code || "Error", "in")}
-          >
-            입고
-          </Button>
-          {/* <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => handleLocationUpdate(row.code || "Error")}
-          >
-            이동
-          </Button> */}
-        </div>
-      ),
-    },
+    // {
+    //   key: "actions",
+    //   title: "작업",
+    //   width: "150px",
+    //   render: (value: any, row: PartResDto) => (
+    //     <div className="flex space-x-1">
+    //       <Button
+    //         variant="default"
+    //         size="sm"
+    //         onClick={() => handleStockMovement(row.code || "Error", "in")}
+    //       >
+    //         입고
+    //       </Button>
+    //       {/* <Button
+    //         variant="secondary"
+    //         size="sm"
+    //         onClick={() => handleLocationUpdate(row.code || "Error")}
+    //       >
+    //         이동
+    //       </Button> */}
+    //     </div>
+    //   ),
+    // },
   ];
 
-  const totalItems = apiResponse?.data?.length ?? 0;
-  const lowStockItems =
-    apiResponse?.data?.filter(
-      (item: PartResDto) => (item.quantity || -1) <= (item.rop || 0),
-    ).length ?? 0;
-  // const criticalItems = apiResponse?.data!.filter(
-  //   (item) => item.currentStock <= item.safetyStock,
-  // ).length;
-  const totalValue =
-    apiResponse?.data!.reduce(
-      (sum, item) => sum + Number(item.partValue!),
-      0,
-    ) || 0;
+  // const totalItems = apiResponse?.data?.length ?? 0;
+  // const lowStockItems =
+  //   apiResponse?.data?.filter(
+  //     (item: PartResDto) => (item.quantity || -1) <= (item.rop || 0),
+  //   ).length ?? 0;
+  // // const criticalItems = apiResponse?.data!.filter(
+  // //   (item) => item.currentStock <= item.safetyStock,
+  // // ).length;
+  // const totalValue =
+  //   apiResponse?.data!.reduce(
+  //     (sum, item) => sum + Number(item.partValue!),
+  //     0,
+  //   ) || 0;
 
   return (
     <>
@@ -180,21 +217,21 @@ export const InventoryDashboard = () => {
           <StatCard
             icon="ri-stack-line"
             label="전체 품목"
-            value={totalItems}
+            value={0}
             iconBgColor="bg-blue-100"
             iconColor="text-blue-600"
           />
           <StatCard
             icon="ri-alert-line"
             label="재주문점 이하"
-            value={lowStockItems}
+            value={0}
             iconBgColor="bg-yellow-100"
             iconColor="text-yellow-600"
           />
           <StatCard
             icon="ri-money-dollar-circle-line"
             label="총 재고가치"
-            value={`₩${(totalValue / 1000000).toFixed(1)}M`}
+            value={`₩${(0 / 1000000).toFixed(1)}M`}
             iconBgColor="bg-green-100"
             iconColor="text-green-600"
           />
@@ -203,15 +240,28 @@ export const InventoryDashboard = () => {
         {/* 필터 및 검색 */}
         <SearchFilterBar
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onSearchChange={(value) => {
+            console.log("value", value);
+            setSearchTerm(value);
+          }}
           searchPlaceholder="품목코드, 품목명 검색..."
           filters={[
             {
               key: "category",
               value: categoryFilter,
               options: categoryOptions,
-              onChange: setCategoryFilter,
+              onChange: (e) => {
+                setCategoryFilter(e);
+                setGroupFilter("");
+              },
             },
+            {
+              key: "group",
+              value: groupFilter,
+              options: groupOptions,
+              onChange: setGroupFilter,
+            },
+
             {
               key: "status",
               value: statusFilter,
@@ -222,12 +272,7 @@ export const InventoryDashboard = () => {
           actions={
             <div className="flex space-x-2">
               <Button variant="default" size="sm">
-                <i className="ri-add-line mr-2"></i>
-                재고조정
-              </Button>
-              <Button variant="secondary" size="sm">
-                <i className="ri-download-line mr-2"></i>
-                내보내기
+                초기화
               </Button>
             </div>
           }
@@ -238,7 +283,7 @@ export const InventoryDashboard = () => {
           title="재고 현황"
           metaRight={
             <span className="text-sm text-gray-500">
-              총 {filteredData.length}개 품목
+              총 {data?.data?.content?.length ?? 0}개 품목
             </span>
           }
           actionsRight={
@@ -250,9 +295,12 @@ export const InventoryDashboard = () => {
         >
           <Table
             columns={columns}
-            data={filteredData}
+            data={data?.data?.content ?? []}
+            loading={isLoading && data === undefined}
             emptyText={
-              isLoading ? "데이터 로딩 중..." : "조건에 맞는 재고가 없습니다"
+              isLoading && data === undefined
+                ? "데이터 로딩 중..."
+                : "조건에 맞는 재고가 없습니다"
             }
             errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
           />

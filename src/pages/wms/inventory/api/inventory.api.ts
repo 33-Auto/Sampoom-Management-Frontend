@@ -1,32 +1,52 @@
-import { useQuery } from "@tanstack/react-query";
+import type { InventoryListParams } from "@/pages/wms/inventory/model";
+import { queryClient } from "@/shared/api";
 
-import { fetchClient } from "@/shared/api";
+// 공통 옵션 생성 함수
+const getInventoryQueryOptions = (params?: InventoryListParams) => ({
+  params: {
+    query: {
+      warehouseId: params?.warehouseId ?? 40,
+      page: params?.page ?? 0,
+      size: params?.size ?? 10,
+      keyword: params?.keyword,
+      categoryId: params?.categoryId,
+      groupId: params?.groupId,
+      quantityStatus: params?.quantityStatus,
+    },
+  },
+});
 
-export const getWarehouseInventory = async () => {
-  const { data, error } = await fetchClient.GET(
-    "/api/warehouse/{warehouseId}/group/{groupId}",
+// queryOptions를 반환하는 함수 (loader 등에서 사용)
+export const inventoryListQueryOptions = (params?: InventoryListParams) =>
+  queryClient.queryOptions(
+    "get",
+    "/api/warehouse/",
+    getInventoryQueryOptions(params),
+  );
+
+// useQuery hook (컴포넌트에서 사용)
+export const useWarehouseInventoryQuery = (params?: InventoryListParams) =>
+  queryClient.useQuery(
+    "get",
+    "/api/warehouse/",
+    getInventoryQueryOptions(params),
+    {
+      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+    },
+  );
+
+export const useMaterialCategoryQuery = () =>
+  queryClient.useQuery("get", "/api/part/api/parts/categories");
+
+export const useMaterialGroupQuery = (categoryId: number) =>
+  queryClient.useQuery(
+    "get",
+    "/api/part/api/parts/categories/{categoryId}/groups",
     {
       params: {
         path: {
-          warehouseId: 1,
-          groupId: 1,
+          categoryId: categoryId,
         },
       },
     },
   );
-
-  if (error) {
-    throw error;
-  }
-
-  console.log("Inventory Data:", data);
-  return data || [];
-};
-
-export const warehouseInventoryQueryOptions = {
-  queryKey: ["warehouse", "inventory"],
-  queryFn: getWarehouseInventory,
-};
-
-export const useWarehouseInventoryQuery = () =>
-  useQuery(warehouseInventoryQueryOptions);

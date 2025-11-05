@@ -1,3 +1,3 @@
-import type { Schemas } from "@/shared/model";
+// import type { Schemas } from "@/shared/model";
 
-export type RopSettingsResponse = Schemas["SearchReqDto"];
+// export type RopSettingsResponse = Schemas["SearchReqDto"];

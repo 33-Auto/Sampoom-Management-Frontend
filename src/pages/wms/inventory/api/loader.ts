@@ -1,10 +1,11 @@
-import { queryClient } from "@/shared/api/query";
+import { queryClient as tanstackQueryClient } from "@/shared/api/query";
 
-import { warehouseInventoryQueryOptions } from "./inventory.api";
+import { inventoryListQueryOptions } from "./inventory.api";
 
 export function loader() {
-  const inventoryPromise = queryClient.ensureQueryData(
-    warehouseInventoryQueryOptions,
+  tanstackQueryClient.prefetchQuery(
+    inventoryListQueryOptions({ warehouseId: 40 }),
   );
-  return { orders: inventoryPromise };
+
+  return null;
 }

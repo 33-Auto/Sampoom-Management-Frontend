@@ -92,9 +92,9 @@ const SalesOrders = lazy(async () => ({
 // ============================================================================
 // WMS Pages - 창고 관리 모듈 (지연 로딩)
 // ============================================================================
-const InventoryDashboard = lazy(async () => ({
-  default: (await import("@/pages/wms/inventory")).InventoryDashboard,
-}));
+// const InventoryDashboard = lazy(async () => ({
+//   default: (await import("@/pages/wms/inventory")).InventoryDashboard,
+// }));
 // const ShippingTodos = lazy(async () => ({
 //   default: (await import("@/pages/wms/shipping")).ShippingTodos,
 // }));
@@ -230,7 +230,15 @@ const routes: RouteObject[] = [
           },
           {
             path: "inventory",
-            element: <InventoryDashboard />,
+            lazy: async () => {
+              const { InventoryDashboard } = await import(
+                "@/pages/wms/inventory"
+              );
+              const { loader } = await import(
+                "@/pages/wms/inventory/api/loader"
+              );
+              return { Component: InventoryDashboard, loader };
+            },
           },
           {
             path: "receiving",

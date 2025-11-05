@@ -1,7 +1,10 @@
-import type { components } from "./v1";
+import type { components, operations } from "./v1";
 
 // Schemas
 export type Schemas = components["schemas"];
+
+// Opertaions
+export type Operations = operations;
 
 // Auth
 export type LoginRequest = Schemas["LoginRequest"];
