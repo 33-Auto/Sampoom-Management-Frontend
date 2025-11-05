@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { materialMasterData } from "@/mocks/factoryData";
 import { Button, InfoBox, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
@@ -12,7 +13,6 @@ import {
   usePartGroupsQuery,
 } from "../create/api/create.api";
 import { useItemStats } from "../model/useItemStats";
-// Modal-based components removed; using page navigation instead
 
 export const ItemMaster = () => {
   const navigate = useNavigate();
@@ -21,10 +21,12 @@ export const ItemMaster = () => {
     "전체",
   );
   // 조달 유형/카테고리 필터는 제거
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+
+  // Pagination 처리를 위한 커스텀 훅
+  const { page, size, setPage, setSize } = usePaginationTable({});
 
   // API 호출
   const { data, /* isLoading: _isLoading, */ isError, refetch } =
@@ -231,7 +233,6 @@ export const ItemMaster = () => {
           iconColor="text-purple-600"
         />
       </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
@@ -325,7 +326,6 @@ export const ItemMaster = () => {
           </>
         }
       />
-
       {/* 리드 타임 관리 안내 */}
       <InfoBox type="info" title="리드 타임 관리 안내">
         <p className="mb-1">
@@ -341,7 +341,6 @@ export const ItemMaster = () => {
           계획(Backward Scheduling)을 수행합니다
         </p>
       </InfoBox>
-
       {/* 공정 기반 리드 타임 자동 계산 안내 */}
       <InfoBox type="success" title="공정 기반 리드 타임 자동 계산">
         <p className="mb-1">
@@ -357,7 +356,6 @@ export const ItemMaster = () => {
           스케줄링 지원
         </p>
       </InfoBox>
-
       {/* 품목 목록 테이블 */}
       <PaginationTableSection
         title="품목 목록"
