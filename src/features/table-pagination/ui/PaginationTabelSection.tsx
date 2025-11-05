@@ -2,8 +2,8 @@ import React from "react";
 
 import { TableSection } from "@/shared/ui";
 
+import { PaginationMeta } from "./PaginationMeta";
 import { PaginationNavigation } from "./PaginationNavigation";
-import { PaginationMeta } from "./PaginatoinMeta";
 
 interface PaginationTableSectionProps {
   title?: React.ReactNode;

@@ -26,7 +26,8 @@ export const ItemMaster = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 
   // Pagination 처리를 위한 커스텀 훅
-  const { page, size, setPage, setSize } = usePaginationTable({});
+  const { page, size, setPage, onPageChange, onSizeChange } =
+    usePaginationTable({});
 
   // API 호출
   const { data, /* isLoading: _isLoading, */ isError, refetch } =
@@ -363,8 +364,8 @@ export const ItemMaster = () => {
         page={page}
         totalPages={totalPages}
         size={size}
-        onSizeChange={setSize}
-        onPageChange={setPage}
+        onSizeChange={onSizeChange}
+        onPageChange={onPageChange}
         showRefresh
         onRefresh={refetch}
       >

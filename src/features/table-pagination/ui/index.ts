@@ -1,3 +1,3 @@
 export { PaginationTableSection } from "./PaginationTabelSection";
-export { PaginationMeta } from "./PaginatoinMeta";
+export { PaginationMeta } from "./PaginationMeta";
 export { PaginationNavigation } from "./PaginationNavigation";
