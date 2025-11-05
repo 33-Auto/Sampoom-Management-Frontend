@@ -31,12 +31,6 @@ export const InventoryDashboard = () => {
     quantityStatus:
       statusFilter === "" ? undefined : (statusFilter as InventoryStatus),
   });
-  // const categoryOptions = [
-  //   { value: "전체", label: "전체 카테고리" },
-  //   { value: "완제품", label: "완제품" },
-  //   { value: "원자재", label: "원자재" },
-  //   { value: "부품", label: "부품" },
-  // ];
 
   const { data: categoryData } = useMaterialCategoryQuery();
 
@@ -65,27 +59,6 @@ export const InventoryDashboard = () => {
       }),
   ];
 
-  // InventoryStatus["ENOUGH"];
-  // const statusOptions = [
-  //   { value: "전체", label: "전체 상태" },
-  //   { value: "정상", label: "정상" },
-  //   { value: "부족", label: "부족" },
-  //   { value: "위험", label: "위험" },
-  //   { value: "과다", label: "과다" },
-  // ];
-
-  // const inventoryData: PartResDto[] = (apiResponse?.data || []).map((item) => ({
-  //   ...item,
-  //   itemCode: item.code,
-  //   itemName: item.name,
-  //   currentStock: item.quantity || 0,
-  //   reorderPoint: Number(item.rop || 0), // Placeholder
-  //   safetyStock: 5, // Placeholder
-  //   unit: "EA", // Placeholder
-  //   totalValue: Number(item.partValue || 0), // Placeholder
-  //   location: "A-1", // Placeholder
-  // }));
-
   // const filteredData =
   //   apiResponse?.data?.filter((item: PartResDto) => {
   //     const matchesSearch =
@@ -97,15 +70,6 @@ export const InventoryDashboard = () => {
   //       statusFilter === "전체" || item.status === statusFilter;
   //     return matchesSearch && matchesCategory && matchesStatus;
   //   }) || [];
-
-  // const handleStockMovement = (itemCode: string, type: "in" | "out") => {
-  //   console.log("재고 이동 기록:", itemCode, type);
-  //   // ERP로 재고 변경 이벤트 전송
-  // };
-
-  // const handleLocationUpdate = (itemCode: string) => {
-  //   console.log("위치 변경:", itemCode);
-  // };
 
   const keys = createKeyRecord<PartResDto>(data?.data?.content ?? []);
   const columns = [
@@ -199,9 +163,9 @@ export const InventoryDashboard = () => {
   //   apiResponse?.data?.filter(
   //     (item: PartResDto) => (item.quantity || -1) <= (item.rop || 0),
   //   ).length ?? 0;
-  // // const criticalItems = apiResponse?.data!.filter(
-  // //   (item) => item.currentStock <= item.safetyStock,
-  // // ).length;
+  // const criticalItems = apiResponse?.data!.filter(
+  //   (item) => item.currentStock <= item.safetyStock,
+  // ).length;
   // const totalValue =
   //   apiResponse?.data!.reduce(
   //     (sum, item) => sum + Number(item.partValue!),
@@ -260,6 +224,7 @@ export const InventoryDashboard = () => {
               value: groupFilter,
               options: groupOptions,
               onChange: setGroupFilter,
+              disabled: categoryFilter === "",
             },
 
             {
