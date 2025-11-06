@@ -1,5 +1,8 @@
+// TODO 추후에 useContext를 zustand로 대체할 예정
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
+
+import { Button, ToastContainer, Modal } from "@/shared/ui";
 
 interface ToastNotification {
   id: string;
@@ -116,6 +119,46 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+      <ToastContainer />
+      {confirmModal && (
+        <Modal
+          open={!!confirmModal}
+          onClose={() => {
+            confirmModal.onCancel?.();
+            hideConfirm();
+          }}
+          title={confirmModal.title}
+          widthClassName="max-w-md"
+        >
+          <div className="space-y-4">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              {confirmModal.message}
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  confirmModal.onCancel?.();
+                  hideConfirm();
+                }}
+              >
+                {confirmModal.cancelText || "취소"}
+              </Button>
+              <Button
+                variant={
+                  confirmModal.variant === "danger" ? "destructive" : "default"
+                }
+                onClick={() => {
+                  confirmModal.onConfirm();
+                  hideConfirm();
+                }}
+              >
+                {confirmModal.confirmText || "확인"}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </NotificationContext.Provider>
   );
 }
@@ -123,9 +166,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 export function useNotification() {
   const context = useContext(NotificationContext);
   if (context === undefined) {
-    throw new Error(
-      "useNotification must be used within a NotificationProvider",
-    );
+    throw new Error("NotificationProvider 안에 정의되어야 합니다");
   }
   return context;
 }

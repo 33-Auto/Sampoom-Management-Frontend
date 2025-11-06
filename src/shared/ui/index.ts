@@ -11,3 +11,5 @@ export { TableSection } from "./TableSection";
 export { Card } from "./Card";
 export { Badge } from "./Badge";
 export { ThemeToggle } from "./ThemeToggle";
+export { Modal } from "./Modal";
+export { ToastContainer } from "./Toast";

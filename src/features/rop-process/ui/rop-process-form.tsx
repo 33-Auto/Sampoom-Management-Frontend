@@ -24,7 +24,7 @@ export function RopProcessForm({
   onCancel,
 }: RopProcessFormProps) {
   const isEditMode = !!ropId;
-  const { showSuccess, showError } = useNotification();
+  const { showSuccess, showError, showConfirm } = useNotification();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedGroupId, setSelectedGroupId] = useState("");
@@ -55,9 +55,6 @@ export function RopProcessForm({
           (ropData.autoOrderStatus as "ACTIVE" | "INACTIVE") || "ACTIVE",
         autoCalStatus: "ACTIVE",
       });
-      // TODO: categoryName과 groupName으로 categoryId와 groupId 찾기
-      // 현재는 categoryOptions와 groupOptions에서 찾아야 하지만
-      // 일단은 빈 값으로 두고 나중에 개선
     }
   }, [ropData]);
 
@@ -181,30 +178,33 @@ export function RopProcessForm({
   const handleDelete = () => {
     if (!ropId) return;
 
-    if (
-      window.confirm(
-        `"${ropData?.partName || ropData?.partCode}" ROP 설정을 삭제하시겠습니까?`,
-      )
-    ) {
-      deleteMutation.mutate(
-        {
-          params: {
-            path: {
-              ropId: ropId,
+    showConfirm({
+      title: "ROP 설정 삭제",
+      message: `"${ropData?.partName || ropData?.partCode}" ROP 설정을 삭제하시겠습니까?`,
+      confirmText: "삭제",
+      cancelText: "취소",
+      variant: "danger",
+      onConfirm: () => {
+        deleteMutation.mutate(
+          {
+            params: {
+              path: {
+                ropId: ropId,
+              },
             },
           },
-        },
-        {
-          onSuccess: () => {
-            showSuccess("삭제 완료", "ROP 설정이 성공적으로 삭제되었습니다.");
-            onSuccess?.();
+          {
+            onSuccess: () => {
+              showSuccess("삭제 완료", "ROP 설정이 성공적으로 삭제되었습니다.");
+              onSuccess?.();
+            },
+            onError: () => {
+              showError("삭제 실패", "ROP 설정 삭제에 실패했습니다.");
+            },
           },
-          onError: () => {
-            showError("삭제 실패", "ROP 설정 삭제에 실패했습니다.");
-          },
-        },
-      );
-    }
+        );
+      },
+    });
   };
 
   const calculatedRop = formData.averageDaily * formData.leadTime;
