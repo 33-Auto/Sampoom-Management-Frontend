@@ -6,7 +6,6 @@ import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePagi
 import { useWorkCentersQuery } from "@/pages/master/workcenters/api";
 import type {
   WorkCenterResponseDTO,
-  WorkCenterStatus,
   WorkCenterType,
 } from "@/pages/master/workcenters/model";
 import {
@@ -37,7 +36,9 @@ export const WorkCenterMaster = () => {
     query: searchTerm === "" ? undefined : searchTerm,
     type: typeFilter === "" ? undefined : (typeFilter as WorkCenterType),
     status:
-      statusFilter === "" ? undefined : (statusFilter as WorkCenterStatus),
+      statusFilter === "" || statusFilter === "MAINTENANCE"
+        ? undefined
+        : (statusFilter as "ACTIVE" | "INACTIVE"),
     page,
     size,
   });
