@@ -109,7 +109,7 @@ export const getItemsMaster = async (params?: {
   const size = params?.size ?? 10;
 
   const { data, error } = await fetchClient.GET(
-    "/api/part/api/items/search" as any,
+    "/api/part/items/search" as any,
     {
       params: {
         query: {

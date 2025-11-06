@@ -18,7 +18,7 @@ interface ApiListResponse<T> {
 
 export const getMaterialCategories = async (): Promise<MaterialCategory[]> => {
   const { data, error } = await fetchClient.GET(
-    "/api/part/api/materials/category" as any,
+    "/api/part/materials/category" as any,
     {},
   );
   if (error) throw error;
@@ -43,7 +43,7 @@ export interface PartCategory {
 
 export const getPartCategories = async (): Promise<PartCategory[]> => {
   const { data, error } = await fetchClient.GET(
-    "/api/part/api/parts/categories" as any,
+    "/api/part/parts/categories" as any,
     {},
   );
   if (error) throw error;
@@ -71,7 +71,7 @@ export const getPartGroups = async (
   categoryId: number,
 ): Promise<PartGroup[]> => {
   const { data, error } = await fetchClient.GET(
-    "/api/part/api/parts/categories/{categoryId}/groups" as any,
+    "/api/part/parts/categories/{categoryId}/groups" as any,
     { params: { path: { categoryId } } as any },
   );
   if (error) throw error;
@@ -99,7 +99,7 @@ export interface CreateMaterialRequest {
 export const createMaterial = async (
   payload: CreateMaterialRequest,
 ): Promise<void> => {
-  const { error } = await fetchClient.POST("/api/part/api/materials" as any, {
+  const { error } = await fetchClient.POST("/api/part/materials" as any, {
     body: payload as any,
   });
   if (error) throw error;
@@ -118,7 +118,7 @@ export interface CreatePartRequest {
 }
 
 export const createPart = async (payload: CreatePartRequest): Promise<void> => {
-  const { error } = await fetchClient.POST("/api/part/api/parts" as any, {
+  const { error } = await fetchClient.POST("/api/part/parts" as any, {
     body: payload as any,
   });
   if (error) throw error;
@@ -149,10 +149,9 @@ export interface MaterialDetailResponse {
 export const getPartDetail = async (
   id: number,
 ): Promise<PartDetailResponse> => {
-  const { data, error } = await fetchClient.GET(
-    "/api/part/api/parts/{id}" as any,
-    { params: { path: { id } } as any },
-  );
+  const { data, error } = await fetchClient.GET("/api/part/parts/{id}" as any, {
+    params: { path: { id } } as any,
+  });
   if (error) throw error;
   const wrapped = data as { data?: PartDetailResponse } | PartDetailResponse;
   return (wrapped as any).data
@@ -164,7 +163,7 @@ export const getMaterialDetail = async (
   id: number,
 ): Promise<MaterialDetailResponse> => {
   const { data, error } = await fetchClient.GET(
-    "/api/part/api/materials/{id}" as any,
+    "/api/part/materials/{id}" as any,
     { params: { path: { id } } as any },
   );
   if (error) throw error;
@@ -214,7 +213,7 @@ export const updatePart = async (
   id: number,
   payload: UpdatePartRequest,
 ): Promise<void> => {
-  const { error } = await fetchClient.PUT("/api/part/api/parts/{id}" as any, {
+  const { error } = await fetchClient.PUT("/api/part/parts/{id}" as any, {
     params: { path: { id } } as any,
     body: payload as any,
   });
@@ -225,17 +224,22 @@ export const updateMaterial = async (
   id: number,
   payload: UpdateMaterialRequest,
 ): Promise<void> => {
-  const { error } = await fetchClient.PUT(
-    "/api/part/api/materials/{id}" as any,
-    { params: { path: { id } } as any, body: payload as any },
-  );
+  const { error } = await fetchClient.PUT("/api/part/materials/{id}" as any, {
+    params: { path: { id } } as any,
+    body: payload as any,
+  });
   if (error) throw error;
 };
 
 export const useUpdatePartMutation = () =>
   useMutation({
-    mutationFn: async ({ id, payload }: { id: number; payload: UpdatePartRequest }) =>
-      updatePart(id, payload),
+    mutationFn: async ({
+      id,
+      payload,
+    }: {
+      id: number;
+      payload: UpdatePartRequest;
+    }) => updatePart(id, payload),
   });
 
 export const useUpdateMaterialMutation = () =>
@@ -252,17 +256,16 @@ export const useUpdateMaterialMutation = () =>
 // Delete mutations
 export const deleteMaterial = async (id: number): Promise<void> => {
   const { error } = await fetchClient.DELETE(
-    "/api/part/api/materials/{id}" as any,
+    "/api/part/materials/{id}" as any,
     { params: { path: { id } } as any },
   );
   if (error) throw error;
 };
 
 export const deletePart = async (id: number): Promise<void> => {
-  const { error } = await fetchClient.DELETE(
-    "/api/part/api/parts/{id}" as any,
-    { params: { path: { id } } as any },
-  );
+  const { error } = await fetchClient.DELETE("/api/part/parts/{id}" as any, {
+    params: { path: { id } } as any,
+  });
   if (error) throw error;
 };
 
