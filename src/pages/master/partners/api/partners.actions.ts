@@ -9,9 +9,9 @@ export type PartnerUpdateRequestDTO = Schemas["VendorUpdateRequestDTO"];
 export const useCreatePartnerMutation = () =>
   queryClient.useMutation("post", "/api/site/vendors");
 
-// Update mutation (PATCH 사용)
+// Update mutation (PUT 사용)
 export const useUpdatePartnerMutation = () =>
-  queryClient.useMutation("patch", "/api/site/vendors/{id}");
+  queryClient.useMutation("put", "/api/site/vendors/{id}");
 
 // Delete mutation
 export const useDeletePartnerMutation = () =>
