@@ -78,6 +78,8 @@ export function WmsPurchaseOrders() {
   const getStatusBadge = (status?: string) => {
     if (!status) return null;
 
+    console.log(status);
+
     const statusConfig: Record<
       string,
       { label: string; variant: "success" | "info" | "error" | "default" }

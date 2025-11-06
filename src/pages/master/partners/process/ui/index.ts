@@ -1,0 +1,1 @@
+export { PartnerProcess } from "./PartnerProcess";

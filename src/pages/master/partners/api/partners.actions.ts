@@ -1,70 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "@/shared/api";
+import type { Schemas } from "@/shared/model";
 
-import { fetchClient } from "@/shared/api";
+// 타입 정의 (OpenAPI에서 가져오기)
+export type PartnerCreateRequestDTO = Schemas["VendorRequestDTO"];
+export type PartnerUpdateRequestDTO = Schemas["VendorUpdateRequestDTO"];
 
-import type { PartnerMaster } from "./partners.api";
+// Create mutation
+export const useCreatePartnerMutation = () =>
+  queryClient.useMutation("post", "/api/site/vendors");
 
-export interface CreatePartnerRequest
-  extends Omit<PartnerMaster, "partnerCode"> {}
+// Update mutation (PUT 사용)
+export const useUpdatePartnerMutation = () =>
+  queryClient.useMutation("put", "/api/site/vendors/{id}");
 
-export interface UpdatePartnerRequest extends Partial<PartnerMaster> {}
-
-// 거래처 등록
-export const createPartner = async (
-  partnerData: CreatePartnerRequest,
-): Promise<PartnerMaster> => {
-  const { data, error } = await fetchClient.POST(
-    "/api/master/partners" as any,
-    {
-      body: partnerData,
-    },
-  );
-  if (error) throw error;
-  return data as PartnerMaster;
-};
-
-// 거래처 수정
-export const updatePartner = async (
-  partnerCode: string,
-  updates: UpdatePartnerRequest,
-): Promise<PartnerMaster> => {
-  const { data, error } = await fetchClient.PUT(
-    "/api/master/partners/{partnerCode}" as any,
-    {
-      params: { path: { partnerCode } },
-      body: updates,
-    },
-  );
-  if (error) throw error;
-  return data as PartnerMaster;
-};
-
-// React Query Hooks for Mutations
-
-export const useCreatePartner = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createPartner,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "partners"] });
-    },
-  });
-};
-
-export const useUpdatePartner = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      partnerCode,
-      updates,
-    }: {
-      partnerCode: string;
-      updates: UpdatePartnerRequest;
-    }) => updatePartner(partnerCode, updates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "partners"] });
-    },
-  });
-};
+// Delete mutation
+export const useDeletePartnerMutation = () =>
+  queryClient.useMutation("delete", "/api/site/vendors/{id}");

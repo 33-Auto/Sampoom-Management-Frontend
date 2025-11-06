@@ -25,6 +25,11 @@ const MasterLayout: React.FC = () => {
       icon: "ri-building-line",
     },
     {
+      path: "/master/branches",
+      label: "지점 마스터",
+      icon: "ri-store-line",
+    },
+    {
       path: "/master/workcenters",
       label: "작업장 마스터",
       icon: "ri-tools-line",

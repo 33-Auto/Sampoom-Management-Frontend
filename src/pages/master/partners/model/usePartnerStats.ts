@@ -1,28 +1,19 @@
 import { useMemo } from "react";
 
-interface PartnerData {
-  status: string;
-  partnerType: string;
-}
+import type { PartnerResponseDTO } from "./partners.model";
 
-export const usePartnerStats = (data: PartnerData[]) => {
+export const usePartnerStats = (data: PartnerResponseDTO[]) => {
   return useMemo(() => {
     const totalPartners = data.length;
     const activePartners = data.filter(
-      (partner) => partner.status === "활성",
+      (partner) => partner.status === "ACTIVE",
     ).length;
-    const customers = data.filter(
-      (partner) => partner.partnerType === "고객사",
-    ).length;
-    const suppliers = data.filter(
-      (partner) => partner.partnerType === "공급업체",
-    ).length;
+    // Note: VendorListResponseDTO에는 partnerType이 없으므로 customers/suppliers는 제거
+    // 필요시 API 응답에 따라 추가 가능
 
     return {
       totalPartners,
       activePartners,
-      customers,
-      suppliers,
     };
   }, [data]);
 };

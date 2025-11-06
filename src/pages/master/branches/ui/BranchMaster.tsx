@@ -3,23 +3,26 @@ import { useNavigate } from "react-router-dom";
 
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { usePartnersQuery } from "@/pages/master/partners/api";
-import type { PartnerResponseDTO } from "@/pages/master/partners/model";
-import { PARTNER_STATUS } from "@/pages/master/partners/model";
-import { usePartnerStats } from "@/pages/master/partners/model/usePartnerStats";
+import { useBranchesQuery } from "@/pages/master/branches/api";
+import type { BranchResponseDTO } from "@/pages/master/branches/model";
+import { BRANCH_STATUS, BRANCH_TYPE } from "@/pages/master/branches/model";
+import { useBranchStats } from "@/pages/master/branches/model/useBranchStats";
 import { createKeyRecord } from "@/shared/lib/utils";
 import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
-export const PartnerMaster = () => {
+export const BranchMaster = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   // Pagination 처리를 위한 커스텀 훅
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
-  const { data, isLoading, isError, refetch } = usePartnersQuery({
+  const { data, isLoading, isError, refetch } = useBranchesQuery({
     keyword: searchTerm === "" ? undefined : searchTerm,
+    type:
+      typeFilter === "" ? undefined : (typeFilter as "WAREHOUSE" | "FACTORY"),
     status:
       statusFilter === "" ? undefined : (statusFilter as "ACTIVE" | "INACTIVE"),
     page,
@@ -29,9 +32,25 @@ export const PartnerMaster = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
+  const typeOptions = [
+    { value: "", label: "전체 유형" },
+    ...Object.entries(BRANCH_TYPE)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        const typeLabels: Record<string, string> = {
+          WAREHOUSE: "창고",
+          FACTORY: "공장",
+        };
+        return {
+          value: value as string,
+          label: typeLabels[key] || key,
+        };
+      }),
+  ];
+
   const statusOptions = [
     { value: "", label: "전체 상태" },
-    ...Object.entries(PARTNER_STATUS)
+    ...Object.entries(BRANCH_STATUS)
       .filter(([_, value]) => value !== undefined)
       .map(([key, value]) => {
         const statusLabels: Record<string, string> = {
@@ -46,22 +65,36 @@ export const PartnerMaster = () => {
   ];
 
   const handleCreateNew = () => {
-    navigate("/master/partners/process");
+    navigate("/master/branches/process");
   };
 
-  const handleViewDetail = (row: PartnerResponseDTO) => {
-    navigate(`/master/partners/process/${row.id}`, {
-      state: { partnerData: row },
+  const handleViewDetail = (row: BranchResponseDTO) => {
+    navigate(`/master/branches/process/${row.id}`, {
+      state: { branchData: row },
     });
   };
 
-  const keys = createKeyRecord<PartnerResponseDTO>(data?.data?.content ?? []);
+  const keys = createKeyRecord<BranchResponseDTO>(data?.data?.content ?? []);
 
   const columns = [
-    { key: keys.vendorCode, title: "거래처 코드", width: "120px" },
-    { key: keys.name, title: "거래처명" },
-    { key: keys.businessNumber, title: "사업자번호", width: "130px" },
-    { key: keys.ceoName, title: "대표자", width: "100px" },
+    { key: keys.branchCode, title: "지점 코드", width: "120px" },
+    { key: keys.name, title: "지점명" },
+    {
+      key: keys.type,
+      title: "유형",
+      width: "120px",
+      render: (value: string) => {
+        const typeLabels: Record<string, string> = {
+          WAREHOUSE: "창고",
+          FACTORY: "공장",
+        };
+        return (
+          <Badge variant={value === "WAREHOUSE" ? "default" : "warning"}>
+            {typeLabels[value] || value}
+          </Badge>
+        );
+      },
+    },
     { key: keys.address, title: "주소" },
     {
       key: keys.status,
@@ -95,7 +128,7 @@ export const PartnerMaster = () => {
       key: "actions",
       title: "작업",
       width: "120px",
-      render: (_value: any, row: PartnerResponseDTO) => {
+      render: (_value: any, row: BranchResponseDTO) => {
         return (
           <Button
             variant="secondary"
@@ -111,28 +144,45 @@ export const PartnerMaster = () => {
   ];
 
   // 통계 계산 (API 데이터 기반)
-  const partners = data?.data?.content ?? [];
-  const { totalPartners, activePartners } = usePartnerStats(partners);
+  const branches = data?.data?.content ?? [];
+  const { totalBranches, activeBranches, warehouses, factories } =
+    useBranchStats(branches);
 
   return (
     <>
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
         <StatCard
-          icon="ri-building-line"
-          label="전체 거래처"
-          value={totalPartners}
+          icon="ri-store-line"
+          label="전체 지점"
+          value={totalBranches}
           iconBgColor="bg-blue-100"
           iconColor="text-blue-600"
         />
 
         <StatCard
           icon="ri-check-line"
-          label="활성 거래처"
-          value={activePartners}
+          label="활성 지점"
+          value={activeBranches}
           iconBgColor="bg-green-100"
           iconColor="text-green-600"
+        />
+
+        <StatCard
+          icon="ri-archive-line"
+          label="창고"
+          value={warehouses}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
+
+        <StatCard
+          icon="ri-building-2-line"
+          label="공장"
+          value={factories}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
         />
       </div>
 
@@ -143,8 +193,17 @@ export const PartnerMaster = () => {
           setSearchTerm(value);
           onPageChange(0);
         }}
-        searchPlaceholder="거래처명 또는 코드 검색..."
+        searchPlaceholder="지점명 또는 코드 검색..."
         filters={[
+          {
+            key: "type",
+            value: typeFilter,
+            options: typeOptions,
+            onChange: (e) => {
+              setTypeFilter(e);
+              onPageChange(0);
+            },
+          },
           {
             key: "status",
             value: statusFilter,
@@ -161,6 +220,7 @@ export const PartnerMaster = () => {
               variant="secondary"
               onClick={() => {
                 setSearchTerm("");
+                setTypeFilter("");
                 setStatusFilter("");
                 onPageChange(0);
               }}
@@ -168,8 +228,6 @@ export const PartnerMaster = () => {
               <i className="ri-refresh-line mr-2"></i>
               초기화
             </Button>
-            {/* 신규 등록 버튼 */}
-
             <Button variant="default" onClick={handleCreateNew}>
               <i className="ri-add-line mr-2"></i>
               신규 등록
@@ -178,9 +236,9 @@ export const PartnerMaster = () => {
         }
       />
 
-      {/* 거래처 목록 테이블 */}
+      {/* 지점 목록 테이블 */}
       <PaginationTableSection
-        title="거래처 목록"
+        title="지점 목록"
         totalElements={totalElements}
         page={page}
         totalPages={totalPages}
@@ -192,12 +250,12 @@ export const PartnerMaster = () => {
       >
         <Table
           columns={columns}
-          data={partners}
+          data={branches}
           loading={isLoading && data === undefined}
           emptyText={
             isLoading && data === undefined
               ? "데이터 로딩 중..."
-              : "조건에 맞는 거래처가 없습니다"
+              : "조건에 맞는 지점이 없습니다"
           }
           errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
         />

@@ -37,9 +37,6 @@ const BomMaster = lazy(async () => ({
 const BomCreate = lazy(async () => ({
   default: (await import("@/pages/master/bom/create")).CreateBOM,
 }));
-const PartnerMaster = lazy(async () => ({
-  default: (await import("@/pages/master/partners")).PartnerMaster,
-}));
 const DepartmentMaster = lazy(async () => ({
   default: (await import("@/pages/master/departments")).DepartmentMaster,
 }));
@@ -158,7 +155,66 @@ const routes: RouteObject[] = [
           },
           { path: "bom", element: <BomMaster /> },
           { path: "bom/create", element: <BomCreate /> },
-          { path: "partners", element: <PartnerMaster /> },
+          {
+            path: "partners",
+            lazy: async () => {
+              const { PartnerMaster: Component } = await import(
+                "@/pages/master/partners"
+              );
+              const { partnersLoader } = await import(
+                "@/pages/master/partners/api/partners.loaders"
+              );
+              return { Component, loader: partnersLoader };
+            },
+          },
+          {
+            path: "partners/process",
+            lazy: async () => {
+              const { PartnerProcess: Component } = await import(
+                "@/pages/master/partners/process"
+              );
+              return { Component };
+            },
+          },
+          {
+            path: "partners/process/:id",
+            lazy: async () => {
+              const { PartnerProcess: Component } = await import(
+                "@/pages/master/partners/process"
+              );
+              return { Component };
+            },
+          },
+          {
+            path: "branches",
+            lazy: async () => {
+              const { BranchMaster: Component } = await import(
+                "@/pages/master/branches"
+              );
+              const { branchesLoader } = await import(
+                "@/pages/master/branches/api/branches.loaders"
+              );
+              return { Component, loader: branchesLoader };
+            },
+          },
+          {
+            path: "branches/process",
+            lazy: async () => {
+              const { BranchProcess: Component } = await import(
+                "@/pages/master/branches/process"
+              );
+              return { Component };
+            },
+          },
+          {
+            path: "branches/process/:id",
+            lazy: async () => {
+              const { BranchProcess: Component } = await import(
+                "@/pages/master/branches/process"
+              );
+              return { Component };
+            },
+          },
           { path: "departments", element: <DepartmentMaster /> },
           { path: "positions", element: <PositionMaster /> },
           {
