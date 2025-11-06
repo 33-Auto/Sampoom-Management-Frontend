@@ -8,7 +8,7 @@ interface ModalProps {
   widthClassName?: string; // e.g., max-w-3xl
 }
 
-const Modal: React.FC<ModalProps> = ({
+export const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
   title,
@@ -95,5 +95,3 @@ const Modal: React.FC<ModalProps> = ({
     </div>
   );
 };
-
-export default Modal;
