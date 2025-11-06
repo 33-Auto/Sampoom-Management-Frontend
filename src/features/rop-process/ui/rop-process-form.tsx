@@ -33,7 +33,7 @@ export function RopProcessForm({
   const [formData, setFormData] = useState({
     leadTime: 7,
     averageDaily: 10,
-    maxStock: 0,
+    maxStock: 200,
     autoOrderStatus: "ACTIVE" as "ACTIVE" | "INACTIVE",
     autoCalStatus: "ACTIVE" as "ACTIVE" | "INACTIVE",
   });
@@ -208,7 +208,8 @@ export function RopProcessForm({
   };
 
   const calculatedRop = formData.averageDaily * formData.leadTime;
-  const isAutoOrder = formData.autoOrderStatus === "ACTIVE";
+
+  const isAutoOrder = formData.autoOrderStatus === "활성";
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
@@ -218,28 +219,81 @@ export function RopProcessForm({
           <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
             품목 정보
           </h3>
+
           <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-3">
-            <Select
-              label="카테고리"
-              value={selectedCategoryId}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              options={categoryOptions}
-              disabled={isEditMode}
-            />
-            <Select
-              label="그룹"
-              value={selectedGroupId}
-              onChange={(e) => handleGroupChange(e.target.value)}
-              options={groupOptions}
-              disabled={!selectedCategoryId || isEditMode}
-            />
-            <Select
-              label="품목"
-              value={extractPartCode(selectedPart)}
-              onChange={(e) => handlePartChange(e.target.value)}
-              options={partOptions}
-              disabled={!selectedGroupId || isEditMode}
-            />
+            {!isEditMode ? (
+              <>
+                <Select
+                  label="카테고리"
+                  value={selectedCategoryId}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  options={categoryOptions}
+                  disabled={isEditMode}
+                />
+                <Select
+                  label="그룹"
+                  value={selectedGroupId}
+                  onChange={(e) => handleGroupChange(e.target.value)}
+                  options={groupOptions}
+                  disabled={!selectedCategoryId || isEditMode}
+                />
+                <Select
+                  label="품목"
+                  value={extractPartCode(selectedPart)}
+                  onChange={(e) => handlePartChange(e.target.value)}
+                  options={partOptions}
+                  disabled={!selectedGroupId || isEditMode}
+                />
+              </>
+            ) : (
+              <>
+                <Select
+                  label="카테고리"
+                  value={ropData?.categoryName || ""}
+                  options={
+                    ropData?.categoryName
+                      ? [
+                          {
+                            value: ropData.categoryName,
+                            label: ropData.categoryName,
+                          },
+                        ]
+                      : []
+                  }
+                  disabled
+                />
+                <Select
+                  label="그룹"
+                  value={ropData?.groupName || ""}
+                  options={
+                    ropData?.groupName
+                      ? [{ value: ropData.groupName, label: ropData.groupName }]
+                      : []
+                  }
+                  disabled
+                />
+                <Select
+                  label="품목"
+                  value={
+                    ropData?.partCode && ropData?.partName
+                      ? `[${ropData.partCode}] ${ropData.partName}`
+                      : ""
+                  }
+                  options={
+                    ropData?.partCode && ropData?.partName
+                      ? [
+                          {
+                            value: `[${ropData.partCode}] ${ropData.partName}`,
+                            label: `[${ropData.partCode}] ${ropData.partName}`,
+                          },
+                        ]
+                      : []
+                  }
+                  disabled
+                />
+              </>
+            )}
+
             {/* <Input label="품목코드" value={selectedPartCode} disabled /> */}
           </div>
 

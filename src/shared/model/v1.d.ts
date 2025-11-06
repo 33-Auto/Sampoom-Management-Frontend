@@ -84,6 +84,134 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/user/invitations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["create"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/user/internal/verify": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [Not Client API] 로그인 User 서비스 내부 통신용
+     * @description [Not Client API] 로그인을 통해 유저의 조직 정합성을 검증합니다.
+     */
+    post: operations["verifyWorkspace"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/user/internal/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [Not Client API] 회원가입 User 서비스 내부 통신용
+     * @description [Not Client API] 회원가입을 통해 프로필 정보를 담은 유저를 생성합니다.
+     */
+    post: operations["createProfile"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/user/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 로그인 유저 프로필 정보 조회
+     * @description 토큰으로 로그인한 유저의 프로필 정보를 조회합니다.
+     */
+    get: operations["getMyProfile"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 로그인 유저 프로필 정보 수정
+     * @description 토큰으로 로그인한 유저의 프로필 정보를 수정합니다.
+     */
+    patch: operations["updateMyProfile"];
+    trace?: never;
+  };
+  "/api/user/profile/{userId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 관리자 권한 프로필 정보 수정
+     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
+     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
+     */
+    patch: operations["updateUserProfile"];
+    trace?: never;
+  };
+  "/api/user/info": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 조건에 맞는 회원의 전체 회원 정보를 조회
+     * @description 조건에 맞는 회원의 전체 정보를 페이지 형태로 불러옵니다.
+     *     <br><br> **정렬**
+     *     <br> **page**: n번째 페이지부터 불러오기
+     *     <br> **size**: 페이지 당 사이즈
+     *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
+     *     <br><br> **검색조건**
+     *     <br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
+     *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
+     */
+    get: operations["getUsersInfo"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/order/": {
     parameters: {
       query?: never;
@@ -556,34 +684,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/factory/{factoryId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 공장 조회
-     * @description 공장 정보를 조회합니다.
-     */
-    get: operations["getFactory"];
-    /**
-     * 공장 수정
-     * @description 공장 정보를 수정합니다.
-     */
-    put: operations["updateFactory"];
-    post?: never;
-    /**
-     * 공장 삭제
-     * @description 공장을 삭제합니다.
-     */
-    delete: operations["deleteFactory"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/factory/{factoryId}/material/order/{orderId}/receive": {
     parameters: {
       query?: never;
@@ -738,30 +838,6 @@ export interface paths {
      * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다. 여러 아이템이 있는 경우 각각 단건으로 나누어 개별 주문을 생성합니다.
      */
     post: operations["createPartOrder"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 공장 목록 조회
-     * @description 모든 공장 목록을 조회합니다.
-     */
-    get: operations["getAllFactories"];
-    put?: never;
-    /**
-     * 공장 생성
-     * @description 공장을 생성합니다.
-     */
-    post: operations["createFactory"];
     delete?: never;
     options?: never;
     head?: never;
@@ -1333,7 +1409,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/parts/{partId}": {
+  "/api/part/parts/{partId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -1353,7 +1429,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/materials/{materialId}": {
+  "/api/part/materials/{materialId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -1377,7 +1453,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/boms/{bomId}": {
+  "/api/part/boms/{bomId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -1422,7 +1498,7 @@ export interface paths {
      * 작업장 등록
      * @description 작업장명, 유형, 상태, 일일 가동시간, 효율성, 시간당비용을 입력하여 작업장을 등록합니다.
      */
-    post: operations["create"];
+    post: operations["create1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -1453,7 +1529,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/parts": {
+  "/api/part/parts": {
     parameters: {
       query?: never;
       header?: never;
@@ -1477,7 +1553,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/materials": {
+  "/api/part/materials": {
     parameters: {
       query?: never;
       header?: never;
@@ -1501,7 +1577,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/part/api/boms": {
+  "/api/part/boms": {
     parameters: {
       query?: never;
       header?: never;
@@ -1551,6 +1627,169 @@ export interface paths {
      * @description 부분 수정(PATCH)
      */
     patch: operations["update_1"];
+    trace?: never;
+  };
+  "/api/part/parts/categories": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 카테고리 목록 조회
+     * @description 카테고리 목록 조회
+     */
+    get: operations["getCategories1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/parts/categories/{categoryId}/parts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 카테고리별 부품 목록 조회 (그룹 안 정했을 때)
+     * @description 카테고리 내 모든 그룹의 부품을 한 번에 조회합니다.
+     */
+    get: operations["getPartsByCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/parts/categories/{categoryId}/groups": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 카테고리별 그룹 목록 조회
+     * @description 카테고리에 속한 그룹 목록 조회
+     */
+    get: operations["getGroups1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/materials/search": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 원자재 검색
+     * @description 원자재명 또는 코드로 검색합니다.
+     */
+    get: operations["searchMaterials"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/materials/category": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 카테고리 조회
+     * @description 모든 자재 카테고리를 조회합니다.
+     */
+    get: operations["getAllCategories"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/materials/category/{categoryId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 카테고리별 자재 목록 조회
+     * @description 특정 카테고리에 속한 자재 목록을 조회합니다.
+     */
+    get: operations["getMaterialsByCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/items/search": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 품목 통합 검색
+     * @description 부품/자재/전체 품목을 검색합니다.
+     *     - type: ALL / PART / MATERIAL
+     *     - 부품일 때: partCategoryId, partGroupId 사용
+     *     - 자재일 때: materialCategoryId 사용
+     */
+    get: operations["searchItems"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/part/boms/search": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * BOM 검색
+     * @description 부품 이름 또는 부품 코드로 BOM을 검색하고, 카테고리나 그룹으로 필터링합니다.
+     */
+    get: operations["searchBoms"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/api/part/api/v1/health": {
@@ -1645,169 +1884,6 @@ export interface paths {
       cookie?: never;
     };
     get: operations["healthCheckData_14"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/parts/categories": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 카테고리 목록 조회
-     * @description 카테고리 목록 조회
-     */
-    get: operations["getCategories1"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/parts/categories/{categoryId}/parts": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 카테고리별 부품 목록 조회 (그룹 안 정했을 때)
-     * @description 카테고리 내 모든 그룹의 부품을 한 번에 조회합니다.
-     */
-    get: operations["getPartsByCategory"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/parts/categories/{categoryId}/groups": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 카테고리별 그룹 목록 조회
-     * @description 카테고리에 속한 그룹 목록 조회
-     */
-    get: operations["getGroups1"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/materials/search": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 원자재 검색
-     * @description 원자재명 또는 코드로 검색합니다.
-     */
-    get: operations["searchMaterials"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/materials/category": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 카테고리 조회
-     * @description 모든 자재 카테고리를 조회합니다.
-     */
-    get: operations["getAllCategories"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/materials/category/{categoryId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 카테고리별 자재 목록 조회
-     * @description 특정 카테고리에 속한 자재 목록을 조회합니다.
-     */
-    get: operations["getMaterialsByCategory"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/items/search": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 품목 통합 검색
-     * @description 부품/자재/전체 품목을 검색합니다.
-     *     - type: ALL / PART / MATERIAL
-     *     - 부품일 때: partCategoryId, partGroupId 사용
-     *     - 자재일 때: materialCategoryId 사용
-     */
-    get: operations["searchItems"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/part/api/boms/search": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * BOM 검색
-     * @description 부품 이름 또는 부품 코드로 BOM을 검색하고, 카테고리나 그룹으로 필터링합니다.
-     */
-    get: operations["searchBoms"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2369,6 +2445,223 @@ export interface components {
       /** Format: int64 */
       expiresIn?: number;
     };
+    InvitationCreateRequestDto: {
+      /** @enum {string} */
+      targetType: "AGENCY" | "FACTORY" | "WAREHOUSE";
+      /** Format: int64 */
+      targetId: number;
+      email: string;
+      /** @enum {string} */
+      role: "USER" | "ADMIN";
+      /** @enum {string} */
+      position:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+    };
+    ApiResponseInvitationCreateResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["InvitationCreateResponseDto"];
+    };
+    InvitationCreateResponseDto: {
+      inviteCode?: string;
+    };
+    LoginRequest1: {
+      /** Format: int64 */
+      userId: number;
+      /** @enum {string} */
+      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+    };
+    LoginResponse1: {
+      /** Format: int64 */
+      userId: number;
+      /** @enum {string} */
+      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      valid?: boolean;
+    };
+    SignupUser: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      branch?: string;
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+    };
+    UserUpdateRequest: {
+      userName?: string;
+    };
+    ApiResponseUserUpdateResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["UserUpdateResponse"];
+    };
+    UserUpdateResponse: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+    };
+    UserUpdateAdminRequest: {
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+    };
+    ApiResponseUserUpdateAdminResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["UserUpdateAdminResponse"];
+    };
+    UserUpdateAdminResponse: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+    };
+    ApiResponseUserLoginResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["UserLoginResponse"];
+    };
+    UserLoginResponse: {
+      /** Format: int64 */
+      userId?: number;
+      email?: string;
+      /** @enum {string} */
+      role?: "USER" | "ADMIN";
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** Format: int64 */
+      organizationId?: number;
+      branch?: string;
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+      /** Format: date-time */
+      startedAt?: string;
+      /** Format: date-time */
+      endedAt?: string;
+    };
+    ApiResponseUserInfoListResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["UserInfoListResponse"];
+    };
+    PageMeta: {
+      /** Format: int32 */
+      currentPage?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      size?: number;
+      hasNext?: boolean;
+      hasPrevious?: boolean;
+    };
+    UserInfoListResponse: {
+      users?: components["schemas"]["UserInfoResponse"][];
+      meta?: components["schemas"]["PageMeta"];
+    };
+    UserInfoResponse: {
+      /** Format: int64 */
+      userId?: number;
+      email?: string;
+      /** @enum {string} */
+      role?: "USER" | "ADMIN";
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** Format: int64 */
+      organizationId?: number;
+      branch?: string;
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+      /** Format: date-time */
+      startedAt?: string;
+      /** Format: date-time */
+      endedAt?: string;
+    };
     ItemCategoryDto: {
       /** Format: int64 */
       categoryId?: number;
@@ -2700,25 +2993,6 @@ export interface components {
       partValue?: number;
       status?: string;
     };
-    FactoryRequestDto: {
-      name: string;
-      address: string;
-    };
-    ApiResponseFactoryResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["FactoryResponseDto"];
-    };
-    FactoryResponseDto: {
-      /** Format: int64 */
-      id?: number;
-      name?: string;
-      address?: string;
-    };
     ApiResponseMaterialOrderResponseDto: {
       /** Format: int32 */
       status?: number;
@@ -2819,6 +3093,8 @@ export interface components {
       quantity?: number;
     };
     PartOrderRequestDto: {
+      /** Format: int64 */
+      warehouseId?: number;
       warehouseName?: string;
       /** Format: date-time */
       requiredDate?: string;
@@ -2876,15 +3152,6 @@ export interface components {
       code?: number;
       message?: string;
       data?: string;
-    };
-    ApiResponseListFactoryResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["FactoryResponseDto"][];
     };
     AgencyCartUpdateRequestDTO: {
       /** Format: int32 */
@@ -3349,15 +3616,6 @@ export interface components {
       /** Format: int32 */
       totalPages?: number;
     };
-    ApiResponseString3: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
-    };
     ApiResponsePageResponseDTOPartListResponseDTO: {
       /** Format: int32 */
       status?: number;
@@ -3530,6 +3788,15 @@ export interface components {
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;
+    };
+    ApiResponseString3: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: string;
     };
     MaterialRequestDto: {
       name?: string;
@@ -3901,6 +4168,179 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseLoginResponse"];
+        };
+      };
+    };
+  };
+  create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["InvitationCreateRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseInvitationCreateResponseDto"];
+        };
+      };
+    };
+  };
+  verifyWorkspace: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequest1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["LoginResponse1"];
+        };
+      };
+    };
+  };
+  createProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SignupUser"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  getMyProfile: {
+    parameters: {
+      query: {
+        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseUserLoginResponse"];
+        };
+      };
+    };
+  };
+  updateMyProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseUserUpdateResponse"];
+        };
+      };
+    };
+  };
+  updateUserProfile: {
+    parameters: {
+      query: {
+        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      };
+      header?: never;
+      path: {
+        userId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserUpdateAdminRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseUserUpdateAdminResponse"];
+        };
+      };
+    };
+  };
+  getUsersInfo: {
+    parameters: {
+      query?: {
+        /** @description Zero-based page index (0..N) */
+        page?: number;
+        /** @description The size of the page to be returned */
+        size?: number;
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+        workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        organizationId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseUserInfoListResponse"];
         };
       };
     };
@@ -4598,103 +5038,6 @@ export interface operations {
       };
     };
   };
-  getFactory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseFactoryResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  updateFactory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["FactoryRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseFactoryResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  deleteFactory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
   receiveMaterialOrder: {
     parameters: {
       query?: never;
@@ -4948,68 +5291,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getAllFactories: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListFactoryResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createFactory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["FactoryRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseFactoryResponseDto"];
         };
       };
       /** @description Conflict */
@@ -6129,7 +6410,7 @@ export interface operations {
       };
     };
   };
-  create: {
+  create1: {
     parameters: {
       query?: never;
       header?: never;
@@ -6418,128 +6699,6 @@ export interface operations {
       };
     };
   };
-  healthCheck4: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  unauthorizedTest4: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  notFoundTest4: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  forbiddenTest4: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData4: {
-    parameters: {
-      query?: {
-        fail?: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData_14: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString3"];
-        };
-      };
-    };
-  };
   getCategories1: {
     parameters: {
       query?: never;
@@ -6729,6 +6888,128 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePageResponseDTOBomResponseDTO"];
+        };
+      };
+    };
+  };
+  healthCheck4: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  unauthorizedTest4: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  notFoundTest4: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  forbiddenTest4: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData4: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData_14: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString3"];
         };
       };
     };

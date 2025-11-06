@@ -64,6 +64,7 @@ export function RopSettings() {
   };
 
   const handleViewDetail = (row: RopResDto) => {
+    console.log(row);
     navigate(`/wms/rop-settings/process/${row.ropId}`, {
       state: { ropData: row },
     });
@@ -131,15 +132,17 @@ export function RopSettings() {
       key: "actions",
       title: "작업",
       width: "100px",
-      render: (_value: any, row: RopResDto) => (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => handleViewDetail(row)}
-        >
-          상세
-        </Button>
-      ),
+      render: (_value: any, row: RopResDto) => {
+        return (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleViewDetail(row)}
+          >
+            상세
+          </Button>
+        );
+      },
     },
   ];
 
