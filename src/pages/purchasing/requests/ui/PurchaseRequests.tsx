@@ -1,128 +1,107 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { usePurchaseRequestQuery } from "@/pages/purchasing/requests/api";
+import type {
+  PurchaseOrderResponseDto,
+  PurchaseRequestStatus,
+  PurchaseRequestUrgency,
+} from "@/pages/purchasing/requests/model";
 import {
-  Badge,
-  Button,
-  SearchFilterBar,
-  StatCard,
-  Table,
-  TableSection,
-} from "@/shared/ui";
-
-// 구매 요청 데이터
-const purchaseRequestData = [
-  {
-    requestId: "PR-2024-001",
-    requestDate: "2024-01-15",
-    itemName: "알루미늄 합금",
-    itemCode: "RAW-001",
-    requestedQty: 500,
-    unit: "KG",
-    urgency: "높음",
-    requestedBy: "김생산",
-    department: "생산부",
-    reason: "생산지시 WO-2024-001",
-    requiredDate: "2024-01-20",
-    estimatedPrice: 2500000,
-    status: "승인대기",
-    supplier: "대한금속",
-  },
-  {
-    requestId: "PR-2024-002",
-    requestDate: "2024-01-15",
-    itemName: "고무 시일링",
-    itemCode: "RAW-002",
-    requestedQty: 200,
-    unit: "EA",
-    urgency: "보통",
-    requestedBy: "이생산",
-    department: "생산부",
-    reason: "재고 보충",
-    requiredDate: "2024-01-25",
-    estimatedPrice: 800000,
-    status: "승인",
-    supplier: "한국고무",
-  },
-  {
-    requestId: "PR-2024-003",
-    requestDate: "2024-01-14",
-    itemName: "전자 센서",
-    itemCode: "COMP-003",
-    requestedQty: 50,
-    unit: "EA",
-    urgency: "높음",
-    requestedBy: "박품질",
-    department: "품질관리부",
-    reason: "불량품 교체",
-    requiredDate: "2024-01-18",
-    estimatedPrice: 1500000,
-    status: "발주완료",
-    supplier: "전자부품코리아",
-  },
-];
+  PURCHASE_REQUEST_STATUS,
+  PURCHASE_REQUEST_URGENCY,
+} from "@/pages/purchasing/requests/model";
+import { createKeyRecord } from "@/shared/lib/utils";
+import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
 export const PurchaseRequests = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
-  const [urgencyFilter, setUrgencyFilter] = useState("전체");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [urgencyFilter, setUrgencyFilter] = useState<string>("");
 
-  // 헤더 설정
-  // 네비게이션 탭 설정
+  // Pagination 처리를 위한 커스텀 훅
+  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+
+  const { data, isLoading, isError, refetch } = usePurchaseRequestQuery({
+    query: searchTerm === "" ? undefined : searchTerm,
+    status:
+      statusFilter === "" ? undefined : (statusFilter as PurchaseRequestStatus),
+    urgency:
+      urgencyFilter === ""
+        ? undefined
+        : (urgencyFilter as PurchaseRequestUrgency),
+    page,
+    size,
+  });
+
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
+
   const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "승인대기", label: "승인대기" },
-    { value: "승인", label: "승인" },
-    { value: "발주완료", label: "발주완료" },
-    { value: "반려", label: "반려" },
+    { value: "", label: "전체 상태" },
+    ...Object.entries(PURCHASE_REQUEST_STATUS)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        const statusLabels: Record<string, string> = {
+          ORDERED: "주문됨",
+          RECEIVED: "수령됨",
+          CANCELED: "취소됨",
+        };
+        return {
+          value: value as string,
+          label: statusLabels[key] || key,
+        };
+      }),
   ];
 
   const urgencyOptions = [
-    { value: "전체", label: "전체 긴급도" },
-    { value: "높음", label: "높음" },
-    { value: "보통", label: "보통" },
-    { value: "낮음", label: "낮음" },
+    { value: "", label: "전체 긴급도" },
+    ...Object.entries(PURCHASE_REQUEST_URGENCY)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        const urgencyLabels: Record<string, string> = {
+          HIGH: "높음",
+          MEDIUM: "보통",
+          LOW: "낮음",
+        };
+        return {
+          value: value as string,
+          label: urgencyLabels[key] || key,
+        };
+      }),
   ];
 
-  const filteredData = purchaseRequestData.filter((request) => {
-    const matchesSearch =
-      request.requestId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.requestedBy?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "전체" || request.status === statusFilter;
-    const matchesUrgency =
-      urgencyFilter === "전체" || request.urgency === urgencyFilter;
-    return matchesSearch && matchesStatus && matchesUrgency;
-  });
-
-  const handleApprove = (requestId: string) => {
-    console.log("구매 요청 승인:", requestId);
-  };
-
-  const handleReject = (requestId: string) => {
-    console.log("구매 요청 반려:", requestId);
-  };
-
-  const handleCreatePO = (requestId: string) => {
-    navigate(`/purchasing/orders?from=${requestId}`);
-  };
+  const keys = createKeyRecord<PurchaseOrderResponseDto>(
+    data?.data?.content ?? [],
+  );
 
   const columns = [
-    { key: "requestId", title: "요청번호", width: "120px" },
-    { key: "requestDate", title: "요청일", width: "100px" },
-    { key: "itemName", title: "품목명" },
+    { key: keys.orderCode, title: "주문번호", width: "120px" },
     {
-      key: "requestedQty",
-      title: "요청수량",
-      width: "100px",
-      render: (value: number, row: any) => `${value} ${row.unit}`,
+      key: keys.orderAt,
+      title: "주문일",
+      width: "120px",
+      render: (value: string) => {
+        if (!value) return "-";
+        const date = new Date(value);
+        return date.toLocaleDateString("ko-KR");
+      },
     },
-    { key: "requestedBy", title: "요청자", width: "100px" },
-    { key: "requiredDate", title: "필요일", width: "100px" },
+    { key: keys.factoryName, title: "공장명", width: "120px" },
+    { key: keys.requesterName, title: "요청자", width: "100px" },
     {
-      key: "urgency",
+      key: keys.requiredAt,
+      title: "필요일",
+      width: "100px",
+      render: (value: string) => {
+        if (!value) return "-";
+        const date = new Date(value);
+        return date.toLocaleDateString("ko-KR");
+      },
+    },
+    {
+      key: keys.urgency,
       title: "긴급도",
       width: "100px",
       render: (value: string) => {
@@ -130,27 +109,37 @@ export const PurchaseRequests = () => {
           urgency: string,
         ): "error" | "warning" | "success" | "default" => {
           switch (urgency) {
-            case "높음":
+            case "HIGH":
               return "error";
-            case "보통":
+            case "MEDIUM":
               return "warning";
-            case "낮음":
+            case "LOW":
               return "success";
             default:
               return "default";
           }
         };
-        return <Badge variant={getUrgencyVariant(value)}>{value}</Badge>;
+        const urgencyLabels: Record<string, string> = {
+          HIGH: "높음",
+          MEDIUM: "보통",
+          LOW: "낮음",
+        };
+        return (
+          <Badge variant={getUrgencyVariant(value)}>
+            {urgencyLabels[value] || value}
+          </Badge>
+        );
       },
     },
     {
-      key: "estimatedPrice",
+      key: keys.expectedAmount,
       title: "예상금액",
       width: "120px",
-      render: (value: number) => `₩${value.toLocaleString()}`,
+      render: (value: number) =>
+        value ? `₩${Number(value).toLocaleString()}` : "-",
     },
     {
-      key: "status",
+      key: keys.status,
       title: "상태",
       width: "100px",
       render: (value: string) => {
@@ -158,74 +147,41 @@ export const PurchaseRequests = () => {
           status: string,
         ): "info" | "success" | "default" | "error" => {
           switch (status) {
-            case "승인대기":
+            case "ORDERED":
               return "info";
-            case "승인":
+            case "RECEIVED":
               return "success";
-            case "발주완료":
-              return "default";
-            case "반려":
+            case "CANCELED":
               return "error";
             default:
               return "default";
           }
         };
-        return <Badge variant={getStatusVariant(value)}>{value}</Badge>;
+        const statusLabels: Record<string, string> = {
+          ORDERED: "주문됨",
+          RECEIVED: "수령됨",
+          CANCELED: "취소됨",
+        };
+        return (
+          <Badge variant={getStatusVariant(value)}>
+            {statusLabels[value] || value}
+          </Badge>
+        );
       },
-    },
-    {
-      key: "actions",
-      title: "작업",
-      width: "180px",
-      render: (value: any, row: any) => (
-        <div className="flex space-x-1">
-          {row.status === "승인대기" && (
-            <>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => handleApprove(row.requestId)}
-              >
-                승인
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleReject(row.requestId)}
-              >
-                반려
-              </Button>
-            </>
-          )}
-          {row.status === "승인" && (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => handleCreatePO(row.requestId)}
-            >
-              발주생성
-            </Button>
-          )}
-          <Button variant="secondary" size="sm">
-            상세
-          </Button>
-        </div>
-      ),
     },
   ];
 
   // 통계 계산
-  const totalRequests = purchaseRequestData.length;
-  const pendingApproval = purchaseRequestData.filter(
-    (req) => req.status === "승인대기",
-  ).length;
-  const approved = purchaseRequestData.filter(
-    (req) => req.status === "승인",
-  ).length;
-  const totalAmount = purchaseRequestData.reduce(
-    (sum, req) => sum + req.estimatedPrice,
-    0,
-  );
+  const totalRequests = totalElements;
+  const orderedRequests =
+    data?.data?.content?.filter((req) => req.status === "ORDERED").length ?? 0;
+  const receivedRequests =
+    data?.data?.content?.filter((req) => req.status === "RECEIVED").length ?? 0;
+  const totalAmount =
+    data?.data?.content?.reduce(
+      (sum, req) => sum + (req.expectedAmount || 0),
+      0,
+    ) ?? 0;
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -240,15 +196,15 @@ export const PurchaseRequests = () => {
         />
         <StatCard
           icon="ri-time-line"
-          label="승인 대기"
-          value={pendingApproval}
+          label="주문됨"
+          value={orderedRequests}
           iconBgColor="bg-yellow-100"
           iconColor="text-yellow-600"
         />
         <StatCard
           icon="ri-check-line"
-          label="승인 완료"
-          value={approved}
+          label="수령됨"
+          value={receivedRequests}
           iconBgColor="bg-green-100"
           iconColor="text-green-600"
         />
@@ -264,20 +220,29 @@ export const PurchaseRequests = () => {
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder="요청번호, 품목명, 요청자 검색..."
+        onSearchChange={(value) => {
+          setSearchTerm(value);
+          onPageChange(0);
+        }}
+        searchPlaceholder="주문번호, 공장명, 요청자 검색..."
         filters={[
           {
             key: "status",
             value: statusFilter,
             options: statusOptions,
-            onChange: setStatusFilter,
+            onChange: (e) => {
+              setStatusFilter(e);
+              onPageChange(0);
+            },
           },
           {
             key: "urgency",
             value: urgencyFilter,
             options: urgencyOptions,
-            onChange: setUrgencyFilter,
+            onChange: (e) => {
+              setUrgencyFilter(e);
+              onPageChange(0);
+            },
           },
         ]}
         actions={
@@ -295,26 +260,29 @@ export const PurchaseRequests = () => {
       />
 
       {/* 구매 요청 목록 테이블 */}
-      <TableSection
+      <PaginationTableSection
         title="구매 요청 목록"
-        metaRight={
-          <span className="text-sm text-gray-500">
-            총 {filteredData.length}개 요청
-          </span>
-        }
-        actionsRight={
-          <Button variant="secondary" size="sm">
-            <i className="ri-refresh-line mr-2"></i>
-            새로고침
-          </Button>
-        }
+        totalElements={totalElements}
+        page={page}
+        totalPages={totalPages}
+        size={size}
+        onSizeChange={onSizeChange}
+        onPageChange={onPageChange}
+        showRefresh
+        onRefresh={refetch}
       >
         <Table
           columns={columns}
-          data={filteredData}
-          emptyText="조건에 맞는 구매요청이 없습니다"
+          data={data?.data?.content ?? []}
+          loading={isLoading && data === undefined}
+          emptyText={
+            isLoading && data === undefined
+              ? "데이터 로딩 중..."
+              : "조건에 맞는 구매요청이 없습니다"
+          }
+          errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
         />
-      </TableSection>
+      </PaginationTableSection>
     </div>
   );
 };
