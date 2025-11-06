@@ -84,134 +84,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/user/invitations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/user/internal/verify": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [Not Client API] 로그인 User 서비스 내부 통신용
-     * @description [Not Client API] 로그인을 통해 유저의 조직 정합성을 검증합니다.
-     */
-    post: operations["verifyWorkspace"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/user/internal/profile": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [Not Client API] 회원가입 User 서비스 내부 통신용
-     * @description [Not Client API] 회원가입을 통해 프로필 정보를 담은 유저를 생성합니다.
-     */
-    post: operations["createProfile"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/user/profile": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 로그인 유저 프로필 정보 조회
-     * @description 토큰으로 로그인한 유저의 프로필 정보를 조회합니다.
-     */
-    get: operations["getMyProfile"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 로그인 유저 프로필 정보 수정
-     * @description 토큰으로 로그인한 유저의 프로필 정보를 수정합니다.
-     */
-    patch: operations["updateMyProfile"];
-    trace?: never;
-  };
-  "/api/user/profile/{userId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 관리자 권한 프로필 정보 수정
-     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
-     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
-     */
-    patch: operations["updateUserProfile"];
-    trace?: never;
-  };
-  "/api/user/info": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 조건에 맞는 회원의 전체 회원 정보를 조회
-     * @description 조건에 맞는 회원의 전체 정보를 페이지 형태로 불러옵니다.
-     *     <br><br> **정렬**
-     *     <br> **page**: n번째 페이지부터 불러오기
-     *     <br> **size**: 페이지 당 사이즈
-     *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
-     *     <br><br> **검색조건**
-     *     <br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
-     *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
-     */
-    get: operations["getUsersInfo"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/order/": {
     parameters: {
       query?: never;
@@ -1550,7 +1422,7 @@ export interface paths {
      * 작업장 등록
      * @description 작업장명, 유형, 상태, 일일 가동시간, 효율성, 시간당비용을 입력하여 작업장을 등록합니다.
      */
-    post: operations["create1"];
+    post: operations["create"];
     delete?: never;
     options?: never;
     head?: never;
@@ -2244,7 +2116,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/site/api/vendors/{id}": {
+  "/api/site/vendors/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -2272,7 +2144,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/site/api/branches/{id}": {
+  "/api/site/branches/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -2300,7 +2172,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/site/api/vendors": {
+  "/api/site/vendors": {
     parameters: {
       query?: never;
       header?: never;
@@ -2324,7 +2196,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/site/api/branches": {
+  "/api/site/branches": {
     parameters: {
       query?: never;
       header?: never;
@@ -2342,6 +2214,26 @@ export interface paths {
      * @description 새로운 지점(공장/창고)을 등록합니다.
      */
     post: operations["createBranch"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/site/vendors/search": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 거래처 검색
+     * @description 거래처 코드, 이름, 유형, 상태로 검색 및 페이징 처리합니다.
+     */
+    get: operations["searchVendors"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -2368,27 +2260,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/site/api/vendors/search": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 거래처 검색
-     * @description 거래처 코드, 이름, 유형, 상태로 검색 및 페이징 처리합니다.
-     */
-    get: operations["searchVendors"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/site/api/branches/search": {
+  "/api/site/branches/search": {
     parameters: {
       query?: never;
       header?: never;
@@ -2496,225 +2368,6 @@ export interface components {
       refreshToken?: string;
       /** Format: int64 */
       expiresIn?: number;
-    };
-    InvitationCreateRequestDto: {
-      /** @enum {string} */
-      targetType: "AGENCY" | "FACTORY" | "WAREHOUSE";
-      /** Format: int64 */
-      targetId: number;
-      email: string;
-      /** @enum {string} */
-      role: "USER" | "ADMIN";
-      /** @enum {string} */
-      position:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-    };
-    ApiResponseInvitationCreateResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["InvitationCreateResponseDto"];
-    };
-    InvitationCreateResponseDto: {
-      inviteCode?: string;
-    };
-    LoginRequest1: {
-      /** Format: int64 */
-      userId: number;
-      /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-    };
-    LoginResponse1: {
-      /** Format: int64 */
-      userId: number;
-      /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      valid?: boolean;
-    };
-    SignupUser: {
-      /** Format: int64 */
-      userId?: number;
-      userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      branch?: string;
-      /** @enum {string} */
-      position?:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-    };
-    UserUpdateRequest: {
-      /** Format: int64 */
-      userId?: number;
-      userName?: string;
-    };
-    ApiResponseUserUpdateResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["UserUpdateResponse"];
-    };
-    UserUpdateResponse: {
-      /** Format: int64 */
-      userId?: number;
-      userName?: string;
-    };
-    UserUpdateAdminRequest: {
-      /** @enum {string} */
-      position?:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-    };
-    ApiResponseUserUpdateAdminResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["UserUpdateAdminResponse"];
-    };
-    UserUpdateAdminResponse: {
-      /** Format: int64 */
-      userId?: number;
-      userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      /** @enum {string} */
-      position?:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-    };
-    ApiResponseUserLoginResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["UserLoginResponse"];
-    };
-    UserLoginResponse: {
-      /** Format: int64 */
-      userId?: number;
-      email?: string;
-      /** @enum {string} */
-      role?: "USER" | "ADMIN";
-      userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      /** Format: int64 */
-      organizationId?: number;
-      branch?: string;
-      /** @enum {string} */
-      position?:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-      /** Format: date-time */
-      startedAt?: string;
-      /** Format: date-time */
-      endedAt?: string;
-    };
-    ApiResponseUserInfoListResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["UserInfoListResponse"];
-    };
-    PageMeta: {
-      /** Format: int32 */
-      currentPage?: number;
-      /** Format: int32 */
-      totalPages?: number;
-      /** Format: int64 */
-      totalElements?: number;
-      /** Format: int32 */
-      size?: number;
-      hasNext?: boolean;
-      hasPrevious?: boolean;
-    };
-    UserInfoListResponse: {
-      users?: components["schemas"]["UserInfoResponse"][];
-      meta?: components["schemas"]["PageMeta"];
-    };
-    UserInfoResponse: {
-      /** Format: int64 */
-      userId?: number;
-      email?: string;
-      /** @enum {string} */
-      role?: "USER" | "ADMIN";
-      userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      /** Format: int64 */
-      organizationId?: number;
-      branch?: string;
-      /** @enum {string} */
-      position?:
-        | "STAFF"
-        | "SENIOR_STAFF"
-        | "ASSISTANT_MANAGER"
-        | "MANAGER"
-        | "DEPUTY_GENERAL_MANAGER"
-        | "GENERAL_MANAGER"
-        | "DIRECTOR"
-        | "VICE_PRESIDENT"
-        | "PRESIDENT"
-        | "CHAIRMAN";
-      /** Format: date-time */
-      startedAt?: string;
-      /** Format: date-time */
-      endedAt?: string;
     };
     ItemCategoryDto: {
       /** Format: int64 */
@@ -2933,6 +2586,8 @@ export interface components {
       unit?: string;
       /** Format: int32 */
       quantity?: number;
+      /** Format: int64 */
+      ropId?: number;
       /** Format: int32 */
       rop?: number;
       /** Format: int32 */
@@ -4246,179 +3901,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseLoginResponse"];
-        };
-      };
-    };
-  };
-  create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["InvitationCreateRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseInvitationCreateResponseDto"];
-        };
-      };
-    };
-  };
-  verifyWorkspace: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LoginRequest1"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LoginResponse1"];
-        };
-      };
-    };
-  };
-  createProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SignupUser"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  getMyProfile: {
-    parameters: {
-      query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseUserLoginResponse"];
-        };
-      };
-    };
-  };
-  updateMyProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UserUpdateRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseUserUpdateResponse"];
-        };
-      };
-    };
-  };
-  updateUserProfile: {
-    parameters: {
-      query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      };
-      header?: never;
-      path: {
-        userId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UserUpdateAdminRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseUserUpdateAdminResponse"];
-        };
-      };
-    };
-  };
-  getUsersInfo: {
-    parameters: {
-      query?: {
-        /** @description Zero-based page index (0..N) */
-        page?: number;
-        /** @description The size of the page to be returned */
-        size?: number;
-        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
-        sort?: string[];
-        workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-        organizationId?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseUserInfoListResponse"];
         };
       };
     };
@@ -6647,7 +6129,7 @@ export interface operations {
       };
     };
   };
-  create1: {
+  create: {
     parameters: {
       query?: never;
       header?: never;
@@ -7977,26 +7459,6 @@ export interface operations {
       };
     };
   };
-  healthCheck7: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
   searchVendors: {
     parameters: {
       query?: {
@@ -8018,6 +7480,26 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePageResponseDTOVendorListResponseDTO"];
+        };
+      };
+    };
+  };
+  healthCheck7: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };

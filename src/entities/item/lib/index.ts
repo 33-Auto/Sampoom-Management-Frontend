@@ -1,1 +1,5 @@
-export { useCategoryOptions, useGroupOptions } from "./item.lib";
+export {
+  useCategoryOptions,
+  useGroupOptions,
+  usePartOptions,
+} from "./item.lib";

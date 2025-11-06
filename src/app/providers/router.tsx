@@ -114,12 +114,8 @@ const RopSettings = lazy(async () => ({
   default: (await import("@/pages/wms/rop-settings")).RopSettings,
 }));
 
-const CreateRopSettings = lazy(async () => ({
-  default: (await import("@/pages/wms/rop-settings/create")).CreateRopSettings,
-}));
-
-const EditRopSettings = lazy(async () => ({
-  default: (await import("@/pages/wms/rop-settings/edit/[id]")).EditRopSettings,
+const RopProcess = lazy(async () => ({
+  default: (await import("@/pages/wms/rop-settings/process")).RopProcess,
 }));
 
 // ============================================================================
@@ -284,12 +280,8 @@ const routes: RouteObject[] = [
             element: <RopSettings />,
           },
           {
-            path: "rop-settings/create",
-            element: <CreateRopSettings />,
-          },
-          {
-            path: "rop-settings/edit/:id",
-            element: <EditRopSettings />,
+            path: "rop-settings/process/:id?",
+            element: <RopProcess />,
           },
         ],
       },

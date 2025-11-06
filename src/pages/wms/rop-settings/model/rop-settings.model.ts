@@ -1,3 +1,9 @@
-// import type { Schemas } from "@/shared/model";
+import type { Schemas, Operations } from "@/shared/model";
 
-// export type RopSettingsResponse = Schemas["SearchReqDto"];
+export type RopSettingsListParams =
+  Operations["getRops"]["parameters"]["query"];
+
+export type RopSettingsListResponse = Schemas["ApiResponsePageRopResDto"];
+export type RopResDto = Schemas["RopResDto"];
+
+export type RopSettingStatus = "활성" | "비활성";

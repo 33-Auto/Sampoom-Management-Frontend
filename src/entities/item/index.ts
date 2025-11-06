@@ -1,1 +1,1 @@
-export { useCategoryOptions, useGroupOptions } from "./lib";
+export { useCategoryOptions, useGroupOptions, usePartOptions } from "./lib";

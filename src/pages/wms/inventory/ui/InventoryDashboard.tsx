@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-import {
-  useWarehouseInventoryQuery,
-  useMaterialCategoryQuery,
-  useMaterialGroupQuery,
-} from "@/pages/wms/inventory/api";
+import { useCategoryOptions, useGroupOptions } from "@/entities/item";
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { useWarehouseInventoryQuery } from "@/pages/wms/inventory/api";
 import type { InventoryStatus, PartResDto } from "@/pages/wms/inventory/model";
 import { QUANTITY_STATUS } from "@/pages/wms/inventory/model";
 import { createKeyRecord } from "@/shared/lib/utils";
@@ -15,7 +14,6 @@ import {
   SearchFilterBar,
   StatCard,
   Table,
-  TableSection,
 } from "@/shared/ui";
 
 export const InventoryDashboard = () => {
@@ -23,32 +21,29 @@ export const InventoryDashboard = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [groupFilter, setGroupFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const { data, isLoading, isError } = useWarehouseInventoryQuery({
+
+  // Pagination 처리를 위한 커스텀 훅
+  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+
+  const { data, isLoading, isError, refetch } = useWarehouseInventoryQuery({
     warehouseId: 40,
     keyword: searchTerm === "" ? undefined : searchTerm,
     categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
     groupId: groupFilter === "" ? undefined : Number(groupFilter),
     quantityStatus:
       statusFilter === "" ? undefined : (statusFilter as InventoryStatus),
+    page,
+    size,
   });
 
-  const { data: categoryData } = useMaterialCategoryQuery();
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
 
-  const categoryOptions = [
-    { value: "", label: "전체 카테고리" },
-    ...(categoryData?.data?.map((item) => {
-      return { value: String(item.categoryId), label: item.categoryName ?? "" };
-    }) ?? []),
-  ];
+  const categoryOptions = useCategoryOptions();
 
-  const { data: groupData } =
-    useMaterialGroupQuery(Number(categoryFilter)) || [];
-  const groupOptions = [
-    { value: "", label: "전체 그룹" },
-    ...(groupData?.data?.map((item) => {
-      return { value: String(item.groupId), label: item.groupName ?? "" };
-    }) ?? []),
-  ];
+  const groupOptions = useGroupOptions(
+    categoryFilter === "" ? 0 : Number(categoryFilter),
+  );
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
@@ -207,6 +202,7 @@ export const InventoryDashboard = () => {
           onSearchChange={(value) => {
             console.log("value", value);
             setSearchTerm(value);
+            onPageChange(0);
           }}
           searchPlaceholder="품목코드, 품목명 검색..."
           filters={[
@@ -217,13 +213,17 @@ export const InventoryDashboard = () => {
               onChange: (e) => {
                 setCategoryFilter(e);
                 setGroupFilter("");
+                onPageChange(0);
               },
             },
             {
               key: "group",
               value: groupFilter,
               options: groupOptions,
-              onChange: setGroupFilter,
+              onChange: (e) => {
+                setGroupFilter(e);
+                onPageChange(0);
+              },
               disabled: categoryFilter === "",
             },
 
@@ -231,7 +231,10 @@ export const InventoryDashboard = () => {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: setStatusFilter,
+              onChange: (e) => {
+                setStatusFilter(e);
+                onPageChange(0);
+              },
             },
           ]}
           actions={
@@ -244,19 +247,16 @@ export const InventoryDashboard = () => {
         />
 
         {/* 재고 현황 테이블 */}
-        <TableSection
+        <PaginationTableSection
           title="재고 현황"
-          metaRight={
-            <span className="text-sm text-gray-500">
-              총 {data?.data?.content?.length ?? 0}개 품목
-            </span>
-          }
-          actionsRight={
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          }
+          totalElements={totalElements}
+          page={page}
+          totalPages={totalPages}
+          size={size}
+          onSizeChange={onSizeChange}
+          onPageChange={onPageChange}
+          showRefresh
+          onRefresh={refetch}
         >
           <Table
             columns={columns}
@@ -269,7 +269,7 @@ export const InventoryDashboard = () => {
             }
             errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
           />
-        </TableSection>
+        </PaginationTableSection>
 
         {/* WMS 역할 안내 */}
         <InfoBox type="info" title="WMS 시스템 역할">

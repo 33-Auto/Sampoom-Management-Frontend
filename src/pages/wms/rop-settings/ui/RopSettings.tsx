@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useCategoryOptions, useGroupOptions } from "@/entities/item";
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { useRopSettingsQuery } from "@/pages/wms/rop-settings/api";
+import type {
+  RopResDto,
+  // RopSettingStatus,
+} from "@/pages/wms/rop-settings/model";
+import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
   Button,
@@ -8,332 +17,143 @@ import {
   SearchFilterBar,
   StatCard,
   Table,
-  TableSection,
 } from "@/shared/ui";
 
 export function RopSettings() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("전체");
-  const [groupFilter, setGroupFilter] = useState("전체");
-  const [autoOrderFilter, setAutoOrderFilter] = useState("전체");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
 
-  // 모든 ROP 설정 데이터
-  const allRopSettings = [
-    {
-      id: 1,
-      itemCode: "RM-AL-001",
-      itemName: "알루미늄 합금 판재",
-      category: "기계",
-      group: "현가장치",
-      unit: "KG",
-      supplier: "한국금속공업",
-      currentStock: 120,
-      reorderPoint: 75,
-      leadTime: 5,
-      avgConsumption: 15,
-      maxStock: 300,
-      status: "active",
-      lastUpdated: "2024-01-15",
-      autoOrder: "false",
-    },
-    {
-      id: 2,
-      itemCode: "CP-BEA-001",
-      itemName: "볼 베어링",
-      category: "기계",
-      group: "동력전달",
-      unit: "EA",
-      supplier: "베어링코리아",
-      currentStock: 45,
-      reorderPoint: 50,
-      leadTime: 7,
-      avgConsumption: 8,
-      maxStock: 200,
-      status: "active",
-      lastUpdated: "2024-01-14",
-      autoOrder: "true",
-    },
-    {
-      id: 3,
-      itemCode: "RM-PL-001",
-      itemName: "플라스틱 원료",
-      category: "플라스틱",
-      group: "외장재",
-      unit: "KG",
-      supplier: "플라스틱산업",
-      currentStock: 200,
-      reorderPoint: 100,
-      leadTime: 10,
-      avgConsumption: 12,
-      maxStock: 500,
-      status: "active",
-      lastUpdated: "2024-01-13",
-      autoOrder: "false",
-    },
-    {
-      id: 4,
-      itemCode: "FG-PRD-A01",
-      itemName: "LED 헤드라이트",
-      category: "전자",
-      group: "조명",
-      unit: "EA",
-      supplier: "자체생산",
-      currentStock: 80,
-      reorderPoint: 60,
-      leadTime: 3,
-      avgConsumption: 20,
-      maxStock: 150,
-      status: "inactive",
-      lastUpdated: "2024-01-12",
-      autoOrder: "false",
-    },
-    {
-      id: 5,
-      itemCode: "CS-TOL-001",
-      itemName: "브레이크 디스크",
-      category: "안전",
-      group: "제동",
-      unit: "SET",
-      supplier: "공구상사",
-      currentStock: 25,
-      reorderPoint: 30,
-      leadTime: 4,
-      avgConsumption: 8,
-      maxStock: 100,
-      status: "active",
-      lastUpdated: "2024-01-11",
-      autoOrder: "true",
-    },
-    {
-      id: 6,
-      itemCode: "RM-ST-002",
-      itemName: "스테인리스 볼트",
-      category: "기계",
-      group: "동력전달",
-      unit: "KG",
-      supplier: "스테인리스산업",
-      currentStock: 180,
-      reorderPoint: 100,
-      leadTime: 6,
-      avgConsumption: 18,
-      maxStock: 400,
-      status: "active",
-      lastUpdated: "2024-01-10",
-      autoOrder: "true",
-    },
-    {
-      id: 7,
-      itemCode: "CP-GEA-002",
-      itemName: "기어 세트",
-      category: "기계",
-      group: "동력전달",
-      unit: "SET",
-      supplier: "기어제조",
-      currentStock: 35,
-      reorderPoint: 40,
-      leadTime: 8,
-      avgConsumption: 6,
-      maxStock: 150,
-      status: "active",
-      lastUpdated: "2024-01-09",
-      autoOrder: "false",
-    },
-    {
-      id: 8,
-      itemCode: "FG-PRD-B02",
-      itemName: "시트 패드",
-      category: "내장",
-      group: "시트",
-      unit: "EA",
-      supplier: "자체생산",
-      currentStock: 150,
-      reorderPoint: 80,
-      leadTime: 4,
-      avgConsumption: 25,
-      maxStock: 200,
-      status: "active",
-      lastUpdated: "2024-01-08",
-      autoOrder: "true",
-    },
-    {
-      id: 9,
-      itemCode: "EL-CTR-001",
-      itemName: "전자 제어 모듈",
-      category: "전자",
-      group: "제어",
-      unit: "EA",
-      supplier: "전자공업",
-      currentStock: 65,
-      reorderPoint: 50,
-      leadTime: 5,
-      avgConsumption: 10,
-      maxStock: 180,
-      status: "active",
-      lastUpdated: "2024-01-07",
-      autoOrder: "true",
-    },
-    {
-      id: 10,
-      itemCode: "BRK-PAD-001",
-      itemName: "브레이크 패드",
-      category: "안전",
-      group: "제동",
-      unit: "SET",
-      supplier: "안전부품",
-      currentStock: 90,
-      reorderPoint: 70,
-      leadTime: 6,
-      avgConsumption: 12,
-      maxStock: 250,
-      status: "active",
-      lastUpdated: "2024-01-06",
-      autoOrder: "false",
-    },
-  ];
+  // Pagination 처리를 위한 커스텀 훅
+  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
-  // 카테고리 옵션 (ReceivingMaterials와 동일)
-  const categoryOptions = [
-    { value: "전체", label: "전체 카테고리" },
-    { value: "안전", label: "안전" },
-    { value: "섀시", label: "섀시" },
-    { value: "기계", label: "기계" },
-    { value: "전기", label: "전기" },
-    { value: "내장", label: "내장" },
-    { value: "플라스틱", label: "플라스틱" },
-    { value: "전자", label: "전자" },
-  ];
-
-  // 그룹 옵션 (ReceivingMaterials와 동일)
-  const groupOptions = [
-    { value: "전체", label: "전체 그룹" },
-    { value: "제동", label: "제동" },
-    { value: "현가장치", label: "현가장치" },
-    { value: "동력전달", label: "동력전달" },
-    { value: "조명", label: "조명" },
-    { value: "시트", label: "시트" },
-    { value: "외장재", label: "외장재" },
-    { value: "제어", label: "제어" },
-  ];
-
-  const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "true", label: "활성" },
-    { value: "false", label: "비활성" },
-  ];
-
-  // 필터링된 데이터
-  const filteredData = allRopSettings.filter((item) => {
-    const term = searchTerm.trim().toLowerCase();
-    const matchesSearch =
-      !term ||
-      item.itemCode.toLowerCase().includes(term) ||
-      item.itemName.toLowerCase().includes(term) ||
-      item.supplier.toLowerCase().includes(term);
-    const matchesCategory =
-      categoryFilter === "전체" || item.category === categoryFilter;
-    const matchesGroup = groupFilter === "전체" || item.group === groupFilter;
-    const matchesStatus =
-      autoOrderFilter === "전체" || item.autoOrder === autoOrderFilter;
-
-    return matchesSearch && matchesCategory && matchesGroup && matchesStatus;
+  const { data, isLoading, isError, refetch } = useRopSettingsQuery({
+    warehouseId: 40,
+    keyword: searchTerm === "" ? undefined : searchTerm,
+    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+    groupId: groupFilter === "" ? undefined : Number(groupFilter),
+    autoOrderStatus:
+      statusFilter === ""
+        ? undefined
+        : statusFilter === "활성"
+          ? "ACTIVE"
+          : "INACTIVE",
+    page,
+    size,
   });
 
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
+
+  const categoryOptions = useCategoryOptions();
+
+  const groupOptions = useGroupOptions(
+    categoryFilter === "" ? 0 : Number(categoryFilter),
+  );
+
+  const statusOptions = [
+    { value: "", label: "전체 상태" },
+    { value: "ACTIVE", label: "활성" },
+    { value: "INACTIVE", label: "비활성" },
+  ];
+
   const handleCreateNew = () => {
-    navigate("/wms/rop-settings/create");
+    navigate("/wms/rop-settings/process");
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/wms/rop-settings/edit/${id}`);
+  const handleViewDetail = (row: RopResDto) => {
+    navigate(`/wms/rop-settings/process/${row.ropId}`, {
+      state: { ropData: row },
+    });
   };
 
-  const handleDelete = (id: number, itemName: string) => {
-    if (window.confirm(`"${itemName}" ROP 설정을 삭제하시겠습니까?`)) {
-      // 실제로는 API 호출로 삭제 처리
-      alert("ROP 설정이 삭제되었습니다.");
-    }
-  };
-
+  const keys = createKeyRecord<RopResDto>(data?.data?.content ?? []);
   const columns = [
-    { key: "itemCode", title: "품목 코드", width: "120px" },
-    { key: "itemName", title: "품목명" },
+    { key: keys.partCode, title: "품목 코드", width: "120px" },
+    { key: keys.partName, title: "품목명" },
     {
       key: "category",
       title: "카테고리",
       width: "200px",
-      render: (_: any, row: any) => `${row.category} > ${row.group}`,
+      render: (_value: string, row: RopResDto) =>
+        `${row.categoryName || "-"} > ${row.groupName || "-"}`,
     },
-    { key: "unit", title: "단위", width: "80px" },
+    { key: keys.unit, title: "단위", width: "80px" },
     {
-      key: "currentStock",
+      key: keys.quantity,
       title: "현재 재고",
       width: "100px",
       render: (value: number) => `${value?.toLocaleString() || 0}`,
     },
     {
-      key: "reorderPoint",
+      key: keys.rop,
       title: "재주문점",
       width: "100px",
       render: (value: number) => `${value?.toLocaleString() || 0}`,
     },
     {
-      key: "maxStock",
+      key: keys.maxStock,
       title: "최대 재고",
       width: "100px",
-      render: (value: number) => `${value?.toLocaleString() || 0}`,
+      render: (value: number) => `${value?.toLocaleString() || "-"}`,
     },
     {
-      key: "autoOrder",
+      key: keys.autoOrderStatus,
       title: "자동 발주",
       width: "100px",
-      render: (value: string) => (
-        <Badge variant={value === "true" ? "success" : "default"}>
-          {value === "true" ? "활성" : "비활성"}
-        </Badge>
-      ),
+      render: (value: string) => {
+        return (
+          <Badge variant={value === "활성" ? "success" : "default"}>
+            {value === "활성" ? "활성" : "비활성"}
+          </Badge>
+        );
+      },
     },
     {
-      key: "leadTime",
+      key: keys.leadTime,
       title: "리드타임",
       width: "100px",
-      render: (value: number) => `${value || 0}일`,
+      render: (value: number) => `${value || "-"}일`,
     },
-    { key: "lastUpdated", title: "최종 수정일", width: "120px" },
+    {
+      key: keys.updatedAt,
+      title: "최종 수정일",
+      width: "120px",
+      render: (value: string) => {
+        if (!value) return "-";
+        const date = new Date(value);
+        return date.toLocaleDateString("ko-KR");
+      },
+    },
     {
       key: "actions",
       title: "작업",
-      width: "120px",
-      render: (_: any, row: any) => (
-        <div className="flex space-x-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => handleEdit(row.id)}
-          >
-            <i className="ri-edit-line"></i>
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => handleDelete(row.id, row.itemName)}
-          >
-            <i className="ri-delete-bin-line"></i>
-          </Button>
-        </div>
+      width: "100px",
+      render: (_value: any, row: RopResDto) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => handleViewDetail(row)}
+        >
+          상세
+        </Button>
       ),
     },
   ];
 
-  // 통계 계산
-  const totalSettings = allRopSettings.length;
-  const activeSettings = allRopSettings.filter(
-    (item) => item.status === "active",
+  // 통계 계산 (API 데이터 기반)
+  const ropSettings = data?.data?.content ?? [];
+  const totalSettings = totalElements;
+  const activeSettings = ropSettings.filter(
+    (item: RopResDto) => item.autoOrderStatus === "ACTIVE",
   ).length;
-  const autoOrderSettings = allRopSettings.filter(
-    (item) => item.autoOrder,
+  const autoOrderSettings = ropSettings.filter(
+    (item: RopResDto) => item.autoOrderStatus === "ACTIVE",
   ).length;
-  const lowStockItems = allRopSettings.filter(
-    (item) => item.currentStock <= item.reorderPoint,
+  const lowStockItems = ropSettings.filter(
+    (item: RopResDto) => (item.quantity || 0) <= (item.rop || 0),
   ).length;
 
   return (
@@ -394,44 +214,40 @@ export function RopSettings() {
         {/* 필터 및 검색 */}
         <SearchFilterBar
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          searchPlaceholder="품목 코드, 품목명, 공급업체 검색..."
+          onSearchChange={(value) => {
+            setSearchTerm(value);
+            onPageChange(0);
+          }}
+          searchPlaceholder="품목 코드, 품목명 검색..."
           filters={[
             {
               key: "category",
               value: categoryFilter,
               options: categoryOptions,
-              onChange: (value) => {
-                setCategoryFilter(value);
-                // 카테고리 변경 시 그룹 필터 초기화
-                if (value !== categoryFilter) {
-                  setGroupFilter("전체");
-                }
+              onChange: (e) => {
+                setCategoryFilter(e);
+                setGroupFilter("");
+                onPageChange(0);
               },
             },
             {
               key: "group",
               value: groupFilter,
-              options: groupOptions.filter((option) => {
-                // 카테고리가 선택된 경우 해당 카테고리의 그룹만 표시
-                if (categoryFilter === "전체") {
-                  return true;
-                }
-                const filteredGroups = allRopSettings
-                  .filter((item) => item.category === categoryFilter)
-                  .map((item) => item.group);
-                return (
-                  option.value === "전체" ||
-                  filteredGroups.includes(option.value)
-                );
-              }),
-              onChange: (value) => setGroupFilter(value),
+              options: groupOptions,
+              onChange: (e) => {
+                setGroupFilter(e);
+                onPageChange(0);
+              },
+              disabled: categoryFilter === "",
             },
             {
-              key: "autoOrder",
-              value: autoOrderFilter,
+              key: "status",
+              value: statusFilter,
               options: statusOptions,
-              onChange: (value) => setAutoOrderFilter(value),
+              onChange: (e) => {
+                setStatusFilter(e);
+                onPageChange(0);
+              },
             },
           ]}
           actions={
@@ -440,9 +256,10 @@ export function RopSettings() {
               size="sm"
               onClick={() => {
                 setSearchTerm("");
-                setCategoryFilter("전체");
-                setGroupFilter("전체");
-                setAutoOrderFilter("전체");
+                setCategoryFilter("");
+                setGroupFilter("");
+                setStatusFilter("");
+                onPageChange(0);
               }}
             >
               <i className="ri-refresh-line mr-2"></i>
@@ -452,21 +269,29 @@ export function RopSettings() {
         />
 
         {/* ROP 설정 목록 */}
-        <TableSection
-          title={`ROP 설정 목록 (${filteredData.length}개)`}
-          actionsRight={
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          }
+        <PaginationTableSection
+          title="ROP 설정 목록"
+          totalElements={totalElements}
+          page={page}
+          totalPages={totalPages}
+          size={size}
+          onSizeChange={onSizeChange}
+          onPageChange={onPageChange}
+          showRefresh
+          onRefresh={refetch}
         >
           <Table
             columns={columns}
-            data={filteredData}
-            emptyText="ROP 설정이 없습니다."
+            data={ropSettings}
+            loading={isLoading && data === undefined}
+            emptyText={
+              isLoading && data === undefined
+                ? "데이터 로딩 중..."
+                : "ROP 설정이 없습니다."
+            }
+            errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
           />
-        </TableSection>
+        </PaginationTableSection>
 
         {/* ROP 계산 공식 안내 */}
         <InfoBox type="info" title="ROP 계산 공식" className="mt-6">
