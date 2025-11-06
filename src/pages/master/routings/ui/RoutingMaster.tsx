@@ -1,81 +1,101 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { routingMasterData } from "@/mocks/factoryData";
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { useRoutingsQuery } from "@/pages/master/routings/api";
+import type {
+  ProcessResponseDTO,
+  RoutingStatus,
+} from "@/pages/master/routings/model";
+import { ROUTING_STATUS } from "@/pages/master/routings/model";
+import { useRoutingStats } from "@/pages/master/routings/model/useRoutingStats";
+import { createKeyRecord } from "@/shared/lib/utils";
 import {
+  Badge,
   Button,
   InfoBox,
   SearchFilterBar,
   StatCard,
   Table,
-  TableSection,
 } from "@/shared/ui";
-
-import { useRoutingStats } from "../model/useRoutingStats";
 
 export const RoutingMaster = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
-  const [selectedRouting, setSelectedRouting] = useState<any>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [selectedRouting, setSelectedRouting] =
+    useState<ProcessResponseDTO | null>(null);
 
-  const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "활성", label: "활성" },
-    { value: "검토중", label: "검토중" },
-    { value: "비활성", label: "비활성" },
-  ];
+  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
-  const filteredData = routingMasterData.filter((item) => {
-    const matchesSearch =
-      item.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.itemCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.routingCode?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "전체" || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
+  const { data, isLoading, isError, refetch } = useRoutingsQuery({
+    query: searchTerm === "" ? undefined : searchTerm,
+    status: statusFilter === "" ? undefined : (statusFilter as RoutingStatus),
+    page,
+    size,
   });
 
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
+  const routings = data?.data?.content ?? [];
+
+  const statusOptions = [
+    { value: "", label: "전체 상태" },
+    ...Object.entries(ROUTING_STATUS)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => {
+        const statusLabels: Record<string, string> = {
+          ACTIVE: "활성",
+          INACTIVE: "비활성",
+        };
+        return { value: value as string, label: statusLabels[key] || key };
+      }),
+  ];
+
+  const handleCreateNew = () => {
+    navigate("/master/routings/process");
+  };
+
+  const handleViewDetail = (row: ProcessResponseDTO) => {
+    navigate(`/master/routings/process/${row.id}`, {
+      state: { routingData: row },
+    });
+  };
+
+  const keys = createKeyRecord<ProcessResponseDTO>(routings);
   const columns = [
-    { key: "routingCode", title: "공정 코드", width: "120px" },
-    { key: "itemCode", title: "품목 코드", width: "120px" },
-    { key: "itemName", title: "품목명" },
-    { key: "version", title: "버전", width: "80px" },
+    { key: keys.code, title: "공정 코드", width: "120px" },
+    { key: keys.partCode, title: "품목 코드", width: "120px" },
+    { key: keys.partName, title: "품목명" },
+    { key: keys.version, title: "버전", width: "80px" },
     {
-      key: "totalLeadTime",
+      key: keys.totalStepMinutes,
       title: "총 리드타임",
       width: "120px",
-      render: (value: number) => `${value}시간`,
+      render: (value: number) => `${value || 0}분`,
     },
     {
-      key: "operationCount",
+      key: keys.stepCount,
       title: "공정 수",
       width: "80px",
-      render: (value: number) => `${value}개`,
+      render: (value: number) => `${value || 0}개`,
     },
     {
-      key: "status",
+      key: keys.status,
       title: "상태",
       width: "80px",
       render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "활성"
-              ? "bg-green-100 text-green-800"
-              : value === "검토중"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-gray-100 text-gray-800"
-          }`}
-        >
-          {value}
-        </span>
+        <Badge variant={value === "ACTIVE" ? "success" : "default"}>
+          {value === "ACTIVE" ? "활성" : "비활성"}
+        </Badge>
       ),
     },
     {
       key: "actions",
       title: "작업",
       width: "150px",
-      render: (_: any, row: any) => (
+      render: (_value: any, row: ProcessResponseDTO) => (
         <div className="flex space-x-2">
           <Button
             variant="outline"
@@ -85,7 +105,11 @@ export const RoutingMaster = () => {
             <i className="ri-eye-line mr-1"></i>
             상세
           </Button>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleViewDetail(row)}
+          >
             <i className="ri-edit-line mr-1"></i>
             편집
           </Button>
@@ -96,7 +120,7 @@ export const RoutingMaster = () => {
 
   // 통계 계산 (훅으로 분리)
   const { totalRoutings, activeRoutings, avgLeadTime, avgOperations } =
-    useRoutingStats(routingMasterData);
+    useRoutingStats(routings);
 
   return (
     <>
@@ -125,7 +149,7 @@ export const RoutingMaster = () => {
             <StatCard
               icon="ri-time-line"
               label="평균 리드타임"
-              value={`${avgLeadTime}h`}
+              value={`${avgLeadTime}분`}
               iconBgColor="bg-blue-100"
               iconColor="text-blue-600"
             />
@@ -142,22 +166,24 @@ export const RoutingMaster = () => {
           {/* 필터 및 검색 */}
           <SearchFilterBar
             searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
+            onSearchChange={(value) => {
+              setSearchTerm(value);
+              onPageChange(0);
+            }}
             searchPlaceholder="품목명, 코드 또는 공정 코드 검색..."
             filters={[
               {
                 key: "status",
                 value: statusFilter,
                 options: statusOptions,
-                onChange: (value) => setStatusFilter(value),
+                onChange: (value) => {
+                  setStatusFilter(value);
+                  onPageChange(0);
+                },
               },
             ]}
             actions={
-              <Button
-                variant="default"
-                size="sm"
-                onClick={async () => navigate("/master/routings/create")}
-              >
+              <Button variant="default" size="sm" onClick={handleCreateNew}>
                 <i className="ri-add-line mr-2"></i>
                 신규 등록
               </Button>
@@ -165,33 +191,36 @@ export const RoutingMaster = () => {
           />
 
           {/* 공정 목록 테이블 */}
-          <TableSection
+          <PaginationTableSection
             title="공정 목록"
-            metaRight={
-              <span className="text-sm text-gray-500">
-                총 {filteredData.length}개 공정
-              </span>
-            }
-            actionsRight={
-              <Button variant="secondary" size="sm">
-                <i className="ri-refresh-line mr-2"></i>
-                새로고침
-              </Button>
-            }
+            totalElements={totalElements}
+            page={page}
+            totalPages={totalPages}
+            size={size}
+            onSizeChange={onSizeChange}
+            onPageChange={onPageChange}
+            showRefresh
+            onRefresh={refetch}
           >
             <Table
               columns={columns}
-              data={filteredData}
-              emptyText="조건에 맞는 공정이 없습니다"
+              data={routings}
+              loading={isLoading && data === undefined}
+              emptyText={
+                isLoading && data === undefined
+                  ? "데이터 로딩 중..."
+                  : "조건에 맞는 공정이 없습니다"
+              }
+              errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
             />
-          </TableSection>
+          </PaginationTableSection>
         </div>
 
         {/* 우측: 공정 상세 정보 */}
         <div className="lg:col-span-1">
-          <div className="sticky top-6 rounded-lg border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900">
+          <div className="sticky top-6 rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
+            <div className="border-b border-gray-200 p-6 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 공정 상세 정보
               </h3>
             </div>
@@ -200,131 +229,134 @@ export const RoutingMaster = () => {
                 <div className="space-y-6">
                   {/* 기본 정보 */}
                   <div>
-                    <h4 className="mb-3 text-sm font-medium text-gray-900">
+                    <h4 className="mb-3 text-sm font-medium text-gray-900 dark:text-gray-100">
                       기본 정보
                     </h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">공정 코드:</span>
-                        <span className="font-medium">
-                          {selectedRouting.routingCode}
+                        <span className="text-gray-600 dark:text-gray-400">
+                          공정 코드:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.code || "-"}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">품목 코드:</span>
-                        <span className="font-medium">
-                          {selectedRouting.itemCode}
+                        <span className="text-gray-600 dark:text-gray-400">
+                          품목 코드:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.partCode || "-"}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">품목명:</span>
-                        <span className="font-medium">
-                          {selectedRouting.itemName}
+                        <span className="text-gray-600 dark:text-gray-400">
+                          품목명:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.partName || "-"}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">버전:</span>
-                        <span className="font-medium">
-                          {selectedRouting.version}
+                        <span className="text-gray-600 dark:text-gray-400">
+                          버전:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.version || "-"}
                         </span>
                       </div>
                     </div>
                   </div>
 
                   {/* 공정 순서 */}
-                  <div>
-                    <h4 className="mb-3 text-sm font-medium text-gray-900">
-                      공정 순서
-                    </h4>
-                    <div className="space-y-3">
-                      {selectedRouting.operations?.map(
-                        (op: any, index: number) => (
-                          <div
-                            key={index}
-                            className="rounded-lg border border-gray-200 p-3"
-                          >
-                            <div className="mb-2 flex items-center justify-between">
-                              <span className="text-sm font-medium text-gray-900">
-                                {op.operationNumber}. {op.operationName}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                {op.workCenterCode}
-                              </span>
+                  {selectedRouting.steps &&
+                    selectedRouting.steps.length > 0 && (
+                      <div>
+                        <h4 className="mb-3 text-sm font-medium text-gray-900 dark:text-gray-100">
+                          공정 순서
+                        </h4>
+                        <div className="space-y-3">
+                          {selectedRouting.steps.map((step, index) => (
+                            <div
+                              key={index}
+                              className="rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+                            >
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                  {step.stepOrder}. {step.stepName || "-"}
+                                </span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  {step.workCenterCode || "-"}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-400">
+                                <div>
+                                  <span className="block text-gray-500 dark:text-gray-500">
+                                    준비시간
+                                  </span>
+                                  <span className="font-medium">
+                                    {step.setupMinutes || 0}분
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="block text-gray-500 dark:text-gray-500">
+                                    가공시간
+                                  </span>
+                                  <span className="font-medium">
+                                    {step.processMinutes || 0}분
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="block text-gray-500 dark:text-gray-500">
+                                    대기시간
+                                  </span>
+                                  <span className="font-medium">
+                                    {step.waitMinutes || 0}분
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
-                              <div>
-                                <span className="block text-gray-500">
-                                  준비시간
-                                </span>
-                                <span className="font-medium">
-                                  {op.setupTime}분
-                                </span>
-                              </div>
-                              <div>
-                                <span className="block text-gray-500">
-                                  가공시간
-                                </span>
-                                <span className="font-medium">
-                                  {op.processTime}분
-                                </span>
-                              </div>
-                              <div>
-                                <span className="block text-gray-500">
-                                  대기시간
-                                </span>
-                                <span className="font-medium">
-                                  {op.waitTime}분
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                   {/* 총 시간 요약 */}
-                  <div className="rounded-lg bg-gray-50 p-4">
-                    <h4 className="mb-2 text-sm font-medium text-gray-900">
+                  <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
+                    <h4 className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                       시간 요약
                     </h4>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">총 준비시간:</span>
-                        <span className="font-medium">
-                          {selectedRouting.operations?.reduce(
-                            (sum: number, op: any) => sum + op.setupTime,
-                            0,
-                          )}
-                          분
+                        <span className="text-gray-600 dark:text-gray-400">
+                          총 준비시간:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.totalSetupMinutes || 0}분
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">총 가공시간:</span>
-                        <span className="font-medium">
-                          {selectedRouting.operations?.reduce(
-                            (sum: number, op: any) => sum + op.processTime,
-                            0,
-                          )}
-                          분
+                        <span className="text-gray-600 dark:text-gray-400">
+                          총 가공시간:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.totalProcessMinutes || 0}분
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">총 대기시간:</span>
-                        <span className="font-medium">
-                          {selectedRouting.operations?.reduce(
-                            (sum: number, op: any) => sum + op.waitTime,
-                            0,
-                          )}
-                          분
+                        <span className="text-gray-600 dark:text-gray-400">
+                          총 대기시간:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedRouting.totalWaitMinutes || 0}분
                         </span>
                       </div>
-                      <div className="mt-2 flex justify-between border-t pt-2">
-                        <span className="font-medium text-gray-900">
+                      <div className="mt-2 flex justify-between border-t border-gray-300 pt-2 dark:border-gray-600">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
                           총 리드타임:
                         </span>
-                        <span className="font-bold text-main-600">
-                          {selectedRouting.totalLeadTime}시간
+                        <span className="font-bold text-main-600 dark:text-main-400">
+                          {selectedRouting.totalStepMinutes || 0}분
                         </span>
                       </div>
                     </div>
@@ -332,8 +364,8 @@ export const RoutingMaster = () => {
                 </div>
               ) : (
                 <div className="py-8 text-center">
-                  <i className="ri-route-line mb-4 text-4xl text-gray-300"></i>
-                  <p className="text-gray-500">
+                  <i className="ri-route-line mb-4 text-4xl text-gray-300 dark:text-gray-600"></i>
+                  <p className="text-gray-500 dark:text-gray-400">
                     공정을 선택하면 상세 정보가 표시됩니다
                   </p>
                 </div>

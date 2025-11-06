@@ -46,12 +46,6 @@ const DepartmentMaster = lazy(async () => ({
 const PositionMaster = lazy(async () => ({
   default: (await import("@/pages/master/positions")).PositionMaster,
 }));
-const RoutingMaster = lazy(async () => ({
-  default: (await import("@/pages/master/routings")).RoutingMaster,
-}));
-const RoutingCreate = lazy(async () => ({
-  default: (await import("@/pages/master/routings/create")).RoutingCreate,
-}));
 
 // ============================================================================
 // Production Pages - 생산 관리 모듈 (지연 로딩)
@@ -197,8 +191,36 @@ const routes: RouteObject[] = [
               return { Component };
             },
           },
-          { path: "routings", element: <RoutingMaster /> },
-          { path: "routings/create", element: <RoutingCreate /> },
+          {
+            path: "routings",
+            lazy: async () => {
+              const { RoutingMaster: Component } = await import(
+                "@/pages/master/routings"
+              );
+              const { routingsLoader } = await import(
+                "@/pages/master/routings/api/routings.loaders"
+              );
+              return { Component, loader: routingsLoader };
+            },
+          },
+          {
+            path: "routings/process",
+            lazy: async () => {
+              const { RoutingProcess: Component } = await import(
+                "@/pages/master/routings/process"
+              );
+              return { Component };
+            },
+          },
+          {
+            path: "routings/process/:id",
+            lazy: async () => {
+              const { RoutingProcess: Component } = await import(
+                "@/pages/master/routings/process"
+              );
+              return { Component };
+            },
+          },
         ],
       },
 

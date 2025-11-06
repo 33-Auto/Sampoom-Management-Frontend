@@ -1,10 +1,8 @@
 import { queryClient } from "@/shared/api/query";
 
-import { routingsMasterQueryOptions } from "./routings.api";
+import { routingsListQueryOptions } from "./routings.api";
 
-export function loader() {
-  const routingsPromise = queryClient.ensureQueryData(
-    routingsMasterQueryOptions,
-  );
-  return { routings: routingsPromise };
+export function routingsLoader() {
+  queryClient.prefetchQuery(routingsListQueryOptions({}));
+  return null;
 }
