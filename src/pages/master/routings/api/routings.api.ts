@@ -1,42 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import type { RoutingListParams } from "@/pages/master/routings/model";
+import { queryClient } from "@/shared/api";
 
-import { fetchClient } from "@/shared/api";
+// 공통 옵션 생성 함수
+const getRoutingsQueryOptions = (params?: RoutingListParams) => ({
+  params: {
+    query: {
+      page: params?.page ?? 0,
+      size: params?.size ?? 10,
+      query: params?.query,
+      status: params?.status,
+    },
+  },
+});
 
-export interface RoutingOperation {
-  operationNumber: number;
-  operationName: string;
-  workCenterCode: string;
-  setupTime: number;
-  processTime: number;
-  waitTime: number;
-}
+// queryOptions를 반환하는 함수 (loader 등에서 사용)
+export const routingsListQueryOptions = (params?: RoutingListParams) =>
+  queryClient.queryOptions(
+    "get",
+    "/api/part/processes",
+    getRoutingsQueryOptions(params),
+  );
 
-export interface RoutingMaster {
-  routingCode: string;
-  itemCode: string;
-  itemName: string;
-  version: string;
-  status: string;
-  totalLeadTime: number;
-  operationCount: number;
-  operations: RoutingOperation[];
-}
-
-export const getRoutingsMaster = async (): Promise<RoutingMaster[]> => {
-  const { data, error } = await fetchClient.GET("/api/master/routings" as any, {
-    params: { query: {} },
-  });
-
-  if (error) {
-    throw error;
-  }
-  return data || [];
-};
-
-export const routingsMasterQueryOptions = {
-  queryKey: ["master", "routings"],
-  queryFn: getRoutingsMaster,
-};
-
-export const useGetRoutingsMasterQuery = () =>
-  useQuery(routingsMasterQueryOptions);
+// useQuery hook (컴포넌트에서 사용)
+export const useRoutingsQuery = (params?: RoutingListParams) =>
+  queryClient.useQuery(
+    "get",
+    "/api/part/processes",
+    getRoutingsQueryOptions(params),
+    {
+      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+    },
+  );

@@ -1,66 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "@/shared/api";
+import type { Schemas } from "@/shared/model";
 
-import { fetchClient } from "@/shared/api";
+// 타입 정의 (OpenAPI에서 가져오기)
+export type ProcessCreateRequestDTO = Schemas["ProcessCreateRequestDTO"];
+export type ProcessUpdateRequestDTO = Schemas["ProcessUpdateRequestDTO"];
 
-import type { RoutingMaster } from "./routings.api";
+// Create mutation
+export const useCreateRouting = () =>
+  queryClient.useMutation("post", "/api/part/processes");
 
-export interface CreateRoutingRequest
-  extends Omit<RoutingMaster, "routingCode"> {}
+// Update mutation (PUT 사용)
+export const useUpdateRouting = () =>
+  queryClient.useMutation("put", "/api/part/processes/{id}");
 
-export interface UpdateRoutingRequest extends Partial<RoutingMaster> {}
-
-export const createRouting = async (
-  routingData: CreateRoutingRequest,
-): Promise<RoutingMaster> => {
-  const { data, error } = await fetchClient.POST(
-    "/api/master/routings" as any,
-    {
-      body: routingData,
-    },
-  );
-  if (error) throw error;
-  return data as RoutingMaster;
-};
-
-export const updateRouting = async (
-  routingCode: string,
-  updates: UpdateRoutingRequest,
-): Promise<RoutingMaster> => {
-  const { data, error } = await fetchClient.PUT(
-    "/api/master/routings/{routingCode}" as any,
-    {
-      params: { path: { routingCode } },
-      body: updates,
-    },
-  );
-  if (error) throw error;
-  return data as RoutingMaster;
-};
-
-export const useCreateRouting = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createRouting,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "routings"] });
-    },
-  });
-};
-
-export const useUpdateRouting = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      routingCode,
-      updates,
-    }: {
-      routingCode: string;
-      updates: UpdateRoutingRequest;
-    }) => updateRouting(routingCode, updates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "routings"] });
-    },
-  });
-};
+// Delete mutation
+export const useDeleteRouting = () =>
+  queryClient.useMutation("delete", "/api/part/processes/{id}");

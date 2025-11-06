@@ -1,20 +1,21 @@
 import { useMemo } from "react";
 
-interface RoutingData {
-  status: string;
-  totalLeadTime: number;
-  operationCount: number;
-}
+import type { ProcessResponseDTO } from "./routings.model";
+import { ROUTING_STATUS } from "./routings.model";
 
-export const useRoutingStats = (data: RoutingData[]) => {
+export const useRoutingStats = (data: ProcessResponseDTO[]) => {
   return useMemo(() => {
     const totalRoutings = data.length;
-    const activeRoutings = data.filter((item) => item.status === "활성").length;
+    const activeRoutings = data.filter(
+      (item) => item.status === ROUTING_STATUS.ACTIVE,
+    ).length;
     const avgLeadTime = Math.round(
-      data.reduce((sum, item) => sum + item.totalLeadTime, 0) / totalRoutings,
+      data.reduce((sum, item) => sum + (item.totalStepMinutes || 0), 0) /
+        totalRoutings || 0,
     );
     const avgOperations = Math.round(
-      data.reduce((sum, item) => sum + item.operationCount, 0) / totalRoutings,
+      data.reduce((sum, item) => sum + (item.stepCount || 0), 0) /
+        totalRoutings || 0,
     );
 
     return {
