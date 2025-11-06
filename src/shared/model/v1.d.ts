@@ -164,6 +164,27 @@ export interface paths {
     patch: operations["updateMyProfile"];
     trace?: never;
   };
+  "/api/user/profile/{userId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 관리자 권한 프로필 정보 수정
+     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
+     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
+     */
+    patch: operations["updateUserProfile"];
+    trace?: never;
+  };
   "/api/user/info": {
     parameters: {
       query?: never;
@@ -172,12 +193,14 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * 모든 회원의 전체 회원 정보를 조회
-     * @description 모든 회원의 전체 정보를 페이지 형태로 불러옵니다.
-     *     <br><br> **page**: n번째 페이지부터 불러오기
+     * 조건에 맞는 회원의 전체 회원 정보를 조회
+     * @description 조건에 맞는 회원의 전체 정보를 페이지 형태로 불러옵니다.
+     *     <br><br> **정렬**
+     *     <br> **page**: n번째 페이지부터 불러오기
      *     <br> **size**: 페이지 당 사이즈
      *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
-     *     <br><br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
+     *     <br><br> **검색조건**
+     *     <br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
      *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
      */
     get: operations["getUsersInfo"];
@@ -1174,6 +1197,22 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  "/api/agency/{agencyId}/stock": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["stockingParts1"];
     trace?: never;
   };
   "/api/agency/{agencyId}/outbound/{outboundId}": {
@@ -2525,6 +2564,8 @@ export interface components {
         | "CHAIRMAN";
     };
     UserUpdateRequest: {
+      /** Format: int64 */
+      userId?: number;
       userName?: string;
     };
     ApiResponseUserUpdateResponse: {
@@ -2540,6 +2581,48 @@ export interface components {
       /** Format: int64 */
       userId?: number;
       userName?: string;
+    };
+    UserUpdateAdminRequest: {
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
+    };
+    ApiResponseUserUpdateAdminResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["UserUpdateAdminResponse"];
+    };
+    UserUpdateAdminResponse: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** @enum {string} */
+      position?:
+        | "STAFF"
+        | "SENIOR_STAFF"
+        | "ASSISTANT_MANAGER"
+        | "MANAGER"
+        | "DEPUTY_GENERAL_MANAGER"
+        | "GENERAL_MANAGER"
+        | "DIRECTOR"
+        | "VICE_PRESIDENT"
+        | "PRESIDENT"
+        | "CHAIRMAN";
     };
     ApiResponseUserLoginResponse: {
       /** Format: int32 */
@@ -3164,6 +3247,15 @@ export interface components {
       /** Format: int32 */
       quantity: number;
     };
+    PartDeltaDTO: {
+      /** Format: int64 */
+      partId: number;
+      /** Format: int32 */
+      quantity?: number;
+    };
+    PartUpdateRequestDTO: {
+      items?: components["schemas"]["PartDeltaDTO"][];
+    };
     AgencyOutboundUpdateRequestDTO: {
       /** Format: int32 */
       quantity: number;
@@ -3357,7 +3449,7 @@ export interface components {
       /** Format: int32 */
       totalMinutes?: number;
     };
-    PartUpdateRequestDTO: {
+    PartUpdateRequestDTO1: {
       name?: string;
       /** @enum {string} */
       status?: "ACTIVE" | "DISCONTINUED";
@@ -4270,6 +4362,34 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseUserUpdateResponse"];
+        };
+      };
+    };
+  };
+  updateUserProfile: {
+    parameters: {
+      query: {
+        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      };
+      header?: never;
+      path: {
+        userId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserUpdateAdminRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseUserUpdateAdminResponse"];
         };
       };
     };
@@ -5976,6 +6096,32 @@ export interface operations {
       };
     };
   };
+  stockingParts1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        agencyId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartUpdateRequestDTO"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
   deleteItem: {
     parameters: {
       query?: never;
@@ -6342,7 +6488,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PartUpdateRequestDTO"];
+        "application/json": components["schemas"]["PartUpdateRequestDTO1"];
       };
     };
     responses: {
