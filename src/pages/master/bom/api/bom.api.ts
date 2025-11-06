@@ -1,45 +1,36 @@
-import { useQuery } from "@tanstack/react-query";
+import type { BomListParams } from "@/pages/master/bom/model";
+import { queryClient } from "@/shared/api";
 
-import { fetchClient } from "@/shared/api";
+// 공통 옵션 생성 함수
+const getBomsQueryOptions = (params?: BomListParams) => ({
+  params: {
+    query: {
+      page: params?.page ?? 0,
+      size: params?.size ?? 10,
+      keyword: params?.keyword,
+      categoryId: params?.categoryId,
+      groupId: params?.groupId,
+      status: params?.status,
+      complexity: params?.complexity,
+    },
+  },
+});
 
-export interface BOMMaterial {
-  itemCode: string;
-  itemName: string;
-  quantity: number;
-  unit: string;
-  unitCost: number;
-}
+// queryOptions를 반환하는 함수 (loader 등에서 사용)
+export const bomsListQueryOptions = (params?: BomListParams) =>
+  queryClient.queryOptions(
+    "get",
+    "/api/part/boms/search",
+    getBomsQueryOptions(params),
+  );
 
-export interface BOMMaster {
-  bomId: string;
-  bomName: string;
-  category: string;
-  version: string;
-  status: string;
-  description: string;
-  createdDate: string;
-  lastModified: string;
-  complexity: string;
-  componentCount: number;
-  totalCost: number;
-  materials: BOMMaterial[];
-}
-
-// 전체 BOM 목록 조회
-export const getBOMMaster = async (): Promise<BOMMaster[]> => {
-  const { data, error } = await fetchClient.GET("/api/master/bom" as any, {
-    params: { query: {} },
-  });
-
-  if (error) {
-    throw error;
-  }
-  return data || [];
-};
-
-export const bomMasterQueryOptions = {
-  queryKey: ["master", "bom"],
-  queryFn: getBOMMaster,
-};
-
-export const useGetBOMMasterQuery = () => useQuery(bomMasterQueryOptions);
+// useQuery hook (컴포넌트에서 사용)
+export const useBomsQuery = (params?: BomListParams) =>
+  queryClient.useQuery(
+    "get",
+    "/api/part/boms/search",
+    getBomsQueryOptions(params),
+    {
+      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+    },
+  );

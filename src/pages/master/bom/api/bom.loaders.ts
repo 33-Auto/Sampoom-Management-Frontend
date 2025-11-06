@@ -1,8 +1,8 @@
 import { queryClient } from "@/shared/api/query";
 
-import { bomMasterQueryOptions } from "./bom.api";
+import { bomsListQueryOptions } from "./bom.api";
 
-export function loader() {
-  const bomsPromise = queryClient.ensureQueryData(bomMasterQueryOptions);
-  return { boms: bomsPromise };
+export function bomsLoader() {
+  queryClient.prefetchQuery(bomsListQueryOptions({}));
+  return null;
 }
