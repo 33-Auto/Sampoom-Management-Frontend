@@ -308,6 +308,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/order/outbound": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getOutboundList"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/order/api/v1/health": {
     parameters: {
       query?: never;
@@ -684,26 +700,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/factory/{factoryId}/material/order/{orderId}/receive": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * 자재 주문 입고 처리
-     * @description 자재 주문을 입고 처리합니다.
-     */
-    put: operations["receiveMaterialOrder"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/factory/{factoryId}/part/orders/mrp/batch": {
     parameters: {
       query?: never;
@@ -893,7 +889,7 @@ export interface paths {
     };
     /**
      * 부품 주문 목록 조회
-     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있습니다.
+     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있으며, 부품명/부품코드/주문코드로 검색할 수 있습니다.
      */
     get: operations["getPartOrders"];
     put?: never;
@@ -1160,6 +1156,10 @@ export interface paths {
     delete?: never;
     options?: never;
     head?: never;
+    /**
+     * 대리점 주문 입고 처리
+     * @description 대리점이 주문한 부품 입고 처리
+     */
     patch: operations["stockingParts1"];
     trace?: never;
   };
@@ -1179,6 +1179,26 @@ export interface paths {
     head?: never;
     /** 출고 수량 변경 */
     patch: operations["updateQuantity"];
+    trace?: never;
+  };
+  "/api/agency/{agencyId}/weekly-summary": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 대리점 주간 히스토리 조회
+     * @description 대리점의 주간 부품 히스토리 요약 정보를 조회합니다
+     */
+    get: operations["getWeeklySummary"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/api/agency/{agencyId}/search": {
@@ -1213,6 +1233,26 @@ export interface paths {
      * @description 대리점 별 부품 목록 조회
      */
     get: operations["getParts"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/agency/{agencyId}/dashboard": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 대리점 대시보드 조회
+     * @description 대리점의 재고 현황을 요약한 대시보드 정보를 조회합니다
+     */
+    get: operations["getDashboard"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2128,6 +2168,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/purchase/{orderId}/receive": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 자재 주문 입고 처리
+     * @description 주문된 자재를 입고 처리합니다.
+     */
+    patch: operations["receiveOrder"];
+    trace?: never;
+  };
   "/api/purchase/{orderId}/cancel": {
     parameters: {
       query?: never;
@@ -2681,6 +2741,8 @@ export interface components {
       code?: string;
       /** Format: int32 */
       quantity?: number;
+      /** Format: int32 */
+      standardCost?: number;
     };
     OrderReqDto: {
       agencyName?: string;
@@ -2702,9 +2764,10 @@ export interface components {
       status?:
         | "PENDING"
         | "CONFIRMED"
-        | "SHIPPING"
         | "DELAYED"
-        | "PRODUCING"
+        | "SHIPPING"
+        | "SHIPPED"
+        | "DELIVERING"
         | "ARRIVED"
         | "COMPLETED"
         | "CANCELED";
@@ -2758,6 +2821,65 @@ export interface components {
       empty?: boolean;
       sorted?: boolean;
       unsorted?: boolean;
+    };
+    ApiResponsePageOrderWithStockDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PageOrderWithStockDto"];
+    };
+    OrderWithStockDto: {
+      /** Format: int64 */
+      orderId?: number;
+      orderNumber?: string;
+      agencyName?: string;
+      /** @enum {string} */
+      status?:
+        | "PENDING"
+        | "CONFIRMED"
+        | "DELAYED"
+        | "SHIPPING"
+        | "SHIPPED"
+        | "DELIVERING"
+        | "ARRIVED"
+        | "COMPLETED"
+        | "CANCELED";
+      /** Format: date-time */
+      createdAt?: string;
+      items?: components["schemas"]["PartStockDto"][];
+    };
+    PageOrderWithStockDto: {
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["OrderWithStockDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
+    PartStockDto: {
+      categoryName?: string;
+      groupName?: string;
+      /** Format: int64 */
+      partId?: number;
+      name?: string;
+      code?: string;
+      /** Format: int32 */
+      stock?: number;
+      /** Format: int32 */
+      orderQuantity?: number;
+      /** Format: int32 */
+      standardCost?: number;
     };
     ApiResponseString: {
       /** Format: int32 */
@@ -2863,10 +2985,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     RopResDto: {
@@ -2933,10 +3055,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     ApiResponseListPartItemDto: {
@@ -2971,10 +3093,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     PartResDto: {
@@ -2992,38 +3114,6 @@ export interface components {
       /** Format: int32 */
       partValue?: number;
       status?: string;
-    };
-    ApiResponseMaterialOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MaterialOrderResponseDto"];
-    };
-    MaterialOrderItemDto: {
-      /** Format: int64 */
-      materialId?: number;
-      materialName?: string;
-      unit?: string;
-      /** Format: int64 */
-      quantity?: number;
-    };
-    MaterialOrderResponseDto: {
-      /** Format: int64 */
-      id?: number;
-      code?: string;
-      /** Format: int64 */
-      factoryId?: number;
-      factoryName?: string;
-      /** @enum {string} */
-      status?: "ORDERED" | "RECEIVED" | "CANCELED";
-      /** Format: date-time */
-      orderAt?: string;
-      /** Format: date-time */
-      receivedAt?: string;
-      items?: components["schemas"]["MaterialOrderItemDto"][];
     };
     ApiResponseListPartOrderResponseDto: {
       /** Format: int32 */
@@ -3085,6 +3175,38 @@ export interface components {
     };
     MaterialOrderRequestDto: {
       items?: components["schemas"]["MaterialOrderItemRequestDto"][];
+    };
+    ApiResponseMaterialOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MaterialOrderResponseDto"];
+    };
+    MaterialOrderItemDto: {
+      /** Format: int64 */
+      materialId?: number;
+      materialName?: string;
+      unit?: string;
+      /** Format: int64 */
+      quantity?: number;
+    };
+    MaterialOrderResponseDto: {
+      /** Format: int64 */
+      id?: number;
+      code?: string;
+      /** Format: int64 */
+      factoryId?: number;
+      factoryName?: string;
+      /** @enum {string} */
+      status?: "ORDERED" | "RECEIVED" | "CANCELED";
+      /** Format: date-time */
+      orderAt?: string;
+      /** Format: date-time */
+      receivedAt?: string;
+      items?: components["schemas"]["MaterialOrderItemDto"][];
     };
     PartOrderItemRequestDto: {
       /** Format: int64 */
@@ -3182,6 +3304,22 @@ export interface components {
       /** Format: int32 */
       quantity: number;
     };
+    ApiResponseWeeklySummaryResponseDTO: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["WeeklySummaryResponseDTO"];
+    };
+    WeeklySummaryResponseDTO: {
+      /** Format: int64 */
+      inStockParts?: number;
+      /** Format: int64 */
+      outStockParts?: number;
+      weekPeriod?: string;
+    };
     ApiResponsePageResponseDTOCategoryResponseDTO: {
       /** Format: int32 */
       status?: number;
@@ -3253,6 +3391,25 @@ export interface components {
       quantity?: number;
       /** Format: int32 */
       standardCost?: number;
+    };
+    ApiResponseDashboardResponseDTO: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["DashboardResponseDTO"];
+    };
+    DashboardResponseDTO: {
+      /** Format: int64 */
+      totalParts?: number;
+      /** Format: int64 */
+      outOfStockParts?: number;
+      /** Format: int64 */
+      lowStockParts?: number;
+      /** Format: int64 */
+      totalQuantity?: number;
     };
     ApiResponseString2: {
       /** Format: int32 */
@@ -3352,6 +3509,12 @@ export interface components {
       totalStepMinutes?: number;
       /** Format: int64 */
       totalProcessCost?: number;
+      /** Format: int64 */
+      categoryId?: number;
+      categoryName?: string;
+      /** Format: int64 */
+      groupId?: number;
+      groupName?: string;
       steps?: components["schemas"]["ProcessStepResponseDTO"][];
     };
     ProcessStepResponseDTO: {
@@ -3861,12 +4024,14 @@ export interface components {
       /** Format: int64 */
       quantity?: number;
       unitPrice?: number;
+      /** Format: int32 */
+      leadTimeDays?: number;
     };
     PurchaseOrderRequestDto: {
       /** Format: int64 */
       factoryId?: number;
       factoryName?: string;
-      /** Format: date */
+      /** Format: date-time */
       requiredAt?: string;
       requesterName?: string;
       items?: components["schemas"]["PurchaseOrderItemDto"][];
@@ -3886,8 +4051,10 @@ export interface components {
       orderCode?: string;
       /** Format: date-time */
       orderAt?: string;
-      /** Format: date */
+      /** Format: date-time */
       requiredAt?: string;
+      /** Format: date-time */
+      expectedDeliveryAt?: string;
       /** Format: int64 */
       factoryId?: number;
       factoryName?: string;
@@ -4442,9 +4609,10 @@ export interface operations {
         status?:
           | "PENDING"
           | "CONFIRMED"
-          | "SHIPPING"
           | "DELAYED"
-          | "PRODUCING"
+          | "SHIPPING"
+          | "SHIPPED"
+          | "DELIVERING"
           | "ARRIVED"
           | "COMPLETED"
           | "CANCELED";
@@ -4490,6 +4658,43 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePageOrderResDto"];
+        };
+      };
+    };
+  };
+  getOutboundList: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        categoryId?: number;
+        groupId?: number;
+        keyword?: string;
+        status?:
+          | "PENDING"
+          | "CONFIRMED"
+          | "DELAYED"
+          | "SHIPPING"
+          | "SHIPPED"
+          | "DELIVERING"
+          | "ARRIVED"
+          | "COMPLETED"
+          | "CANCELED";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageOrderWithStockDto"];
         };
       };
     };
@@ -5038,38 +5243,6 @@ export interface operations {
       };
     };
   };
-  receiveMaterialOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
   executeBatchMRP: {
     parameters: {
       query?: never;
@@ -5381,6 +5554,7 @@ export interface operations {
           | "COMPLETED"
         )[];
         priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
+        query?: string;
         page?: number;
         size?: number;
       };
@@ -5935,6 +6109,28 @@ export interface operations {
       };
     };
   };
+  getWeeklySummary: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        agencyId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseWeeklySummaryResponseDTO"];
+        };
+      };
+    };
+  };
   searchParts: {
     parameters: {
       query: {
@@ -5980,6 +6176,28 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseListPartWithStockResponseDTO"];
+        };
+      };
+    };
+  };
+  getDashboard: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        agencyId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseDashboardResponseDTO"];
         };
       };
     };
@@ -6439,6 +6657,8 @@ export interface operations {
       query?: {
         query?: string;
         status?: "ACTIVE" | "INACTIVE";
+        categoryId?: number;
+        groupId?: number;
         page?: number;
         size?: number;
       };
@@ -7369,6 +7589,37 @@ export interface operations {
         "application/json": components["schemas"]["PurchaseOrderRequestDto"];
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  receiveOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
     responses: {
       /** @description OK */
       200: {

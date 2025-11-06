@@ -64,7 +64,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className="px-6 py-3 text-left text-xs font-medium tracking-wider text-grey-700 uppercase dark:bg-grey-800 dark:text-grey-200"
+                  className="px-6 py-3 text-left text-xs font-medium tracking-wider whitespace-nowrap text-grey-700 uppercase dark:bg-grey-800 dark:text-grey-200"
                   style={{ width: column.width }}
                 >
                   {column.title}
