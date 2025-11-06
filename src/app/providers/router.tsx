@@ -46,12 +46,6 @@ const DepartmentMaster = lazy(async () => ({
 const PositionMaster = lazy(async () => ({
   default: (await import("@/pages/master/positions")).PositionMaster,
 }));
-const WorkCenterMaster = lazy(async () => ({
-  default: (await import("@/pages/master/workcenters")).WorkCenterMaster,
-}));
-const WorkCenterCreate = lazy(async () => ({
-  default: (await import("@/pages/master/workcenters/create")).CreateWorkCenter,
-}));
 const RoutingMaster = lazy(async () => ({
   default: (await import("@/pages/master/routings")).RoutingMaster,
 }));
@@ -108,14 +102,6 @@ const ReceivingProcess = lazy(async () => ({
 
 const WmsPurchaseOrders = lazy(async () => ({
   default: (await import("@/pages/wms/purchase-orders")).WmsPurchaseOrders,
-}));
-
-const RopSettings = lazy(async () => ({
-  default: (await import("@/pages/wms/rop-settings")).RopSettings,
-}));
-
-const RopProcess = lazy(async () => ({
-  default: (await import("@/pages/wms/rop-settings/process")).RopProcess,
 }));
 
 // ============================================================================
@@ -181,8 +167,36 @@ const routes: RouteObject[] = [
           { path: "partners", element: <PartnerMaster /> },
           { path: "departments", element: <DepartmentMaster /> },
           { path: "positions", element: <PositionMaster /> },
-          { path: "workcenters", element: <WorkCenterMaster /> },
-          { path: "workcenters/create", element: <WorkCenterCreate /> },
+          {
+            path: "workcenters",
+            lazy: async () => {
+              const { WorkCenterMaster: Component } = await import(
+                "@/pages/master/workcenters"
+              );
+              const { workCentersLoader } = await import(
+                "@/pages/master/workcenters/api/workcenters.loaders"
+              );
+              return { Component, loader: workCentersLoader };
+            },
+          },
+          {
+            path: "workcenters/process",
+            lazy: async () => {
+              const { WorkCenterProcess: Component } = await import(
+                "@/pages/master/workcenters/process"
+              );
+              return { Component };
+            },
+          },
+          {
+            path: "workcenters/process/:id",
+            lazy: async () => {
+              const { WorkCenterProcess: Component } = await import(
+                "@/pages/master/workcenters/process"
+              );
+              return { Component };
+            },
+          },
           { path: "routings", element: <RoutingMaster /> },
           { path: "routings/create", element: <RoutingCreate /> },
         ],
@@ -277,11 +291,21 @@ const routes: RouteObject[] = [
           },
           {
             path: "rop-settings",
-            element: <RopSettings />,
+            lazy: async () => {
+              const { RopSettings: Component } = await import(
+                "@/pages/wms/rop-settings"
+              );
+              return { Component };
+            },
           },
           {
             path: "rop-settings/process/:id?",
-            element: <RopProcess />,
+            lazy: async () => {
+              const { RopProcess: Component } = await import(
+                "@/pages/wms/rop-settings/process"
+              );
+              return { Component };
+            },
           },
         ],
       },
