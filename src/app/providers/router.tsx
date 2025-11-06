@@ -49,8 +49,9 @@ const PositionMaster = lazy(async () => ({
 const WorkCenterMaster = lazy(async () => ({
   default: (await import("@/pages/master/workcenters")).WorkCenterMaster,
 }));
-const WorkCenterCreate = lazy(async () => ({
-  default: (await import("@/pages/master/workcenters/create")).CreateWorkCenter,
+const WorkCenterProcess = lazy(async () => ({
+  default: (await import("@/pages/master/workcenters/process"))
+    .WorkCenterProcess,
 }));
 const RoutingMaster = lazy(async () => ({
   default: (await import("@/pages/master/routings")).RoutingMaster,
@@ -182,7 +183,8 @@ const routes: RouteObject[] = [
           { path: "departments", element: <DepartmentMaster /> },
           { path: "positions", element: <PositionMaster /> },
           { path: "workcenters", element: <WorkCenterMaster /> },
-          { path: "workcenters/create", element: <WorkCenterCreate /> },
+          { path: "workcenters/process", element: <WorkCenterProcess /> },
+          { path: "workcenters/process/:id", element: <WorkCenterProcess /> },
           { path: "routings", element: <RoutingMaster /> },
           { path: "routings/create", element: <RoutingCreate /> },
         ],

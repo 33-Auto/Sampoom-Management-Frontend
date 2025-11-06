@@ -1,33 +1,32 @@
 import { useMemo } from "react";
 
-interface WorkCenterData {
-  status: string;
-  type: string;
-  dailyCapacity: number;
-  efficiency: number;
-  hourlyRate: number;
-}
+import type { WorkCenterResponseDTO } from "./workcenters.model";
 
-export const useWorkCenterStats = (data: WorkCenterData[]) => {
+export const useWorkCenterStats = (data: WorkCenterResponseDTO[]) => {
   return useMemo(() => {
     const totalWorkCenters = data.length;
     const activeWorkCenters = data.filter(
-      (item) => item.status === "가동",
+      (item) => item.status === "ACTIVE",
     ).length;
     const internalWorkCenters = data.filter(
-      (item) => item.type === "내부 설비",
+      (item) => item.type === "INTERNAL",
     ).length;
     const externalWorkCenters = data.filter(
-      (item) => item.type === "외주 가공처",
+      (item) => item.type === "EXTERNAL",
     ).length;
     const totalCapacity = data
-      .filter((item) => item.status === "가동")
+      .filter((item) => item.status === "ACTIVE")
       .reduce(
-        (sum, item) => sum + (item.dailyCapacity * item.efficiency) / 100,
+        (sum, item) =>
+          sum +
+          ((item.dailyOperatingHours || 0) * (item.efficiency || 0)) / 100,
         0,
       );
     const avgHourlyRate = Math.round(
-      data.reduce((sum, item) => sum + item.hourlyRate, 0) / totalWorkCenters,
+      data.length > 0
+        ? data.reduce((sum, item) => sum + (item.costPerHour || 0), 0) /
+            totalWorkCenters
+        : 0,
     );
 
     return {

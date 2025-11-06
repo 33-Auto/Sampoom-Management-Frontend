@@ -1,66 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "@/shared/api";
+import type { Schemas } from "@/shared/model";
 
-import { fetchClient } from "@/shared/api";
+// 타입 정의 (OpenAPI에서 가져오기)
+export type WorkCenterCreateRequestDTO = Schemas["WorkCenterCreateRequestDTO"];
+export type WorkCenterUpdateRequestDTO = Schemas["WorkCenterUpdateRequestDTO"];
 
-import type { WorkCenterMaster } from "./workcenters.api";
+// Create mutation
+export const useCreateWorkCenter = () =>
+  queryClient.useMutation("post", "/api/part/work-centers");
 
-export interface CreateWorkCenterRequest
-  extends Omit<WorkCenterMaster, "workCenterCode"> {}
+// Update mutation (PATCH 사용)
+export const useUpdateWorkCenter = () =>
+  queryClient.useMutation("patch", "/api/part/work-centers/{id}");
 
-export interface UpdateWorkCenterRequest extends Partial<WorkCenterMaster> {}
-
-export const createWorkCenter = async (
-  workCenterData: CreateWorkCenterRequest,
-): Promise<WorkCenterMaster> => {
-  const { data, error } = await fetchClient.POST(
-    "/api/master/workcenters" as any,
-    {
-      body: workCenterData,
-    },
-  );
-  if (error) throw error;
-  return data as WorkCenterMaster;
-};
-
-export const updateWorkCenter = async (
-  workCenterCode: string,
-  updates: UpdateWorkCenterRequest,
-): Promise<WorkCenterMaster> => {
-  const { data, error } = await fetchClient.PUT(
-    "/api/master/workcenters/{workCenterCode}" as any,
-    {
-      params: { path: { workCenterCode } },
-      body: updates,
-    },
-  );
-  if (error) throw error;
-  return data as WorkCenterMaster;
-};
-
-export const useCreateWorkCenter = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createWorkCenter,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "workcenters"] });
-    },
-  });
-};
-
-export const useUpdateWorkCenter = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      workCenterCode,
-      updates,
-    }: {
-      workCenterCode: string;
-      updates: UpdateWorkCenterRequest;
-    }) => updateWorkCenter(workCenterCode, updates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "workcenters"] });
-    },
-  });
-};
+// Delete mutation
+export const useDeleteWorkCenter = () =>
+  queryClient.useMutation("delete", "/api/part/work-centers/{id}");

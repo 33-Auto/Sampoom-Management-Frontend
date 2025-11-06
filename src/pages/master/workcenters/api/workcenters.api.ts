@@ -1,37 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
+import type { WorkCenterListParams } from "@/pages/master/workcenters/model";
+import { queryClient } from "@/shared/api";
 
-import { fetchClient } from "@/shared/api";
-
-export interface WorkCenterMaster {
-  workCenterCode: string;
-  workCenterName: string;
-  type: string;
-  dailyCapacity: number;
-  efficiency: number;
-  hourlyRate: number;
-  status: string;
-  description: string;
-}
-
-// 전체 작업장 목록 조회
-export const getWorkCentersMaster = async (): Promise<WorkCenterMaster[]> => {
-  const { data, error } = await fetchClient.GET(
-    "/api/master/workcenters" as any,
-    {
-      params: { query: {} },
+// 공통 옵션 생성 함수
+const getWorkCentersQueryOptions = (params?: WorkCenterListParams) => ({
+  params: {
+    query: {
+      page: params?.page ?? 0,
+      size: params?.size ?? 10,
+      query: params?.query,
+      type: params?.type,
+      status: params?.status,
     },
+  },
+});
+
+// queryOptions를 반환하는 함수 (loader 등에서 사용)
+export const workCentersListQueryOptions = (params?: WorkCenterListParams) =>
+  queryClient.queryOptions(
+    "get",
+    "/api/part/work-centers",
+    getWorkCentersQueryOptions(params),
   );
 
-  if (error) {
-    throw error;
-  }
-  return data || [];
-};
-
-export const workCentersMasterQueryOptions = {
-  queryKey: ["master", "workcenters"],
-  queryFn: getWorkCentersMaster,
-};
-
-export const useGetWorkCentersMasterQuery = () =>
-  useQuery(workCentersMasterQueryOptions);
+// useQuery hook (컴포넌트에서 사용)
+export const useWorkCentersQuery = (params?: WorkCenterListParams) =>
+  queryClient.useQuery(
+    "get",
+    "/api/part/work-centers",
+    getWorkCentersQueryOptions(params),
+    {
+      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+    },
+  );

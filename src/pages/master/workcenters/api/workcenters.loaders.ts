@@ -1,10 +1,8 @@
 import { queryClient } from "@/shared/api/query";
 
-import { workCentersMasterQueryOptions } from "./workcenters.api";
+import { workCentersListQueryOptions } from "./workcenters.api";
 
-export function loader() {
-  const workCentersPromise = queryClient.ensureQueryData(
-    workCentersMasterQueryOptions,
-  );
-  return { workCenters: workCentersPromise };
+export function workCentersLoader() {
+  queryClient.prefetchQuery(workCentersListQueryOptions({}));
+  return null;
 }
