@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useCategoryOptions, useGroupOptions } from "@/entities/part";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useRopSettingsQuery } from "@/pages/wms/rop-settings/api";
@@ -47,9 +47,9 @@ export function RopSettings() {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const categoryOptions = useCategoryOptions();
+  const categoryOptions = usePartCategoryOptions();
 
-  const groupOptions = useGroupOptions(
+  const groupOptions = usePartGroupOptions(
     categoryFilter === "" ? 0 : Number(categoryFilter),
   );
 
