@@ -31,12 +31,6 @@ const ItemMaster = lazy(async () => ({
 const ItemCreate = lazy(async () => ({
   default: (await import("@/pages/master/items/create")).ItemCreate,
 }));
-const BomMaster = lazy(async () => ({
-  default: (await import("@/pages/master/bom")).BomMasterPage,
-}));
-const BomCreate = lazy(async () => ({
-  default: (await import("@/pages/master/bom/create")).CreateBOM,
-}));
 const DepartmentMaster = lazy(async () => ({
   default: (await import("@/pages/master/departments")).DepartmentMaster,
 }));
@@ -153,8 +147,32 @@ const routes: RouteObject[] = [
               Component: (await import("@/pages/master/items/edit")).ItemEdit,
             }),
           },
-          { path: "bom", element: <BomMaster /> },
-          { path: "bom/create", element: <BomCreate /> },
+          {
+            path: "bom",
+            lazy: async () => {
+              const { BomMasterPage: Component } = await import(
+                "@/pages/master/bom"
+              );
+              const { bomsLoader } = await import(
+                "@/pages/master/bom/api/bom.loaders"
+              );
+              return { Component, loader: bomsLoader };
+            },
+          },
+          {
+            path: "bom/process",
+            lazy: async () => ({
+              Component: (await import("@/pages/master/bom/process"))
+                .BomProcess,
+            }),
+          },
+          {
+            path: "bom/process/:id",
+            lazy: async () => ({
+              Component: (await import("@/pages/master/bom/process"))
+                .BomProcess,
+            }),
+          },
           {
             path: "partners",
             lazy: async () => {

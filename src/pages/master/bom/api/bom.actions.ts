@@ -1,66 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "@/shared/api";
+import type { Schemas } from "@/shared/model";
 
-import { fetchClient } from "@/shared/api";
+// 타입 정의 (OpenAPI에서 가져오기)
+export type BomCreateRequestDTO = Schemas["BomRequestDTO"];
+export type BomUpdateRequestDTO = Schemas["BomRequestDTO"];
 
-import type { BOMMaster } from "./bom.api";
+// Create mutation
+export const useCreateBomMutation = () =>
+  queryClient.useMutation("post", "/api/part/boms");
 
-export interface CreateBOMRequest extends Omit<BOMMaster, "bomId"> {}
+// Update mutation (PUT 사용)
+export const useUpdateBomMutation = () =>
+  queryClient.useMutation("put", "/api/part/boms/{bomId}");
 
-export interface UpdateBOMRequest extends Partial<BOMMaster> {}
-
-// BOM 등록
-export const createBOM = async (
-  bomData: CreateBOMRequest,
-): Promise<BOMMaster> => {
-  const { data, error } = await fetchClient.POST("/api/master/bom" as any, {
-    body: bomData,
-  });
-  if (error) throw error;
-  return data as BOMMaster;
-};
-
-// BOM 수정
-export const updateBOM = async (
-  bomId: string,
-  updates: UpdateBOMRequest,
-): Promise<BOMMaster> => {
-  const { data, error } = await fetchClient.PUT(
-    "/api/master/bom/{bomId}" as any,
-    {
-      params: { path: { bomId } },
-      body: updates,
-    },
-  );
-  if (error) throw error;
-  return data as BOMMaster;
-};
-
-// React Query Hooks for Mutations
-
-export const useCreateBOM = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createBOM,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "bom"] });
-    },
-  });
-};
-
-export const useUpdateBOM = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      bomId,
-      updates,
-    }: {
-      bomId: string;
-      updates: UpdateBOMRequest;
-    }) => updateBOM(bomId, updates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["master", "bom"] });
-    },
-  });
-};
+// Delete mutation
+export const useDeleteBomMutation = () =>
+  queryClient.useMutation("delete", "/api/part/boms/{bomId}");
