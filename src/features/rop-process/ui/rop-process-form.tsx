@@ -6,7 +6,7 @@ import {
   useCategoryOptions,
   useGroupOptions,
   usePartOptions,
-} from "@/entities/item";
+} from "@/entities/part";
 import { Button, InfoBox, Input, Select } from "@/shared/ui";
 
 import {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useCategoryOptions, useGroupOptions } from "@/entities/item";
+import { useCategoryOptions, useGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useWarehouseInventoryQuery } from "@/pages/wms/inventory/api";

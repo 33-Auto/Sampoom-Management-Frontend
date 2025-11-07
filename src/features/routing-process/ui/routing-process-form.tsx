@@ -7,7 +7,7 @@ import {
   useCategoryOptions,
   useGroupOptions,
   usePartOptions,
-} from "@/entities/item";
+} from "@/entities/part";
 import type { ProcessStepCreateRequestDTO } from "@/pages/master/routings/model";
 import { useWorkCentersQuery } from "@/pages/master/workcenters/api";
 import { Button, Input, Select } from "@/shared/ui";

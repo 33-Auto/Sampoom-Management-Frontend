@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useNotification } from "@/app/providers/NotificationContext";
 import {
-  useCategoryOptions,
-  useGroupOptions,
-  usePartOptions,
-} from "@/entities/item";
-import { usePartSearchQuery } from "@/entities/item/api/part.api";
+  usePartCategoryOptions,
+  usePartGroupOptions,
+  usePartSelectOptions,
+} from "@/entities/part";
+import { usePartSearchQuery } from "@/entities/part/api/part.api";
 import { useMaterialsQuery } from "@/pages/master/bom/api";
 import type { MaterialResponseDTO } from "@/pages/master/bom/model";
 import { Button, Card, Input, Modal, Select } from "@/shared/ui";
@@ -100,11 +100,11 @@ export function BomProcessForm({
     }
   }, [bomData, categoryName, groupName]);
 
-  const categoryOptions = useCategoryOptions();
-  const groupOptions = useGroupOptions(
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
     selectedCategoryId ? Number(selectedCategoryId) : 0,
   );
-  const partOptions = usePartOptions(
+  const partOptions = usePartSelectOptions(
     Number(selectedCategoryId),
     Number(selectedGroupId),
   );
