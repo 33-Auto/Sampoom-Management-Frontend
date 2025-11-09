@@ -5,7 +5,7 @@ import { queryClient } from "@/shared/api";
 const getRopSettingsQueryOptions = (params?: RopSettingsListParams) => ({
   params: {
     query: {
-      warehouseId: params?.warehouseId ?? 40,
+      warehouseId: params?.warehouseId ?? 168,
       page: params?.page ?? 0,
       size: params?.size ?? 10,
       keyword: params?.keyword,

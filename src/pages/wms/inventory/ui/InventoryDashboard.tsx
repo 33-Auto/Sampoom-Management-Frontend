@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { normalizeInventoryStatus } from "@/entities/inventory/lib/status";
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useWarehouseInventoryQuery } from "@/pages/wms/inventory/api";
-import type { InventoryStatus, PartResDto } from "@/pages/wms/inventory/model";
-import { QUANTITY_STATUS } from "@/pages/wms/inventory/model";
+import type {
+  InventoryStatusKey,
+  PartResDto,
+} from "@/pages/wms/inventory/model";
+import {
+  INVENTORY_STATUS_BADGE_VARIANTS,
+  INVENTORY_STATUS_LABELS,
+} from "@/pages/wms/inventory/model";
+import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
+import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
@@ -20,24 +29,51 @@ export const InventoryDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [groupFilter, setGroupFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<InventoryStatusKey | "">("");
 
   // Pagination 처리를 위한 커스텀 훅
-  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+  const { page, size, onPageChange, onSizeChange, setPage } =
+    usePaginationTable({});
 
   const { data, isLoading, isError, refetch } = useWarehouseInventoryQuery({
-    warehouseId: 40,
+    warehouseId: DEFAULT_WAREHOUSE_ID,
     keyword: searchTerm === "" ? undefined : searchTerm,
     categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
     groupId: groupFilter === "" ? undefined : Number(groupFilter),
-    quantityStatus:
-      statusFilter === "" ? undefined : (statusFilter as InventoryStatus),
+    quantityStatus: statusFilter === "" ? undefined : statusFilter,
     page,
     size,
   });
 
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
+  const items = data?.data?.content ?? [];
+
+  const { reorderPointCount, dangerCount, totalInventoryValue } =
+    useMemo(() => {
+      return items.reduce(
+        (acc, item) => {
+          const quantity = item.quantity ?? 0;
+          const rop = item.rop ?? 0;
+          const statusKey = normalizeInventoryStatus(item.status);
+          if (quantity <= rop) {
+            acc.reorderPointCount += 1;
+          }
+          if (statusKey === "DANGER") {
+            acc.dangerCount += 1;
+          }
+          acc.totalInventoryValue += Number(item.partValue ?? 0);
+          acc.totalQuantity += quantity;
+          return acc;
+        },
+        {
+          reorderPointCount: 0,
+          dangerCount: 0,
+          totalInventoryValue: 0,
+          totalQuantity: 0,
+        },
+      );
+    }, [items]);
 
   const categoryOptions = usePartCategoryOptions();
 
@@ -47,11 +83,10 @@ export const InventoryDashboard = () => {
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
-    ...Object.entries(QUANTITY_STATUS)
-      .filter(([_, value]) => value !== undefined)
-      .map(([key, value]) => {
-        return { value: value as string, label: key };
-      }),
+    ...Object.entries(INVENTORY_STATUS_LABELS).map(([value, label]) => ({
+      value,
+      label,
+    })),
   ];
 
   // const filteredData =
@@ -66,10 +101,10 @@ export const InventoryDashboard = () => {
   //     return matchesSearch && matchesCategory && matchesStatus;
   //   }) || [];
 
-  const keys = createKeyRecord<PartResDto>(data?.data?.content ?? []);
+  const keys = createKeyRecord<PartResDto>(items);
   const columns = [
-    { key: keys.code, title: "품목코드", width: "120px" },
-    { key: keys.name, title: "품목명" },
+    { key: keys.code ?? "code", title: "품목코드", width: "120px" },
+    { key: keys.name ?? "name", title: "품목명" },
     {
       key: "category",
       title: "카테고리",
@@ -78,55 +113,52 @@ export const InventoryDashboard = () => {
         `${row.category || "-"} > ${row.group || "-"}`,
     },
     {
-      key: keys.quantity,
+      key: keys.quantity ?? "quantity",
       title: "현재고",
       width: "100px",
-      render: (value: number, row: PartResDto) => (
-        <span
-          className={
-            value <= Number(row.rop!)
-              ? "font-semibold text-red-600"
-              : value <= Number(row.rop!) * 1.2
-                ? "font-semibold text-yellow-600"
-                : "text-black dark:text-white"
-          }
-        >
-          {value} {row.unit || "EA"}
-        </span>
-      ),
+      render: (value: number | undefined, row: PartResDto) => {
+        const quantity = value ?? 0;
+        const rop = row.rop ?? 0;
+        const className =
+          quantity <= rop
+            ? "font-semibold text-red-600"
+            : quantity <= rop * 1.2
+              ? "font-semibold text-yellow-600"
+              : "text-gray-900 dark:text-grey-100";
+        return (
+          <span className={className}>
+            {formatNumber(quantity)} {row.unit || "EA"}
+          </span>
+        );
+      },
     },
     {
-      key: keys.rop,
+      key: keys.rop ?? "rop",
       title: "재주문점",
       width: "100px",
-      render: (value: number, row: PartResDto) =>
-        `${value} ${row.unit || "EA"}`,
+      render: (value: number | undefined, row: PartResDto) =>
+        `${formatNumber(value ?? 0)} ${row.unit || "EA"}`,
     },
     {
-      key: keys.status,
+      key: keys.status ?? "status",
       title: "상태",
       width: "100px",
-      render: (value: string) => (
-        <Badge
-          variant={
-            value === "정상"
-              ? "success"
-              : value === "부족"
-                ? "warning"
-                : value === "위험"
-                  ? "error"
-                  : "info"
-          }
-        >
-          {value}
-        </Badge>
-      ),
+      render: (value: string | undefined) => {
+        const statusKey = normalizeInventoryStatus(value);
+        const label = statusKey
+          ? INVENTORY_STATUS_LABELS[statusKey]
+          : (value ?? "-");
+        const variant = statusKey
+          ? INVENTORY_STATUS_BADGE_VARIANTS[statusKey]
+          : "default";
+        return <Badge variant={variant}>{label}</Badge>;
+      },
     },
     {
-      key: keys.partValue,
+      key: keys.partValue ?? "partValue",
       title: "재고가치",
       width: "120px",
-      render: (value: number) => `₩${Number(value).toLocaleString()}`,
+      render: (value: number | undefined) => formatCurrency(value ?? 0),
     },
     // {
     //   key: "actions",
@@ -176,23 +208,30 @@ export const InventoryDashboard = () => {
           <StatCard
             icon="ri-stack-line"
             label="전체 품목"
-            value={0}
+            value={totalElements}
             iconBgColor="bg-blue-100"
             iconColor="text-blue-600"
           />
           <StatCard
-            icon="ri-alert-line"
+            icon="ri-recycle-line"
             label="재주문점 이하"
-            value={0}
-            iconBgColor="bg-yellow-100"
-            iconColor="text-yellow-600"
+            value={reorderPointCount}
+            iconBgColor="bg-amber-100"
+            iconColor="text-amber-600"
+          />
+          <StatCard
+            icon="ri-alert-line"
+            label="위험 재고"
+            value={dangerCount}
+            iconBgColor="bg-red-100"
+            iconColor="text-red-600"
           />
           <StatCard
             icon="ri-money-dollar-circle-line"
             label="총 재고가치"
-            value={`₩${(0 / 1000000).toFixed(1)}M`}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
+            value={formatCurrency(totalInventoryValue)}
+            iconBgColor="bg-emerald-100"
+            iconColor="text-emerald-600"
           />
         </div>
 
@@ -200,7 +239,6 @@ export const InventoryDashboard = () => {
         <SearchFilterBar
           searchTerm={searchTerm}
           onSearchChange={(value) => {
-            console.log("value", value);
             setSearchTerm(value);
             onPageChange(0);
           }}
@@ -231,15 +269,26 @@ export const InventoryDashboard = () => {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (e) => {
-                setStatusFilter(e);
+              onChange: (value: string) => {
+                setStatusFilter(value as InventoryStatusKey | "");
                 onPageChange(0);
               },
             },
           ]}
           actions={
             <div className="flex space-x-2">
-              <Button variant="default" size="sm">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setSearchTerm("");
+                  setCategoryFilter("");
+                  setGroupFilter("");
+                  setStatusFilter("");
+                  setPage(0);
+                }}
+              >
+                <i className="ri-refresh-line mr-2" />
                 초기화
               </Button>
             </div>
@@ -256,14 +305,16 @@ export const InventoryDashboard = () => {
           onSizeChange={onSizeChange}
           onPageChange={onPageChange}
           showRefresh
-          onRefresh={refetch}
+          onRefresh={async () => {
+            await refetch();
+          }}
         >
           <Table
             columns={columns}
-            data={data?.data?.content ?? []}
-            loading={isLoading && data === undefined}
+            data={items}
+            loading={isLoading && items.length === 0}
             emptyText={
-              isLoading && data === undefined
+              isLoading && items.length === 0
                 ? "데이터 로딩 중..."
                 : "조건에 맞는 재고가 없습니다"
             }

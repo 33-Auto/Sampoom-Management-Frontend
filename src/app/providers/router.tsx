@@ -390,6 +390,15 @@ const routes: RouteObject[] = [
             element: <WmsPurchaseOrders />,
           },
           {
+            path: "purchase-orders/detail/:id",
+            lazy: async () => {
+              const { default: Component } = await import(
+                "@/pages/wms/purchase-orders/detail/StockingPage"
+              );
+              return { Component };
+            },
+          },
+          {
             path: "rop-settings",
             lazy: async () => {
               const { RopSettings: Component } = await import(

@@ -84,6 +84,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/auth/role/{userId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 권한 변경
+     * @description 특정 유저의 접근 권한을 변경합니다. 관리자 권한만 변경이 가능합니다.
+     */
+    patch: operations["updateRole"];
+    trace?: never;
+  };
   "/api/user/invitations": {
     parameters: {
       query?: never;
@@ -94,26 +114,6 @@ export interface paths {
     get?: never;
     put?: never;
     post: operations["create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/user/internal/verify": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [Not Client API] 로그인 User 서비스 내부 통신용
-     * @description [Not Client API] 로그인을 통해 유저의 조직 정합성을 검증합니다.
-     */
-    post: operations["verifyWorkspace"];
     delete?: never;
     options?: never;
     head?: never;
@@ -138,6 +138,32 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  "/api/user/status/{userId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 관리자 권한 직원 상태 변경
+     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 상태를 변경합니다.
+     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
+     *     <br> 변경할 EmployeeStatus 값을 요청으로 보내세요.
+     *     <br><br>***EmployeeStatus***
+     *     <br>ACTIVE: 재직
+     *     <br>LEAVE: 휴직 (비활성화)
+     *     <br>RETIRED: 퇴직 (비활성화)
+     */
+    patch: operations["updateEmployeeStatus"];
     trace?: never;
   };
   "/api/user/profile": {
@@ -181,6 +207,10 @@ export interface paths {
      * 관리자 권한 프로필 정보 수정
      * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
      *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
+     *     <br> 변경할 Role 값을 요청으로 보내세요.
+     *     <br><br>***Role***
+     *     <br>USER: 일반
+     *     <br>ADMIN: 관리자
      */
     patch: operations["updateUserProfile"];
     trace?: never;
@@ -2513,6 +2543,25 @@ export interface components {
       /** Format: int64 */
       expiresIn?: number;
     };
+    RoleRequest: {
+      /** @enum {string} */
+      role: "USER" | "ADMIN";
+    };
+    ApiResponseRoleResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["RoleResponse"];
+    };
+    RoleResponse: {
+      /** Format: int64 */
+      userId?: number;
+      /** @enum {string} */
+      role?: "USER" | "ADMIN";
+    };
     InvitationCreateRequestDto: {
       /** @enum {string} */
       targetType: "AGENCY" | "FACTORY" | "WAREHOUSE";
@@ -2546,19 +2595,6 @@ export interface components {
     InvitationCreateResponseDto: {
       inviteCode?: string;
     };
-    LoginRequest1: {
-      /** Format: int64 */
-      userId: number;
-      /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-    };
-    LoginResponse1: {
-      /** Format: int64 */
-      userId: number;
-      /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      valid?: boolean;
-    };
     SignupUser: {
       /** Format: int64 */
       userId?: number;
@@ -2578,6 +2614,28 @@ export interface components {
         | "VICE_PRESIDENT"
         | "PRESIDENT"
         | "CHAIRMAN";
+    };
+    EmployeeStatusRequest: {
+      /** @enum {string} */
+      employeeStatus?: "ACTIVE" | "LEAVE" | "RETIRED";
+    };
+    ApiResponseEmployeeStatusResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["EmployeeStatusResponse"];
+    };
+    EmployeeStatusResponse: {
+      /** Format: int64 */
+      userId?: number;
+      userName?: string;
+      /** @enum {string} */
+      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      /** @enum {string} */
+      employeeStatus?: "ACTIVE" | "LEAVE" | "RETIRED";
     };
     UserUpdateRequest: {
       userName?: string;
@@ -2725,10 +2783,16 @@ export interface components {
         | "VICE_PRESIDENT"
         | "PRESIDENT"
         | "CHAIRMAN";
+      /** @enum {string} */
+      status?: "ACTIVE" | "LEAVE" | "RETIRED";
+      /** Format: date-time */
+      createdAt?: string;
       /** Format: date-time */
       startedAt?: string;
       /** Format: date-time */
       endedAt?: string;
+      /** Format: date-time */
+      deletedAt?: string;
     };
     ItemCategoryDto: {
       /** Format: int64 */
@@ -2982,10 +3046,10 @@ export interface components {
       data?: components["schemas"]["PageRopResDto"];
     };
     PageRopResDto: {
-      /** Format: int64 */
-      totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+      /** Format: int64 */
+      totalElements?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["RopResDto"][];
@@ -3032,6 +3096,8 @@ export interface components {
       orderNumber?: string;
       categoryName?: string;
       groupName?: string;
+      /** Format: int64 */
+      partId?: number;
       partName?: string;
       partCode?: string;
       /** Format: int32 */
@@ -3052,10 +3118,10 @@ export interface components {
       orderStatus?: string;
     };
     PagePOResDto: {
-      /** Format: int64 */
-      totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+      /** Format: int64 */
+      totalElements?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["POResDto"][];
@@ -3090,10 +3156,10 @@ export interface components {
       data?: components["schemas"]["PagePartResDto"];
     };
     PagePartResDto: {
-      /** Format: int64 */
-      totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+      /** Format: int64 */
+      totalElements?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["PartResDto"][];
@@ -3272,7 +3338,7 @@ export interface components {
       /** Format: int64 */
       materialCategoryId?: number;
       materialCategoryName?: string;
-      /** Format: int64 */
+      /** Format: double */
       quantity?: number;
     };
     PageResponseDtoMaterialResponseDto: {
@@ -4051,6 +4117,8 @@ export interface components {
       unit?: string;
       /** Format: int64 */
       quantity?: number;
+      /** Format: int64 */
+      standardQuantity?: number;
       unitPrice?: number;
       /** Format: int32 */
       leadTimeDays?: number;
@@ -4367,6 +4435,32 @@ export interface operations {
       };
     };
   };
+  updateRole: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        userId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RoleRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseRoleResponse"];
+        };
+      };
+    };
+  };
   create: {
     parameters: {
       query?: never;
@@ -4391,30 +4485,6 @@ export interface operations {
       };
     };
   };
-  verifyWorkspace: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LoginRequest1"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LoginResponse1"];
-        };
-      };
-    };
-  };
   createProfile: {
     parameters: {
       query?: never;
@@ -4434,6 +4504,34 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+    };
+  };
+  updateEmployeeStatus: {
+    parameters: {
+      query: {
+        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      };
+      header?: never;
+      path: {
+        userId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EmployeeStatusRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseEmployeeStatusResponse"];
+        };
       };
     };
   };

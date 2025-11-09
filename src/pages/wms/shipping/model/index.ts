@@ -1,2 +1,6 @@
-export type { ShippingListResponse } from "./shipping.model";
-export type { PartResDto } from "./shipping.model";
+export type {
+  ShippingListParams,
+  ShippingListResponse,
+  ShippingOrderDto,
+  ShippingOrderItemDto,
+} from "./shipping.model";

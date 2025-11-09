@@ -1,319 +1,325 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import { queryClient as tanstackQueryClient } from "@/shared/api/query";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { useShippingListQuery } from "@/pages/wms/shipping/api/shipping-list.api";
+import type {
+  ShippingListParams,
+  ShippingOrderDto,
+  ShippingOrderItemDto,
+} from "@/pages/wms/shipping/model";
 import {
   Badge,
   Button,
+  InfoBox,
   SearchFilterBar,
   StatCard,
   Table,
-  TableSection,
 } from "@/shared/ui";
 
-import { shippingListQueryOptions } from "../api/order.api";
-import type { PartResDto } from "../model/shipping.model";
-// 출고 지시 데이터
-const shippingTodoData = [
+type ShippingStatus = NonNullable<ShippingListParams["status"]>;
+
+const STATUS_CONFIG: Record<
+  ShippingStatus,
   {
-    shippingId: "SH-2024-001",
-    orderId: "SO-2024-001",
-    orderDate: "2024-01-15",
-    customerName: "서울대리점",
-    productName: "엔진 어셈블리 A-Type",
-    productCode: "PROD-001",
-    requestedQty: 5,
-    availableStock: 3,
-    warehouseLocation: "A-01-05",
-    priority: "높음",
-    requestedDate: "2024-01-20",
-    status: "출고대기",
-    warehouseManager: "김창고",
-  },
-  {
-    shippingId: "SH-2024-002",
-    orderId: "SO-2024-002",
-    orderDate: "2024-01-15",
-    customerName: "부산대리점",
-    productName: "브레이크 시스템",
-    productCode: "PROD-002",
-    requestedQty: 10,
-    availableStock: 15,
-    warehouseLocation: "B-02-03",
-    priority: "보통",
-    requestedDate: "2024-01-22",
-    status: "출고대기",
-    warehouseManager: "이창고",
-  },
-  {
-    shippingId: "SH-2024-003",
-    orderId: "SO-2024-003",
-    orderDate: "2024-01-14",
-    customerName: "대구대리점",
-    productName: "전자제어 모듈",
-    productCode: "PROD-003",
-    requestedQty: 8,
-    availableStock: 2,
-    warehouseLocation: "C-01-02",
-    priority: "높음",
-    requestedDate: "2024-01-18",
-    status: "재고부족",
-    warehouseManager: "박창고",
-  },
+    label: string;
+    variant: "default" | "info" | "success" | "warning" | "error";
+  }
+> = {
+  PENDING: { label: "출고 대기", variant: "warning" },
+  CONFIRMED: { label: "출고 확정", variant: "info" },
+  SHIPPING: { label: "출고 진행", variant: "info" },
+  DELIVERING: { label: "배송 중", variant: "info" },
+  ARRIVED: { label: "도착", variant: "success" },
+  COMPLETED: { label: "완료", variant: "success" },
+  DELAYED: { label: "지연", variant: "error" },
+  CANCELED: { label: "취소", variant: "error" },
+  SHIPPED: { label: "출고 완료", variant: "success" },
+};
+
+const STATUS_OPTIONS: Array<{ value: ShippingStatus | ""; label: string }> = [
+  { value: "", label: "전체 상태" },
+  ...Object.entries(STATUS_CONFIG).map(([value, { label }]) => ({
+    value: value as ShippingStatus,
+    label,
+  })),
 ];
 
-export const ShippingTodos = () => {
+const DEFAULT_WAREHOUSE_ID = 168;
+
+const isShippingStatus = (status: string): status is ShippingStatus =>
+  Object.prototype.hasOwnProperty.call(STATUS_CONFIG, status);
+
+const sumOrderQuantity = (items?: ShippingOrderItemDto[]) =>
+  items?.reduce((acc, item) => acc + (item.orderQuantity ?? 0), 0) ?? 0;
+
+const sumAvailableStock = (items?: ShippingOrderItemDto[]) =>
+  items?.reduce((acc, item) => acc + (item.stock ?? 0), 0) ?? 0;
+
+const formatNumber = (value: number) => value.toLocaleString("ko-KR");
+
+export function ShippingTodos() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
-  const [priorityFilter, setPriorityFilter] = useState("전체");
+  const [statusFilter, setStatusFilter] = useState<ShippingStatus | "">("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
 
-  const [page, setPage] = useState(0);
+  const { page, size, onPageChange, onSizeChange, setPage } =
+    usePaginationTable({});
 
-  // loader로 불러진 데이터 사용하기
-  const { data, isFetching } = useQuery(
-    shippingListQueryOptions({ page: page }),
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
+    categoryFilter === "" ? 0 : Number(categoryFilter),
   );
 
-  const shippingList = data?.data?.content || [];
-
-  // 이거 공통 컴포넌트화
-  const keys =
-    shippingList.length > 0
-      ? (Object.fromEntries(
-          Object.keys(shippingList[0]).map((key) => [key, key]),
-        ) as Record<keyof PartResDto, keyof PartResDto>)
-      : ({} as Record<keyof PartResDto, keyof PartResDto>);
-
-  const handleNextPage = () => {
-    setPage(page + 1);
-    tanstackQueryClient.prefetchQuery(
-      shippingListQueryOptions({ page: page + 2 }),
-    );
-
-    console.log(keys);
-  };
-
-  const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "출고대기", label: "출고대기" },
-    { value: "출고진행", label: "출고진행" },
-    { value: "출고완료", label: "출고완료" },
-    { value: "재고부족", label: "재고부족" },
-  ];
-
-  const priorityOptions = [
-    { value: "전체", label: "전체 우선순위" },
-    { value: "높음", label: "높음" },
-    { value: "보통", label: "보통" },
-    { value: "낮음", label: "낮음" },
-  ];
-
-  const filteredData = shippingTodoData.filter((item) => {
-    const matchesSearch =
-      item.shippingId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.productName?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "전체" || item.status === statusFilter;
-    const matchesPriority =
-      priorityFilter === "전체" || item.priority === priorityFilter;
-    return matchesSearch && matchesStatus && matchesPriority;
+  const { data, isLoading, isError, refetch } = useShippingListQuery({
+    warehouseId: DEFAULT_WAREHOUSE_ID,
+    keyword: searchTerm === "" ? undefined : searchTerm,
+    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+    groupId: groupFilter === "" ? undefined : Number(groupFilter),
+    status: statusFilter === "" ? undefined : statusFilter,
+    page,
+    size,
   });
 
-  const handleShipConfirm = (shippingId: string) => {
-    console.log("출고 확정:", shippingId);
-    console.log(keys.code);
-  };
+  const orders = data?.data?.content ?? [];
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
 
-  // 생산 요청 기능 제거 - WMS는 보고만 담당
-  // const handleStockAlert = (shippingId: string) => {
-  //   console.log("재고 부족 알림 전송:", shippingId);
-  //   // ERP 시스템으로 재고 부족 이벤트 전송
-  // };
+  const {
+    totalOrderCount,
+    pendingCount,
+    inProgressCount,
+    completedCount,
+    shortageQuantity,
+    totalRequestedQuantity,
+  } = useMemo(() => {
+    const pendingStatuses = new Set<ShippingStatus>(["PENDING"]);
+    const inProgressStatuses = new Set<ShippingStatus>([
+      "CONFIRMED",
+      "SHIPPING",
+      "DELIVERING",
+    ]);
+    const completedStatuses = new Set<ShippingStatus>(["COMPLETED", "ARRIVED"]);
+
+    return orders.reduce(
+      (acc, order) => {
+        const orderQuantity = sumOrderQuantity(order.items);
+        const availableStock = sumAvailableStock(order.items);
+        const shortage = Math.max(orderQuantity - availableStock, 0);
+        const status = (order.status ?? "") as ShippingStatus | "";
+
+        acc.totalOrderCount += 1;
+        acc.totalRequestedQuantity += orderQuantity;
+        acc.shortageQuantity += shortage;
+
+        if (status && pendingStatuses.has(status)) {
+          acc.pendingCount += 1;
+        } else if (status && inProgressStatuses.has(status)) {
+          acc.inProgressCount += 1;
+        } else if (status && completedStatuses.has(status)) {
+          acc.completedCount += 1;
+        }
+
+        return acc;
+      },
+      {
+        totalOrderCount: 0,
+        pendingCount: 0,
+        inProgressCount: 0,
+        completedCount: 0,
+        shortageQuantity: 0,
+        totalRequestedQuantity: 0,
+      },
+    );
+  }, [orders]);
 
   const columns = [
-    // { key: "id", title: "출고번호", width: "120px" },
-    { key: keys.code, title: "주문번호", width: "120px" },
-    { key: keys.name, title: "제품명" },
     {
-      key: "requestedQty",
-      title: "요청수량",
-      width: "80px",
-      render: (value: number) => `${value}개`,
+      key: "orderNumber",
+      title: "출고 번호",
+      width: "140px",
+      render: (value: string) => value ?? "-",
     },
     {
-      key: "unit",
-      title: "단위",
-      width: "80px",
+      key: "agencyName",
+      title: "대상 대리점",
+      render: (value: string) => value ?? "-",
+    },
+    {
+      key: "items",
+      title: "품목 수",
+      width: "100px",
+      render: (_: unknown, row: ShippingOrderDto) => row.items?.length ?? 0,
+    },
+    {
+      key: "orderQuantity",
+      title: "요청 수량",
+      width: "140px",
+      render: (_: unknown, row: ShippingOrderDto) =>
+        `${formatNumber(sumOrderQuantity(row.items))} EA`,
     },
     {
       key: "availableStock",
-      title: "가용재고",
-      width: "80px",
-      render: (value: number, row: any) => (
-        <span
-          className={
-            value >= row.requestedQty ? "text-green-600" : "text-red-600"
-          }
-        >
-          {value}개
-        </span>
-      ),
+      title: "가용 재고",
+      width: "140px",
+      render: (_: unknown, row: ShippingOrderDto) =>
+        `${formatNumber(sumAvailableStock(row.items))} EA`,
     },
     {
       key: "status",
       title: "상태",
-      width: "100px",
-      render: (value: string) => (
-        <Badge
-          variant={
-            value === "출고대기"
-              ? "info"
-              : value === "출고진행"
-                ? "warning"
-                : value === "출고완료"
-                  ? "success"
-                  : "error"
-          }
-        >
-          {value}
-        </Badge>
-      ),
+      width: "120px",
+      render: (value: string | undefined) => {
+        const config =
+          value && isShippingStatus(value)
+            ? STATUS_CONFIG[value]
+            : {
+                label: value ?? "-",
+                variant: "default" as const,
+              };
+        return <Badge variant={config.variant}>{config.label}</Badge>;
+      },
     },
     {
-      key: "actions",
-      title: "작업",
-      width: "180px",
-      render: (value: any, row: any) => (
-        <div className="flex space-x-1">
-          {row.status === "출고대기" &&
-            row.availableStock >= row.requestedQty && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => handleShipConfirm(row.shippingId)}
-              >
-                출고확정
-              </Button>
-            )}
-          {/* {row.status === "재고부족" && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleStockAlert(row.shippingId)}
-            >
-              재고알림
-            </Button>
-          )}
-          <Button variant="secondary" size="sm">
-            상세
-          </Button> */}
-        </div>
-      ),
+      key: "createdAt",
+      title: "요청일",
+      width: "140px",
+      render: (value: string | undefined) =>
+        value ? new Date(value).toLocaleDateString("ko-KR") : "-",
     },
   ];
 
-  // 통계 계산
-  const totalShipping = shippingTodoData.length;
-  const pendingShipping = shippingTodoData.filter(
-    (item) => item.status === "출고대기",
-  ).length;
-  const stockShortage = shippingTodoData.filter(
-    (item) => item.status === "재고부족",
-  ).length;
-  const urgentShipping = shippingTodoData.filter(
-    (item) => item.priority === "높음",
-  ).length;
-
   return (
-    <>
-      {/* 메인 컨텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* 통계 카드 */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-truck-line"
-            label="전체 출고지시"
-            value={totalShipping}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatCard
-            icon="ri-time-line"
-            label="출고 대기"
-            value={pendingShipping}
-            iconBgColor="bg-yellow-100"
-            iconColor="text-yellow-600"
-          />
-          <StatCard
-            icon="ri-alert-line"
-            label="재고 부족"
-            value={stockShortage}
-            iconBgColor="bg-red-100"
-            iconColor="text-red-600"
-          />
-          <StatCard
-            icon="ri-fire-line"
-            label="긴급 출고"
-            value={urgentShipping}
-            iconBgColor="bg-orange-100"
-            iconColor="text-orange-600"
-          />
-        </div>
-
-        {/* 필터 및 검색 */}
-        <SearchFilterBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          searchPlaceholder="출고번호, 주문번호, 고객사 검색..."
-          filters={[
-            {
-              key: "status",
-              value: statusFilter,
-              options: statusOptions,
-              onChange: setStatusFilter,
-            },
-            {
-              key: "priority",
-              value: priorityFilter,
-              options: priorityOptions,
-              onChange: setPriorityFilter,
-            },
-          ]}
-          actions={
-            <div className="flex space-x-2">
-              <Button variant="default" size="sm" onClick={handleNextPage}>
-                <i className="ri1-add-line mr-2"></i>
-                수동 출고
-              </Button>
-            </div>
-          }
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+        <StatCard
+          icon="ri-truck-line"
+          label="전체 출고 요청"
+          value={totalElements || totalOrderCount}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
         />
-
-        {/* 출고 지시 목록 테이블 */}
-        <TableSection
-          title="출고 지시 목록"
-          metaRight={
-            <span className="text-sm text-gray-500">
-              총 {filteredData.length}개 출고지시
-            </span>
-          }
-          actionsRight={
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          }
-        >
-          <Table
-            columns={columns}
-            data={data?.data?.content || []}
-            emptyText="조건에 맞는 출고지시가 없습니다"
-            loading={isFetching}
-          />
-        </TableSection>
+        <StatCard
+          icon="ri-time-line"
+          label="출고 대기"
+          value={pendingCount}
+          iconBgColor="bg-yellow-100"
+          iconColor="text-yellow-600"
+        />
+        <StatCard
+          icon="ri-flight-takeoff-line"
+          label="진행 중"
+          value={inProgressCount}
+          iconBgColor="bg-indigo-100"
+          iconColor="text-indigo-600"
+        />
+        <StatCard
+          icon="ri-check-line"
+          label="완료"
+          value={completedCount}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
       </div>
-    </>
+
+      <InfoBox type="info" title="WMS 출고 관리 안내">
+        <p className="text-sm">
+          출고 요청은 창고의 가용 재고를 기반으로 진행됩니다. 재고 부족분은
+          자동으로 MRP/구매팀과 공유되어 보충 작업이 진행됩니다.
+        </p>
+      </InfoBox>
+
+      <SearchFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={(value) => {
+          setSearchTerm(value);
+          onPageChange(0);
+        }}
+        searchPlaceholder="출고 번호, 대리점, 품목명 검색..."
+        filters={[
+          {
+            key: "status",
+            value: statusFilter,
+            options: STATUS_OPTIONS,
+            onChange: (value: string) => {
+              setStatusFilter(value as ShippingStatus | "");
+              onPageChange(0);
+            },
+          },
+          {
+            key: "category",
+            value: categoryFilter,
+            options: categoryOptions,
+            onChange: (value: string) => {
+              setCategoryFilter(value);
+              setGroupFilter("");
+              onPageChange(0);
+            },
+          },
+          {
+            key: "group",
+            value: groupFilter,
+            options: groupOptions,
+            onChange: (value: string) => {
+              setGroupFilter(value);
+              onPageChange(0);
+            },
+            disabled: categoryFilter === "",
+          },
+        ]}
+        actions={
+          <div className="flex space-x-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("");
+                setCategoryFilter("");
+                setGroupFilter("");
+                setPage(0);
+              }}
+            >
+              <i className="ri-refresh-line mr-2" />
+              초기화
+            </Button>
+          </div>
+        }
+      />
+
+      <PaginationTableSection
+        title="출고 요청 목록"
+        totalElements={totalElements}
+        page={page}
+        totalPages={totalPages}
+        size={size}
+        onSizeChange={onSizeChange}
+        onPageChange={onPageChange}
+        showRefresh
+        onRefresh={async () => {
+          await refetch();
+        }}
+        actionsRight={
+          <span className="text-sm text-gray-500 dark:text-grey-300">
+            요청 수량 합계: {formatNumber(totalRequestedQuantity)} EA / 부족
+            수량: {formatNumber(shortageQuantity)} EA
+          </span>
+        }
+      >
+        <Table
+          columns={columns}
+          data={orders}
+          loading={isLoading && orders.length === 0}
+          emptyText={
+            isLoading && orders.length === 0
+              ? "데이터 로딩 중..."
+              : "조건에 맞는 출고 요청이 없습니다"
+          }
+          errorText={isError ? "출고 요청 데이터를 불러오지 못했습니다." : ""}
+        />
+      </PaginationTableSection>
+    </div>
   );
-};
+}
