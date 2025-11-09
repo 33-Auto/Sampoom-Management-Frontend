@@ -76,11 +76,11 @@ export const Home = () => {
           path: "/wms/inventory",
           icon: "ri-bar-chart-box-line",
         },
-        {
-          title: "입고 관리",
-          path: "/wms/receiving",
-          icon: "ri-file-list-3-line",
-        },
+        // {
+        //   title: "입고 관리",
+        //   path: "/wms/receiving",
+        //   icon: "ri-file-list-3-line",
+        // },
         {
           title: "발주 관리",
           path: "/wms/orders",

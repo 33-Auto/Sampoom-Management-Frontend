@@ -4,7 +4,7 @@ import { purchaseOrderListQueryOptions } from "./purchase-orders.api";
 
 export function loader() {
   tanstackQueryClient.prefetchQuery(
-    purchaseOrderListQueryOptions({ warehouseId: 40 }),
+    purchaseOrderListQueryOptions({ warehouseId: 168 }),
   );
 
   return null;

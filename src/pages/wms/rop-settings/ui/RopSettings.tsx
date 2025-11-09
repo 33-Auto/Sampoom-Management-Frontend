@@ -30,7 +30,7 @@ export function RopSettings() {
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
   const { data, isLoading, isError, refetch } = useRopSettingsQuery({
-    warehouseId: 40,
+    warehouseId: 168,
     keyword: searchTerm === "" ? undefined : searchTerm,
     categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
     groupId: groupFilter === "" ? undefined : Number(groupFilter),

@@ -27,7 +27,7 @@ const WMSLayout: React.FC = () => {
       label: "재고 현황",
       icon: "ri-bar-chart-box-line",
     },
-    { path: "/wms/receiving", label: "입고 관리", icon: "ri-file-list-3-line" },
+    // { path: "/wms/receiving", label: "입고 관리", icon: "ri-file-list-3-line" },
     {
       path: "/wms/orders",
       label: "발주 관리",

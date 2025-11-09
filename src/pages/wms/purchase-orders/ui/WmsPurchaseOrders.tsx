@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import {
+  STATUS_ORDER,
+  normalizePurchaseOrderStatus,
+} from "@/entities/purchase-order/lib/status";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  usePurchaseOrderQuery,
-  useMaterialCategoryQuery,
-  useMaterialGroupQuery,
-} from "@/pages/wms/purchase-orders/api";
+import { usePurchaseOrderQuery } from "@/pages/wms/purchase-orders/api";
 import type {
   POResDto,
   PurchaseOrderListParams,
+  PurchaseOrderStatusKey,
 } from "@/pages/wms/purchase-orders/model";
-import { PURCHASE_ORDER_STATUS } from "@/pages/wms/purchase-orders/model";
+import {
+  PURCHASE_ORDER_STATUS_BADGE_VARIANTS,
+  PURCHASE_ORDER_STATUS_LABELS,
+} from "@/pages/wms/purchase-orders/model";
+import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
+import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
@@ -26,7 +33,9 @@ import {
 export function WmsPurchaseOrders() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatusKey | "">(
+    "",
+  );
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
 
@@ -35,7 +44,7 @@ export function WmsPurchaseOrders() {
     usePaginationTable({});
 
   const { data, isLoading, isError, refetch } = usePurchaseOrderQuery({
-    warehouseId: 40,
+    warehouseId: DEFAULT_WAREHOUSE_ID,
     keyword: searchTerm === "" ? undefined : searchTerm,
     categoryId: selectedCategory === "" ? undefined : Number(selectedCategory),
     groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
@@ -47,231 +56,200 @@ export function WmsPurchaseOrders() {
     size,
   });
 
-  const purchaseOrdersData = data?.data?.content ?? [];
+  const orders = data?.data?.content ?? [];
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const { data: categoryData } = useMaterialCategoryQuery();
-
-  const categoryOptions = [
-    { value: "", label: "전체 카테고리" },
-    ...(categoryData?.data?.map((item) => {
-      return { value: String(item.categoryId), label: item.categoryName ?? "" };
-    }) ?? []),
-  ];
-
-  const { data: groupData } = useMaterialGroupQuery(Number(selectedCategory));
-  const groupOptions = [
-    { value: "", label: "전체 그룹" },
-    ...(groupData?.data?.map((item) => {
-      return { value: String(item.groupId), label: item.groupName ?? "" };
-    }) ?? []),
-  ];
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
+    selectedCategory === "" ? 0 : Number(selectedCategory),
+  );
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
-    ...Object.entries(PURCHASE_ORDER_STATUS)
-      .filter(([_, value]) => value !== undefined)
-      .map(([key, value]) => {
-        return { value: value as string, label: key };
-      }),
+    ...STATUS_ORDER.filter(
+      (status, index, self) =>
+        PURCHASE_ORDER_STATUS_LABELS[status] !== undefined &&
+        self.indexOf(status) === index,
+    ).map((status) => ({
+      value: status,
+      label: PURCHASE_ORDER_STATUS_LABELS[status],
+    })),
   ];
 
-  const getStatusBadge = (status?: string) => {
-    if (!status) return null;
+  const {
+    processingCount,
+    completedCount,
 
-    console.log(status);
+    totalAmount,
+  } = useMemo(() => {
+    const processingStatuses = new Set<PurchaseOrderStatusKey>([
+      "CONFIRMED",
+      "PRODUCING",
+      "IN_PROGRESS",
+      "SHIPPING",
+    ]);
+    const completedStatuses = new Set<PurchaseOrderStatusKey>([
+      "COMPLETED",
+      "ARRIVED",
+    ]);
+    const canceledStatuses = new Set<PurchaseOrderStatusKey>(["CANCELED"]);
 
-    const statusConfig: Record<
-      string,
-      { label: string; variant: "success" | "info" | "error" | "default" }
-    > = {
-      PENDING: {
-        label: "대기",
-        variant: "default",
-      },
-      CONFIRMED: {
-        label: "확인됨",
-        variant: "info",
-      },
-      SHIPPING: {
-        label: "배송중",
-        variant: "info",
-      },
-      DELAYED: {
-        label: "지연",
-        variant: "error",
-      },
-      PRODUCING: {
-        label: "생산중",
-        variant: "info",
-      },
-      ARRIVED: {
-        label: "도착",
-        variant: "info",
-      },
-      COMPLETED: {
-        label: "완료",
-        variant: "success",
-      },
-      CANCELED: {
-        label: "취소",
-        variant: "error",
-      },
-    };
+    return orders.reduce(
+      (acc, order) => {
+        const statusKey = normalizePurchaseOrderStatus(order.orderStatus);
+        if (statusKey && processingStatuses.has(statusKey)) {
+          acc.processingCount += 1;
+        } else if (statusKey && completedStatuses.has(statusKey)) {
+          acc.completedCount += 1;
+        } else if (statusKey && canceledStatuses.has(statusKey)) {
+          acc.canceledCount += 1;
+        }
 
-    const config = statusConfig[status];
-    if (!config) return null;
+        acc.totalAmount += Number(order.price ?? 0);
+        acc.totalOrderQuantity += Number(order.orderQuantity ?? 0);
+        acc.totalInboundQuantity += Number(order.inboundQuantity ?? 0);
+        acc.totalRestQuantity += Number(order.restQuantity ?? 0);
 
-    return <Badge variant={config.variant}>{config.label}</Badge>;
+        return acc;
+      },
+      {
+        processingCount: 0,
+        completedCount: 0,
+        canceledCount: 0,
+        totalAmount: 0,
+        totalOrderQuantity: 0,
+        totalInboundQuantity: 0,
+        totalRestQuantity: 0,
+      },
+    );
+  }, [orders]);
+
+  const getStatusBadge = (status?: string | null) => {
+    const statusKey = normalizePurchaseOrderStatus(status);
+    if (!statusKey) {
+      return status ? <Badge variant="default">{status}</Badge> : null;
+    }
+    return (
+      <Badge variant={PURCHASE_ORDER_STATUS_BADGE_VARIANTS[statusKey]}>
+        {PURCHASE_ORDER_STATUS_LABELS[statusKey]}
+      </Badge>
+    );
   };
 
-  const handleViewDetails = (orderNumber?: string) => {
-    if (orderNumber) {
-      navigate(`/wms/purchase-orders/detail/${orderNumber}`);
+  const handleViewDetails = (partId?: number, row?: POResDto) => {
+    if (partId) {
+      navigate(`/wms/purchase-orders/detail/${partId}`, {
+        state: {
+          warehouseId: DEFAULT_WAREHOUSE_ID,
+          initialItems: [
+            {
+              id: partId,
+              delta: row?.restQuantity ?? 0,
+            },
+          ],
+          part: row,
+        },
+      });
     }
   };
 
-  const keys = createKeyRecord<POResDto>(data?.data?.content ?? []);
+  const keys = createKeyRecord<POResDto>(orders);
   const columns = [
     {
-      key: keys.orderNumber,
+      key: keys.orderNumber ?? "orderNumber",
       title: "발주번호",
-      width: "120px",
-      render: (value: string) => (
-        <div>
-          <div className="font-medium text-gray-900 dark:text-grey-100">
-            {value || "-"}
-          </div>
-        </div>
-      ),
+      width: "140px",
+      render: (value: string | undefined) => value || "-",
     },
     {
-      key: keys.partCode,
+      key: keys.partCode ?? "partCode",
       title: "품목코드",
-      render: (value: string) => (
-        <div>
-          <div className="font-medium text-gray-900 dark:text-grey-100">
-            {value || "-"}
-          </div>
-        </div>
-      ),
+      width: "120px",
+      render: (value: string | undefined) => value || "-",
     },
-    // {
-    //   key: keys.partName,
-    //   title: "품목명",
-    //   render: (value: string, row: POResDto) => (
-    //     <div>
-    //       <div className="font-medium text-gray-900 dark:text-grey-100">
-    //         {value || "-"}
-    //       </div>
-    //       <div className="text-xs text-gray-400 dark:text-grey-400">
-    //         현재: {row.currQuantity || 0} / ROP: {row.rop || 0}
-    //       </div>
-    //     </div>
-    //   ),
-    // },
     {
-      key: keys.partName,
+      key: keys.partName ?? "partName",
       title: "품목명",
-      // render: (value: string, row: POResDto) => (
-      //   <div>
-      //     <div className="font-medium text-gray-900 dark:text-grey-100">
-      //       {value || "-"}
-      //     </div>
-      //     <div className="text-xs text-gray-400 dark:text-grey-400">
-      //       현재: {row.currQuantity || 0} / ROP: {row.rop || 0}
-      //     </div>
-      //   </div>
-      // ),
+      render: (value: string | undefined) => value || "-",
     },
     {
       key: "category",
       title: "카테고리",
-      width: "250px",
-      render: (_: any, row: POResDto) =>
+      width: "220px",
+      render: (_: unknown, row: POResDto) =>
         `${row.categoryName || "-"} > ${row.groupName || "-"}`,
     },
     {
-      key: keys.orderQuantity,
+      key: keys.orderQuantity ?? "orderQuantity",
       title: "발주수량",
-      width: "100px",
-      render: (value: number, row: POResDto) =>
-        `${(value || 0).toLocaleString()} ${row.unit || ""}`,
+      width: "120px",
+      render: (value: number | undefined, row: POResDto) =>
+        `${formatNumber(value ?? 0)} ${row.unit || ""}`,
     },
     {
-      key: keys.inboundQuantity,
+      key: keys.inboundQuantity ?? "inboundQuantity",
       title: "입고수량",
-      width: "100px",
-      render: (value: number, row: POResDto) => (
-        <span
-          className={
-            (value || 0) > 0
-              ? "font-medium text-green-600 dark:text-green-400"
-              : "text-gray-500 dark:text-grey-300"
-          }
-        >
-          {(value || 0).toLocaleString()} {row.unit || ""}
-        </span>
-      ),
-    },
-    {
-      key: keys.restQuantity,
-      title: "미입고수량",
-      width: "100px",
-      render: (value: number, row: POResDto) => {
-        const restQty = value || 0;
+      width: "120px",
+      render: (value: number | undefined, row: POResDto) => {
+        const inbound = value ?? 0;
+        const className =
+          inbound > 0
+            ? "font-medium text-green-600 dark:text-green-400"
+            : "text-gray-500 dark:text-grey-300";
         return (
-          <span
-            className={
-              restQty > 0
-                ? "font-medium text-orange-600 dark:text-orange-400"
-                : "text-gray-500 dark:text-grey-300"
-            }
-          >
-            {restQty.toLocaleString()} {row.unit || ""}
+          <span className={className}>
+            {formatNumber(inbound)} {row.unit || ""}
           </span>
         );
       },
     },
     {
-      key: keys.price,
-      title: "발주금액",
+      key: keys.restQuantity ?? "restQuantity",
+      title: "미입고수량",
       width: "120px",
-      render: (value: number) => `₩${(value || 0).toLocaleString()}`,
+      render: (value: number | undefined, row: POResDto) => {
+        const restQty = value ?? 0;
+        const className =
+          restQty > 0
+            ? "font-medium text-orange-600 dark:text-orange-400"
+            : "text-gray-500 dark:text-grey-300";
+        return (
+          <span className={className}>
+            {formatNumber(restQty)} {row.unit || ""}
+          </span>
+        );
+      },
     },
     {
-      key: keys.createdAt,
+      key: keys.price ?? "price",
+      title: "발주금액",
+      width: "140px",
+      render: (value: number | undefined) => formatCurrency(value ?? 0),
+    },
+    {
+      key: keys.createdAt ?? "createdAt",
       title: "처리일",
-      width: "100px",
-      render: (value: string | null) => (
-        <div>
-          {value ? (
-            <div className="text-sm text-gray-900 dark:text-grey-100">
-              {new Date(value).toLocaleDateString()}
-            </div>
-          ) : (
-            <div className="text-sm text-gray-500 dark:text-grey-300">-</div>
-          )}
-        </div>
-      ),
+      width: "120px",
+      render: (value: string | null | undefined) =>
+        value ? new Date(value).toLocaleDateString("ko-KR") : "-",
     },
     {
-      key: keys.orderStatus,
+      key: keys.orderStatus ?? "orderStatus",
       title: "상태",
-      width: "100px",
-      render: (_: any, row: POResDto) => getStatusBadge(row.orderStatus),
+      width: "110px",
+      render: (_: unknown, row: POResDto) => getStatusBadge(row.orderStatus),
     },
     {
       key: "actions",
       title: "작업",
       width: "100px",
-      render: (_: any, row: POResDto) => (
+      render: (_: unknown, row: POResDto) => (
         <div className="flex space-x-1">
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => handleViewDetails(row.orderNumber)}
+            onClick={() => handleViewDetails((row as any).partId, row)}
           >
             상세
           </Button>
@@ -279,18 +257,6 @@ export function WmsPurchaseOrders() {
       ),
     },
   ];
-
-  // 통계 계산
-  const completedCount = purchaseOrdersData.filter(
-    (item) => item.orderStatus === "COMPLETED",
-  ).length;
-  const canceledCount = purchaseOrdersData.filter(
-    (item) => item.orderStatus === "CANCELED",
-  ).length;
-  const totalAmount = purchaseOrdersData.reduce(
-    (sum, item) => sum + (item.price || 0),
-    0,
-  );
 
   return (
     <>
@@ -302,9 +268,16 @@ export function WmsPurchaseOrders() {
           <StatCard
             icon="ri-file-list-line"
             label="전체 발주"
-            value={purchaseOrdersData.length}
+            value={totalElements}
             iconBgColor="bg-blue-100"
             iconColor="text-blue-600"
+          />
+          <StatCard
+            icon="ri-time-line"
+            label="진행 중"
+            value={processingCount}
+            iconBgColor="bg-indigo-100"
+            iconColor="text-indigo-600"
           />
           <StatCard
             icon="ri-check-line"
@@ -314,16 +287,9 @@ export function WmsPurchaseOrders() {
             iconColor="text-green-600"
           />
           <StatCard
-            icon="ri-close-line"
-            label="취소"
-            value={canceledCount}
-            iconBgColor="bg-red-100"
-            iconColor="text-red-600"
-          />
-          <StatCard
             icon="ri-money-dollar-circle-line"
             label="총 발주액"
-            value={`₩${(totalAmount / 1000000).toFixed(1)}M`}
+            value={formatCurrency(totalAmount)}
             iconBgColor="bg-purple-100"
             iconColor="text-purple-600"
           />
@@ -376,7 +342,7 @@ export function WmsPurchaseOrders() {
               value: statusFilter,
               options: statusOptions,
               onChange: (value) => {
-                setStatusFilter(value);
+                setStatusFilter(value as PurchaseOrderStatusKey | "");
                 setPage(0);
               },
             },
@@ -411,14 +377,16 @@ export function WmsPurchaseOrders() {
           onSizeChange={onSizeChange}
           onPageChange={onPageChange}
           showRefresh
-          onRefresh={refetch}
+          onRefresh={async () => {
+            await refetch();
+          }}
         >
           <Table
             columns={columns}
-            data={purchaseOrdersData}
-            loading={isLoading && data === undefined}
+            data={orders}
+            loading={isLoading && orders.length === 0}
             emptyText={
-              isLoading && data === undefined
+              isLoading && orders.length === 0
                 ? "데이터 로딩 중..."
                 : "조건에 맞는 발주서가 없습니다"
             }

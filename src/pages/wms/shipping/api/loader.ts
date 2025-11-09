@@ -1,10 +1,13 @@
 import { queryClient as tanstackQueryClient } from "@/shared/api/query";
 
-import { shippingListQueryOptions } from "./order.api";
+import { shippingListQueryOptions } from "./shipping-list.api";
 
-export function loader() {
-  tanstackQueryClient.prefetchQuery(shippingListQueryOptions({}));
-  tanstackQueryClient.prefetchQuery(shippingListQueryOptions({ page: 1 }));
+export async function loader() {
+  await Promise.all([
+    tanstackQueryClient.prefetchQuery(
+      shippingListQueryOptions({ warehouseId: 168 }),
+    ),
+  ]);
 
   return null;
 }

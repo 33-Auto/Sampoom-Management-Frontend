@@ -5,7 +5,7 @@ import { queryClient } from "@/shared/api";
 const getInventoryQueryOptions = (params?: InventoryListParams) => ({
   params: {
     query: {
-      warehouseId: params?.warehouseId ?? 40,
+      warehouseId: params?.warehouseId ?? 168,
       page: params?.page ?? 0,
       size: params?.size ?? 10,
       keyword: params?.keyword,
@@ -32,21 +32,5 @@ export const useWarehouseInventoryQuery = (params?: InventoryListParams) =>
     getInventoryQueryOptions(params),
     {
       placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
-    },
-  );
-
-export const useMaterialCategoryQuery = () =>
-  queryClient.useQuery("get", "/api/part/parts/categories");
-
-export const useMaterialGroupQuery = (categoryId: number) =>
-  queryClient.useQuery(
-    "get",
-    "/api/part/parts/categories/{categoryId}/groups",
-    {
-      params: {
-        path: {
-          categoryId: categoryId,
-        },
-      },
     },
   );
