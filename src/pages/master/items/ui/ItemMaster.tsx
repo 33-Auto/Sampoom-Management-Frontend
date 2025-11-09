@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useMaterialCategoryOptions } from "@/entities/material";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { materialMasterData } from "@/mocks/factoryData";
-import { Button, InfoBox, SearchFilterBar, StatCard, Table } from "@/shared/ui";
-
-import { useGetItemsMasterQuery } from "../api/items.api";
 import {
-  useMaterialCategoriesQuery,
-  usePartCategoriesQuery,
-  usePartGroupsQuery,
-} from "../create/api/create.api";
-import { useItemStats } from "../model/useItemStats";
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  StatCard,
+  Table,
+  Badge,
+} from "@/shared/ui";
+
+import { useItemsMasterQuery } from "../api/items.api";
+import type { ItemResponseDTO } from "../model";
 
 export const ItemMaster = () => {
   const navigate = useNavigate();
@@ -30,40 +33,46 @@ export const ItemMaster = () => {
     usePaginationTable({});
 
   // API 호출
-  const { data, /* isLoading: _isLoading, */ isError, refetch } =
-    useGetItemsMasterQuery({
-      type: selectedType === "전체" ? "ALL" : selectedType,
-      keyword: searchTerm || undefined,
-      materialCategoryId:
-        selectedType === "원자재" && selectedCategoryId
-          ? Number(selectedCategoryId)
-          : undefined,
-      partCategoryId:
-        selectedType === "부품" && selectedCategoryId
-          ? Number(selectedCategoryId)
-          : undefined,
-      partGroupId:
-        selectedType === "부품" && selectedGroupId
-          ? Number(selectedGroupId)
-          : undefined,
-      page,
-      size,
-    });
+  // 현재 백엔드 API는 두개가 다른 API 엔드포인트를 가지지만
+  // 프론트에서는 동시에 표현해야하기 때문에 하나인 것 처럼 동작하기 위해
+  // 설정함
+  const { data, isError, refetch } = useItemsMasterQuery({
+    type:
+      selectedType === "전체"
+        ? "ALL"
+        : selectedType === "원자재"
+          ? "MATERIAL"
+          : "PART",
+    keyword: searchTerm || undefined,
+    materialCategoryId:
+      selectedType === "원자재" && selectedCategoryId
+        ? Number(selectedCategoryId)
+        : undefined,
+    partCategoryId:
+      selectedType === "부품" && selectedCategoryId
+        ? Number(selectedCategoryId)
+        : undefined,
+    partGroupId:
+      selectedType === "부품" && selectedGroupId
+        ? Number(selectedGroupId)
+        : undefined,
+    page,
+    size,
+  });
 
-  const items = data?.items || [];
-  const totalPages = data?.totalPages ?? 0;
-  const totalElements = data?.totalElements ?? 0;
+  // API 응답 구조: data?.data?.content, data?.data?.totalPages 등
+  const items = data?.data?.content || [];
+  const totalPages = data?.data?.totalPages ?? 0;
+  const totalElements = data?.data?.totalElements ?? 0;
 
-  // category/group filter options based on type
-  const { data: materialCategories } = useMaterialCategoriesQuery();
-  const { data: partCategories } = usePartCategoriesQuery();
-  const { data: partGroups } = usePartGroupsQuery(
+  // 필터 옵션 (유형에 따라 다름)
+  const materialCategoryOptions = useMaterialCategoryOptions();
+  const partCategoryOptions = usePartCategoryOptions();
+  const partGroupOptions = usePartGroupOptions(
     selectedType === "부품" && selectedCategoryId
       ? Number(selectedCategoryId)
-      : undefined,
+      : 0,
   );
-
-  // 카테고리 옵션 제거
 
   const typeOptions = [
     { value: "전체", label: "전체 유형" },
@@ -71,46 +80,29 @@ export const ItemMaster = () => {
     { value: "부품", label: "부품" },
   ];
 
-  // 조달 유형 옵션 제거
-
-  // 서버 검색/필터를 사용하므로 클라이언트 필터는 제거
-  const filteredData = items;
-
   const columns = [
-    { key: "itemCode", title: "품목 코드", width: "120px" },
-    { key: "itemName", title: "품목명" },
-    { key: "category", title: "카테고리", width: "200px" },
+    { key: "code", title: "품목 코드", width: "120px" },
+    { key: "name", title: "품목명" },
     {
-      key: "itemType",
-      title: "품목 유형",
-      width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "원자재"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-green-100 text-green-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      key: "categoryName",
+      title: "카테고리",
+      width: "200px",
+      render: (value: string, row: ItemResponseDTO) =>
+        `${row.categoryName}` + `${row.groupName ? " > " + row.groupName : ""}`,
     },
     {
-      key: "procurementType",
-      title: "조달 유형",
+      key: "type",
+      title: "품목 유형",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "구매"
-              ? "bg-orange-100 text-orange-800"
-              : "bg-teal-100 text-teal-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value: string) => {
+        const displayType =
+          value === "MATERIAL" ? "원자재" : value === "PART" ? "부품" : value;
+        return (
+          <Badge variant={displayType === "원자재" ? "info" : "success"}>
+            {displayType}
+          </Badge>
+        );
+      },
     },
     {
       key: "baseQuantity",
@@ -123,15 +115,7 @@ export const ItemMaster = () => {
       key: "leadTime",
       title: "리드 타임",
       width: "100px",
-      render: (_: any, row: any) => {
-        let leadTime: number | null = null;
-        if (row.procurementType === "구매") {
-          leadTime = row.purchaseLeadTime;
-        } else if (row.procurementType === "생산") {
-          leadTime = row.calculatedProductionLeadTime ?? row.productionLeadTime;
-        }
-        return leadTime ? `${leadTime}일` : "-";
-      },
+      render: (value: number) => (value ? `${value}일` : "-"),
     },
     {
       key: "actions",
@@ -146,9 +130,16 @@ export const ItemMaster = () => {
             aria-label="편집"
             onClick={(e) => {
               e.stopPropagation();
-              const type = row.itemType === "원자재" ? "MATERIAL" : "PART";
-              navigate(`/master/items/${type}/${row.id}/edit`, {
-                state: { item: row },
+              const itemType = row.type === "MATERIAL" ? "MATERIAL" : "PART";
+              navigate(`/master/items/process/${row.id}`, {
+                state: {
+                  itemType,
+                  categoryId: row.categoryId ?? undefined,
+                  categoryName: row.categoryName ?? undefined,
+                  groupId: row.groupId ?? undefined,
+                  groupName: row.groupName ?? undefined,
+                  item: row,
+                },
               });
             }}
           >
@@ -159,18 +150,20 @@ export const ItemMaster = () => {
     },
   ];
 
-  // 통계 계산 (훅으로 분리)
-  const {
-    totalItems,
-    activeItems,
-    purchaseItems,
-    productionItems,
-    avgPurchaseLeadTime,
-    avgProductionLeadTime,
-  } = useItemStats(materialMasterData);
+  // 통계 계산 (실제 데이터에서 계산)
+  const totalItems = totalElements;
+  const materialCount = items.filter((item) => item.type === "MATERIAL").length;
+  const partCount = items.filter((item) => item.type === "PART").length;
+  const leadTimes = items
+    .map((item) => item.leadTime)
+    .filter((lt): lt is number => lt !== undefined && lt !== null);
+  const avgLeadTime =
+    leadTimes.length > 0
+      ? Math.round(leadTimes.reduce((a, b) => a + b, 0) / leadTimes.length)
+      : 0;
 
   return (
-    <div className="p-6">
+    <div>
       {isError && (
         <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           데이터를 불러오는데 실패했습니다.
@@ -185,7 +178,7 @@ export const ItemMaster = () => {
         </div>
       )}
       {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
         <StatCard
           icon="ri-database-line"
           label="전체 품목"
@@ -195,41 +188,25 @@ export const ItemMaster = () => {
         />
 
         <StatCard
-          icon="ri-check-line"
-          label="활성 품목"
-          value={activeItems}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-shopping-cart-line"
-          label="구매 품목"
-          value={purchaseItems}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-
-        <StatCard
-          icon="ri-tools-line"
-          label="생산 품목"
-          value={productionItems}
-          iconBgColor="bg-teal-100"
-          iconColor="text-teal-600"
-        />
-
-        <StatCard
-          icon="ri-time-line"
-          label="평균 구매 L/T"
-          value={`${avgPurchaseLeadTime}일`}
+          icon="ri-instance-line"
+          label="원자재"
+          value={materialCount}
           iconBgColor="bg-blue-100"
           iconColor="text-blue-600"
         />
 
         <StatCard
-          icon="ri-timer-line"
-          label="평균 생산 L/T"
-          value={`${avgProductionLeadTime}일`}
+          icon="ri-tools-line"
+          label="부품"
+          value={partCount}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+
+        <StatCard
+          icon="ri-time-line"
+          label="평균 리드 타임"
+          value={`${avgLeadTime}일`}
           iconBgColor="bg-purple-100"
           iconColor="text-purple-600"
         />
@@ -241,9 +218,9 @@ export const ItemMaster = () => {
           setSearchTerm(v);
           setPage(0); // 검색 변경 시 1페이지로 이동
         }}
-        searchPlaceholder="키워드(코드/이름) 검색..."
+        searchPlaceholder="품목 코드, 품목명 검색..."
         filters={(() => {
-          const list: any[] = [
+          const filters = [
             {
               key: "type",
               value: selectedType,
@@ -255,63 +232,35 @@ export const ItemMaster = () => {
                 setPage(0);
               },
             },
+            {
+              key: "category",
+              value: selectedCategoryId,
+              options:
+                selectedType === "원자재"
+                  ? materialCategoryOptions
+                  : selectedType === "부품"
+                    ? partCategoryOptions
+                    : [{ value: "", label: "전체 카테고리" }],
+              onChange: (value: string) => {
+                setSelectedCategoryId(value);
+                setSelectedGroupId("");
+                setPage(0);
+              },
+              disabled: selectedType === "전체",
+            },
+            {
+              key: "group",
+              value: selectedGroupId,
+              options: partGroupOptions,
+              onChange: (value: string) => {
+                setSelectedGroupId(value);
+                setPage(0);
+              },
+              disabled: selectedType !== "부품" || selectedCategoryId === "",
+            },
           ];
 
-          // Unified Category filter (options depend on type)
-          const categoryOptionsDynamic =
-            selectedType === "원자재"
-              ? [{ value: "", label: "전체 카테고리" }].concat(
-                  (materialCategories || []).map(
-                    (c: { id: number; name: string }) => ({
-                      value: String(c.id),
-                      label: c.name,
-                    }),
-                  ),
-                )
-              : selectedType === "부품"
-                ? [{ value: "", label: "전체 카테고리" }].concat(
-                    (partCategories || []).map(
-                      (c: { categoryId: number; categoryName: string }) => ({
-                        value: String(c.categoryId),
-                        label: c.categoryName,
-                      }),
-                    ),
-                  )
-                : [{ value: "", label: "카테고리 (유형을 먼저 선택)" }];
-
-          list.push({
-            key: "category",
-            value: selectedCategoryId,
-            options: categoryOptionsDynamic,
-            onChange: (v: string) => {
-              setSelectedCategoryId(v);
-              setSelectedGroupId("");
-              setPage(0);
-            },
-            disabled: selectedType === "전체",
-          });
-
-          // Group filter (only meaningful for PART)
-          const partGrpOptions = [{ value: "", label: "전체 그룹" }].concat(
-            (partGroups || []).map(
-              (g: { groupId: number; groupName: string }) => ({
-                value: String(g.groupId),
-                label: g.groupName,
-              }),
-            ),
-          );
-          list.push({
-            key: "group",
-            value: selectedGroupId,
-            options: partGrpOptions,
-            onChange: (v: string) => {
-              setSelectedGroupId(v);
-              setPage(0);
-            },
-            disabled: !(selectedType === "부품" && selectedCategoryId),
-          });
-
-          return list;
+          return filters;
         })()}
         actions={
           <>
@@ -319,7 +268,32 @@ export const ItemMaster = () => {
               variant="default"
               size="sm"
               className="cursor-pointer"
-              onClick={async () => navigate("/master/items/create")}
+              onClick={async () => {
+                const defaultType =
+                  selectedType === "원자재"
+                    ? "MATERIAL"
+                    : selectedType === "부품"
+                      ? "PART"
+                      : undefined;
+
+                navigate("/master/items/process", {
+                  state: {
+                    itemType: defaultType,
+                    categoryId:
+                      defaultType === "MATERIAL" && selectedCategoryId
+                        ? Number(selectedCategoryId)
+                        : defaultType === "PART" && selectedCategoryId
+                          ? Number(selectedCategoryId)
+                          : undefined,
+                    categoryName: undefined,
+                    groupId:
+                      defaultType === "PART" && selectedGroupId
+                        ? Number(selectedGroupId)
+                        : undefined,
+                    groupName: undefined,
+                  },
+                });
+              }}
             >
               <i className="ri-add-line mr-2"></i>
               신규 등록
@@ -371,7 +345,7 @@ export const ItemMaster = () => {
       >
         <Table
           columns={columns}
-          data={filteredData}
+          data={items}
           emptyText="조건에 맞는 품목이 없습니다"
         />
       </PaginationTableSection>

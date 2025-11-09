@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 
 import { useNotification } from "@/app/providers/NotificationContext";
 import {
-  useCategoryOptions,
-  useGroupOptions,
-  usePartOptions,
-} from "@/entities/item";
+  usePartCategoryOptions,
+  usePartGroupOptions,
+  usePartSelectOptions,
+} from "@/entities/part";
 import { Button, InfoBox, Input, Select } from "@/shared/ui";
 
 import {
@@ -59,11 +59,11 @@ export function RopProcessForm({
     }
   }, [ropData]);
 
-  const categoryOptions = useCategoryOptions();
-  const groupOptions = useGroupOptions(
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
     selectedCategoryId ? Number(selectedCategoryId) : 0,
   );
-  const partOptions = usePartOptions(
+  const partOptions = usePartSelectOptions(
     Number(selectedCategoryId),
     Number(selectedGroupId),
   );
@@ -210,7 +210,7 @@ export function RopProcessForm({
 
   const calculatedRop = formData.averageDaily * formData.leadTime;
 
-  const isAutoOrder = formData.autoOrderStatus === "활성";
+  const isAutoOrder = formData.autoOrderStatus === "ACTIVE";
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">

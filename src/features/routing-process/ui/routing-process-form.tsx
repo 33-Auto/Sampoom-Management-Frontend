@@ -4,10 +4,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 
 import { useNotification } from "@/app/providers/NotificationContext";
 import {
-  useCategoryOptions,
-  useGroupOptions,
-  usePartOptions,
-} from "@/entities/item";
+  usePartCategoryOptions,
+  usePartGroupOptions,
+  usePartSelectOptions,
+} from "@/entities/part";
 import type { ProcessStepCreateRequestDTO } from "@/pages/master/routings/model";
 import { useWorkCentersQuery } from "@/pages/master/workcenters/api";
 import { Button, Input, Select } from "@/shared/ui";
@@ -109,11 +109,11 @@ export function RoutingProcessForm({
   const updateMutation = useUpdateRoutingMutation();
   const deleteMutation = useDeleteRoutingMutation();
 
-  const categoryOptions = useCategoryOptions();
-  const groupOptions = useGroupOptions(
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
     selectedCategoryId ? Number(selectedCategoryId) : 0,
   );
-  const partOptions = usePartOptions(
+  const partOptions = usePartSelectOptions(
     Number(selectedCategoryId),
     Number(selectedGroupId),
   );

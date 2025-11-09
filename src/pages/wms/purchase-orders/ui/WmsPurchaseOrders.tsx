@@ -9,8 +9,8 @@ import {
   useMaterialGroupQuery,
 } from "@/pages/wms/purchase-orders/api";
 import type {
-  PurchaseOrderStatus,
   POResDto,
+  PurchaseOrderListParams,
 } from "@/pages/wms/purchase-orders/model";
 import { PURCHASE_ORDER_STATUS } from "@/pages/wms/purchase-orders/model";
 import { createKeyRecord } from "@/shared/lib/utils";
@@ -40,7 +40,9 @@ export function WmsPurchaseOrders() {
     categoryId: selectedCategory === "" ? undefined : Number(selectedCategory),
     groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
     status:
-      statusFilter === "" ? undefined : (statusFilter as PurchaseOrderStatus),
+      statusFilter === ""
+        ? undefined
+        : (statusFilter as PurchaseOrderListParams["status"]),
     page,
     size,
   });

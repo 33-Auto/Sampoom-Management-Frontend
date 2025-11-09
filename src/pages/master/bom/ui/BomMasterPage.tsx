@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useCategoryOptions, useGroupOptions } from "@/entities/item";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useBomsQuery } from "@/pages/master/bom/api";
@@ -52,8 +52,8 @@ export const BomMasterPage = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const categoryOptions = useCategoryOptions();
-  const groupOptions = useGroupOptions(
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
     categoryIdFilter ? Number(categoryIdFilter) : 0,
   );
   const statusOptions = [

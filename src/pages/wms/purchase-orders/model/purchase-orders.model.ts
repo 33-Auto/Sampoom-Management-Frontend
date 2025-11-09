@@ -4,7 +4,15 @@ export type PurchaseOrderListParams =
   Operations["getPurchaseOrders"]["parameters"]["query"];
 export type PurchaseOrderListResponse = Schemas["ApiResponsePagePOResDto"];
 export type POResDto = Schemas["POResDto"];
-export type PurchaseOrderStatus = PurchaseOrderListParams["status"];
+export type PurchaseOrderStatus =
+  | PurchaseOrderListParams["status"]
+  | "PENDING"
+  | "CONFIRMED"
+  | "SHIPPING"
+  | "PRODUCING"
+  | "ARRIVED"
+  | "CANCELED"
+  | undefined;
 
 // 현재 백엔드에서 상태가 다 모여 있으므로 내가 원하는 것만 처리한다.
 // 일단 그냥 뿌려주자
@@ -19,4 +27,4 @@ export const PURCHASE_ORDER_STATUS = {
   COMPLETED: "COMPLETED",
   CANCELED: "CANCELED",
   undefined: undefined,
-} as const satisfies Record<string, PurchaseOrderStatus | undefined>;
+} as const satisfies Record<string, PurchaseOrderStatus>;

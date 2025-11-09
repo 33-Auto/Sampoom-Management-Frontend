@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useCategoryOptions, useGroupOptions } from "@/entities/item";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useWarehouseInventoryQuery } from "@/pages/wms/inventory/api";
@@ -39,9 +39,9 @@ export const InventoryDashboard = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const categoryOptions = useCategoryOptions();
+  const categoryOptions = usePartCategoryOptions();
 
-  const groupOptions = useGroupOptions(
+  const groupOptions = usePartGroupOptions(
     categoryFilter === "" ? 0 : Number(categoryFilter),
   );
 

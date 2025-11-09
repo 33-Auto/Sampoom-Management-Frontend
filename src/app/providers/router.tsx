@@ -28,9 +28,6 @@ import WMSLayout from "@/widgets/Layout/WMSLayout";
 const ItemMaster = lazy(async () => ({
   default: (await import("@/pages/master/items")).ItemMaster,
 }));
-const ItemCreate = lazy(async () => ({
-  default: (await import("@/pages/master/items/create")).ItemCreate,
-}));
 const DepartmentMaster = lazy(async () => ({
   default: (await import("@/pages/master/departments")).DepartmentMaster,
 }));
@@ -140,11 +137,18 @@ const routes: RouteObject[] = [
         element: <MasterLayout />,
         children: [
           { path: "items", element: <ItemMaster /> },
-          { path: "items/create", element: <ItemCreate /> },
           {
-            path: "items/:type/:id/edit",
+            path: "items/process",
             lazy: async () => ({
-              Component: (await import("@/pages/master/items/edit")).ItemEdit,
+              Component: (await import("@/pages/master/items/process"))
+                .ItemProcess,
+            }),
+          },
+          {
+            path: "items/process/:id",
+            lazy: async () => ({
+              Component: (await import("@/pages/master/items/process"))
+                .ItemProcess,
             }),
           },
           {

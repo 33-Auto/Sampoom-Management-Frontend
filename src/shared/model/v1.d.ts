@@ -740,26 +740,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/factory/{factoryId}/part/order/{orderId}/start-production": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 생산지시
-     * @description 계획확정된 부품 주문을 진행중 상태로 변경합니다.
-     */
-    post: operations["startProduction"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/factory/{factoryId}/part/order/{orderId}/mrp": {
     parameters: {
       query?: never;
@@ -892,6 +872,26 @@ export interface paths {
      * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있으며, 부품명/부품코드/주문코드로 검색할 수 있습니다.
      */
     get: operations["getPartOrders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders/production-plans": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 생산계획 목록 조회
+     * @description 생산계획 탭용 조회 - 계획 상태와 최근 IN_PROGRESS로 전환된 데이터를 포함하여 조회합니다.
+     */
+    get: operations["getProductionPlans"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1456,7 +1456,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * 부품 상세조회
+     * @description 부품 ID로 상세 정보 조회
+     */
+    get: operations["getPartById"];
     /**
      * 부품 수정
      * @description 부품을 수정
@@ -1476,7 +1480,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * 자재 상세조회
+     * @description 자재 ID로 상세 정보를 조회합니다.
+     */
+    get: operations["getMaterialById"];
     /**
      * 자재 수정
      * @description 기존 자재 정보를 수정합니다.
@@ -1943,7 +1951,7 @@ export interface paths {
      * 자재 상세 조회
      * @description 자재 ID로 특정 자재 정보를 조회합니다.
      */
-    get: operations["getMaterialById"];
+    get: operations["getMaterialById1"];
     /**
      * 자재 수정
      * @description 기존 자재 정보를 수정합니다.
@@ -2985,10 +2993,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     RopResDto: {
@@ -3055,10 +3063,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     ApiResponseListPartItemDto: {
@@ -3093,10 +3101,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PartResDto: {
@@ -3145,6 +3153,8 @@ export interface components {
       factoryName?: string;
       /** Format: int64 */
       factoryId?: number;
+      /** Format: int64 */
+      externalPartOrderId?: number;
       /** Format: date-time */
       requiredDate?: string;
       /** Format: date-time */
@@ -3213,6 +3223,10 @@ export interface components {
       partId?: number;
       /** Format: int64 */
       quantity?: number;
+      /** Format: int64 */
+      materialId?: number;
+      /** Format: int32 */
+      requestQuantity?: number;
     };
     PartOrderRequestDto: {
       /** Format: int64 */
@@ -3220,6 +3234,8 @@ export interface components {
       warehouseName?: string;
       /** Format: date-time */
       requiredDate?: string;
+      /** Format: int64 */
+      externalPartOrderId?: number;
       items?: components["schemas"]["PartOrderItemRequestDto"][];
     };
     ApiResponsePageResponseDtoPartOrderResponseDto: {
@@ -3541,6 +3557,8 @@ export interface components {
       partUnit?: string;
       /** Format: int32 */
       baseQuantity?: number;
+      /** Format: int32 */
+      standardQuantity?: number;
       /** Format: int64 */
       groupId?: number;
     };
@@ -3563,6 +3581,8 @@ export interface components {
       /** Format: int32 */
       baseQuantity?: number;
       /** Format: int32 */
+      standardQuantity?: number;
+      /** Format: int32 */
       leadTime?: number;
       /** Format: int64 */
       standardCost?: number;
@@ -3580,6 +3600,8 @@ export interface components {
       materialUnit?: string;
       /** Format: int32 */
       baseQuantity?: number;
+      /** Format: int32 */
+      standardQuantity?: number;
       /** Format: int32 */
       leadTime?: number;
       /** Format: int64 */
@@ -3603,6 +3625,8 @@ export interface components {
       /** Format: int32 */
       baseQuantity?: number;
       /** Format: int32 */
+      standardQuantity?: number;
+      /** Format: int32 */
       leadTime?: number;
       /** Format: int64 */
       standardCost?: number;
@@ -3613,7 +3637,7 @@ export interface components {
     BomMaterialDTO: {
       /** Format: int64 */
       materialId?: number;
-      /** Format: int64 */
+      /** Format: double */
       quantity?: number;
     };
     BomRequestDTO: {
@@ -3638,7 +3662,7 @@ export interface components {
       materialName?: string;
       materialCode?: string;
       unit?: string;
-      /** Format: int64 */
+      /** Format: double */
       quantity?: number;
       /** Format: int64 */
       standardCost?: number;
@@ -3733,6 +3757,8 @@ export interface components {
       partUnit: string;
       /** Format: int32 */
       baseQuantity: number;
+      /** Format: int32 */
+      standardQuantity?: number;
     };
     WorkCenterUpdateRequestDTO: {
       name?: string;
@@ -3892,6 +3918,8 @@ export interface components {
       leadTime?: number;
       /** Format: int32 */
       baseQuantity?: number;
+      /** Format: int32 */
+      standardQuantity?: number;
       /** Format: int64 */
       standardCost?: number;
     };
@@ -5020,14 +5048,11 @@ export interface operations {
         categoryId?: number;
         groupId?: number;
         status?:
-          | "PENDING"
-          | "CONFIRMED"
-          | "SHIPPING"
+          | "UNDER_REVIEW"
+          | "PLAN_CONFIRMED"
           | "DELAYED"
-          | "PRODUCING"
-          | "ARRIVED"
-          | "COMPLETED"
-          | "CANCELED";
+          | "IN_PROGRESS"
+          | "COMPLETED";
         page?: number;
         size?: number;
       };
@@ -5313,38 +5338,6 @@ export interface operations {
       };
     };
   };
-  startProduction: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
   executeMRP: {
     parameters: {
       query?: never;
@@ -5555,8 +5548,49 @@ export interface operations {
         )[];
         priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
         query?: string;
+        categoryId?: number;
+        groupId?: number;
         page?: number;
         size?: number;
+      };
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getProductionPlans: {
+    parameters: {
+      query?: {
+        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
+        query?: string;
+        categoryId?: number;
+        groupId?: number;
+        page?: number;
+        size?: number;
+        includeRecentDays?: number;
       };
       header?: never;
       path: {
@@ -6458,6 +6492,28 @@ export interface operations {
       };
     };
   };
+  getPartById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        partId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartListResponseDTO"];
+        };
+      };
+    };
+  };
   updatePart: {
     parameters: {
       query?: never;
@@ -6480,6 +6536,28 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePartListResponseDTO"];
+        };
+      };
+    };
+  };
+  getMaterialById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDTO"];
         };
       };
     };
@@ -7234,7 +7312,7 @@ export interface operations {
       };
     };
   };
-  getMaterialById: {
+  getMaterialById1: {
     parameters: {
       query?: never;
       header?: never;
