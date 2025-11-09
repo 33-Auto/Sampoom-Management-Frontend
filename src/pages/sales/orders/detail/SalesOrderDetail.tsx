@@ -145,42 +145,44 @@ export const SalesOrderDetail: React.FC = () => {
               <div key={cat.categoryId} className="py-3">
                 {cat.groups?.map((grp: any) => (
                   <div key={grp.groupId} className="pt-3">
-                    <div className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      {cat.categoryName} {" > "} {grp.groupName}
+                    <div className="mb-3 flex items-center justify-between text-sm">
+                      <div className="font-semibold text-gray-700 dark:text-gray-200">
+                        {cat.categoryName} {" > "} {grp.groupName}
+                      </div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500">
+                        총 {(grp.parts || []).length}개 부품
+                      </div>
                     </div>
-                    <div className="border-t border-gray-200 dark:border-gray-700">
+                    <div className="space-y-3">
                       {(grp.parts || []).map((p: any) => {
                         const unitPrice = p.standardCost ?? 0;
                         const quantity = p.quantity ?? 0;
                         const lineAmount = unitPrice * quantity;
                         return (
-                          <div
+                          <Card
                             key={p.partId}
-                            className="flex items-start justify-between py-2 text-sm"
+                            className="p-4 transition-colors duration-200 dark:border-gray-700"
                           >
-                            <div className="min-w-0 pr-4">
-                              <div className="truncate text-gray-900 dark:text-gray-100">
-                                {p.name}
+                            <div className="flex flex-wrap items-start justify-between gap-3 text-sm">
+                              <div className="min-w-0 flex-1">
+                                <div className="truncate font-medium text-gray-900 dark:text-gray-100">
+                                  {p.name}
+                                </div>
+                                <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                                  {p.code}
+                                </div>
                               </div>
-                              <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                                {p.code}
-                              </div>
-                            </div>
-                            <div className="text-right text-gray-900 dark:text-gray-100">
-                              <div className="text-xs text-gray-500 dark:text-gray-400">
-                                단가
-                              </div>
-                              <div className="font-medium">
-                                {formatCurrency(unitPrice)}
-                              </div>
-                              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                수량 / 합계
-                              </div>
-                              <div className="font-semibold">
-                                {quantity}개 / {formatCurrency(lineAmount)}
+                              <div className="min-w-[80px] text-right text-gray-700 dark:text-gray-200">
+                                <div>{formatCurrency(unitPrice)}</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  × {quantity}
+                                </div>
+                                <div className="mt-1 font-semibold text-main-600 dark:text-main-400">
+                                  {formatCurrency(lineAmount)}
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          </Card>
                         );
                       })}
                     </div>
