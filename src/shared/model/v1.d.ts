@@ -582,6 +582,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/warehouse/po/{purchaseOrderId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getPurchaseOrder"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/warehouse/order": {
     parameters: {
       query?: never;
@@ -919,7 +935,7 @@ export interface paths {
     };
     /**
      * 생산계획 목록 조회
-     * @description 생산계획 탭용 조회 - 계획 상태와 최근 IN_PROGRESS로 전환된 데이터를 포함하여 조회합니다.
+     * @description 생산계획 탭용 조회 - 계획 상태와 최근 IN_PROGRESS로 전환된 데이터를 포함하여 조회합니다. includeRecentDays=-1로 전체 데이터 조회 가능합니다.
      */
     get: operations["getProductionPlans"];
     put?: never;
@@ -2990,6 +3006,8 @@ export interface components {
     };
     PartUpdateReqDto: {
       /** Format: int64 */
+      purchaseOrderId: number;
+      /** Format: int64 */
       warehouseId: number;
       items?: components["schemas"]["PartDeltaDto"][];
     };
@@ -3046,10 +3064,10 @@ export interface components {
       data?: components["schemas"]["PageRopResDto"];
     };
     PageRopResDto: {
-      /** Format: int32 */
-      totalPages?: number;
       /** Format: int64 */
       totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["RopResDto"][];
@@ -3057,10 +3075,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     RopResDto: {
@@ -3093,6 +3111,8 @@ export interface components {
       data?: components["schemas"]["PagePOResDto"];
     };
     POResDto: {
+      /** Format: int64 */
+      purchaseOrderId?: number;
       orderNumber?: string;
       categoryName?: string;
       groupName?: string;
@@ -3114,14 +3134,18 @@ export interface components {
       /** Format: int32 */
       price?: number;
       /** Format: date-time */
+      scheduledDate?: string;
+      /** Format: date-time */
+      receivedDate?: string;
+      /** Format: date-time */
       createdAt?: string;
       orderStatus?: string;
     };
     PagePOResDto: {
-      /** Format: int32 */
-      totalPages?: number;
       /** Format: int64 */
       totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["POResDto"][];
@@ -3129,11 +3153,18 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
+    };
+    ApiResponsePOResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["POResDto"];
     };
     ApiResponseListPartItemDto: {
       /** Format: int32 */
@@ -3156,10 +3187,10 @@ export interface components {
       data?: components["schemas"]["PagePartResDto"];
     };
     PagePartResDto: {
-      /** Format: int32 */
-      totalPages?: number;
       /** Format: int64 */
       totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
       /** Format: int32 */
       size?: number;
       content?: components["schemas"]["PartResDto"][];
@@ -3167,10 +3198,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     PartResDto: {
@@ -5167,6 +5198,28 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponsePagePOResDto"];
+        };
+      };
+    };
+  };
+  getPurchaseOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        purchaseOrderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePOResDto"];
         };
       };
     };

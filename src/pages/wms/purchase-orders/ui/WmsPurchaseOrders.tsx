@@ -137,21 +137,15 @@ export function WmsPurchaseOrders() {
     );
   };
 
-  const handleViewDetails = (partId?: number, row?: POResDto) => {
-    if (partId) {
-      navigate(`/wms/purchase-orders/detail/${partId}`, {
-        state: {
-          warehouseId: DEFAULT_WAREHOUSE_ID,
-          initialItems: [
-            {
-              id: partId,
-              delta: row?.restQuantity ?? 0,
-            },
-          ],
-          part: row,
-        },
-      });
+  const handleStocking = (row: POResDto) => {
+    if (!row.purchaseOrderId) {
+      return;
     }
+    navigate(`/wms/orders/stocking/${row.purchaseOrderId}`, {
+      state: {
+        warehouseId: DEFAULT_WAREHOUSE_ID,
+      },
+    });
   };
 
   const keys = createKeyRecord<POResDto>(orders);
@@ -247,11 +241,12 @@ export function WmsPurchaseOrders() {
       render: (_: unknown, row: POResDto) => (
         <div className="flex space-x-1">
           <Button
-            variant="secondary"
+            variant="default"
             size="sm"
-            onClick={() => handleViewDetails((row as any).partId, row)}
+            disabled={!row.purchaseOrderId || (row.restQuantity ?? 0) <= 0}
+            onClick={() => handleStocking(row)}
           >
-            상세
+            입고 처리
           </Button>
         </div>
       ),
