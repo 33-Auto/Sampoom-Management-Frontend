@@ -6,7 +6,6 @@ import {
   usePartGroupOptions,
   usePartSelectOptions,
 } from "@/entities/part";
-import { usePartSearchQuery } from "@/entities/part/api/part.api";
 import { useMaterialsQuery } from "@/pages/master/bom/api";
 import type { MaterialResponseDTO } from "@/pages/master/bom/model";
 import { Button, Card, Input, Modal, Select } from "@/shared/ui";
@@ -108,11 +107,6 @@ export function BomProcessForm({
     Number(selectedCategoryId),
     Number(selectedGroupId),
   );
-  // partId를 찾기 위한 raw data
-  const { data: partSearchData } = usePartSearchQuery(
-    Number(selectedCategoryId),
-    Number(selectedGroupId),
-  );
 
   const { data: materialsData, isLoading: materialsLoading } =
     useMaterialsQuery({
@@ -141,22 +135,16 @@ export function BomProcessForm({
   };
 
   const handlePartChange = (value: string) => {
-    const selectedOption = partOptions.find((opt) => opt.value === value);
-    if (selectedOption) {
-      setSelectedPart(selectedOption.label);
-      // partCode로 partId 찾기
-      const foundPart = partSearchData?.data?.content?.find(
-        (p) => p.code === value,
-      );
-      if (foundPart?.id) {
-        setSelectedPartId(foundPart.id);
-      } else {
-        setSelectedPartId(undefined);
-      }
-    } else {
+    if (!value) {
       setSelectedPart("");
       setSelectedPartId(undefined);
+      return;
     }
+
+    const selectedOption = partOptions.find((opt) => opt.value === value);
+    setSelectedPart(selectedOption?.label ?? "");
+    const numericId = Number(value);
+    setSelectedPartId(Number.isNaN(numericId) ? undefined : numericId);
   };
 
   // selectedPart에서 partCode 추출하는 헬퍼 함수
@@ -380,7 +368,11 @@ export function BomProcessForm({
                       />
                       <Select
                         label="품목"
-                        value={extractPartCode(selectedPart)}
+                        value={
+                          selectedPartId !== undefined
+                            ? selectedPartId.toString()
+                            : ""
+                        }
                         onChange={(e) => handlePartChange(e.target.value)}
                         options={partOptions}
                         disabled={!selectedGroupId || isEditMode}

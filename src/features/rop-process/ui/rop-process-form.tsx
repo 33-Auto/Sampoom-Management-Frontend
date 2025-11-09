@@ -30,6 +30,7 @@ export function RopProcessForm({
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedGroupId, setSelectedGroupId] = useState("");
   const [selectedPart, setSelectedPart] = useState("");
+  const [selectedPartId, setSelectedPartId] = useState("");
 
   const [formData, setFormData] = useState({
     leadTime: 7,
@@ -45,6 +46,11 @@ export function RopProcessForm({
       setSelectedCategoryId(ropData.categoryName || "");
       setSelectedGroupId(ropData.groupName || "");
       setSelectedPart("[" + ropData.partCode + "] " + ropData.partName || "");
+      setSelectedPartId(
+        ropData.partId !== undefined && ropData.partId !== null
+          ? String(ropData.partId)
+          : "",
+      );
       setFormData({
         leadTime: ropData.leadTime || 7,
         averageDaily:
@@ -76,21 +82,19 @@ export function RopProcessForm({
     setSelectedCategoryId(value);
     setSelectedGroupId("");
     setSelectedPart("");
+    setSelectedPartId("");
   };
 
   const handleGroupChange = (value: string) => {
     setSelectedGroupId(value);
     setSelectedPart("");
+    setSelectedPartId("");
   };
 
   const handlePartChange = (value: string) => {
-    // value는 partCode이므로, partOptions에서 해당 옵션을 찾아 [code] name 형식으로 저장
+    setSelectedPartId(value);
     const selectedOption = partOptions.find((opt) => opt.value === value);
-    if (selectedOption) {
-      setSelectedPart(selectedOption.label); // [code] name 형식
-    } else {
-      setSelectedPart("");
-    }
+    setSelectedPart(selectedOption?.label ?? "");
   };
 
   // selectedPart에서 partCode 추출하는 헬퍼 함수
@@ -240,7 +244,7 @@ export function RopProcessForm({
                 />
                 <Select
                   label="품목"
-                  value={extractPartCode(selectedPart)}
+                  value={selectedPartId}
                   onChange={(e) => handlePartChange(e.target.value)}
                   options={partOptions}
                   disabled={!selectedGroupId || isEditMode}
