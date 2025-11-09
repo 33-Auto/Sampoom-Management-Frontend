@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { useNotification } from "@/app/providers/NotificationContext";
@@ -53,6 +53,28 @@ const ITEM_TYPE_OPTIONS: Array<{ value: ItemProcessType; label: string }> = [
   { value: "MATERIAL", label: "원자재 (MATERIAL)" },
   { value: "PART", label: "부품 (PART)" },
 ];
+
+type FormSectionProps = {
+  title: string;
+  description?: string;
+  children: ReactNode;
+};
+
+const FormSection = ({ title, description, children }: FormSectionProps) => (
+  <section className="space-y-4">
+    <div className="space-y-1">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        {title}
+      </h3>
+      {description ? (
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
+      ) : null}
+    </div>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">{children}</div>
+  </section>
+);
 
 type InitParams = {
   type: ItemProcessType;
@@ -493,48 +515,57 @@ export function ItemProcessForm({
       <form
         onSubmit={handleSubmit(onSubmit as SubmitHandler<ItemProcessFormData>)}
       >
-        <div className="space-y-8 p-6">
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-              기본 정보
-            </h3>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <Input
-                label="품목명"
-                placeholder="예) 스테인리스 볼트"
-                {...register("name")}
-                errorText={errors.name?.message}
-              />
-              <Select
-                label="품목 유형"
-                value={type}
-                options={ITEM_TYPE_OPTIONS}
-                onChange={(e) =>
-                  handleTypeChange(e.target.value as ItemProcessType)
-                }
-                disabled={isEditMode}
-              />
+        <div className="space-y-10 p-6">
+          <FormSection
+            title="품목 기본 정보"
+            description="품목의 기본 속성을 입력하세요."
+          >
+            <Input
+              label="품목명"
+              placeholder="예) 스테인리스 볼트"
+              {...register("name")}
+              errorText={errors.name?.message}
+            />
+            <Select
+              label="품목 유형"
+              value={type}
+              options={ITEM_TYPE_OPTIONS}
+              onChange={(e) =>
+                handleTypeChange(e.target.value as ItemProcessType)
+              }
+              disabled={isEditMode}
+            />
+            {renderUnitSelect()}
+          </FormSection>
 
-              {renderCategorySelect()}
-              {renderGroupSelect()}
-              {renderUnitSelect()}
+          <FormSection
+            title="분류 및 그룹 설정"
+            description="카테고리와 그룹을 지정하여 품목을 체계적으로 관리합니다."
+          >
+            {renderCategorySelect()}
+            {renderGroupSelect()}
+          </FormSection>
 
-              <Input
-                label="안전 재고 (baseQuantity)"
-                type="number"
-                placeholder="0"
-                {...register("baseQuantity", { valueAsNumber: true })}
-                errorText={errors.baseQuantity?.message}
-              />
-              <Input
-                label="기준 수량 (standardQuantity)"
-                type="number"
-                placeholder="0"
-                {...register("standardQuantity", { valueAsNumber: true })}
-                errorText={errors.standardQuantity?.message}
-              />
-
-              {type === "MATERIAL" && (
+          <FormSection
+            title="재고 · 운영 지표"
+            description="안전 재고와 기준 수량, 리드 타임 등의 값을 입력하세요."
+          >
+            <Input
+              label="안전 재고 (baseQuantity)"
+              type="number"
+              placeholder="0"
+              {...register("baseQuantity", { valueAsNumber: true })}
+              errorText={errors.baseQuantity?.message}
+            />
+            <Input
+              label="기준 수량 (standardQuantity)"
+              type="number"
+              placeholder="0"
+              {...register("standardQuantity", { valueAsNumber: true })}
+              errorText={errors.standardQuantity?.message}
+            />
+            {type === "MATERIAL" ? (
+              <>
                 <Input
                   label="리드 타임 (일)"
                   type="number"
@@ -544,9 +575,6 @@ export function ItemProcessForm({
                   })}
                   errorText={errors.leadTime?.message}
                 />
-              )}
-
-              {type === "MATERIAL" && (
                 <Input
                   label="표준 단가 (standardCost)"
                   type="number"
@@ -556,35 +584,22 @@ export function ItemProcessForm({
                   })}
                   errorText={errors.standardCost?.message}
                 />
-              )}
-
-              {type === "PART" && (
-                <Input
-                  label="리드 타임 (선택)"
-                  type="number"
-                  placeholder="0"
-                  {...register("leadTime", {
-                    setValueAs: (value) =>
-                      value === "" || value === undefined
-                        ? undefined
-                        : Number(value),
-                  })}
-                  errorText={errors.leadTime?.message}
-                />
-              )}
-            </div>
-          </div>
-
-          {/* {isEditMode && (
-            <div className="rounded-lg bg-gray-50 p-4 text-sm text-gray-700 dark:bg-gray-800/60 dark:text-gray-300">
-              <p className="font-semibold">현재 선택 정보</p>
-              <div className="mt-2 space-y-1">
-                <p>• 유형: {type === "MATERIAL" ? "원자재" : "부품"}</p>
-                {categoryName && <p>• 카테고리: {categoryName}</p>}
-                {groupName && <p>• 그룹: {groupName}</p>}
-              </div>
-            </div>
-          )} */}
+              </>
+            ) : (
+              <Input
+                label="리드 타임 (선택)"
+                type="number"
+                placeholder="0"
+                {...register("leadTime", {
+                  setValueAs: (value) =>
+                    value === "" || value === undefined
+                      ? undefined
+                      : Number(value),
+                })}
+                errorText={errors.leadTime?.message}
+              />
+            )}
+          </FormSection>
         </div>
 
         <div className="flex justify-between border-t border-gray-200 p-6 dark:border-gray-700">
