@@ -514,15 +514,15 @@ const routes: RouteObject[] = [
         path: "/warehouse",
         element: <Navigate to="/warehouse/dashboard" replace />,
       },
-      {
-        path: "/warehouse/dashboard",
-        lazy: async () => {
-          const { WarehouseDashboard: Component } = await import(
-            "@/pages/warehouse"
-          );
-          return { Component };
-        },
-      },
+      // {
+      //   path: "/warehouse/dashboard",
+      //   lazy: async () => {
+      //     const { WarehouseDashboard: Component } = await import(
+      //       "@/pages/warehouse"
+      //     );
+      //     return { Component };
+      //   },
+      // },
       {
         path: "/warehouse/orders",
         lazy: async () => {
@@ -535,16 +535,16 @@ const routes: RouteObject[] = [
           return { Component, loader };
         },
       },
-      {
-        path: "/warehouse/inventory",
-        lazy: async () => {
-          const { WarehouseInventory: Component } = await import(
-            "@/pages/warehouse/inventory"
-          );
-          const { loader } = await import("@/pages/wms/inventory/api/loader");
-          return { Component, loader };
-        },
-      },
+      // {
+      //   path: "/warehouse/inventory",
+      //   lazy: async () => {
+      //     const { WarehouseInventory: Component } = await import(
+      //       "@/pages/warehouse/inventory"
+      //     );
+      //     const { loader } = await import("@/pages/wms/inventory/api/loader");
+      //     return { Component, loader };
+      //   },
+      // },
 
       // ----------------------------------------------------------------------------
       // Factory Module - 생산 관리 (지연 로딩)
