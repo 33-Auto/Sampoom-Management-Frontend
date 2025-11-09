@@ -58,5 +58,31 @@ export const PRODUCTION_PLAN_PRIORITY_BADGE_VARIANTS: Record<
   LOW: "success",
 };
 
+export const PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS: Record<
+  string,
+  string
+> = {
+  SUFFICIENT: "충분",
+  SUFFICIENT_STOCK: "충분",
+  INSUFFICIENT: "부족",
+  SHORTAGE: "부족",
+  CRITICAL_SHORTAGE: "심각",
+  UNKNOWN: "미확인",
+  PENDING: "검토 필요",
+};
+
+export const PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS: Record<
+  string,
+  "default" | "info" | "success" | "warning" | "error"
+> = {
+  SUFFICIENT: "success",
+  SUFFICIENT_STOCK: "success",
+  INSUFFICIENT: "error",
+  SHORTAGE: "error",
+  CRITICAL_SHORTAGE: "error",
+  UNKNOWN: "warning",
+  PENDING: "info",
+};
+
 export const DEFAULT_FACTORY_ID = 164;
 export const DEFAULT_INCLUDE_RECENT_DAYS = -1;

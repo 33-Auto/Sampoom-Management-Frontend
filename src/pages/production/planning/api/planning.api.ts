@@ -10,6 +10,18 @@ export type ProductionPlansQueryParams = ProductionPlanListParams & {
   includeRecentDays?: number;
 };
 
+export const useBatchMrpExecutionMutation = () =>
+  queryClient.useMutation(
+    "post",
+    "/api/factory/{factoryId}/part/orders/mrp/batch",
+  );
+
+export const useBatchMrpApplyMutation = () =>
+  queryClient.useMutation(
+    "post",
+    "/api/factory/{factoryId}/part/orders/apply-mrp/batch",
+  );
+
 const buildQuery = (params?: ProductionPlansQueryParams) => {
   const query: Record<string, unknown> = {
     page: params?.page ?? 0,
@@ -28,6 +40,9 @@ const buildQuery = (params?: ProductionPlansQueryParams) => {
   }
   if (params?.priorities && params.priorities.length > 0) {
     query.priorities = params.priorities;
+  }
+  if (params?.statuses && params.statuses.length > 0) {
+    query.statuses = params.statuses;
   }
 
   return query;
