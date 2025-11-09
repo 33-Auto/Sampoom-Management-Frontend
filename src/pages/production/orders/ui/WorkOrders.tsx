@@ -1,338 +1,467 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 
+import { PaginationTableSection } from "@/features/table-pagination";
+import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import {
+  usePartOrdersQuery,
+  DEFAULT_FACTORY_ID,
+} from "@/pages/production/orders/api";
+import {
+  DEFAULT_PART_ORDER_STATUSES,
+  PART_ORDER_PRIORITY_BADGE_VARIANTS,
+  PART_ORDER_PRIORITY_LABELS,
+  PART_ORDER_STATUS_BADGE_VARIANTS,
+  PART_ORDER_STATUS_LABELS,
+  type PartOrderPriority,
+  type PartOrderResponseDTO,
+  type PartOrderStatus,
+} from "@/pages/production/orders/model";
+import { createKeyRecord } from "@/shared/lib/utils";
 import {
   Badge,
   Button,
+  Modal,
   SearchFilterBar,
   StatCard,
   Table,
-  TableSection,
 } from "@/shared/ui";
 
-// 생산 지시 데이터
-const workOrderData = [
-  {
-    workOrderId: "WO-2024-001",
-    productName: "엔진 어셈블리 A-Type",
-    productCode: "PROD-001",
-    requestedQty: 10,
-    plannedQty: 10,
-    completedQty: 0,
-    requestDate: "2024-01-15",
-    plannedStartDate: "2024-01-18",
-    plannedEndDate: "2024-01-25",
-    priority: "높음",
-    status: "대기",
-    bomVersion: "v2.1",
-    productionLine: "LINE-A",
-    assignedWorker: "박생산",
-    estimatedHours: 56,
-    materialAvailability: "부족",
-  },
-  {
-    workOrderId: "WO-2024-002",
-    productName: "브레이크 시스템",
-    productCode: "PROD-002",
-    requestedQty: 15,
-    plannedQty: 15,
-    completedQty: 8,
-    requestDate: "2024-01-14",
-    plannedStartDate: "2024-01-16",
-    plannedEndDate: "2024-01-20",
-    priority: "보통",
-    status: "진행중",
-    bomVersion: "v1.5",
-    productionLine: "LINE-B",
-    assignedWorker: "이생산",
-    estimatedHours: 45,
-    materialAvailability: "충분",
-  },
-  {
-    workOrderId: "WO-2024-003",
-    productName: "전자제어 모듈",
-    productCode: "PROD-003",
-    requestedQty: 20,
-    plannedQty: 20,
-    completedQty: 20,
-    requestDate: "2024-01-12",
-    plannedStartDate: "2024-01-13",
-    plannedEndDate: "2024-01-17",
-    priority: "보통",
-    status: "완료",
-    bomVersion: "v3.0",
-    productionLine: "LINE-C",
-    assignedWorker: "박생산",
-    estimatedHours: 32,
-    materialAvailability: "충분",
-  },
-];
-
 export const WorkOrders = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
-  const [priorityFilter, setPriorityFilter] = useState("전체");
+  const [statusFilter, setStatusFilter] = useState(
+    DEFAULT_PART_ORDER_STATUSES.join(","),
+  );
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [selectedOrder, setSelectedOrder] =
+    useState<PartOrderResponseDTO | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // navItems를 별도로 정의
+  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+
+  const selectedStatuses = useMemo<PartOrderStatus[]>(() => {
+    if (statusFilter.trim().length === 0) {
+      return [];
+    }
+    return statusFilter
+      .split(",")
+      .map((status) => status.trim())
+      .filter(
+        (status): status is PartOrderStatus =>
+          status in PART_ORDER_STATUS_LABELS,
+      );
+  }, [statusFilter]);
+
+  const selectedPriorities = useMemo<PartOrderPriority[]>(() => {
+    const trimmed = priorityFilter.trim();
+    if (trimmed.length === 0) {
+      return [];
+    }
+    return trimmed in PART_ORDER_PRIORITY_LABELS
+      ? [trimmed as PartOrderPriority]
+      : [];
+  }, [priorityFilter]);
+
+  const { data, isLoading, isError, refetch } = usePartOrdersQuery({
+    factoryId: DEFAULT_FACTORY_ID,
+    query: searchTerm === "" ? undefined : searchTerm,
+    statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+    priorities: selectedPriorities.length > 0 ? selectedPriorities : undefined,
+    page,
+    size,
+  });
+
+  const orders = data?.data?.content ?? [];
+  const totalElements = data?.data?.totalElements ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
+
+  const stats = useMemo(() => {
+    const statusCounter = orders.reduce<Record<string, number>>(
+      (acc, order) => {
+        if (order.status) {
+          acc[order.status] = (acc[order.status] ?? 0) + 1;
+        }
+        return acc;
+      },
+      {},
+    );
+
+    return {
+      total: totalElements,
+      inProgress: statusCounter.IN_PROGRESS ?? 0,
+      completed: statusCounter.COMPLETED ?? 0,
+      delayed: statusCounter.DELAYED ?? 0,
+    };
+  }, [orders, totalElements]);
+
   const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "대기", label: "대기" },
-    { value: "진행중", label: "진행중" },
-    { value: "완료", label: "완료" },
-    { value: "중단", label: "중단" },
+    { value: "", label: "전체 상태" },
+    {
+      value: DEFAULT_PART_ORDER_STATUSES.join(","),
+      label: "진행중 + 완료",
+    },
+    ...Object.entries(PART_ORDER_STATUS_LABELS).map(([value, label]) => ({
+      value,
+      label,
+    })),
   ];
 
   const priorityOptions = [
-    { value: "전체", label: "전체 우선순위" },
-    { value: "높음", label: "높음" },
-    { value: "보통", label: "보통" },
-    { value: "낮음", label: "낮음" },
+    { value: "", label: "전체 우선순위" },
+    ...Object.entries(PART_ORDER_PRIORITY_LABELS).map(([value, label]) => ({
+      value,
+      label,
+    })),
   ];
 
-  const filteredData = workOrderData.filter((order) => {
-    const matchesSearch =
-      order.workOrderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.productName?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "전체" || order.status === statusFilter;
-    const matchesPriority =
-      priorityFilter === "전체" || order.priority === priorityFilter;
-    return matchesSearch && matchesStatus && matchesPriority;
-  });
-
-  const handleStartProduction = (workOrderId: string) => {
-    console.log("생산 시작:", workOrderId);
+  const formatDate = (value?: string) => {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+    return date.toLocaleDateString("ko-KR");
   };
 
-  const handleViewDetails = (workOrderId: string) => {
-    navigate(`/production/orders/${workOrderId}`);
+  const formatProgressRate = (value?: number | null) => {
+    const normalized = Math.max(
+      0,
+      Math.min(100, Math.round((value ?? 0) * (value && value <= 1 ? 100 : 1))),
+    );
+    return normalized;
   };
+
+  const formatItemsSummary = (
+    items?: PartOrderResponseDTO["items"],
+  ): string => {
+    if (!items || items.length === 0) {
+      return "-";
+    }
+    const [first, ...rest] = items;
+    const firstLabel = first?.partName ?? first?.partCode ?? "-";
+    if (rest.length === 0) {
+      return firstLabel ?? "-";
+    }
+    return `${firstLabel ?? "-"} 외 ${rest.length}`;
+  };
+
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setStatusFilter(DEFAULT_PART_ORDER_STATUSES.join(","));
+    setPriorityFilter("");
+    onPageChange(0);
+    refetch();
+  };
+
+  const handleViewDetails = (order: PartOrderResponseDTO) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const keys = createKeyRecord<PartOrderResponseDTO>(orders);
 
   const columns = [
-    { key: "workOrderId", title: "생산지시번호", width: "130px" },
-    { key: "productName", title: "제품명" },
     {
-      key: "progress",
+      key: keys.orderCode ?? "orderCode",
+      title: "주문 코드",
+      width: "160px",
+      render: (value: string | undefined, row: PartOrderResponseDTO) =>
+        value ?? row.orderId ?? "-",
+    },
+    {
+      key: keys.factoryName ?? "factoryName",
+      title: "공장",
+      width: "150px",
+      render: (value: string | undefined, row: PartOrderResponseDTO) =>
+        value ?? row.warehouseName ?? "-",
+    },
+    {
+      key: keys.items ?? "items",
+      title: "품목",
+      render: (
+        _value: PartOrderResponseDTO["items"],
+        row: PartOrderResponseDTO,
+      ) => formatItemsSummary(row.items),
+    },
+    {
+      key: keys.priority ?? "priority",
+      title: "우선순위",
+      width: "110px",
+      render: (value: string | undefined) =>
+        value ? (
+          <Badge
+            variant={PART_ORDER_PRIORITY_BADGE_VARIANTS[value] ?? "default"}
+          >
+            {PART_ORDER_PRIORITY_LABELS[value] ?? value}
+          </Badge>
+        ) : (
+          "-"
+        ),
+    },
+    {
+      key: keys.progressRate ?? "progressRate",
       title: "진행률",
-      width: "120px",
-      render: (value: any, row: any) => {
-        const percentage = (row.completedQty / row.plannedQty) * 100;
+      width: "140px",
+      render: (value: number | undefined) => {
+        const percentage = formatProgressRate(value);
         return (
           <div className="flex items-center space-x-2">
-            <div className="h-2 w-16 rounded-full bg-gray-200">
+            <div className="h-2 w-20 rounded-full bg-gray-200 dark:bg-gray-700">
               <div
-                className="h-2 rounded-full bg-blue-500"
+                className="h-2 rounded-full bg-blue-500 dark:bg-main-400"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
-            <span className="text-xs text-gray-600 dark:text-white">
-              {Math.round(percentage)}%
+            <span className="text-xs text-gray-600 dark:text-gray-200">
+              {percentage}%
             </span>
           </div>
         );
       },
     },
     {
-      key: "quantity",
-      title: "수량",
-      width: "100px",
-      render: (value: any, row: any) => `${row.completedQty}/${row.plannedQty}`,
-    },
-    { key: "plannedEndDate", title: "완료예정일", width: "110px" },
-    {
-      key: "priority",
-      title: "우선순위",
-      width: "100px",
-      render: (value: string) => {
-        const getPriorityVariant = (
-          priority: string,
-        ): "error" | "warning" | "success" | "default" => {
-          switch (priority) {
-            case "높음":
-              return "error";
-            case "보통":
-              return "warning";
-            case "낮음":
-              return "success";
-            default:
-              return "default";
-          }
-        };
-        return <Badge variant={getPriorityVariant(value)}>{value}</Badge>;
-      },
+      key: keys.requiredDate ?? "requiredDate",
+      title: "요청일",
+      width: "120px",
+      render: (value: string | undefined) => formatDate(value),
     },
     {
-      key: "materialAvailability",
-      title: "자재가용성",
-      width: "100px",
-      render: (value: string) => {
-        const getAvailabilityVariant = (
-          availability: string,
-        ): "success" | "error" | "warning" => {
-          switch (availability) {
-            case "충분":
-              return "success";
-            case "부족":
-              return "error";
-            default:
-              return "warning";
-          }
-        };
-        return <Badge variant={getAvailabilityVariant(value)}>{value}</Badge>;
-      },
+      key: keys.scheduledDate ?? "scheduledDate",
+      title: "계획일",
+      width: "120px",
+      render: (value: string | undefined) => formatDate(value),
     },
     {
-      key: "status",
+      key: keys.status ?? "status",
       title: "상태",
-      width: "100px",
-      render: (value: string) => {
-        const getStatusVariant = (
-          status: string,
-        ): "info" | "warning" | "success" | "error" | "default" => {
-          switch (status) {
-            case "대기":
-              return "info";
-            case "진행중":
-              return "warning";
-            case "완료":
-              return "success";
-            case "중단":
-              return "error";
-            default:
-              return "default";
-          }
-        };
-        return <Badge variant={getStatusVariant(value)}>{value}</Badge>;
-      },
+      width: "120px",
+      render: (value: string | undefined) =>
+        value ? (
+          <Badge variant={PART_ORDER_STATUS_BADGE_VARIANTS[value] ?? "default"}>
+            {PART_ORDER_STATUS_LABELS[value] ?? value}
+          </Badge>
+        ) : (
+          "-"
+        ),
     },
     {
       key: "actions",
       title: "작업",
-      width: "150px",
-      render: (value: any, row: any) => (
-        <div className="flex space-x-1">
-          {row.status === "대기" && row.materialAvailability === "충분" && (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => handleStartProduction(row.workOrderId)}
-            >
-              시작
-            </Button>
-          )}
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => handleViewDetails(row.workOrderId)}
-          >
-            상세
-          </Button>
-        </div>
+      width: "120px",
+      render: (_value: unknown, row: PartOrderResponseDTO) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => handleViewDetails(row)}
+        >
+          <i className="ri-eye-line mr-1"></i>
+          상세
+        </Button>
       ),
     },
   ];
 
-  // 통계 계산
-  const totalOrders = workOrderData.length;
-  const pendingOrders = workOrderData.filter(
-    (order) => order.status === "대기",
-  ).length;
-  const inProgressOrders = workOrderData.filter(
-    (order) => order.status === "진행중",
-  ).length;
-  const completedOrders = workOrderData.filter(
-    (order) => order.status === "완료",
-  ).length;
-
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
         <StatCard
           icon="ri-file-list-line"
-          label="전체 지시"
-          value={totalOrders}
+          label="전체 주문"
+          value={stats.total}
           iconBgColor="bg-blue-100"
           iconColor="text-blue-600"
         />
         <StatCard
-          icon="ri-time-line"
-          label="대기 중"
-          value={pendingOrders}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
           icon="ri-play-line"
           label="진행 중"
-          value={inProgressOrders}
+          value={stats.inProgress}
           iconBgColor="bg-orange-100"
           iconColor="text-orange-600"
         />
         <StatCard
           icon="ri-check-line"
           label="완료"
-          value={completedOrders}
+          value={stats.completed}
           iconBgColor="bg-green-100"
           iconColor="text-green-600"
         />
+        <StatCard
+          icon="ri-timer-flash-line"
+          label="지연"
+          value={stats.delayed}
+          iconBgColor="bg-red-100"
+          iconColor="text-red-600"
+        />
       </div>
 
-      {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder="생산지시번호, 제품명 검색..."
+        onSearchChange={(value) => {
+          setSearchTerm(value);
+          onPageChange(0);
+        }}
+        searchPlaceholder="주문 코드, 공장명 등으로 검색..."
         filters={[
           {
             key: "status",
             value: statusFilter,
             options: statusOptions,
-            onChange: setStatusFilter,
+            onChange: (value) => {
+              setStatusFilter(value);
+              onPageChange(0);
+            },
           },
           {
             key: "priority",
             value: priorityFilter,
             options: priorityOptions,
-            onChange: setPriorityFilter,
+            onChange: (value) => {
+              setPriorityFilter(value);
+              onPageChange(0);
+            },
           },
         ]}
         actions={
           <>
-            <Button variant="default" size="sm">
-              <i className="ri-add-line mr-2"></i>
-              신규 지시
-            </Button>
-            <Button variant="secondary" size="sm">
-              <i className="ri-download-line mr-2"></i>
-              내보내기
+            <Button variant="secondary" size="sm" onClick={handleResetFilters}>
+              <i className="ri-refresh-line mr-2"></i>
+              초기화
             </Button>
           </>
         }
       />
 
-      {/* 생산 지시 목록 테이블 */}
-      <TableSection
-        title="생산 지시 목록"
-        metaRight={
-          <span className="text-sm text-gray-500">
-            총 {filteredData.length}개 지시
-          </span>
-        }
-        actionsRight={
-          <Button variant="secondary" size="sm">
-            <i className="ri-refresh-line mr-2"></i>
-            새로고침
-          </Button>
-        }
+      <PaginationTableSection
+        title="부품 주문 목록"
+        totalElements={totalElements}
+        page={page}
+        totalPages={totalPages}
+        size={size}
+        onSizeChange={onSizeChange}
+        onPageChange={onPageChange}
+        showRefresh
+        onRefresh={refetch}
       >
         <Table
           columns={columns}
-          data={filteredData}
-          emptyText="조건에 맞는 생산지시가 없습니다"
+          data={orders}
+          loading={isLoading && data === undefined}
+          emptyText="조건에 맞는 부품 주문이 없습니다."
+          errorText={
+            isError ? "데이터 로딩 중 오류가 발생했습니다." : undefined
+          }
         />
-      </TableSection>
+      </PaginationTableSection>
+
+      <Modal
+        open={isModalOpen && selectedOrder !== null}
+        onClose={handleCloseModal}
+        title="부품 상세"
+        widthClassName="max-w-2xl"
+      >
+        {selectedOrder && (
+          <div className="space-y-6">
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    주문 코드
+                  </p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                    {selectedOrder.orderCode ?? selectedOrder.orderId ?? "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    공장
+                  </p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                    {selectedOrder.factoryName ??
+                      selectedOrder.warehouseName ??
+                      "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    상태
+                  </p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                    {selectedOrder.status
+                      ? (PART_ORDER_STATUS_LABELS[selectedOrder.status] ??
+                        selectedOrder.status)
+                      : "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    우선순위
+                  </p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                    {selectedOrder.priority
+                      ? (PART_ORDER_PRIORITY_LABELS[selectedOrder.priority] ??
+                        selectedOrder.priority)
+                      : "-"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                부품 목록
+              </h4>
+              {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                          부품명
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                          부품코드
+                        </th>
+                        <th className="px-4 py-2 text-right text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                          수량
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                      {selectedOrder.items.map((item, index) => (
+                        <tr key={item?.partId ?? index}>
+                          <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                            {item?.partName ?? "-"}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                            {item?.partCode ?? "-"}
+                          </td>
+                          <td className="px-4 py-3 text-right text-sm text-gray-900 dark:text-gray-100">
+                            {item?.quantity ?? "-"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="rounded-lg border border-dashed border-gray-300 p-4 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-300">
+                  등록된 부품 정보가 없습니다.
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end">
+              <Button variant="secondary" onClick={handleCloseModal}>
+                닫기
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
