@@ -390,12 +390,26 @@ const routes: RouteObject[] = [
             element: <WmsPurchaseOrders />,
           },
           {
-            path: "purchase-orders/detail/:id",
+            path: "orders/stocking/:purchaseOrderId",
             lazy: async () => {
               const { default: Component } = await import(
                 "@/pages/wms/purchase-orders/detail/StockingPage"
               );
-              return { Component };
+              const { stockingProcessLoader } = await import(
+                "@/features/stocking-process/api/stocking-process.loader"
+              );
+              return {
+                Component,
+                loader: async ({ params }) => {
+                  const purchaseOrderId = Number(params.purchaseOrderId);
+                  if (Number.isNaN(purchaseOrderId)) {
+                    throw new Response("Invalid purchaseOrderId", {
+                      status: 400,
+                    });
+                  }
+                  return stockingProcessLoader(purchaseOrderId);
+                },
+              };
             },
           },
           {
