@@ -1,28 +1,29 @@
 import { useMemo, useState } from "react";
 
+import { MrpBatchResultModal } from "@/features/production-planning/mrp-modal";
+import { ProductionPlanDetailModal } from "@/features/production-planning/plan-detail";
+import { ProductionStatusBadge } from "@/features/production-planning/status-badge";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { useProductionPlansQuery } from "@/pages/production/planning/api";
+import {
+  useBatchMrpApplyMutation,
+  useBatchMrpExecutionMutation,
+  useProductionPlansQuery,
+} from "@/pages/production/planning/api";
 import {
   DEFAULT_FACTORY_ID,
   DEFAULT_INCLUDE_RECENT_DAYS,
   PRODUCTION_PLAN_PRIORITY_BADGE_VARIANTS,
   PRODUCTION_PLAN_PRIORITY_LABELS,
-  PRODUCTION_PLAN_STATUS_BADGE_VARIANTS,
   PRODUCTION_PLAN_STATUS_LABELS,
+  PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS,
+  PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS,
   type ProductionPlanPriority,
   type ProductionPlanResponseDTO,
   type ProductionPlanStatus,
 } from "@/pages/production/planning/model";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  Modal,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
 const DEFAULT_STATUS_FILTER = "";
 const EXCLUDED_STATUSES: ProductionPlanStatus[] = ["IN_PROGRESS", "COMPLETED"];
@@ -35,8 +36,15 @@ export const ProductionPlanning = () => {
     useState<ProductionPlanResponseDTO | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
+  const [isMrpModalOpen, setIsMrpModalOpen] = useState(false);
+  const [mrpResultOrderIds, setMrpResultOrderIds] = useState<number[]>([]);
+  const [mrpError, setMrpError] = useState<string | null>(null);
+  const [mrpTargetPlans, setMrpTargetPlans] = useState<AugmentedPlan[]>([]);
 
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+
+  const executeBatchMrpMutation = useBatchMrpExecutionMutation();
+  const applyBatchMrpMutation = useBatchMrpApplyMutation();
 
   const selectedStatuses = useMemo<ProductionPlanStatus[]>(() => {
     if (statusFilter.trim().length === 0) {
@@ -65,6 +73,7 @@ export const ProductionPlanning = () => {
     factoryId: DEFAULT_FACTORY_ID,
     query: searchTerm === "" ? undefined : searchTerm,
     priorities: selectedPriorities.length > 0 ? selectedPriorities : undefined,
+    statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
     includeRecentDays: DEFAULT_INCLUDE_RECENT_DAYS,
     page,
     size,
@@ -74,23 +83,7 @@ export const ProductionPlanning = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const plans = useMemo(() => {
-    const visiblePlans = rawPlans.filter(
-      (plan) =>
-        !plan.status ||
-        !EXCLUDED_STATUSES.includes(plan.status as ProductionPlanStatus),
-    );
-
-    if (selectedStatuses.length === 0) {
-      return visiblePlans;
-    }
-
-    return visiblePlans.filter((plan) =>
-      plan.status
-        ? selectedStatuses.includes(plan.status as ProductionPlanStatus)
-        : false,
-    );
-  }, [rawPlans, selectedStatuses]);
+  const plans = useMemo(() => rawPlans, [rawPlans]);
 
   type AugmentedPlan = ProductionPlanResponseDTO & { __rowKey: string };
 
@@ -111,6 +104,11 @@ export const ProductionPlanning = () => {
       normalizedPlans.filter((plan) => selectedPlanIds.includes(plan.__rowKey)),
     [normalizedPlans, selectedPlanIds],
   );
+
+  const plansForMrpModal =
+    mrpTargetPlans.length > 0 ? mrpTargetPlans : selectedPlans;
+
+  const isMrpRunning = executeBatchMrpMutation.isPending;
 
   const allVisibleSelected =
     normalizedPlans.length > 0 &&
@@ -186,6 +184,76 @@ export const ProductionPlanning = () => {
     return `${firstLabel ?? "-"} 외 ${rest.length}`;
   };
 
+  const renderMaterialAvailability = (value?: string | null) => {
+    if (!value) {
+      return "-";
+    }
+
+    const trimmed = value.trim();
+    if (trimmed.length === 0) {
+      return "-";
+    }
+
+    const normalized = trimmed.toUpperCase();
+
+    const label =
+      PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS[normalized] ??
+      PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS[trimmed] ??
+      trimmed;
+
+    const variant =
+      PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS[normalized] ??
+      PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS[trimmed] ??
+      "default";
+
+    return <Badge variant={variant}>{label}</Badge>;
+  };
+
+  const getSelectableOrderIds = (plansToConvert: AugmentedPlan[]) => {
+    return plansToConvert
+      .map((plan) => {
+        if (typeof plan.orderId === "number") {
+          return plan.orderId;
+        }
+        if (typeof plan.externalPartOrderId === "number") {
+          return plan.externalPartOrderId;
+        }
+        const parsed = Number(plan.__rowKey);
+        return Number.isNaN(parsed) ? null : parsed;
+      })
+      .filter((value): value is number => typeof value === "number");
+  };
+
+  const normalizeResponseOrderIds = (response: unknown): number[] => {
+    if (Array.isArray(response)) {
+      return response.filter(
+        (value): value is number => typeof value === "number",
+      );
+    }
+
+    if (
+      response &&
+      typeof response === "object" &&
+      Array.isArray((response as { data?: unknown }).data)
+    ) {
+      const { data } = response as { data?: unknown };
+      return (data as unknown[])
+        .map((item) => {
+          if (typeof item === "number") {
+            return item;
+          }
+          if (item && typeof item === "object") {
+            const orderId = (item as { orderId?: number }).orderId;
+            return typeof orderId === "number" ? orderId : null;
+          }
+          return null;
+        })
+        .filter((value): value is number => value !== null);
+    }
+
+    return [];
+  };
+
   const handleResetFilters = () => {
     setSearchTerm("");
     setStatusFilter(DEFAULT_STATUS_FILTER);
@@ -220,7 +288,96 @@ export const ProductionPlanning = () => {
   };
 
   const handleRunMRP = () => {
-    console.log("MRP 실행 - 선택된 계획:", selectedPlans);
+    if (selectedPlans.length === 0 || executeBatchMrpMutation.isPending) {
+      return;
+    }
+
+    const orderIds = getSelectableOrderIds(selectedPlans);
+
+    setMrpResultOrderIds([]);
+    setMrpError(null);
+    setIsMrpModalOpen(true);
+    setMrpTargetPlans(selectedPlans);
+
+    if (orderIds.length === 0) {
+      setMrpError("선택된 계획에서 주문 ID를 확인할 수 없습니다.");
+      return;
+    }
+
+    executeBatchMrpMutation.mutate(
+      {
+        params: {
+          path: {
+            factoryId: DEFAULT_FACTORY_ID,
+          },
+        },
+        body: orderIds,
+      },
+      {
+        onSuccess: (response) => {
+          const ids = normalizeResponseOrderIds(response);
+          if (ids.length === 0) {
+            setMrpError("MRP 실행 결과가 비어 있습니다.");
+          }
+          setMrpResultOrderIds(ids);
+        },
+        onError: (error) => {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "MRP 실행 중 오류가 발생했습니다.";
+          setMrpError(message);
+        },
+      },
+    );
+  };
+
+  const handleApplyMrpResult = () => {
+    if (
+      mrpResultOrderIds.length === 0 ||
+      applyBatchMrpMutation.isPending ||
+      executeBatchMrpMutation.isPending
+    ) {
+      return;
+    }
+
+    applyBatchMrpMutation.mutate(
+      {
+        params: {
+          path: {
+            factoryId: DEFAULT_FACTORY_ID,
+          },
+        },
+        body: mrpResultOrderIds,
+      },
+      {
+        onSuccess: () => {
+          setMrpError(null);
+          setIsMrpModalOpen(false);
+          setMrpResultOrderIds([]);
+          setMrpTargetPlans([]);
+          setSelectedPlanIds([]);
+          void refetch();
+        },
+        onError: (error) => {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "MRP 결과 적용 중 오류가 발생했습니다.";
+          setMrpError(message);
+        },
+      },
+    );
+  };
+
+  const handleCloseMrpModal = () => {
+    if (executeBatchMrpMutation.isPending || applyBatchMrpMutation.isPending) {
+      return;
+    }
+    setIsMrpModalOpen(false);
+    setMrpResultOrderIds([]);
+    setMrpTargetPlans([]);
+    setMrpError(null);
   };
 
   const handleViewDetails = (plan: ProductionPlanResponseDTO) => {
@@ -317,19 +474,18 @@ export const ProductionPlanning = () => {
       render: (value: string | undefined) => formatDate(value),
     },
     {
+      key: keys.materialAvailability ?? "materialAvailability",
+      title: "자재 가용성",
+      width: "140px",
+      render: (value: string | undefined) =>
+        renderMaterialAvailability(value ?? null),
+    },
+    {
       key: keys.status ?? "status",
       title: "상태",
       width: "120px",
       render: (value: string | undefined) =>
-        value ? (
-          <Badge
-            variant={PRODUCTION_PLAN_STATUS_BADGE_VARIANTS[value] ?? "default"}
-          >
-            {PRODUCTION_PLAN_STATUS_LABELS[value] ?? value}
-          </Badge>
-        ) : (
-          "-"
-        ),
+        value ? <ProductionStatusBadge status={value} /> : "-",
     },
     {
       key: "actions",
@@ -349,221 +505,152 @@ export const ProductionPlanning = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-file-list-line"
-          label="전체 계획"
-          value={stats.total}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="확정 계획"
-          value={stats.planConfirmed}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-time-line"
-          label="검토 중"
-          value={stats.underReview}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
-          icon="ri-shopping-cart-line"
-          label="구매 요청"
-          value={stats.purchaseRequest}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-      </div>
+    <>
+      {isMrpRunning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="flex w-full max-w-sm flex-col items-center rounded-lg bg-white p-8 text-center shadow-xl dark:bg-gray-900">
+            <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-main-500 border-t-transparent" />
+            <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              MRP 분석 중...
+            </p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              선택한 계획에 대해 자재와 일정 정보를 검토하고 있습니다.
+            </p>
+          </div>
+        </div>
+      )}
 
-      <SearchFilterBar
-        searchTerm={searchTerm}
-        onSearchChange={(value) => {
-          setSearchTerm(value);
-          onPageChange(0);
-        }}
-        searchPlaceholder="계획 코드, 품목명 등 검색..."
-        filters={[
-          {
-            key: "status",
-            value: statusFilter,
-            options: statusOptions,
-            onChange: (value: string) => {
-              setStatusFilter(value);
-              onPageChange(0);
-            },
-          },
-          {
-            key: "priority",
-            value: priorityFilter,
-            options: priorityOptions,
-            onChange: (value: string) => {
-              setPriorityFilter(value);
-              onPageChange(0);
-            },
-          },
-        ]}
-        actions={
-          <>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleRunMRP}
-              disabled={selectedPlans.length === 0}
-            >
-              <i className="ri-play-line mr-2"></i>
-              MRP 실행
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleToggleAll}
-              disabled={normalizedPlans.length === 0}
-            >
-              {allVisibleSelected ? "선택 해제" : "전체 선택"}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={handleResetFilters}>
-              <i className="ri-refresh-line mr-2"></i>
-              초기화
-            </Button>
-          </>
-        }
-      />
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+          <StatCard
+            icon="ri-file-list-line"
+            label="전체 계획"
+            value={stats.total}
+            iconBgColor="bg-blue-100"
+            iconColor="text-blue-600"
+          />
+          <StatCard
+            icon="ri-check-line"
+            label="확정 계획"
+            value={stats.planConfirmed}
+            iconBgColor="bg-green-100"
+            iconColor="text-green-600"
+          />
+          <StatCard
+            icon="ri-time-line"
+            label="검토 중"
+            value={stats.underReview}
+            iconBgColor="bg-yellow-100"
+            iconColor="text-yellow-600"
+          />
+          <StatCard
+            icon="ri-shopping-cart-line"
+            label="구매 요청"
+            value={stats.purchaseRequest}
+            iconBgColor="bg-yellow-100"
+            iconColor="text-yellow-600"
+          />
+        </div>
 
-      <PaginationTableSection
-        title="생산 계획 목록"
-        totalElements={totalElements}
-        page={page}
-        totalPages={totalPages}
-        size={size}
-        onSizeChange={onSizeChange}
-        onPageChange={onPageChange}
-        showRefresh
-        onRefresh={() => {
-          void refetch();
-        }}
-      >
-        <Table
-          columns={columns}
-          data={normalizedPlans}
-          loading={isLoading && data === undefined}
-          emptyText="조건에 맞는 생산 계획이 없습니다."
-          errorText={
-            isError ? "데이터 로딩 중 오류가 발생했습니다." : undefined
+        <SearchFilterBar
+          searchTerm={searchTerm}
+          onSearchChange={(value) => {
+            setSearchTerm(value);
+            onPageChange(0);
+          }}
+          searchPlaceholder="계획 코드, 품목명 등 검색..."
+          filters={[
+            {
+              key: "status",
+              value: statusFilter,
+              options: statusOptions,
+              onChange: (value: string) => {
+                setStatusFilter(value);
+                onPageChange(0);
+              },
+            },
+            {
+              key: "priority",
+              value: priorityFilter,
+              options: priorityOptions,
+              onChange: (value: string) => {
+                setPriorityFilter(value);
+                onPageChange(0);
+              },
+            },
+          ]}
+          actions={
+            <>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={handleRunMRP}
+                disabled={selectedPlans.length === 0}
+              >
+                <i className="ri-play-line mr-2"></i>
+                MRP 실행
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleToggleAll}
+                disabled={normalizedPlans.length === 0}
+              >
+                {allVisibleSelected ? "선택 해제" : "전체 선택"}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleResetFilters}
+              >
+                <i className="ri-refresh-line mr-2"></i>
+                초기화
+              </Button>
+            </>
           }
         />
-      </PaginationTableSection>
 
-      <Modal
-        open={isModalOpen && selectedPlan !== null}
-        onClose={handleCloseModal}
-        title="생산 계획 상세"
-        widthClassName="max-w-2xl"
-      >
-        {selectedPlan && (
-          <div className="space-y-6">
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    계획 코드
-                  </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
-                    {selectedPlan.orderCode ?? selectedPlan.orderId ?? "-"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    상태
-                  </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
-                    {selectedPlan.status
-                      ? (PRODUCTION_PLAN_STATUS_LABELS[selectedPlan.status] ??
-                        selectedPlan.status)
-                      : "-"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    우선순위
-                  </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
-                    {selectedPlan.priority
-                      ? (PRODUCTION_PLAN_PRIORITY_LABELS[
-                          selectedPlan.priority
-                        ] ?? selectedPlan.priority)
-                      : "-"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    요청일 / 계획일
-                  </p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100">
-                    {formatDate(selectedPlan.requiredDate)} /{" "}
-                    {formatDate(selectedPlan.scheduledDate)}
-                  </p>
-                </div>
-              </div>
-            </div>
+        <PaginationTableSection
+          title="생산 계획 목록"
+          totalElements={totalElements}
+          page={page}
+          totalPages={totalPages}
+          size={size}
+          onSizeChange={onSizeChange}
+          onPageChange={onPageChange}
+          showRefresh
+          onRefresh={() => {
+            void refetch();
+          }}
+        >
+          <Table
+            columns={columns}
+            data={normalizedPlans}
+            loading={isLoading && data === undefined}
+            emptyText="조건에 맞는 생산 계획이 없습니다."
+            errorText={
+              isError ? "데이터 로딩 중 오류가 발생했습니다." : undefined
+            }
+          />
+        </PaginationTableSection>
 
-            <div>
-              <h4 className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
-                부품 목록
-              </h4>
-              {selectedPlan.items && selectedPlan.items.length > 0 ? (
-                <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-gray-50 dark:bg-gray-800">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                          부품명
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                          부품코드
-                        </th>
-                        <th className="px-4 py-2 text-right text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                          수량
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
-                      {selectedPlan.items.map((item, index) => (
-                        <tr key={item?.partId ?? index}>
-                          <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
-                            {item?.partName ?? "-"}
-                          </td>
-                          <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
-                            {item?.partCode ?? "-"}
-                          </td>
-                          <td className="px-4 py-3 text-right text-sm text-gray-900 dark:text-gray-100">
-                            {item?.quantity ?? "-"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <p className="rounded-lg border border-dashed border-gray-300 p-4 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-300">
-                  등록된 부품 정보가 없습니다.
-                </p>
-              )}
-            </div>
+        <MrpBatchResultModal
+          open={isMrpModalOpen}
+          isLoading={isMrpRunning}
+          error={mrpError}
+          plans={plansForMrpModal}
+          executedOrderIds={mrpResultOrderIds}
+          onClose={handleCloseMrpModal}
+          onApply={handleApplyMrpResult}
+          isApplying={applyBatchMrpMutation.isPending}
+        />
 
-            <div className="flex justify-end">
-              <Button variant="secondary" onClick={handleCloseModal}>
-                닫기
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
-    </div>
+        <ProductionPlanDetailModal
+          open={isModalOpen}
+          plan={selectedPlan}
+          onClose={handleCloseModal}
+        />
+      </div>
+    </>
   );
 };

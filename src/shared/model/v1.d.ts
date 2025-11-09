@@ -3256,6 +3256,8 @@ export interface components {
       requiredDate?: string;
       /** Format: date-time */
       scheduledDate?: string;
+      /** Format: date-time */
+      minimumStartDate?: string;
       /** Format: double */
       progressRate?: number;
       rejectionReason?: string;
@@ -5735,6 +5737,15 @@ export interface operations {
   getProductionPlans: {
     parameters: {
       query?: {
+        statuses?: (
+          | "UNDER_REVIEW"
+          | "PURCHASE_REQUEST"
+          | "PLAN_CONFIRMED"
+          | "DELAYED"
+          | "REJECTED"
+          | "IN_PROGRESS"
+          | "COMPLETED"
+        )[];
         priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
         query?: string;
         categoryId?: number;
