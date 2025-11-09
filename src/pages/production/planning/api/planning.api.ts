@@ -1,10 +1,64 @@
-// import { queryClient } from "@/shared/api";
+import type { ProductionPlanListParams } from "@/pages/production/planning/model";
+import {
+  DEFAULT_FACTORY_ID,
+  DEFAULT_INCLUDE_RECENT_DAYS,
+} from "@/pages/production/planning/model";
+import { queryClient } from "@/shared/api";
 
-// export const getProductionPlanning = async () => {
-//   return queryClient.queryOptions("get", "/api/production/planning", {
-//     query: {
-//       page: 1,
-//       size: 10,
-//     },
-//   });
-// };
+export type ProductionPlansQueryParams = ProductionPlanListParams & {
+  factoryId?: number;
+  includeRecentDays?: number;
+};
+
+const buildQuery = (params?: ProductionPlansQueryParams) => {
+  const query: Record<string, unknown> = {
+    page: params?.page ?? 0,
+    size: params?.size ?? 10,
+    includeRecentDays: params?.includeRecentDays ?? DEFAULT_INCLUDE_RECENT_DAYS,
+  };
+
+  if (params?.query) {
+    query.query = params.query;
+  }
+  if (params?.categoryId !== undefined) {
+    query.categoryId = params.categoryId;
+  }
+  if (params?.groupId !== undefined) {
+    query.groupId = params.groupId;
+  }
+  if (params?.priorities && params.priorities.length > 0) {
+    query.priorities = params.priorities;
+  }
+
+  return query;
+};
+
+const getProductionPlansQueryOptions = (
+  params?: ProductionPlansQueryParams,
+) => ({
+  params: {
+    path: {
+      factoryId: params?.factoryId ?? DEFAULT_FACTORY_ID,
+    },
+    query: buildQuery(params),
+  },
+});
+
+export const productionPlansListQueryOptions = (
+  params?: ProductionPlansQueryParams,
+) =>
+  queryClient.queryOptions(
+    "get",
+    "/api/factory/{factoryId}/part/orders/production-plans",
+    getProductionPlansQueryOptions(params),
+  );
+
+export const useProductionPlansQuery = (params?: ProductionPlansQueryParams) =>
+  queryClient.useQuery(
+    "get",
+    "/api/factory/{factoryId}/part/orders/production-plans",
+    getProductionPlansQueryOptions(params),
+    {
+      placeholderData: (previousData) => previousData,
+    },
+  );
