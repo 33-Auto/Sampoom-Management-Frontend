@@ -3,6 +3,7 @@ export interface ApiSalesOrderPart {
   name: string;
   code: string;
   quantity: number;
+  standardCost: number | null;
 }
 
 export interface ApiSalesOrderGroup {
@@ -66,6 +67,7 @@ export interface SalesOrderRow {
   agencyName: string;
   productName: string; // first part name + 외 N개
   totalQuantity: number; // sum of parts quantities
+  totalAmount: number; // sum of quantity * standardCost
   status: ApiSalesOrderStatus;
 }
 
