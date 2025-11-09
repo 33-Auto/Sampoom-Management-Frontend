@@ -1,25 +1,40 @@
-// TODO: 타입 체크 임시 비활성화 - 타입 에러 수정 후 이 줄 제거
-// @ts-nocheck
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import Logo from "@/shared/assets/logo_text_dark.svg";
-import { Button, Card, Input } from "@/shared/ui";
+import { Button, Card, Input, Select } from "@/shared/ui";
 
-import { useLogin } from "../model/useLogin";
+import { useLoginForm } from "../lib";
+import { WORKSPACE_OPTIONS, type LoginFormValues } from "../model";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { handleLogin, isLoading } = useLogin();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const { submitLogin, isLoading } = useLoginForm();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+      workspace: "",
+    },
+    mode: "onSubmit",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleLogin(formData);
-  };
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      await submitLogin(values);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "로그인에 실패했습니다. 다시 시도해주세요.";
+      setError("root", { type: "manual", message });
+    }
+  });
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black">
@@ -32,34 +47,59 @@ const Login = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
             <Input
               label="이메일"
               type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
               placeholder="이메일을 입력하세요"
-              required
+              autoComplete="email"
+              {...register("email", {
+                required: "이메일을 입력하세요.",
+                pattern: {
+                  value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/u,
+                  message: "올바른 이메일 형식을 입력하세요.",
+                },
+              })}
+              errorText={errors.email?.message}
             />
 
             <Input
               label="비밀번호"
               type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
               placeholder="비밀번호를 입력하세요"
-              required
+              autoComplete="current-password"
+              {...register("password", {
+                required: "비밀번호를 입력하세요.",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8자 이상이어야 합니다.",
+                },
+              })}
+              errorText={errors.password?.message}
             />
+
+            <Select
+              label="조직"
+              {...register("workspace", {
+                required: "조직을 선택하세요.",
+                validate: (value) => value !== "" || "조직을 선택하세요.",
+              })}
+              options={[
+                { value: "" as const, label: "조직을 선택하세요" },
+                ...WORKSPACE_OPTIONS,
+              ]}
+              errorText={errors.workspace?.message}
+            />
+
+            {errors.root?.message && (
+              <p className="text-sm text-error-red">{errors.root.message}</p>
+            )}
 
             <Button
               type="submit"
               className="w-full"
-              loading={isLoading}
-              disabled={!formData.email || !formData.password}
+              loading={isLoading || isSubmitting}
+              disabled={isLoading || isSubmitting}
             >
               로그인
             </Button>

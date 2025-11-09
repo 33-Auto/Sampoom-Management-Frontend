@@ -1,20 +1,47 @@
-import { fetchClient } from "@/shared/api";
-import type { LoginRequest, SignupRequest } from "@/shared/model/models";
+import { fetchClient, queryClient } from "@/shared/api";
+import type { SignupRequest } from "@/shared/model/models";
 
-// 로그인 로직 수행
-export const login = async (credentials: LoginRequest) => {
-  const { data, error } = await fetchClient.POST("/api/auth/login", {
-    body: credentials,
+import type {
+  ApiResponseUserLoginResponse,
+  LoginRequest,
+  UserLoginResponse,
+} from "../model";
+
+export const useLoginMutation = () =>
+  queryClient.useMutation("post", "/api/auth/login");
+
+export const getMyProfile = async (
+  workspace: LoginRequest["workspace"],
+): Promise<UserLoginResponse> => {
+  const { data, error } = await fetchClient.GET("/api/user/profile", {
+    params: {
+      query: {
+        workspace,
+      },
+    },
   });
 
   if (error) {
-    // 에러의 처리는 상위 레이어에 위임
     throw error;
   }
-  return data;
+
+  const response = data as ApiResponseUserLoginResponse | undefined;
+  if (!response?.success || !response.data) {
+    throw new Error(response?.message ?? "프로필 정보를 불러오지 못했습니다.");
+  }
+
+  return response.data;
 };
 
-// 회원가입 로직 수행
+export const useProfileQuery = (workspace: LoginRequest["workspace"]) =>
+  queryClient.useQuery("get", "/api/user/profile", {
+    params: {
+      query: {
+        workspace,
+      },
+    },
+  });
+
 export const register = async (userInfo: SignupRequest) => {
   const { data, error } = await fetchClient.POST("/api/user/signup" as any, {
     body: userInfo,
@@ -27,7 +54,6 @@ export const register = async (userInfo: SignupRequest) => {
   return data;
 };
 
-// 로그아웃 로직 수행
 export const logout = async () => {
   const { data, error } = await fetchClient.POST("/api/auth/logout");
 
