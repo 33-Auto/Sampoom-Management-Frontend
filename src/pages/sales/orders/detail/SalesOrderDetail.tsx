@@ -34,18 +34,24 @@ export const SalesOrderDetail: React.FC = () => {
     CANCELED: "주문 취소",
   };
 
-  const { totalLines, totalQty } = useMemo(() => {
+  const formatCurrency = (amount: number) =>
+    `₩${Number(amount || 0).toLocaleString()}`;
+
+  const { totalLines, totalQty, totalAmount } = useMemo(() => {
     let lines = 0;
     let qty = 0;
+    let amount = 0;
     for (const cat of order?.items || []) {
       for (const grp of cat.groups || []) {
         for (const p of grp.parts || []) {
           lines += 1;
           qty += p.quantity ?? 0;
+          const unitPrice = p.standardCost ?? 0;
+          amount += (p.quantity ?? 0) * unitPrice;
         }
       }
     }
-    return { totalLines: lines, totalQty: qty };
+    return { totalLines: lines, totalQty: qty, totalAmount: amount };
   }, [order]);
 
   return (
@@ -143,24 +149,40 @@ export const SalesOrderDetail: React.FC = () => {
                       {cat.categoryName} {" > "} {grp.groupName}
                     </div>
                     <div className="border-t border-gray-200 dark:border-gray-700">
-                      {(grp.parts || []).map((p: any) => (
-                        <div
-                          key={p.partId}
-                          className="flex items-baseline justify-between py-2 text-sm"
-                        >
-                          <div className="min-w-0 pr-4">
-                            <div className="truncate text-gray-900 dark:text-gray-100">
-                              {p.name}
+                      {(grp.parts || []).map((p: any) => {
+                        const unitPrice = p.standardCost ?? 0;
+                        const quantity = p.quantity ?? 0;
+                        const lineAmount = unitPrice * quantity;
+                        return (
+                          <div
+                            key={p.partId}
+                            className="flex items-start justify-between py-2 text-sm"
+                          >
+                            <div className="min-w-0 pr-4">
+                              <div className="truncate text-gray-900 dark:text-gray-100">
+                                {p.name}
+                              </div>
+                              <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                                {p.code}
+                              </div>
                             </div>
-                            <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                              {p.code}
+                            <div className="text-right text-gray-900 dark:text-gray-100">
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                단가
+                              </div>
+                              <div className="font-medium">
+                                {formatCurrency(unitPrice)}
+                              </div>
+                              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                수량 / 합계
+                              </div>
+                              <div className="font-semibold">
+                                {quantity}개 / {formatCurrency(lineAmount)}
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right font-medium text-gray-900 dark:text-gray-100">
-                            {p.quantity}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -181,6 +203,12 @@ export const SalesOrderDetail: React.FC = () => {
               <span className="text-gray-600 dark:text-gray-300">총 수량</span>
               <span className="font-semibold text-gray-900 dark:text-gray-100">
                 {totalQty}
+              </span>
+            </div>
+            <div className="mt-1 flex items-center justify-between text-sm">
+              <span className="text-gray-600 dark:text-gray-300">총 금액</span>
+              <span className="font-semibold text-gray-900 dark:text-gray-100">
+                {formatCurrency(totalAmount)}
               </span>
             </div>
           </div>

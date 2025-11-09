@@ -112,6 +112,13 @@ export const ItemMaster = () => {
     },
     { key: "unit", title: "단위", width: "80px" },
     {
+      key: "standardCost",
+      title: "표준 단가",
+      width: "120px",
+      render: (value: number | undefined) =>
+        typeof value === "number" ? `₩${value.toLocaleString()}` : "-",
+    },
+    {
       key: "leadTime",
       title: "리드 타임",
       width: "100px",

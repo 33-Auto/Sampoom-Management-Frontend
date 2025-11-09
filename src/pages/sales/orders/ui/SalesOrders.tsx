@@ -74,6 +74,13 @@ export const SalesOrders = () => {
       render: (value: number) => `${value}개`,
     },
     {
+      key: "totalAmount",
+      title: "주문 금액",
+      width: "140px",
+      render: (value: number) =>
+        typeof value === "number" ? `₩${value.toLocaleString()}` : "-",
+    },
+    {
       key: "status",
       title: "상태",
       width: "100px",

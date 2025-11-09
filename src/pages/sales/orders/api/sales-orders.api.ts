@@ -14,22 +14,35 @@ const formatDate = (iso: string): string => iso.slice(0, 10);
 
 const flattenParts = (
   item: ApiSalesOrderItem,
-): { firstName: string | null; totalCount: number; totalParts: number } => {
-  const parts: { name: string; quantity: number }[] = [];
+): {
+  firstName: string | null;
+  totalCount: number;
+  totalParts: number;
+  totalAmount: number;
+} => {
+  const parts: { name: string; quantity: number; standardCost: number }[] = [];
   for (const cat of item.items || []) {
     for (const grp of cat.groups || []) {
       for (const p of grp.parts || []) {
-        parts.push({ name: p.name, quantity: p.quantity });
+        parts.push({
+          name: p.name,
+          quantity: p.quantity ?? 0,
+          standardCost: p.standardCost ?? 0,
+        });
       }
     }
   }
   const totalCount = parts.reduce((sum, p) => sum + (p.quantity ?? 0), 0);
+  const totalAmount = parts.reduce(
+    (sum, p) => sum + (p.quantity ?? 0) * (p.standardCost ?? 0),
+    0,
+  );
   const firstName = parts.length > 0 ? parts[0].name : null;
-  return { firstName, totalCount, totalParts: parts.length };
+  return { firstName, totalCount, totalParts: parts.length, totalAmount };
 };
 
 const mapToRow = (item: ApiSalesOrderItem): SalesOrderRow => {
-  const { firstName, totalCount, totalParts } = flattenParts(item);
+  const { firstName, totalCount, totalParts, totalAmount } = flattenParts(item);
   const productName = firstName
     ? totalParts > 1
       ? `${firstName} 외 ${totalParts - 1}개`
@@ -43,6 +56,7 @@ const mapToRow = (item: ApiSalesOrderItem): SalesOrderRow => {
     agencyName: item.agencyName,
     productName,
     totalQuantity: totalCount,
+    totalAmount,
     status: item.status,
   };
 };
