@@ -1,6 +1,6 @@
 import { queryClient } from "@/shared/api/base";
 
-export const meterialDetailQueryOptions = (materialId: number) =>
+export const materialDetailQueryOptions = (materialId: number) =>
   queryClient.queryOptions("get", "/api/part/materials/{materialId}", {
     params: {
       path: {
