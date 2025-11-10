@@ -10,6 +10,9 @@ import type {
 export const useLoginMutation = () =>
   queryClient.useMutation("post", "/api/auth/login");
 
+export const useSignupMutation = () =>
+  queryClient.useMutation("post", "/api/auth/signup");
+
 export const getMyProfile = async (
   workspace: LoginRequest["workspace"],
 ): Promise<UserLoginResponse> => {
