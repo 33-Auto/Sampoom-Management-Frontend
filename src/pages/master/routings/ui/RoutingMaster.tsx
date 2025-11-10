@@ -195,6 +195,7 @@ export const RoutingMaster = () => {
                 options: categoryOptions,
                 onChange: (value: string) => {
                   setCategoryFilter(value);
+                  setGroupFilter("");
                   onPageChange(0);
                 },
               },
@@ -296,9 +297,7 @@ export const RoutingMaster = () => {
                           카테고리:
                         </span>
                         <span className="font-medium text-gray-900 dark:text-gray-100">
-                          {selectedRouting.categoryName +
-                            " > " +
-                            selectedRouting.groupName || "-"}
+                          {`${selectedRouting.categoryName || "-"} > ${selectedRouting.groupName || "-"}`}
                         </span>
                       </div>
                       <div className="flex justify-between">
