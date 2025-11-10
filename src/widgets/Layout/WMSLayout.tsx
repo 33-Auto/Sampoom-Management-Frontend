@@ -10,8 +10,6 @@ const WMSLayout: React.FC = () => {
     moduleDescription: "창고 출고 지시 및 재고 현황을 관리합니다",
     moduleIcon: "ri-archive-drawer-line",
     moduleColor: "bg-purple-600",
-    userRole: "창고 관리자",
-    userEmail: "warehouse@company.com",
     navItems: [],
   };
 

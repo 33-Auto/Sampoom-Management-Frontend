@@ -10,9 +10,7 @@ const MasterLayout: React.FC = () => {
     moduleDescription:
       "품목, BOM, 거래처, 작업장, 공정 등 기준 정보를 관리합니다",
     moduleIcon: "ri-database-line",
-    moduleColor: "bg-main-500",
-    userRole: "시스템 관리자",
-    userEmail: "admin@company.com",
+    moduleColor: "bg-blue-500",
     navItems: [],
   };
 
@@ -40,7 +38,7 @@ const MasterLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
-      <NavigationTabs navItems={navItems} moduleColor="bg-main-500" />
+      <NavigationTabs navItems={navItems} moduleColor="bg-blue-500" />
       <div className="p-6">
         <Outlet />
       </div>

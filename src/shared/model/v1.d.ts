@@ -470,6 +470,298 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/warehouse/rop/{warehouseId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["createRop"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/rop/create": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["createSingleRop"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/stocking": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["stockingParts"];
+    trace?: never;
+  };
+  "/api/warehouse/rop": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getRops"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["updateRop"];
+    trace?: never;
+  };
+  "/api/warehouse/delivery": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["deliveryParts"];
+    trace?: never;
+  };
+  "/api/warehouse/{warehouseId}/category": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getCategoriesByWarehouse"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/{warehouseId}/category/{categoryId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getGroupsByCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/po": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getPurchaseOrders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/po/{purchaseOrderId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getPurchaseOrder"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getInventoryBrief"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HealthCheck API
+     * @description 서버 상태 체크 API입니다.
+     */
+    get: operations["healthCheck1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-unauthorized": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["unauthorizedTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-notfound": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["notFoundTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-forbidden": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["forbiddenTest1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-error": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/api/v1/health-data": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData_11"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["search"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/warehouse/rop/{ropId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["deleteRop"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}/part/orders/mrp/batch": {
     parameters: {
       query?: never;
@@ -550,6 +842,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/factory/{factoryId}/mps/{mpsId}/execute": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MPS 실행
+     * @description MPS를 실행하여 상세 생산 계획(MpsPlan)을 생성합니다.
+     */
+    post: operations["executeMps"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/{mpsId}/confirm": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MPS 확정
+     * @description MPS를 확정하여 각 MpsPlan을 기반으로 PartOrder를 생성합니다.
+     */
+    post: operations["confirmMps"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}/material/order": {
     parameters: {
       query?: never;
@@ -584,6 +916,106 @@ export interface paths {
      * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다. 여러 아이템이 있는 경우 각각 단건으로 나누어 개별 주문을 생성합니다.
      */
     post: operations["createPartOrder"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/set-start-now": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 시작일을 현재 시간으로 설정
+     * @description MPS 주문의 최소 시작일을 현재 시간으로 설정하여 즉시 자동 처리 대상이 되도록 합니다.
+     */
+    post: operations["setMpsStartDateToNow"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/print-info": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 정보 출력
+     * @description MPS 주문의 상세 정보를 로그로 출력합니다.
+     */
+    post: operations["printMpsOrderInfo"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/auto-apply": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] 특정 MPS 주문 자동 MRP 결과 적용
+     * @description 특정 MPS 주문에 대해 자동 MRP 결과 적용을 수동으로 실행합니다.
+     */
+    post: operations["testMpsOrderAutoApply"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/test/mps-auto-apply": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 자동 MRP 결과 적용 스케줄러 수동 실행
+     * @description MPS 주문의 자동 MRP 결과 적용 스케줄러를 수동으로 실행합니다. 테스트 목적으로 사용됩니다.
+     */
+    post: operations["testMpsAutoApply"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/test/create-mps": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 생성 및 테스트 준비
+     * @description 테스트용 MPS 주문을 생성하고 MRP 실행 후 시작일을 현재 시간으로 설정합니다.
+     */
+    post: operations["createTestMpsOrder"];
     delete?: never;
     options?: never;
     head?: never;
@@ -690,6 +1122,66 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/factory/{factoryId}/mps": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MPS 상세 조회
+     * @description 부품ID, 예측달, 창고ID로 MPS를 조회합니다.
+     */
+    get: operations["getMps"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/{mpsId}/plans": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MPS 계획 목록 조회
+     * @description MPS ID로 해당하는 MpsPlan 목록을 조회합니다.
+     */
+    get: operations["getMpsPlans"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps-plans/{mpsPlanId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MpsPlan 상세 조회
+     * @description 특정 MpsPlan의 상세 정보를 조회합니다.
+     */
+    get: operations["getMpsPlan"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}/material": {
     parameters: {
       query?: never;
@@ -730,6 +1222,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/factory/part/order/test/mps-ready": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * [테스트용] 자동 처리 대상 MPS 주문 조회
+     * @description 현재 자동 처리 대상인 MPS 주문들을 조회합니다.
+     */
+    get: operations["getMpsOrdersReadyForProcessing"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/health": {
     parameters: {
       query?: never;
@@ -741,7 +1253,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck1"];
+    get: operations["healthCheck2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -757,7 +1269,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest1"];
+    get: operations["unauthorizedTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -773,7 +1285,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest1"];
+    get: operations["notFoundTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -789,7 +1301,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest1"];
+    get: operations["forbiddenTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -805,7 +1317,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData1"];
+    get: operations["healthCheckData2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -821,7 +1333,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_11"];
+    get: operations["healthCheckData_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -930,7 +1442,7 @@ export interface paths {
      * 대리점 주문 입고 처리
      * @description 대리점이 주문한 부품 입고 처리
      */
-    patch: operations["stockingParts"];
+    patch: operations["stockingParts1"];
     trace?: never;
   };
   "/api/agency/{agencyId}/outbound/{outboundId}": {
@@ -1042,7 +1554,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck2"];
+    get: operations["healthCheck3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1058,7 +1570,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest2"];
+    get: operations["unauthorizedTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1074,7 +1586,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest2"];
+    get: operations["notFoundTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1090,7 +1602,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest2"];
+    get: operations["forbiddenTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1106,7 +1618,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData2"];
+    get: operations["healthCheckData3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1122,7 +1634,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_12"];
+    get: operations["healthCheckData_13"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1334,7 +1846,7 @@ export interface paths {
      * 공정 검색/목록 조회
      * @description 공정명 또는 공정 코드로 검색하거나, 상태별로 필터링하여 공정 목록을 페이징 조회합니다.
      */
-    get: operations["search"];
+    get: operations["search1"];
     put?: never;
     /**
      * 공정 등록
@@ -1621,7 +2133,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck3"];
+    get: operations["healthCheck4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1637,7 +2149,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest3"];
+    get: operations["unauthorizedTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1653,7 +2165,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest3"];
+    get: operations["notFoundTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1669,7 +2181,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest3"];
+    get: operations["forbiddenTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1685,7 +2197,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData3"];
+    get: operations["healthCheckData4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1701,7 +2213,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_13"];
+    get: operations["healthCheckData_14"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1773,7 +2285,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck4"];
+    get: operations["healthCheck5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1789,7 +2301,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest4"];
+    get: operations["unauthorizedTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1805,7 +2317,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest4"];
+    get: operations["notFoundTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1821,7 +2333,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest4"];
+    get: operations["forbiddenTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1837,7 +2349,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData4"];
+    get: operations["healthCheckData5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1853,7 +2365,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_14"];
+    get: operations["healthCheckData_15"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2021,7 +2533,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck5"];
+    get: operations["healthCheck6"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2165,7 +2677,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck6"];
+    get: operations["healthCheck7"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2597,8 +3109,10 @@ export interface components {
       standardCost?: number;
     };
     OrderReqDto: {
-      agencyName?: string;
-      items?: components["schemas"]["ItemCategoryDto"][];
+      /** Format: int64 */
+      agencyId: number;
+      agencyName: string;
+      items: components["schemas"]["ItemCategoryDto"][];
     };
     ApiResponseOrderResDto: {
       /** Format: int32 */
@@ -2611,6 +3125,8 @@ export interface components {
       /** Format: int64 */
       orderId?: number;
       orderNumber?: string;
+      /** Format: int64 */
+      agencyId?: number;
       agencyName?: string;
       /** @enum {string} */
       status?:
@@ -2652,10 +3168,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PageableObject: {
@@ -2713,10 +3229,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PartStockDto: {
@@ -2739,6 +3255,250 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: string;
+    };
+    ApiResponseVoid2: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: Record<string, never>;
+    };
+    RopReqDto: {
+      /** Format: int64 */
+      warehouseId?: number;
+      partCode?: string;
+      /** @enum {string} */
+      autoCalStatus?: "ACTIVE" | "INACTIVE";
+      /** @enum {string} */
+      autoOrderStatus?: "ACTIVE" | "INACTIVE";
+      /** Format: int32 */
+      leadTime?: number;
+      /** Format: int32 */
+      averageDaily?: number;
+      /** Format: int32 */
+      maxStock?: number;
+    };
+    PartDeltaDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: int32 */
+      delta: number;
+    };
+    PartUpdateReqDto: {
+      /** Format: int64 */
+      purchaseOrderId: number;
+      /** Format: int64 */
+      warehouseId: number;
+      items?: components["schemas"]["PartDeltaDto"][];
+    };
+    UpdateRopReqDto: {
+      /** Format: int64 */
+      ropId?: number;
+      /** @enum {string} */
+      autoCalStatus?: "ACTIVE" | "INACTIVE";
+      /** @enum {string} */
+      autoOrderStatus?: "ACTIVE" | "INACTIVE";
+      /** Format: int32 */
+      leadTime?: number;
+      /** Format: int32 */
+      averageDaily?: number;
+      /** Format: int32 */
+      maxStock?: number;
+    };
+    DeliveryReqDto: {
+      /** Format: int64 */
+      warehouseId: number;
+      /** Format: int64 */
+      orderId?: number;
+      items?: components["schemas"]["PartDeltaDto"][];
+    };
+    ApiResponseListCategoryResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["CategoryResDto"][];
+    };
+    CategoryResDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    ApiResponseListGroupResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["GroupResDto"][];
+    };
+    GroupResDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    ApiResponsePageRopResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PageRopResDto"];
+    };
+    PageRopResDto: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["RopResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
+    RopResDto: {
+      /** Format: int64 */
+      partId?: number;
+      partCode?: string;
+      partName?: string;
+      categoryName?: string;
+      groupName?: string;
+      unit?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int64 */
+      ropId?: number;
+      /** Format: int32 */
+      rop?: number;
+      /** Format: int32 */
+      maxStock?: number;
+      /** Format: int32 */
+      leadTime?: number;
+      autoOrderStatus?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ApiResponsePagePOResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PagePOResDto"];
+    };
+    POResDto: {
+      /** Format: int64 */
+      purchaseOrderId?: number;
+      orderNumber?: string;
+      categoryName?: string;
+      groupName?: string;
+      /** Format: int64 */
+      partId?: number;
+      partName?: string;
+      partCode?: string;
+      /** Format: int32 */
+      currQuantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      unit?: string;
+      /** Format: int32 */
+      orderQuantity?: number;
+      /** Format: int32 */
+      inboundQuantity?: number;
+      /** Format: int32 */
+      restQuantity?: number;
+      /** Format: int32 */
+      price?: number;
+      /** Format: date-time */
+      scheduledDate?: string;
+      /** Format: date-time */
+      receivedDate?: string;
+      /** Format: date-time */
+      createdAt?: string;
+      orderStatus?: string;
+    };
+    PagePOResDto: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["POResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
+    ApiResponsePOResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["POResDto"];
+    };
+    ApiResponseListPartItemDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PartItemDto"][];
+    };
+    PartItemDto: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: int32 */
+      quantity?: number;
+    };
+    ApiResponsePagePartResDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      message?: string;
+      data?: components["schemas"]["PagePartResDto"];
+    };
+    PagePartResDto: {
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      /** Format: int32 */
+      size?: number;
+      content?: components["schemas"]["PartResDto"][];
+      /** Format: int32 */
+      number?: number;
+      sort?: components["schemas"]["SortObject"];
+      pageable?: components["schemas"]["PageableObject"];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
+      empty?: boolean;
+    };
+    PartResDto: {
+      /** Format: int64 */
+      id?: number;
+      category?: string;
+      group?: string;
+      name?: string;
+      code?: string;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int32 */
+      rop?: number;
+      unit?: string;
+      /** Format: int32 */
+      partValue?: number;
+      status?: string;
     };
     ApiResponseListPartOrderResponseDto: {
       /** Format: int32 */
@@ -2785,6 +3545,7 @@ export interface components {
       rejectionReason?: string;
       priority?: string;
       materialAvailability?: string;
+      orderType?: string;
       items?: components["schemas"]["PartOrderItemDto"][];
       /** Format: int32 */
       dday?: number;
@@ -2797,6 +3558,40 @@ export interface components {
       code?: number;
       message?: string;
       data?: components["schemas"]["PartOrderResponseDto"];
+    };
+    ApiResponseListMpsPlanResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsPlanResponse"][];
+    };
+    MpsPlanResponse: {
+      /** Format: int64 */
+      mpsPlanId?: number;
+      /** Format: int64 */
+      mpsId?: number;
+      /** Format: int32 */
+      cycleNumber?: number;
+      /** Format: date */
+      requiredDate?: string;
+      /** Format: int32 */
+      productionQuantity?: number;
+      /** Format: int32 */
+      remainingTotalProduction?: number;
+      /** @enum {string} */
+      status?:
+        | "PLANNED"
+        | "IN_PROGRESS"
+        | "COMPLETED"
+        | "DELAYED"
+        | "CANCELLED";
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
     };
     MaterialOrderItemRequestDto: {
       /** Format: int64 */
@@ -2844,10 +3639,6 @@ export interface components {
       partId?: number;
       /** Format: int64 */
       quantity?: number;
-      /** Format: int64 */
-      materialId?: number;
-      /** Format: int32 */
-      requestQuantity?: number;
     };
     PartOrderRequestDto: {
       /** Format: int64 */
@@ -2858,6 +3649,25 @@ export interface components {
       /** Format: int64 */
       externalPartOrderId?: number;
       items?: components["schemas"]["PartOrderItemRequestDto"][];
+    };
+    ApiResponseString1: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: string;
+    };
+    ApiResponseLong: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      /** Format: int64 */
+      data?: number;
     };
     ApiResponsePageResponseDtoPartOrderResponseDto: {
       /** Format: int32 */
@@ -2874,6 +3684,60 @@ export interface components {
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
+    };
+    ApiResponseMpsResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsResponse"];
+    };
+    MpsResponse: {
+      /** Format: int64 */
+      mpsId?: number;
+      /** Format: int64 */
+      partId?: number;
+      /** Format: int64 */
+      warehouseId?: number;
+      /** Format: int64 */
+      factoryId?: number;
+      /** Format: int32 */
+      standardQuantity?: number;
+      /** Format: int32 */
+      expectedInventory?: number;
+      /** Format: int32 */
+      forecastQuantity?: number;
+      /** Format: int32 */
+      totalProduction?: number;
+      /** Format: int32 */
+      safetyStock?: number;
+      /** Format: int32 */
+      leadTime?: number;
+      /** @enum {string} */
+      status?: "PLANNED" | "PROCESSING" | "COMPLETED" | "CANCELLED";
+      /** Format: date */
+      targetDate?: string;
+      /** Format: date */
+      startDate?: string;
+      /** Format: int32 */
+      productionCycles?: number;
+      /** Format: int32 */
+      bufferDays?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ApiResponseMpsPlanResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsPlanResponse"];
     };
     ApiResponsePageResponseDtoMaterialResponseDto: {
       /** Format: int32 */
@@ -2903,14 +3767,40 @@ export interface components {
       /** Format: int32 */
       totalPages?: number;
     };
-    ApiResponseString1: {
+    ApiResponseListMpsOrderInfoDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       /** Format: int32 */
       code?: number;
       message?: string;
-      data?: string;
+      data?: components["schemas"]["MpsOrderInfoDto"][];
+    };
+    MpsOrderInfoDto: {
+      /** Format: int64 */
+      orderId?: number;
+      orderCode?: string;
+      /** @enum {string} */
+      orderType?: "GENERAL" | "MPS";
+      /** @enum {string} */
+      status?:
+        | "UNDER_REVIEW"
+        | "PURCHASE_REQUEST"
+        | "PLAN_CONFIRMED"
+        | "DELAYED"
+        | "REJECTED"
+        | "IN_PROGRESS"
+        | "COMPLETED";
+      /** Format: date-time */
+      minimumStartDate?: string;
+      /** Format: date-time */
+      scheduledDate?: string;
+      /** @enum {string} */
+      materialAvailability?: "SUFFICIENT" | "INSUFFICIENT";
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
     };
     AgencyCartUpdateRequestDTO: {
       /** Format: int32 */
@@ -4537,6 +5427,447 @@ export interface operations {
       };
     };
   };
+  createRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  createSingleRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RopReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  stockingParts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartUpdateReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  getRops: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        categoryId?: number;
+        groupId?: number;
+        keyword?: string;
+        autoOrderStatus?: "ACTIVE" | "INACTIVE";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageRopResDto"];
+        };
+      };
+    };
+  };
+  updateRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateRopReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  deliveryParts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DeliveryReqDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  getCategoriesByWarehouse: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListCategoryResDto"];
+        };
+      };
+    };
+  };
+  getGroupsByCategory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        warehouseId: number;
+        categoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListGroupResDto"];
+        };
+      };
+    };
+  };
+  getPurchaseOrders: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        keyword?: string;
+        categoryId?: number;
+        groupId?: number;
+        status?:
+          | "UNDER_REVIEW"
+          | "PLAN_CONFIRMED"
+          | "DELAYED"
+          | "IN_PROGRESS"
+          | "COMPLETED";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePagePOResDto"];
+        };
+      };
+    };
+  };
+  getPurchaseOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        purchaseOrderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePOResDto"];
+        };
+      };
+    };
+  };
+  getInventoryBrief: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        partIds: number[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartItemDto"];
+        };
+      };
+    };
+  };
+  healthCheck1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  unauthorizedTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  notFoundTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  forbiddenTest1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData1: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
+  healthCheckData_11: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
+  search: {
+    parameters: {
+      query: {
+        warehouseId: number;
+        categoryId?: number;
+        groupId?: number;
+        keyword?: string;
+        quantityStatus?: "ENOUGH" | "SHORT" | "DANGER" | "OVER";
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePagePartResDto"];
+        };
+      };
+    };
+  };
+  deleteRop: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ropId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid2"];
+        };
+      };
+    };
+  };
   executeBatchMRP: {
     parameters: {
       query?: never;
@@ -4671,6 +6002,74 @@ export interface operations {
       };
     };
   };
+  executeMps: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  confirmMps: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
   createMaterialOrder: {
     parameters: {
       query?: never;
@@ -4726,6 +6125,161 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  setMpsStartDateToNow: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString1"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  printMpsOrderInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString1"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  testMpsOrderAutoApply: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString1"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  testMpsAutoApply: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString1"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  createTestMpsOrder: {
+    parameters: {
+      query: {
+        factoryId: number;
+        partId: number;
+        quantity?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseLong"];
         };
       };
       /** @description Conflict */
@@ -4930,6 +6484,111 @@ export interface operations {
       };
     };
   };
+  getMps: {
+    parameters: {
+      query: {
+        /** @description 부품 ID */
+        partId: number;
+        /** @description 예측 달 (YYYY-MM-DD 형식) */
+        forecastMonth: string;
+        /** @description 창고 ID */
+        warehouseId: number;
+      };
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMpsResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsPlans: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsPlan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description MPS Plan ID */
+        mpsPlanId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
   getMaterials: {
     parameters: {
       query?: {
@@ -5001,7 +6660,36 @@ export interface operations {
       };
     };
   };
-  healthCheck1: {
+  getMpsOrdersReadyForProcessing: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsOrderInfoDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheck2: {
     parameters: {
       query?: never;
       header?: never;
@@ -5030,7 +6718,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest1: {
+  unauthorizedTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -5059,7 +6747,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest1: {
+  notFoundTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -5088,7 +6776,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest1: {
+  forbiddenTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -5117,7 +6805,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData1: {
+  healthCheckData2: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -5148,7 +6836,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_11: {
+  healthCheckData_12: {
     parameters: {
       query?: never;
       header?: never;
@@ -5345,7 +7033,7 @@ export interface operations {
       };
     };
   };
-  stockingParts: {
+  stockingParts1: {
     parameters: {
       query?: never;
       header?: never;
@@ -5514,7 +7202,7 @@ export interface operations {
       };
     };
   };
-  healthCheck2: {
+  healthCheck3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5534,7 +7222,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest2: {
+  unauthorizedTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5554,7 +7242,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest2: {
+  notFoundTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5574,7 +7262,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest2: {
+  forbiddenTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5594,7 +7282,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData2: {
+  healthCheckData3: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -5616,7 +7304,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_12: {
+  healthCheckData_13: {
     parameters: {
       query?: never;
       header?: never;
@@ -6008,7 +7696,7 @@ export interface operations {
       };
     };
   };
-  search: {
+  search1: {
     parameters: {
       query?: {
         query?: string;
@@ -6468,7 +8156,7 @@ export interface operations {
       };
     };
   };
-  healthCheck3: {
+  healthCheck4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6488,7 +8176,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest3: {
+  unauthorizedTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6508,7 +8196,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest3: {
+  notFoundTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6528,7 +8216,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest3: {
+  forbiddenTest4: {
     parameters: {
       query?: never;
       header?: never;
@@ -6548,7 +8236,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData3: {
+  healthCheckData4: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -6570,7 +8258,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_13: {
+  healthCheckData_14: {
     parameters: {
       query?: never;
       header?: never;
@@ -6707,7 +8395,7 @@ export interface operations {
       };
     };
   };
-  healthCheck4: {
+  healthCheck5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6727,7 +8415,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest4: {
+  unauthorizedTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6747,7 +8435,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest4: {
+  notFoundTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6767,7 +8455,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest4: {
+  forbiddenTest5: {
     parameters: {
       query?: never;
       header?: never;
@@ -6787,7 +8475,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData4: {
+  healthCheckData5: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -6809,7 +8497,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_14: {
+  healthCheckData_15: {
     parameters: {
       query?: never;
       header?: never;
@@ -7090,7 +8778,7 @@ export interface operations {
       };
     };
   };
-  healthCheck5: {
+  healthCheck6: {
     parameters: {
       query?: never;
       header?: never;
@@ -7372,7 +9060,7 @@ export interface operations {
       };
     };
   };
-  healthCheck6: {
+  healthCheck7: {
     parameters: {
       query?: never;
       header?: never;

@@ -10,8 +10,6 @@ const PurchasingLayout: React.FC = () => {
     moduleDescription: "구매 요청 및 발주 관리를 수행합니다",
     moduleIcon: "ri-shopping-bag-line",
     moduleColor: "bg-red-600",
-    userRole: "구매 관리자",
-    userEmail: "purchasing@company.com",
     navItems: [],
   };
 

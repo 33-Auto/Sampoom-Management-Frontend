@@ -16,8 +16,6 @@ interface ModuleLayoutProps extends PropsWithChildren {
   moduleDescription: string;
   moduleIcon: string;
   moduleColor: string;
-  userRole: string;
-  userEmail: string;
   navItems: NavItem[];
 }
 
@@ -27,8 +25,6 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
   moduleDescription,
   moduleIcon,
   moduleColor,
-  userRole,
-  userEmail,
   navItems,
 }) => {
   const headerConfig = {
@@ -36,8 +32,6 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
     moduleDescription,
     moduleIcon,
     moduleColor,
-    userRole,
-    userEmail,
     navItems: [],
   };
 
