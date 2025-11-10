@@ -46,7 +46,7 @@ export function useLoginForm() {
 
       const userData = mapProfileToUser(profile);
       loginAction(userData);
-      navigate(`/${profile.workspace.toLowerCase()}/dashboard`);
+      navigate(`/${profile.workspace.toLowerCase()}/`);
     },
     [loginMutation, loginAction, navigate],
   );
