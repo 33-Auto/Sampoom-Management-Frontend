@@ -7,8 +7,6 @@ export const FactoryDashboard = () => {
     moduleDescription: "생산 라인, 주문 및 품질을 관리합니다",
     moduleIcon: "ri-factory-line",
     moduleColor: "bg-blue-600",
-    userRole: "생산 관리자",
-    userEmail: "factory@company.com",
     navItems: [
       {
         path: "/factory",
