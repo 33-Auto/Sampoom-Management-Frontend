@@ -122,11 +122,16 @@ export const SalesOrders = () => {
   );
 
   // 작업 버튼 - 취소/상세
-  const statusFilterOptions = useMemo(
-    () =>
-      SALES_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
-        ...option,
+  const statusOptions = useMemo(
+    () => [
+      { value: "ALL", label: "전체 상태" },
+      ...SALES_ORDER_STATUS_FILTER_OPTIONS.filter(
+        (option) => option.value !== "ALL",
+      ).map((option) => ({
+        value: option.value,
+        label: option.label,
       })),
+    ],
     [],
   );
 
@@ -232,7 +237,7 @@ export const SalesOrders = () => {
           {
             key: "status",
             value: statusFilter,
-            options: statusFilterOptions,
+            options: statusOptions,
             onChange: (value: string) => {
               setStatusFilter(value as SalesOrderStatusFilterValue);
               setPage(0);

@@ -44,6 +44,24 @@ export const useSalesOrdersQuery = (params: SalesOrderListParams) =>
     },
   );
 
+export const salesOrderDetailQueryOptions = (orderId: number) =>
+  queryClient.queryOptions("get", "/api/order/{orderId}", {
+    params: {
+      path: { orderId },
+    },
+  });
+
+export const useSalesOrderDetailQuery = (orderId?: number) =>
+  queryClient.useQuery("get", "/api/order/{orderId}", {
+    params: {
+      path: { orderId: orderId as number },
+    },
+    enabled: typeof orderId === "number" && !Number.isNaN(orderId),
+  });
+
+export const useCancelOrderMutation = () =>
+  queryClient.useMutation("patch", "/api/order/cancel/{orderId}");
+
 export type SalesOrderListData = SalesOrderListResponse["data"];
 
 export type SalesOrderListItem = SalesOrderDto;
