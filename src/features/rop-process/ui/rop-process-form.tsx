@@ -214,7 +214,7 @@ export function RopProcessForm({
 
   const calculatedRop = formData.averageDaily * formData.leadTime;
 
-  const isAutoOrder = formData.autoOrderStatus === "ACTIVE";
+  const isAutoOrder = formData.autoOrderStatus === "활성";
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
