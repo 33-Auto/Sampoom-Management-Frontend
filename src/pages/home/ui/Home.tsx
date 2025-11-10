@@ -1,18 +1,10 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, Card } from "@/shared/ui";
+import { Card } from "@/shared/ui";
+import HomeLayout from "@/widgets/Layout/HomeLayout";
 
 export const Home = () => {
   const navigate = useNavigate();
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const modules = [
     {
@@ -151,47 +143,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-white dark:bg-bg-black">
-      {/* 헤더 */}
-      <div className="border-b border-gray-200 bg-bg-card-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
-        <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                삼삼오토
-              </h1>
-              <p className="mt-1 text-gray-600 dark:text-gray-400">
-                {currentTime.toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  weekday: "long",
-                })}{" "}
-                {currentTime.toLocaleTimeString("ko-KR")}
-              </p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={async () => navigate("/login")}
-              >
-                <i className="ri-user-line mr-2"></i>
-                로그인
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={async () => navigate("/signup")}
-              >
-                <i className="ri-user-add-line mr-2"></i>
-                회원가입
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <HomeLayout>
       {/* 메인 콘텐츠 */}
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* 시스템 개요 */}
@@ -366,6 +318,6 @@ export const Home = () => {
           </Card>
         </div>
       </div>
-    </div>
+    </HomeLayout>
   );
 };

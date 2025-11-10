@@ -10,8 +10,6 @@ const ProductionLayout: React.FC = () => {
     moduleDescription: "생산 지시 및 작업 현황을 관리합니다",
     moduleIcon: "ri-settings-4-line",
     moduleColor: "bg-orange-600",
-    userRole: "생산 관리자",
-    userEmail: "production@company.com",
     navItems: [],
   };
 

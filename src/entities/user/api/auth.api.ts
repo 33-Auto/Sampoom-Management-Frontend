@@ -45,6 +45,9 @@ export const useProfileQuery = (workspace: LoginRequest["workspace"]) =>
     },
   });
 
+export const useLogoutMutation = () =>
+  queryClient.useMutation("post", "/api/auth/logout");
+
 export const register = async (userInfo: SignupRequest) => {
   const { data, error } = await fetchClient.POST("/api/user/signup" as any, {
     body: userInfo,

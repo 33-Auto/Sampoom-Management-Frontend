@@ -10,8 +10,6 @@ const SalesLayout: React.FC = () => {
     moduleDescription: "대리점 주문 접수 및 판매 현황을 관리합니다",
     moduleIcon: "ri-shopping-cart-line",
     moduleColor: "bg-green-600",
-    userRole: "판매 관리자",
-    userEmail: "sales@company.com",
     navItems: [],
   };
 

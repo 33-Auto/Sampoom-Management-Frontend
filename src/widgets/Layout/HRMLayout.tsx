@@ -10,8 +10,6 @@ const HRMLayout: React.FC = () => {
     moduleDescription: "직원 정보만 조회합니다",
     moduleIcon: "ri-team-line",
     moduleColor: "bg-teal-600",
-    userRole: "인사 담당자",
-    userEmail: "hr@company.com",
     navItems: [],
   };
 
