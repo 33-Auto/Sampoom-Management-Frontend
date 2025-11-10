@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useRoutingsQuery } from "@/pages/master/routings/api";
@@ -23,15 +24,19 @@ import {
 export const RoutingMaster = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [groupFilter, setGroupFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [selectedRouting, setSelectedRouting] =
     useState<ProcessResponseDTO | null>(null);
 
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
-  const { data, isLoading, isError, refetch } = useRoutingsQuery({
+  const { data, isError, refetch } = useRoutingsQuery({
     query: searchTerm === "" ? undefined : searchTerm,
     status: statusFilter === "" ? undefined : (statusFilter as RoutingStatus),
+    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+    groupId: groupFilter === "" ? undefined : Number(groupFilter),
     page,
     size,
   });
@@ -39,6 +44,11 @@ export const RoutingMaster = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
   const routings = data?.data?.content ?? [];
+
+  const categoryOptions = usePartCategoryOptions();
+  const groupOptions = usePartGroupOptions(
+    categoryFilter === "" ? 0 : Number(categoryFilter),
+  );
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
@@ -68,6 +78,13 @@ export const RoutingMaster = () => {
     { key: keys.code, title: "공정 코드", width: "120px" },
     { key: keys.partCode, title: "품목 코드", width: "120px" },
     { key: keys.partName, title: "품목명" },
+    {
+      key: keys.categoryName,
+      title: "카테고리",
+      width: "120px",
+      render: (value: string, row: ProcessResponseDTO) =>
+        `${row.categoryName || "-"} > ${row.groupName || "-"}`,
+    },
     { key: keys.version, title: "버전", width: "80px" },
     {
       key: keys.totalStepMinutes,
@@ -173,6 +190,25 @@ export const RoutingMaster = () => {
             searchPlaceholder="품목명, 코드 또는 공정 코드 검색..."
             filters={[
               {
+                key: "category",
+                value: categoryFilter,
+                options: categoryOptions,
+                onChange: (value: string) => {
+                  setCategoryFilter(value);
+                  setGroupFilter("");
+                  onPageChange(0);
+                },
+              },
+              {
+                key: "group",
+                value: groupFilter,
+                options: groupOptions,
+                onChange: (value: string) => {
+                  setGroupFilter(value);
+                  onPageChange(0);
+                },
+              },
+              {
                 key: "status",
                 value: statusFilter,
                 options: statusOptions,
@@ -205,10 +241,9 @@ export const RoutingMaster = () => {
             <Table
               columns={columns}
               data={routings}
-              loading={isLoading && data === undefined}
               emptyText={
-                isLoading && data === undefined
-                  ? "데이터 로딩 중..."
+                isError && data === undefined
+                  ? "데이터 로딩 중 오류가 발생했습니다."
                   : "조건에 맞는 공정이 없습니다"
               }
               errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
@@ -255,6 +290,14 @@ export const RoutingMaster = () => {
                         </span>
                         <span className="font-medium text-gray-900 dark:text-gray-100">
                           {selectedRouting.partName || "-"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          카테고리:
+                        </span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {`${selectedRouting.categoryName || "-"} > ${selectedRouting.groupName || "-"}`}
                         </span>
                       </div>
                       <div className="flex justify-between">

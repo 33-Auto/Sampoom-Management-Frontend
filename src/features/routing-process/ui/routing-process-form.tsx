@@ -117,6 +117,9 @@ export function RoutingProcessForm({
     Number(selectedCategoryId),
     Number(selectedGroupId),
   );
+  const partIdValue = watch("partId");
+  const partSelectValue =
+    partIdValue && Number(partIdValue) > 0 ? String(partIdValue) : "";
 
   // WorkCenters 옵션 가져오기
   const { data: workCentersData } = useWorkCentersQuery({});
@@ -294,7 +297,7 @@ export function RoutingProcessForm({
             <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
               기본 정보
             </h3>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {!isEditMode ? (
                 <>
                   <Select
@@ -313,7 +316,7 @@ export function RoutingProcessForm({
                   />
                   <Select
                     label="품목"
-                    value={watch("partId")?.toString() || ""}
+                    value={partSelectValue}
                     onChange={(e) => handlePartChange(e.target.value)}
                     options={partOptions}
                     disabled={!selectedGroupId || isEditMode}
