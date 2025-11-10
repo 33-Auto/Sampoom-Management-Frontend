@@ -214,7 +214,7 @@ export const MrpBatchResultModal = ({
                               {" | 납기일: "}
                               {formatDate(plan.requiredDate)}
                               {typeof plan.dday === "number"
-                                ? ` | D-${plan.dday}`
+                                ? ` | ${plan.dday >= 0 ? `D-${plan.dday}` : `D+${Math.abs(plan.dday)}`}`
                                 : ""}
                             </p>
                           </div>
