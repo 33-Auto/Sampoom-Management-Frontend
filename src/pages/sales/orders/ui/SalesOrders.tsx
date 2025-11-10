@@ -189,129 +189,131 @@ export const SalesOrders = () => {
     }, [orders]);
 
   return (
-    <div className="p-6">
-      {/* 통계 카드 - 공통 StatCard 사용 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-file-list-line"
-          label="전체 주문"
-          value={totalOrders}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
+    <>
+      <div className="p-6">
+        {/* 통계 카드 - 공통 StatCard 사용 */}
+        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+          <StatCard
+            icon="ri-file-list-line"
+            label="전체 주문"
+            value={totalOrders}
+            iconBgColor="bg-blue-100"
+            iconColor="text-blue-600"
+          />
 
-        <StatCard
-          icon="ri-notification-line"
-          label="확인된 주문"
-          value={confirmedOrders}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
+          <StatCard
+            icon="ri-notification-line"
+            label="확인된 주문"
+            value={confirmedOrders}
+            iconBgColor="bg-red-100"
+            iconColor="text-red-600"
+          />
 
-        <StatCard
-          icon="ri-time-line"
-          label="진행 중(PENDING/SHIPPING)"
-          value={shippingOrPending}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
+          <StatCard
+            icon="ri-time-line"
+            label="진행 중(PENDING/SHIPPING)"
+            value={shippingOrPending}
+            iconBgColor="bg-yellow-100"
+            iconColor="text-yellow-600"
+          />
 
-        <StatCard
-          icon="ri-check-double-line"
-          label="완료된 주문"
-          value={completedOrders}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-      </div>
+          <StatCard
+            icon="ri-check-double-line"
+            label="완료된 주문"
+            value={completedOrders}
+            iconBgColor="bg-green-100"
+            iconColor="text-green-600"
+          />
+        </div>
 
-      {/* 필터 및 검색 - 공통 컴포넌트 사용 */}
-      <SearchFilterBar
-        searchTerm={fromText}
-        onSearchChange={(v) => {
-          setFromText(v);
-          setPage(0);
-        }}
-        searchPlaceholder="고객사(From) 검색..."
-        filters={[
-          {
-            key: "status",
-            value: statusFilter,
-            options: statusOptions,
-            onChange: (value: string) => {
-              setStatusFilter(value as SalesOrderStatusFilterValue);
-              setPage(0);
-            },
-          },
-        ]}
-      />
-
-      {/* 주문 목록 테이블 - TableSection 사용 */}
-      <TableSection
-        title="판매 주문 목록"
-        metaRight={
-          <div className="flex items-center gap-3 text-sm text-gray-500">
-            <span>
-              총 {totalElements}개 / 페이지 {page + 1} /{" "}
-              {Math.max(totalPages, 1)}
-            </span>
-            <select
-              className="cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs"
-              value={size}
-              onChange={(e) => {
-                setSize(Number(e.target.value));
+        {/* 필터 및 검색 - 공통 컴포넌트 사용 */}
+        <SearchFilterBar
+          searchTerm={fromText}
+          onSearchChange={(v) => {
+            setFromText(v);
+            setPage(0);
+          }}
+          searchPlaceholder="고객사(From) 검색..."
+          filters={[
+            {
+              key: "status",
+              value: statusFilter,
+              options: statusOptions,
+              onChange: (value: string) => {
+                setStatusFilter(value as SalesOrderStatusFilterValue);
                 setPage(0);
-              }}
-            >
-              {[10, 20, 50].map((s) => (
-                <option key={s} value={s}>
-                  {s}/page
-                </option>
-              ))}
-            </select>
-          </div>
-        }
-        actionsRight={
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={async () => refetch()}
-            >
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-                disabled={page <= 0}
-              >
-                이전
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  setPage((p) =>
-                    totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
-                  )
-                }
-                disabled={totalPages ? page >= totalPages - 1 : false}
-              >
-                다음
-              </Button>
-            </div>
-          </div>
-        }
-      >
-        <Table
-          columns={columns}
-          data={orders}
-          emptyText="조건에 맞는 주문이 없습니다"
+              },
+            },
+          ]}
         />
-      </TableSection>
-    </div>
+
+        {/* 주문 목록 테이블 - TableSection 사용 */}
+        <TableSection
+          title="판매 주문 목록"
+          metaRight={
+            <div className="flex items-center gap-3 text-sm text-gray-500">
+              <span>
+                총 {totalElements}개 / 페이지 {page + 1} /{" "}
+                {Math.max(totalPages, 1)}
+              </span>
+              <select
+                className="cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs"
+                value={size}
+                onChange={(e) => {
+                  setSize(Number(e.target.value));
+                  setPage(0);
+                }}
+              >
+                {[10, 20, 50].map((s) => (
+                  <option key={s} value={s}>
+                    {s}/page
+                  </option>
+                ))}
+              </select>
+            </div>
+          }
+          actionsRight={
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={async () => refetch()}
+              >
+                <i className="ri-refresh-line mr-2"></i>
+                새로고침
+              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page <= 0}
+                >
+                  이전
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setPage((p) =>
+                      totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
+                    )
+                  }
+                  disabled={totalPages ? page >= totalPages - 1 : false}
+                >
+                  다음
+                </Button>
+              </div>
+            </div>
+          }
+        >
+          <Table
+            columns={columns}
+            data={orders}
+            emptyText="조건에 맞는 주문이 없습니다"
+          />
+        </TableSection>
+      </div>
+    </>
   );
 };

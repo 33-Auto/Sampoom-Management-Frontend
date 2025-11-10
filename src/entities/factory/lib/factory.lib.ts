@@ -7,14 +7,16 @@ export function useFactoryBranchOptions() {
 
   return useMemo(() => {
     const branches = (data as any)?.data ?? data ?? [];
-    return [
-      { label: "지점 선택", value: "" },
-      ...branches
-        .filter((branch: any) => branch?.status === "ACTIVE")
-        .map((branch: any) => ({
-          label: branch.name,
-          value: String(branch.id),
-        })),
-    ];
+    return branches
+      .filter(
+        (branch: any) =>
+          branch?.status === "ACTIVE" &&
+          branch?.id !== null &&
+          branch?.id !== undefined,
+      )
+      .map((branch: any) => ({
+        label: branch.name,
+        value: String(branch.id),
+      }));
   }, [data]);
 }

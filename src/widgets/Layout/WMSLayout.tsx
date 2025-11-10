@@ -1,9 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
+import { BranchSelectBar } from "@/features/branch-select";
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
-
 const WMSLayout: React.FC = () => {
   const headerConfig = {
     moduleTitle: "재고 관리 (WMS)",
@@ -42,9 +42,10 @@ const WMSLayout: React.FC = () => {
     <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-purple-600" />
-      <div className="p-6">
-        <Outlet />
-      </div>
+      {/* 지점 선택 영역 */}
+      <BranchSelectBar moduleType="wms" />
+
+      <Outlet />
     </div>
   );
 };

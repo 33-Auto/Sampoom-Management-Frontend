@@ -1,2 +1,5 @@
-export { useWarehouseInventoryQuery } from "./inventory.api";
-export { inventoryListQueryOptions } from "./inventory.api";
+export {
+  useWarehouseInventoryQuery,
+  inventoryListQueryOptions,
+} from "./inventory.api";
+export type { InventoryListQueryParams } from "./inventory.api";

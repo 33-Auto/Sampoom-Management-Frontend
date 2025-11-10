@@ -1,10 +1,10 @@
 export async function loader() {
   const { queryClient } = await import("@/shared/api/query");
-  const { wmsBranchesQueryOptions } = await import("@/entities/wms");
-  const { shippingListQueryOptions } = await import("./shipping-list.api");
+  const { factoryBranchesQueryOptions } = await import("@/entities/factory");
+  const { productionPlansListQueryOptions } = await import("./planning.api");
 
   const branchesData = await queryClient.ensureQueryData(
-    wmsBranchesQueryOptions(),
+    factoryBranchesQueryOptions(),
   );
 
   const branches = (branchesData as any)?.data ?? branchesData ?? [];
@@ -15,14 +15,14 @@ export async function loader() {
       branch?.id !== undefined,
   );
 
-  const defaultWarehouseId =
+  const defaultFactoryId =
     typeof firstActive?.id === "number" ? firstActive.id : undefined;
 
-  if (typeof defaultWarehouseId === "number") {
+  if (typeof defaultFactoryId === "number") {
     await queryClient.ensureQueryData(
-      shippingListQueryOptions({ warehouseId: defaultWarehouseId }),
+      productionPlansListQueryOptions({ factoryId: defaultFactoryId }),
     );
   }
 
-  return { defaultWarehouseId };
+  return { defaultFactoryId };
 }

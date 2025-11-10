@@ -1,9 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { useShippingListQuery } from "@/pages/wms/shipping/api/shipping-list.api";
+import {
+  type ShippingListQueryParams,
+  useShippingListQuery,
+} from "@/pages/wms/shipping/api/shipping-list.api";
 import type {
   ShippingListParams,
   ShippingOrderDto,
@@ -46,8 +54,6 @@ const STATUS_OPTIONS: Array<{ value: ShippingStatus | ""; label: string }> = [
   })),
 ];
 
-const DEFAULT_WAREHOUSE_ID = 168;
-
 const isShippingStatus = (status: string): status is ShippingStatus =>
   Object.prototype.hasOwnProperty.call(STATUS_CONFIG, status);
 
@@ -68,20 +74,63 @@ export function ShippingTodos() {
   const { page, size, onPageChange, onSizeChange, setPage } =
     usePaginationTable({});
 
+  const { defaultWarehouseId } = useLoaderData() as {
+    defaultWarehouseId?: number;
+  };
+  const selectedWarehouseId = useBranchId("wms");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
+
   const categoryOptions = usePartCategoryOptions();
   const groupOptions = usePartGroupOptions(
     categoryFilter === "" ? 0 : Number(categoryFilter),
   );
 
-  const { data, isLoading, isError, refetch } = useShippingListQuery({
-    warehouseId: DEFAULT_WAREHOUSE_ID,
-    keyword: searchTerm === "" ? undefined : searchTerm,
-    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
-    groupId: groupFilter === "" ? undefined : Number(groupFilter),
-    status: statusFilter === "" ? undefined : statusFilter,
+  const queryParams = useMemo<ShippingListQueryParams | undefined>(() => {
+    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+      return undefined;
+    }
+    return {
+      warehouseId,
+      keyword: searchTerm === "" ? undefined : searchTerm,
+      categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+      groupId: groupFilter === "" ? undefined : Number(groupFilter),
+      status: statusFilter === "" ? undefined : statusFilter,
+      page,
+      size,
+    };
+  }, [
+    warehouseId,
+    searchTerm,
+    categoryFilter,
+    groupFilter,
+    statusFilter,
     page,
     size,
-  });
+  ]);
+
+  const { data, isLoading, isError, refetch } =
+    useShippingListQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultWarehouseId === "number" &&
+      Number.isFinite(defaultWarehouseId)
+    ) {
+      const defaultIdString = String(defaultWarehouseId);
+      if (!selectedWarehouseId) {
+        setBranchSelection("wms", defaultIdString);
+      }
+    }
+  }, [defaultWarehouseId, selectedWarehouseId, setBranchSelection]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [warehouseId, setPage]);
 
   const orders = data?.data?.content ?? [];
   const totalElements = data?.data?.totalElements ?? 0;
@@ -190,6 +239,18 @@ export function ShippingTodos() {
         value ? new Date(value).toLocaleDateString("ko-KR") : "-",
     },
   ];
+
+  if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <InfoBox type="info" title="창고 선택 필요">
+          <p className="text-sm">
+            상단에서 창고를 선택하면 출고 요청 목록을 확인할 수 있습니다.
+          </p>
+        </InfoBox>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">

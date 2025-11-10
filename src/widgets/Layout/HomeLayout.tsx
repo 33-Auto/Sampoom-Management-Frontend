@@ -1,7 +1,6 @@
 import { useEffect, useState, type PropsWithChildren } from "react";
 
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
-
 const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -32,6 +31,7 @@ const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
+
       {children}
     </div>
   );

@@ -1,10 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 import { normalizeInventoryStatus } from "@/entities/inventory/lib/status";
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { useWarehouseInventoryQuery } from "@/pages/wms/inventory/api";
+import {
+  type InventoryListQueryParams,
+  useWarehouseInventoryQuery,
+} from "@/pages/wms/inventory/api";
 import type {
   InventoryStatusKey,
   PartResDto,
@@ -13,7 +21,6 @@ import {
   INVENTORY_STATUS_BADGE_VARIANTS,
   INVENTORY_STATUS_LABELS,
 } from "@/pages/wms/inventory/model";
-import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
 import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
 import {
@@ -35,15 +42,58 @@ export const InventoryDashboard = () => {
   const { page, size, onPageChange, onSizeChange, setPage } =
     usePaginationTable({});
 
-  const { data, isLoading, isError, refetch } = useWarehouseInventoryQuery({
-    warehouseId: DEFAULT_WAREHOUSE_ID,
-    keyword: searchTerm === "" ? undefined : searchTerm,
-    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
-    groupId: groupFilter === "" ? undefined : Number(groupFilter),
-    quantityStatus: statusFilter === "" ? undefined : statusFilter,
+  const { defaultWarehouseId } = useLoaderData() as {
+    defaultWarehouseId?: number;
+  };
+  const selectedWarehouseId = useBranchId("wms");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
+
+  const queryParams = useMemo<InventoryListQueryParams | undefined>(() => {
+    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+      return undefined;
+    }
+    return {
+      warehouseId,
+      keyword: searchTerm === "" ? undefined : searchTerm,
+      categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+      groupId: groupFilter === "" ? undefined : Number(groupFilter),
+      quantityStatus: statusFilter === "" ? undefined : statusFilter,
+      page,
+      size,
+    };
+  }, [
+    warehouseId,
+    searchTerm,
+    categoryFilter,
+    groupFilter,
+    statusFilter,
     page,
     size,
-  });
+  ]);
+
+  const { data, isLoading, isError, refetch } =
+    useWarehouseInventoryQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultWarehouseId === "number" &&
+      Number.isFinite(defaultWarehouseId)
+    ) {
+      const defaultIdString = String(defaultWarehouseId);
+      if (!selectedWarehouseId) {
+        setBranchSelection("wms", defaultIdString);
+      }
+    }
+  }, [defaultWarehouseId, selectedWarehouseId, setBranchSelection]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [warehouseId, setPage]);
 
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
@@ -198,6 +248,18 @@ export const InventoryDashboard = () => {
   //     (sum, item) => sum + Number(item.partValue!),
   //     0,
   //   ) || 0;
+
+  if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <InfoBox type="info" title="창고 선택 필요">
+          <p className="text-sm">
+            상단에서 창고를 선택하면 재고 현황을 확인할 수 있습니다.
+          </p>
+        </InfoBox>
+      </div>
+    );
+  }
 
   return (
     <>
