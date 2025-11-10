@@ -47,9 +47,9 @@ export function usePartSelectOptions(categoryId: number, groupId: number) {
     const baseOption = { label: "전체", value: "" };
 
     const parts =
-      data?.data?.content?.map(({ code, name }) => ({
+      data?.data?.content?.map(({ id, code, name }) => ({
         label: "[" + code + "] " + name!,
-        value: code!, // 이것은 무조건 있다고 합의되어서 ! 붙임
+        value: String(id),
       })) ?? [];
 
     return [baseOption, ...parts];

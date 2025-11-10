@@ -9,6 +9,8 @@ const getRoutingsQueryOptions = (params?: RoutingListParams) => ({
       size: params?.size ?? 10,
       query: params?.query,
       status: params?.status,
+      categoryId: params?.categoryId,
+      groupId: params?.groupId,
     },
   },
 });
