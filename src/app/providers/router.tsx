@@ -512,7 +512,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/warehouse",
-        element: <Navigate to="/warehouse/dashboard" replace />,
+        element: <Navigate to="/warehouse/orders" replace />,
       },
       // {
       //   path: "/warehouse/dashboard",
