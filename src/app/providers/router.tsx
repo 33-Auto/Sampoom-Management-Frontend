@@ -8,7 +8,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 // ============================================================================
 import { Home } from "@/pages/home";
 import { Login } from "@/pages/login/ui";
-import Register from "@/pages/register/ui/Register";
+import { Register } from "@/pages/register/ui/Register";
 import { Notfound } from "@/pages/Notfound/Notfound";
 
 // ============================================================================

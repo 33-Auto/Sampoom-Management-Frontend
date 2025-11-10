@@ -26,13 +26,13 @@ const createAuthAwareFetchClient = () => {
         return response;
       }
 
-      if (response.url === `${BASE_URL}/auth/refresh`) {
+      if (response.url === `${BASE_URL}/api/auth/refresh`) {
         window.dispatchEvent(new Event("auth:failed"));
         return response;
       }
 
       if (!refreshPromise) {
-        refreshPromise = fetch(`${BASE_URL}/auth/refresh`, {
+        refreshPromise = fetch(`${BASE_URL}/api/auth/refresh`, {
           method: "POST",
           credentials: "include",
         }).finally(() => {

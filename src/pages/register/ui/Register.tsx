@@ -1,49 +1,69 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+import { useFactoryBranchOptions } from "@/entities/factory";
+import { useWmsBranchOptions } from "@/entities/wms";
 import Logo from "@/shared/assets/logo_text_dark.svg";
-import type { SignupRequest } from "@/shared/model/models";
 import { Button, Card, Input, Select } from "@/shared/ui";
 
-import { useRegister } from "../model/useRegister";
+import { useRegisterForm } from "../lib";
+import {
+  POSITION_OPTIONS,
+  WORKSPACE_OPTIONS,
+  type RegisterFormValues,
+} from "../model";
 
-export default function Register() {
+const Register = () => {
   const navigate = useNavigate();
-  const { handleRegister, isLoading: loading } = useRegister();
-
-  const workSpaceOptions = [
-    { value: "warehouse", label: "창고 관리자" },
-    { value: "factory", label: "공장 관리자" },
-  ];
-
-  const branchOptions = [
-    { value: "seoul", label: "서울 지점" },
-    { value: "busan", label: "부산 지점" },
-  ];
-
-  const [formData, setFormData] = useState<SignupRequest>({
-    email: "",
-    password: "",
-    workspace: workSpaceOptions[0].value,
-    branch: branchOptions[0].value,
-    userName: "",
-    position: "",
+  const { submitRegister, isLoading } = useRegisterForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      userName: "",
+      workspace: "",
+      branch: "",
+      position: "",
+    },
+    mode: "onSubmit",
   });
 
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const password = watch("password");
+  const workspace = watch("workspace");
+  const branchValue = watch("branch");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const factoryBranchOptions = useFactoryBranchOptions();
+  const wmsBranchOptions = useWmsBranchOptions();
 
-    if (formData.password !== confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
+  // branch value에 해당하는 label 찾기
+  const branchOptions =
+    workspace === "FACTORY" ? factoryBranchOptions : wmsBranchOptions;
+  const branchLabel =
+    branchOptions.find((option) => option.value === branchValue)?.label || "";
+
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      // branch value 대신 label을 전달
+      await submitRegister({
+        ...values,
+        branch: branchLabel,
+      });
+    } catch (error) {
+      console.error(error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "회원가입에 실패했습니다. 다시 시도해주세요.";
+      setError("root", { type: "manual", message });
     }
-
-    console.log("Submitting registration with data:", formData);
-
-    handleRegister(formData);
-  };
+  });
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg-white p-4 transition-colors duration-200 dark:bg-bg-black">
@@ -52,78 +72,113 @@ export default function Register() {
           <div className="mb-8 text-center">
             <img src={Logo} alt="Logo" className="mx-auto mb-4 h-12 w-auto" />
             <p className="mt-2 text-grey-600 dark:text-grey-300">
-              ERP 시스템에 로그인하세요
-            </p>
-
-            <p className="mt-2 text-grey-600 dark:text-grey-300">
               새 계정을 만드세요
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
             <Input
               label="사용자명"
               type="text"
-              value={formData.userName}
-              onChange={(e) =>
-                setFormData({ ...formData, userName: e.target.value })
-              }
               placeholder="사용자명을 입력하세요"
-              required
+              {...register("userName", {
+                required: "사용자명을 입력하세요.",
+              })}
+              errorText={errors.userName?.message}
             />
 
             <Input
               label="이메일"
               type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
               placeholder="이메일을 입력하세요"
-              required
+              autoComplete="email"
+              {...register("email", {
+                required: "이메일을 입력하세요.",
+                pattern: {
+                  value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/u,
+                  message: "올바른 이메일 형식을 입력하세요.",
+                },
+              })}
+              errorText={errors.email?.message}
             />
 
             <Select
-              label="역할"
-              value={formData.workspace}
-              onChange={(e) =>
-                setFormData({ ...formData, workspace: e.target.value })
-              }
-              options={workSpaceOptions}
-              required
+              label="조직"
+              {...register("workspace", {
+                required: "조직을 선택하세요.",
+                validate: (value) => value !== "" || "조직을 선택하세요.",
+              })}
+              value={watch("workspace")}
+              options={[
+                { value: "" as const, label: "조직을 선택하세요" },
+                ...WORKSPACE_OPTIONS,
+              ]}
+              errorText={errors.workspace?.message}
             />
 
             <Select
               label="지점"
-              value={formData.branch}
-              onChange={(e) =>
-                setFormData({ ...formData, branch: e.target.value })
-              }
+              {...register("branch", {
+                required: "지점을 선택하세요.",
+                validate: (value) => value !== "" || "지점을 선택하세요.",
+              })}
+              value={branchValue}
               options={branchOptions}
-              required
+              errorText={errors.branch?.message}
+              disabled={workspace === ""}
+            />
+
+            <Select
+              label="직급"
+              {...register("position", {
+                required: "직급을 선택하세요.",
+                validate: (value) => value !== "" || "직급을 선택하세요.",
+              })}
+              options={[
+                { value: "" as const, label: "직급을 선택하세요" },
+                ...POSITION_OPTIONS,
+              ]}
+              errorText={errors.position?.message}
             />
 
             <Input
               label="비밀번호"
               type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
               placeholder="비밀번호를 입력하세요"
-              required
+              autoComplete="new-password"
+              {...register("password", {
+                required: "비밀번호를 입력하세요.",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8자 이상이어야 합니다.",
+                },
+              })}
+              errorText={errors.password?.message}
             />
 
             <Input
               label="비밀번호 확인"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="비밀번호를 다시 입력하세요"
-              required
+              autoComplete="new-password"
+              {...register("confirmPassword", {
+                required: "비밀번호 확인을 입력하세요.",
+                validate: (value) =>
+                  value === password || "비밀번호가 일치하지 않습니다.",
+              })}
+              errorText={errors.confirmPassword?.message}
             />
 
-            <Button type="submit" className="w-full" loading={loading}>
+            {errors.root?.message && (
+              <p className="text-sm text-error-red">{errors.root.message}</p>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoading || isSubmitting}
+              disabled={isLoading || isSubmitting}
+            >
               회원가입
             </Button>
           </form>
@@ -140,4 +195,6 @@ export default function Register() {
       </div>
     </div>
   );
-}
+};
+
+export { Register };
