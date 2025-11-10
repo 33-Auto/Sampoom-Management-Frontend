@@ -6,6 +6,8 @@ export type ProductionPlanListParams = NonNullable<
 export type ProductionPlanListResponse =
   Schemas["ApiResponsePageResponseDtoPartOrderResponseDto"];
 export type ProductionPlanResponseDTO = Schemas["PartOrderResponseDto"];
+export type ProductionPlanBatchResponse =
+  Schemas["ApiResponseListPartOrderResponseDto"];
 
 export type ProductionPlanPriority = NonNullable<
   ProductionPlanListParams["priorities"]
@@ -13,19 +15,15 @@ export type ProductionPlanPriority = NonNullable<
 
 export type ProductionPlanStatus =
   | "UNDER_REVIEW"
-  | "PURCHASE_REQUEST"
   | "PLAN_CONFIRMED"
   | "DELAYED"
-  | "REJECTED"
   | "IN_PROGRESS"
   | "COMPLETED";
 
 export const PRODUCTION_PLAN_STATUS_LABELS: Record<string, string> = {
   UNDER_REVIEW: "검토중",
-  PURCHASE_REQUEST: "구매요청",
   PLAN_CONFIRMED: "계획확정",
   DELAYED: "지연",
-  REJECTED: "반려",
   IN_PROGRESS: "진행중",
   COMPLETED: "완료",
 };
@@ -35,10 +33,8 @@ export const PRODUCTION_PLAN_STATUS_BADGE_VARIANTS: Record<
   "default" | "info" | "success" | "warning" | "error"
 > = {
   UNDER_REVIEW: "warning",
-  PURCHASE_REQUEST: "info",
   PLAN_CONFIRMED: "success",
   DELAYED: "error",
-  REJECTED: "error",
   IN_PROGRESS: "info",
   COMPLETED: "success",
 };
@@ -63,12 +59,7 @@ export const PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS: Record<
   string
 > = {
   SUFFICIENT: "충분",
-  SUFFICIENT_STOCK: "충분",
   INSUFFICIENT: "부족",
-  SHORTAGE: "부족",
-  CRITICAL_SHORTAGE: "심각",
-  UNKNOWN: "미확인",
-  PENDING: "검토 필요",
 };
 
 export const PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS: Record<
@@ -76,12 +67,7 @@ export const PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS: Record<
   "default" | "info" | "success" | "warning" | "error"
 > = {
   SUFFICIENT: "success",
-  SUFFICIENT_STOCK: "success",
   INSUFFICIENT: "error",
-  SHORTAGE: "error",
-  CRITICAL_SHORTAGE: "error",
-  UNKNOWN: "warning",
-  PENDING: "info",
 };
 
 export const DEFAULT_FACTORY_ID = 164;

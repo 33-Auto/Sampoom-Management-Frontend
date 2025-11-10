@@ -8,7 +8,7 @@ export function useWmsBranchOptions() {
   return useMemo(() => {
     const branches = (data as any)?.data ?? data ?? [];
     return [
-      { label: "창고 선택", value: "" },
+      { label: "지점 선택", value: "" },
       ...branches
         .filter((branch: any) => branch?.status === "ACTIVE")
         .map((branch: any) => ({

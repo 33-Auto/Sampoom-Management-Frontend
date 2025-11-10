@@ -1,4 +1,8 @@
-import type { ProductionPlanListParams } from "@/pages/production/planning/model";
+import type {
+  ProductionPlanListParams,
+  ProductionPlanResponseDTO,
+  ProductionPlanBatchResponse,
+} from "@/pages/production/planning/model";
 import {
   DEFAULT_FACTORY_ID,
   DEFAULT_INCLUDE_RECENT_DAYS,
@@ -10,19 +14,7 @@ export type ProductionPlansQueryParams = ProductionPlanListParams & {
   includeRecentDays?: number;
 };
 
-export const useBatchMrpExecutionMutation = () =>
-  queryClient.useMutation(
-    "post",
-    "/api/factory/{factoryId}/part/orders/mrp/batch",
-  );
-
-export const useBatchMrpApplyMutation = () =>
-  queryClient.useMutation(
-    "post",
-    "/api/factory/{factoryId}/part/orders/apply-mrp/batch",
-  );
-
-const buildQuery = (params?: ProductionPlansQueryParams) => {
+const buildProductionPlansQuery = (params?: ProductionPlansQueryParams) => {
   const query: Record<string, unknown> = {
     page: params?.page ?? 0,
     size: params?.size ?? 10,
@@ -55,7 +47,7 @@ const getProductionPlansQueryOptions = (
     path: {
       factoryId: params?.factoryId ?? DEFAULT_FACTORY_ID,
     },
-    query: buildQuery(params),
+    query: buildProductionPlansQuery(params),
   },
 });
 
@@ -77,3 +69,19 @@ export const useProductionPlansQuery = (params?: ProductionPlansQueryParams) =>
       placeholderData: (previousData) => previousData,
     },
   );
+
+export const useBatchMrpExecutionMutation = () =>
+  queryClient.useMutation(
+    "post",
+    "/api/factory/{factoryId}/part/orders/mrp/batch",
+  );
+
+export const useBatchMrpApplyMutation = () =>
+  queryClient.useMutation(
+    "post",
+    "/api/factory/{factoryId}/part/orders/apply-mrp/batch",
+  );
+
+export const extractPlansFromMrpResponse = (
+  response: ProductionPlanBatchResponse | null | undefined,
+): ProductionPlanResponseDTO[] => response?.data ?? [];

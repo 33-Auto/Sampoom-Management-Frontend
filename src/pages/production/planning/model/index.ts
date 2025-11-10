@@ -4,6 +4,7 @@ export type {
   ProductionPlanResponseDTO,
   ProductionPlanPriority,
   ProductionPlanStatus,
+  ProductionPlanBatchResponse,
 } from "./planning.model";
 export {
   PRODUCTION_PLAN_STATUS_LABELS,
