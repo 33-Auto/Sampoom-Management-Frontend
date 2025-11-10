@@ -96,13 +96,13 @@ export const WorkOrders = () => {
   const statusOptions = [
     { value: "", label: "전체 상태" },
     {
-      value: DEFAULT_PART_ORDER_STATUSES.join(","),
-      label: "진행중 + 완료",
+      value: "IN_PROGRESS",
+      label: "진행중",
     },
-    ...Object.entries(PART_ORDER_STATUS_LABELS).map(([value, label]) => ({
-      value,
-      label,
-    })),
+    {
+      value: "COMPLETED",
+      label: "완료",
+    },
   ];
 
   const priorityOptions = [

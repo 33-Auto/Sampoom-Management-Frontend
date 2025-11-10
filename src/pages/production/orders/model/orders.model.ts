@@ -19,11 +19,6 @@ export type PartOrderStatus =
 export type PartOrderPriority = "HIGH" | "MEDIUM" | "LOW";
 
 export const PART_ORDER_STATUS_LABELS: Record<string, string> = {
-  UNDER_REVIEW: "검토중",
-  PURCHASE_REQUEST: "구매요청",
-  PLAN_CONFIRMED: "계획확정",
-  DELAYED: "지연",
-  REJECTED: "반려",
   IN_PROGRESS: "진행중",
   COMPLETED: "완료",
 };
@@ -58,5 +53,5 @@ export const PART_ORDER_PRIORITY_BADGE_VARIANTS: Record<
 
 export const DEFAULT_PART_ORDER_STATUSES: PartOrderStatus[] = [
   "IN_PROGRESS",
-  "COMPLETED",
+  // "COMPLETED",
 ];

@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
 
 import { MrpBatchResultModal } from "@/features/production-planning/mrp-modal";
-import { ProductionPlanDetailModal } from "@/features/production-planning/plan-detail";
-import { ProductionStatusBadge } from "@/features/production-planning/status-badge";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import {
   useBatchMrpApplyMutation,
   useBatchMrpExecutionMutation,
   useProductionPlansQuery,
+  extractPlansFromMrpResponse,
 } from "@/pages/production/planning/api";
 import {
   DEFAULT_FACTORY_ID,
@@ -16,6 +15,7 @@ import {
   PRODUCTION_PLAN_PRIORITY_BADGE_VARIANTS,
   PRODUCTION_PLAN_PRIORITY_LABELS,
   PRODUCTION_PLAN_STATUS_LABELS,
+  PRODUCTION_PLAN_STATUS_BADGE_VARIANTS,
   PRODUCTION_PLAN_MATERIAL_AVAILABILITY_BADGE_VARIANTS,
   PRODUCTION_PLAN_MATERIAL_AVAILABILITY_LABELS,
   type ProductionPlanPriority,
@@ -25,21 +25,19 @@ import {
 import { createKeyRecord } from "@/shared/lib/utils";
 import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
 
-const DEFAULT_STATUS_FILTER = "";
+const DEFAULT_STATUS_FILTER = "UNDER_REVIEW";
 const EXCLUDED_STATUSES: ProductionPlanStatus[] = ["IN_PROGRESS", "COMPLETED"];
 
 export const ProductionPlanning = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState(DEFAULT_STATUS_FILTER);
   const [priorityFilter, setPriorityFilter] = useState("");
-  const [selectedPlan, setSelectedPlan] =
-    useState<ProductionPlanResponseDTO | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
   const [isMrpModalOpen, setIsMrpModalOpen] = useState(false);
-  const [mrpResultOrderIds, setMrpResultOrderIds] = useState<number[]>([]);
+  const [mrpResultPlans, setMrpResultPlans] = useState<
+    ProductionPlanResponseDTO[]
+  >([]);
   const [mrpError, setMrpError] = useState<string | null>(null);
-  const [mrpTargetPlans, setMrpTargetPlans] = useState<AugmentedPlan[]>([]);
 
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
 
@@ -79,48 +77,30 @@ export const ProductionPlanning = () => {
     size,
   });
 
-  const rawPlans = data?.data?.content ?? [];
+  const plans = (data?.data?.content ?? []) as ProductionPlanResponseDTO[];
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const plans = useMemo(() => rawPlans, [rawPlans]);
-
-  type AugmentedPlan = ProductionPlanResponseDTO & { __rowKey: string };
-
-  const normalizedPlans = useMemo<AugmentedPlan[]>(() => {
-    return plans.map((plan, index) => ({
-      ...plan,
-      __rowKey: String(
-        plan.orderId ??
-          plan.orderCode ??
-          plan.externalPartOrderId ??
-          `plan-${index}`,
-      ),
-    }));
-  }, [plans]);
-
-  const selectedPlans = useMemo(
-    () =>
-      normalizedPlans.filter((plan) => selectedPlanIds.includes(plan.__rowKey)),
-    [normalizedPlans, selectedPlanIds],
-  );
-
-  const plansForMrpModal =
-    mrpTargetPlans.length > 0 ? mrpTargetPlans : selectedPlans;
+  const normalizedPlans = plans;
 
   const isMrpRunning = executeBatchMrpMutation.isPending;
 
   const allVisibleSelected =
     normalizedPlans.length > 0 &&
-    normalizedPlans.every((plan) => selectedPlanIds.includes(plan.__rowKey));
+    normalizedPlans.every((plan) =>
+      selectedPlanIds.includes(String(plan.orderId)),
+    );
 
   const stats = useMemo(() => {
-    const statusCounter = plans.reduce<Record<string, number>>((acc, plan) => {
-      if (plan.status) {
-        acc[plan.status] = (acc[plan.status] ?? 0) + 1;
-      }
-      return acc;
-    }, {});
+    const statusCounter = plans.reduce<Record<string, number>>(
+      (acc: Record<string, number>, plan: ProductionPlanResponseDTO) => {
+        if (plan.status) {
+          acc[plan.status] = (acc[plan.status] ?? 0) + 1;
+        }
+        return acc;
+      },
+      {},
+    );
 
     return {
       total: plans.length,
@@ -170,20 +150,6 @@ export const ProductionPlanning = () => {
     return normalized;
   };
 
-  const formatItemsSummary = (
-    items?: ProductionPlanResponseDTO["items"],
-  ): string => {
-    if (!items || items.length === 0) {
-      return "-";
-    }
-    const [first, ...rest] = items;
-    const firstLabel = first?.partName ?? first?.partCode ?? "-";
-    if (rest.length === 0) {
-      return firstLabel ?? "-";
-    }
-    return `${firstLabel ?? "-"} 외 ${rest.length}`;
-  };
-
   const renderMaterialAvailability = (value?: string | null) => {
     if (!value) {
       return "-";
@@ -209,49 +175,24 @@ export const ProductionPlanning = () => {
     return <Badge variant={variant}>{label}</Badge>;
   };
 
-  const getSelectableOrderIds = (plansToConvert: AugmentedPlan[]) => {
-    return plansToConvert
-      .map((plan) => {
-        if (typeof plan.orderId === "number") {
-          return plan.orderId;
-        }
-        if (typeof plan.externalPartOrderId === "number") {
-          return plan.externalPartOrderId;
-        }
-        const parsed = Number(plan.__rowKey);
-        return Number.isNaN(parsed) ? null : parsed;
-      })
-      .filter((value): value is number => typeof value === "number");
-  };
-
-  const normalizeResponseOrderIds = (response: unknown): number[] => {
-    if (Array.isArray(response)) {
-      return response.filter(
-        (value): value is number => typeof value === "number",
-      );
+  const renderStatusBadge = (value?: string | null) => {
+    if (!value || value.length === 0) {
+      return "-";
     }
 
-    if (
-      response &&
-      typeof response === "object" &&
-      Array.isArray((response as { data?: unknown }).data)
-    ) {
-      const { data } = response as { data?: unknown };
-      return (data as unknown[])
-        .map((item) => {
-          if (typeof item === "number") {
-            return item;
-          }
-          if (item && typeof item === "object") {
-            const orderId = (item as { orderId?: number }).orderId;
-            return typeof orderId === "number" ? orderId : null;
-          }
-          return null;
-        })
-        .filter((value): value is number => value !== null);
-    }
+    const normalized = value.toUpperCase();
 
-    return [];
+    const label =
+      PRODUCTION_PLAN_STATUS_LABELS[value] ??
+      PRODUCTION_PLAN_STATUS_LABELS[normalized] ??
+      value;
+
+    const variant =
+      PRODUCTION_PLAN_STATUS_BADGE_VARIANTS[value] ??
+      PRODUCTION_PLAN_STATUS_BADGE_VARIANTS[normalized] ??
+      "default";
+
+    return <Badge variant={variant}>{label}</Badge>;
   };
 
   const handleResetFilters = () => {
@@ -275,34 +216,38 @@ export const ProductionPlanning = () => {
     if (allVisibleSelected) {
       setSelectedPlanIds((prev) =>
         prev.filter(
-          (id) => !normalizedPlans.some((plan) => plan.__rowKey === id),
+          (id) => !normalizedPlans.some((plan) => String(plan.orderId) === id),
         ),
       );
     } else {
       setSelectedPlanIds((prev) => {
         const next = new Set(prev);
-        normalizedPlans.forEach((plan) => next.add(plan.__rowKey));
+        normalizedPlans.forEach((plan) => {
+          next.add(String(plan.orderId));
+        });
         return Array.from(next);
       });
     }
   };
 
   const handleRunMRP = () => {
-    if (selectedPlans.length === 0 || executeBatchMrpMutation.isPending) {
+    if (selectedPlanIds.length === 0 || executeBatchMrpMutation.isPending) {
       return;
     }
+    const orderIds = selectedPlanIds
+      .map((id) => Number(id))
+      .filter((value): value is number => Number.isFinite(value));
 
-    const orderIds = getSelectableOrderIds(selectedPlans);
-
-    setMrpResultOrderIds([]);
+    setMrpResultPlans([]);
     setMrpError(null);
-    setIsMrpModalOpen(true);
-    setMrpTargetPlans(selectedPlans);
 
     if (orderIds.length === 0) {
+      setIsMrpModalOpen(true);
       setMrpError("선택된 계획에서 주문 ID를 확인할 수 없습니다.");
       return;
     }
+
+    setIsMrpModalOpen(true);
 
     executeBatchMrpMutation.mutate(
       {
@@ -315,11 +260,14 @@ export const ProductionPlanning = () => {
       },
       {
         onSuccess: (response) => {
-          const ids = normalizeResponseOrderIds(response);
-          if (ids.length === 0) {
+          const plans = extractPlansFromMrpResponse(response);
+          if (plans.length === 0) {
+            setMrpResultPlans([]);
             setMrpError("MRP 실행 결과가 비어 있습니다.");
+            return;
           }
-          setMrpResultOrderIds(ids);
+          setMrpError(null);
+          setMrpResultPlans(plans);
         },
         onError: (error) => {
           const message =
@@ -334,10 +282,18 @@ export const ProductionPlanning = () => {
 
   const handleApplyMrpResult = () => {
     if (
-      mrpResultOrderIds.length === 0 ||
+      mrpResultPlans.length === 0 ||
       applyBatchMrpMutation.isPending ||
       executeBatchMrpMutation.isPending
     ) {
+      return;
+    }
+
+    const orderIds = mrpResultPlans
+      .map((plan) => plan.orderId)
+      .filter((value): value is number => Number.isFinite(value));
+    if (orderIds.length === 0) {
+      setMrpError("MRP 결과에서 주문 ID를 확인할 수 없습니다.");
       return;
     }
 
@@ -348,14 +304,13 @@ export const ProductionPlanning = () => {
             factoryId: DEFAULT_FACTORY_ID,
           },
         },
-        body: mrpResultOrderIds,
+        body: orderIds,
       },
       {
         onSuccess: () => {
           setMrpError(null);
           setIsMrpModalOpen(false);
-          setMrpResultOrderIds([]);
-          setMrpTargetPlans([]);
+          setMrpResultPlans([]);
           setSelectedPlanIds([]);
           void refetch();
         },
@@ -375,35 +330,24 @@ export const ProductionPlanning = () => {
       return;
     }
     setIsMrpModalOpen(false);
-    setMrpResultOrderIds([]);
-    setMrpTargetPlans([]);
+    setMrpResultPlans([]);
     setMrpError(null);
   };
 
-  const handleViewDetails = (plan: ProductionPlanResponseDTO) => {
-    setSelectedPlan(plan);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPlan(null);
-  };
-
-  const keys = createKeyRecord<AugmentedPlan>(normalizedPlans);
+  const keys = createKeyRecord<ProductionPlanResponseDTO>(normalizedPlans);
 
   const columns = [
     {
-      key: "__select",
+      key: "select",
       title: "선택",
       width: "70px",
-      render: (_value: unknown, row: AugmentedPlan) => (
+      render: (_value: unknown, row: ProductionPlanResponseDTO) => (
         <input
           type="checkbox"
           className="h-4 w-4"
-          checked={selectedPlanIds.includes(row.__rowKey)}
+          checked={selectedPlanIds.includes(String(row.orderId))}
           onChange={(event) =>
-            togglePlanSelection(row.__rowKey, event.target.checked)
+            togglePlanSelection(String(row.orderId), event.target.checked)
           }
         />
       ),
@@ -412,16 +356,27 @@ export const ProductionPlanning = () => {
       key: keys.orderCode ?? "orderCode",
       title: "계획 코드",
       width: "160px",
-      render: (value: string | undefined, row: AugmentedPlan) =>
+      render: (value: string | undefined, row: ProductionPlanResponseDTO) =>
         value ?? row.orderId ?? "-",
     },
     {
       key: keys.items ?? "items",
-      title: "대표 품목",
+      title: "품목",
       render: (
         _value: ProductionPlanResponseDTO["items"],
         row: ProductionPlanResponseDTO,
-      ) => formatItemsSummary(row.items),
+      ) => {
+        const items = row.items ?? [];
+        if (items.length === 0) {
+          return "-";
+        }
+        const [first, ...rest] = items;
+        const firstLabel = first?.partName ?? first?.partCode ?? "-";
+        if (rest.length === 0) {
+          return firstLabel ?? "-";
+        }
+        return `${firstLabel ?? "-"} 외 ${rest.length}`;
+      },
     },
     {
       key: keys.priority ?? "priority",
@@ -484,23 +439,7 @@ export const ProductionPlanning = () => {
       key: keys.status ?? "status",
       title: "상태",
       width: "120px",
-      render: (value: string | undefined) =>
-        value ? <ProductionStatusBadge status={value} /> : "-",
-    },
-    {
-      key: "actions",
-      title: "작업",
-      width: "120px",
-      render: (_value: unknown, row: AugmentedPlan) => (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => handleViewDetails(row)}
-        >
-          <i className="ri-eye-line mr-1"></i>
-          상세
-        </Button>
-      ),
+      render: (value: string | undefined) => renderStatusBadge(value ?? null),
     },
   ];
 
@@ -585,7 +524,7 @@ export const ProductionPlanning = () => {
                 variant="default"
                 size="sm"
                 onClick={handleRunMRP}
-                disabled={selectedPlans.length === 0}
+                disabled={selectedPlanIds.length === 0 || isMrpRunning}
               >
                 <i className="ri-play-line mr-2"></i>
                 MRP 실행
@@ -638,17 +577,10 @@ export const ProductionPlanning = () => {
           open={isMrpModalOpen}
           isLoading={isMrpRunning}
           error={mrpError}
-          plans={plansForMrpModal}
-          executedOrderIds={mrpResultOrderIds}
+          plans={mrpResultPlans}
           onClose={handleCloseMrpModal}
           onApply={handleApplyMrpResult}
           isApplying={applyBatchMrpMutation.isPending}
-        />
-
-        <ProductionPlanDetailModal
-          open={isModalOpen}
-          plan={selectedPlan}
-          onClose={handleCloseModal}
         />
       </div>
     </>

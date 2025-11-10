@@ -16,10 +16,14 @@ const ProductionLayout: React.FC = () => {
   };
 
   const navItems = [
-    { path: "/production/orders", label: "생산 지시", icon: "ri-hammer-line" },
+    {
+      path: "/production/orders",
+      label: "생산 지시(MES)",
+      icon: "ri-hammer-line",
+    },
     {
       path: "/production/planning",
-      label: "생산 계획",
+      label: "생산 계획(MRP)",
       icon: "ri-calendar-line",
     },
   ];
