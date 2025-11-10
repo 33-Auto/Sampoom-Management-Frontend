@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 
+import { queryClient } from "@/shared/api";
+import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
 import {
   Button,
   Table,
@@ -9,58 +10,125 @@ import {
   StatCard,
 } from "@/shared/ui";
 
+import { getSalesOrdersQueryOptions } from "../api/sales-orders.api";
 import {
-  useSalesOrdersQuery,
-  useCancelOrderMutation,
-} from "../api/sales-orders.api";
+  SALES_ORDER_STATUS_FILTER_OPTIONS,
+  SALES_ORDER_STATUS_LABELS,
+  type SalesOrderDto,
+  type SalesOrderStatus,
+  type SalesOrderStatusFilterValue,
+} from "../model";
 
-// 판매 주문 데이터는 API로부터 조회
+type SalesOrderRow = {
+  orderId: number;
+  orderNumber: string;
+  createdDate: string;
+  agencyName: string;
+  productName: string;
+  totalQuantity: number;
+  totalAmount: number;
+  status: SalesOrderStatus;
+};
+
+const STATUS_BADGE_CLASS: Record<SalesOrderStatus, string> = {
+  PENDING: "bg-yellow-100 text-yellow-800",
+  CONFIRMED: "bg-blue-100 text-blue-800",
+  DELAYED: "bg-orange-100 text-orange-800",
+  SHIPPING: "bg-indigo-100 text-indigo-800",
+  SHIPPED: "bg-sky-100 text-sky-800",
+  DELIVERING: "bg-teal-100 text-teal-800",
+  ARRIVED: "bg-emerald-100 text-emerald-800",
+  COMPLETED: "bg-green-100 text-green-800",
+  CANCELED: "bg-gray-100 text-gray-800",
+};
+
+const toDate = (iso?: string | null) =>
+  iso ? new Date(iso).toISOString().slice(0, 10) : "-";
+
+const mapOrderToRow = (order: SalesOrderDto): SalesOrderRow => {
+  const items =
+    order.items?.flatMap(
+      (category) =>
+        category.groups?.flatMap((group) => group.parts ?? []) ?? [],
+    ) ?? [];
+
+  const totalQuantity = items.reduce(
+    (sum, part) => sum + (part?.quantity ?? 0),
+    0,
+  );
+  const totalAmount = items.reduce(
+    (sum, part) => sum + (part?.quantity ?? 0) * (part?.standardCost ?? 0),
+    0,
+  );
+
+  const firstName = items.length > 0 ? (items[0]?.name ?? null) : null;
+  const totalParts = items.length;
+  const productName = firstName
+    ? totalParts > 1
+      ? `${firstName} 외 ${totalParts - 1}개`
+      : firstName
+    : "-";
+
+  const status = (order.status ?? "PENDING") as SalesOrderStatus;
+
+  return {
+    orderId: order.orderId ?? 0,
+    orderNumber: order.orderNumber ?? "-",
+    createdDate: toDate(order.createdAt),
+    agencyName: order.agencyName ?? "-",
+    productName,
+    totalQuantity,
+    totalAmount,
+    status,
+  };
+};
 
 export const SalesOrders = () => {
-  const navigate = useNavigate();
   const [fromText, setFromText] = useState(""); // 고객사 필터
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [statusFilter, setStatusFilter] =
+    useState<SalesOrderStatusFilterValue>("ALL");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
-  const warehouseId = 1;
+  const warehouseId = DEFAULT_WAREHOUSE_ID;
 
-  const statusLabelMap: Record<string, string> = {
-    PENDING: "대기 중",
-    CONFIRMED: "주문 확인",
-    SHIPPING: "배송 중",
-    DELAYED: "배송 지연",
-    PRODUCING: "생산 중",
-    COMPLETED: "배송 완료",
-    CANCELED: "주문 취소",
-  };
+  const queryOptions = useMemo(
+    () =>
+      getSalesOrdersQueryOptions({
+        warehouseId,
+        page,
+        size,
+        ...(fromText ? { from: fromText } : {}),
+        ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
+      }),
+    [warehouseId, page, size, fromText, statusFilter],
+  );
 
-  const statusOptions = [
-    { value: "ALL", label: "전체 상태" },
-    { value: "PENDING", label: "대기 중" },
-    { value: "CONFIRMED", label: "주문 확인" },
-    { value: "SHIPPING", label: "배송 중" },
-    { value: "DELAYED", label: "배송 지연" },
-    { value: "PRODUCING", label: "생산 중" },
-    { value: "COMPLETED", label: "배송 완료" },
-    { value: "CANCELED", label: "주문 취소" },
-  ];
+  const { data, refetch } = queryClient.useQuery(
+    "get",
+    "/api/order/warehouse/{warehouseId}",
+    queryOptions,
+    {
+      placeholderData: (previousData) => previousData,
+    },
+  );
+  const pageData = data?.data;
+  const rawContent = pageData?.content ?? [];
+  const totalPages = pageData?.totalPages ?? 0;
+  const totalElements = pageData?.totalElements ?? 0;
 
-  // 우선순위는 추후 확장 예정
-
-  const { data, refetch } = useSalesOrdersQuery({
-    warehouseId,
-    page,
-    size,
-    ...(fromText ? { from: fromText } : {}),
-    ...(statusFilter !== "ALL" ? { status: statusFilter as any } : {}),
-  });
-  const orders = data?.orders ?? [];
-  const rawContent = data?.rawContent ?? [];
-  const totalPages = data?.totalPages ?? 0;
-  const totalElements = data?.totalElements ?? 0;
+  const orders = useMemo(
+    () => rawContent.map((order) => mapOrderToRow(order)),
+    [rawContent],
+  );
 
   // 작업 버튼 - 취소/상세
-  const cancelMutation = useCancelOrderMutation();
+  const statusFilterOptions = useMemo(
+    () =>
+      SALES_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
+        ...option,
+      })),
+    [],
+  );
 
   const columns = [
     { key: "orderNumber", title: "주문번호", width: "160px" },
@@ -84,71 +152,36 @@ export const SalesOrders = () => {
       key: "status",
       title: "상태",
       width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "PENDING"
-              ? "bg-yellow-100 text-yellow-800"
-              : value === "CONFIRMED"
-                ? "bg-blue-100 text-blue-800"
-                : value === "SHIPPING"
-                  ? "bg-indigo-100 text-indigo-800"
-                  : value === "DELAYED"
-                    ? "bg-orange-100 text-orange-800"
-                    : value === "PRODUCING"
-                      ? "bg-purple-100 text-purple-800"
-                      : value === "COMPLETED"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
-          }`}
-        >
-          {statusLabelMap[value] || value}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      title: "작업",
-      width: "220px",
-      render: (_: any, row: any) => (
-        <div className="flex items-center gap-1">
-          <Button
-            variant="destructive"
-            size="sm"
-            className="cursor-pointer"
-            disabled={cancelMutation.isPending || row.status !== "PENDING"}
-            onClick={async () => {
-              await cancelMutation.mutateAsync(row.orderId);
-              await refetch();
-            }}
+      render: (value: SalesOrderStatus) => {
+        const label = SALES_ORDER_STATUS_LABELS[value] ?? value;
+        const className =
+          STATUS_BADGE_CLASS[value] ?? "bg-gray-100 text-gray-800";
+        return (
+          <span
+            className={`rounded-full px-2 py-1 text-xs font-medium ${className}`}
           >
-            취소
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="cursor-pointer"
-            onClick={() => {
-              const full = rawContent.find((r) => r.orderId === row.orderId);
-              navigate(`/sales/orders/${row.orderId}`, {
-                state: { order: full },
-              });
-            }}
-          >
-            상세
-          </Button>
-        </div>
-      ),
+            {label}
+          </span>
+        );
+      },
     },
   ];
 
   // 통계 계산 (현재 페이지 기준 간단 집계)
   const totalOrders = totalElements;
-  const confirmedOrders = orders.filter((o) => o.status === "CONFIRMED").length;
-  const shippingOrPending = orders.filter(
-    (o) => o.status === "SHIPPING" || o.status === "PENDING",
-  ).length;
-  const completedOrders = orders.filter((o) => o.status === "COMPLETED").length;
+  const { confirmedOrders, shippingOrPending, completedOrders } =
+    useMemo(() => {
+      const confirmed = orders.filter((o) => o.status === "CONFIRMED").length;
+      const inProgress = orders.filter(
+        (o) => o.status === "SHIPPING" || o.status === "PENDING",
+      ).length;
+      const completed = orders.filter((o) => o.status === "COMPLETED").length;
+      return {
+        confirmedOrders: confirmed,
+        shippingOrPending: inProgress,
+        completedOrders: completed,
+      };
+    }, [orders]);
 
   return (
     <div className="p-6">
@@ -199,9 +232,9 @@ export const SalesOrders = () => {
           {
             key: "status",
             value: statusFilter,
-            options: statusOptions,
-            onChange: (v: string) => {
-              setStatusFilter(v);
+            options: statusFilterOptions,
+            onChange: (value: string) => {
+              setStatusFilter(value as SalesOrderStatusFilterValue);
               setPage(0);
             },
           },

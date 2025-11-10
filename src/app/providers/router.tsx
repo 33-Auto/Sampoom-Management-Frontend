@@ -61,9 +61,6 @@ const PurchaseRequests = lazy(async () => ({
 // ============================================================================
 // Sales Pages - 판매 관리 모듈 (지연 로딩)
 // ============================================================================
-const SalesOrders = lazy(async () => ({
-  default: (await import("@/pages/sales/orders")).SalesOrders,
-}));
 const SalesOrderDetail = lazy(async () => ({
   default: (await import("@/pages/sales/orders/detail")).SalesOrderDetail,
 }));
@@ -315,7 +312,13 @@ const routes: RouteObject[] = [
           },
           {
             path: "orders",
-            element: <SalesOrders />,
+            lazy: async () => {
+              const { SalesOrders } = await import("@/pages/sales/orders");
+              const { loader } = await import(
+                "@/pages/sales/orders/api/loader"
+              );
+              return { Component: SalesOrders, loader };
+            },
           },
           {
             path: "orders/:id",
