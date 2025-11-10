@@ -136,19 +136,12 @@ export const Home = () => {
     {
       id: "hrm",
       title: "인사 관리 (HRM)",
-      description: "직원 정보, 급여, 근태 및 평가 관리를 수행합니다",
+      description: "직원 정보만 조회합니다",
       icon: "ri-team-line",
       color: "bg-teal-500",
       path: "/hrm/employees",
       subMenus: [
         { title: "직원 관리", path: "/hrm/employees", icon: "ri-user-line" },
-        {
-          title: "급여 관리",
-          path: "/hrm/payroll",
-          icon: "ri-money-dollar-circle-line",
-        },
-        { title: "근태 관리", path: "/hrm/attendance", icon: "ri-time-line" },
-        { title: "평가 관리", path: "/hrm/evaluation", icon: "ri-star-line" },
       ],
     },
   ];

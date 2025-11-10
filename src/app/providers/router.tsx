@@ -101,6 +101,14 @@ const HRMAttendance = lazy(async () => ({
 const HRMEvaluation = lazy(async () => ({
   default: (await import("@/pages/hrm/evaluation")).HRMEvaluation,
 }));
+const EmployeeProfileProcess = lazy(async () => ({
+  default: (await import("@/pages/hrm/employees/process"))
+    .EmployeeProfileProcess,
+}));
+const EmployeeStatusProcess = lazy(async () => ({
+  default: (await import("@/pages/hrm/employees/process"))
+    .EmployeeStatusProcess,
+}));
 
 // ============================================================================
 // Routes Configuration - 라우트 설정
@@ -491,6 +499,14 @@ const routes: RouteObject[] = [
           {
             path: "employees",
             element: <HRMEmployees />,
+          },
+          {
+            path: "employees/process/:id",
+            element: <EmployeeProfileProcess />,
+          },
+          {
+            path: "employees/status/:id",
+            element: <EmployeeStatusProcess />,
           },
           {
             path: "payroll",
