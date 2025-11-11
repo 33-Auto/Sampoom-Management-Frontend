@@ -786,6 +786,586 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/factory/{factoryId}/part/orders/mrp/batch": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 일괄 MRP 실행
+     * @description 여러 부품 주문에 대해 MRP를 일괄 실행합니다.
+     */
+    post: operations["executeBatchMRP"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders/apply-mrp/batch": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 일괄 MRP 결과 적용
+     * @description 여러 부품 주문에 대해 MRP 결과를 일괄 적용합니다.
+     */
+    post: operations["applyBatchMRPResult"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/order/{orderId}/mrp": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MRP 실행
+     * @description 검토중인 부품 주문에 대해 MRP를 실행합니다.
+     */
+    post: operations["executeMRP"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/order/{orderId}/apply-mrp": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MRP 결과 적용
+     * @description MRP 실행 결과를 적용합니다. 자재 부족 시 구매요청과 생산지시를 함께 처리하고, 자재 충분 시 생산지시만 처리합니다.
+     */
+    post: operations["applyMRPResult"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/{mpsId}/execute": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MPS 실행
+     * @description MPS를 실행하여 상세 생산 계획(MpsPlan)을 생성합니다.
+     */
+    post: operations["executeMps"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/{mpsId}/confirm": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * MPS 확정
+     * @description MPS를 확정하여 각 MpsPlan을 기반으로 PartOrder를 생성합니다.
+     */
+    post: operations["confirmMps"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/material/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 자재 주문 생성
+     * @description 공장에 필요한 자재 주문을 생성합니다.
+     */
+    post: operations["createMaterialOrder"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 부품 주문 생성
+     * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다. 여러 아이템이 있는 경우 각각 단건으로 나누어 개별 주문을 생성합니다.
+     */
+    post: operations["createPartOrder"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/set-start-now": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 시작일을 현재 시간으로 설정
+     * @description MPS 주문의 최소 시작일을 현재 시간으로 설정하여 즉시 자동 처리 대상이 되도록 합니다.
+     */
+    post: operations["setMpsStartDateToNow"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/print-info": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 정보 출력
+     * @description MPS 주문의 상세 정보를 로그로 출력합니다.
+     */
+    post: operations["printMpsOrderInfo"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/{orderId}/test/auto-apply": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] 특정 MPS 주문 자동 MRP 결과 적용
+     * @description 특정 MPS 주문에 대해 자동 MRP 결과 적용을 수동으로 실행합니다.
+     */
+    post: operations["testMpsOrderAutoApply"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/test/mps-auto-apply": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 자동 MRP 결과 적용 스케줄러 수동 실행
+     * @description MPS 주문의 자동 MRP 결과 적용 스케줄러를 수동으로 실행합니다. 테스트 목적으로 사용됩니다.
+     */
+    post: operations["testMpsAutoApply"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/test/create-mps": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * [테스트용] MPS 주문 생성 및 테스트 준비
+     * @description 테스트용 MPS 주문을 생성하고 MRP 실행 후 시작일을 현재 시간으로 설정합니다.
+     */
+    post: operations["createTestMpsOrder"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/order/{orderId}/progress": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 부품 주문 진행률 업데이트
+     * @description 부품 주문의 진행률과 D-day를 업데이트합니다.
+     */
+    patch: operations["updatePartOrderProgress"];
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/order/{orderId}/complete": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 부품 주문 완료 처리
+     * @description 진행 중인 부품 주문을 완료 상태로 변경합니다.
+     */
+    patch: operations["completePartOrder"];
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 부품 주문 목록 조회
+     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있으며, 부품명/부품코드/주문코드로 검색할 수 있습니다.
+     */
+    get: operations["getPartOrders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/orders/production-plans": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 생산계획 목록 조회
+     * @description 생산계획 탭용 조회 - 계획 상태와 최근 IN_PROGRESS로 전환된 데이터를 포함하여 조회합니다. includeRecentDays=-1로 전체 데이터 조회 가능합니다.
+     */
+    get: operations["getProductionPlans"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/part/order/{orderId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 부품 주문 조회
+     * @description 특정 부품 주문의 상세 정보를 조회합니다.
+     */
+    get: operations["getPartOrder"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MPS 상세 조회
+     * @description 부품ID, 예측달, 창고ID로 MPS를 조회합니다.
+     */
+    get: operations["getMps"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/{mpsId}/plans": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MPS 계획 목록 조회
+     * @description MPS ID로 해당하는 MpsPlan 목록을 조회합니다.
+     */
+    get: operations["getMpsPlans"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps-plans/{mpsPlanId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MpsPlan 상세 조회
+     * @description 특정 MpsPlan의 상세 정보를 조회합니다.
+     */
+    get: operations["getMpsPlan"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/material": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 공장별 자재 검색/목록 조회
+     * @description 특정 공장의 자재를 페이징 조회합니다. 카테고리(categoryId)로 필터링하고, keyword(자재명/자재코드)로 검색합니다.
+     */
+    get: operations["getMaterials"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/material/category/{categoryId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 공장별 자재 카테고리별 자재 조회
+     * @description 특정 공장의 특정 카테고리에 속한 자재를 조회합니다.
+     */
+    get: operations["getMaterialsByFactoryAndCategory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/part/order/test/mps-ready": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * [테스트용] 자동 처리 대상 MPS 주문 조회
+     * @description 현재 자동 처리 대상인 MPS 주문들을 조회합니다.
+     */
+    get: operations["getMpsOrdersReadyForProcessing"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HealthCheck API
+     * @description 서버 상태 체크 API입니다.
+     */
+    get: operations["healthCheck2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health-unauthorized": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["unauthorizedTest2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health-notfound": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["notFoundTest2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health-forbidden": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["forbiddenTest2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health-error": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/health-data": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["healthCheckData_12"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/agency/{agencyId}/cart/{cartItemId}": {
     parameters: {
       query?: never;
@@ -998,7 +1578,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck2"];
+    get: operations["healthCheck3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1014,7 +1594,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest2"];
+    get: operations["unauthorizedTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1030,7 +1610,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest2"];
+    get: operations["notFoundTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1046,7 +1626,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest2"];
+    get: operations["forbiddenTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1062,7 +1642,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData2"];
+    get: operations["healthCheckData3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1078,7 +1658,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_12"];
+    get: operations["healthCheckData_13"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1577,7 +2157,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck3"];
+    get: operations["healthCheck4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1593,7 +2173,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest3"];
+    get: operations["unauthorizedTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1609,7 +2189,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest3"];
+    get: operations["notFoundTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1625,7 +2205,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest3"];
+    get: operations["forbiddenTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1641,7 +2221,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData3"];
+    get: operations["healthCheckData4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1657,7 +2237,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_13"];
+    get: operations["healthCheckData_14"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1729,7 +2309,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck4"];
+    get: operations["healthCheck5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1745,7 +2325,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest4"];
+    get: operations["unauthorizedTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1761,7 +2341,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest4"];
+    get: operations["notFoundTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1777,7 +2357,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest4"];
+    get: operations["forbiddenTest5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1793,7 +2373,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData4"];
+    get: operations["healthCheckData5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1809,7 +2389,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_14"];
+    get: operations["healthCheckData_15"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1870,6 +2450,114 @@ export interface paths {
      * @description 특정 카테고리에 속한 자재를 조회합니다.
      */
     get: operations["getMaterialsByCategory1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/purchase/": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 자재 주문 목록 조회
+     * @description 주문 상태 필터와 검색(자재명/자재코드/주문코드), 긴급도 필터로 목록을 조회합니다.
+     */
+    get: operations["getOrders"];
+    put?: never;
+    /**
+     * 자재 주문 생성
+     * @description 공장에 필요한 자재 주문을 생성합니다.
+     */
+    post: operations["createMaterialOrder1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/purchase/{orderId}/receive": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 자재 주문 입고 처리
+     * @description 주문된 자재를 입고 처리합니다.
+     */
+    patch: operations["receiveOrder"];
+    trace?: never;
+  };
+  "/api/purchase/{orderId}/cancel": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 자재 주문 취소
+     * @description 주문을 취소 처리합니다.
+     */
+    patch: operations["cancelOrder1"];
+    trace?: never;
+  };
+  "/api/purchase/{orderId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 자재 주문 단건 조회
+     * @description 특정 자재 주문의 상세를 조회합니다.
+     */
+    get: operations["getOrder1"];
+    put?: never;
+    post?: never;
+    /**
+     * 자재 주문 삭제
+     * @description 주문을 삭제합니다(소프트 삭제).
+     */
+    delete: operations["deleteOrder"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/purchase/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * HealthCheck API
+     * @description 서버 상태 체크 API입니다.
+     */
+    get: operations["healthCheck6"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2013,7 +2701,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck5"];
+    get: operations["healthCheck7"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2535,10 +3223,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PageableObject: {
@@ -2598,10 +3286,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PartStockDto: {
@@ -2877,6 +3565,299 @@ export interface components {
       /** Format: int32 */
       partValue?: number;
       status?: string;
+    };
+    ApiResponseListPartOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PartOrderResponseDto"][];
+    };
+    PartOrderItemDto: {
+      /** Format: int64 */
+      partId?: number;
+      partName?: string;
+      partCode?: string;
+      partGroup?: string;
+      partCategory?: string;
+      partGroupName?: string;
+      partCategoryName?: string;
+      /** Format: int64 */
+      quantity?: number;
+    };
+    PartOrderResponseDto: {
+      /** Format: int64 */
+      orderId?: number;
+      orderCode?: string;
+      warehouseName?: string;
+      /** Format: date-time */
+      orderDate?: string;
+      status?: string;
+      factoryName?: string;
+      /** Format: int64 */
+      factoryId?: number;
+      /** Format: int64 */
+      externalPartOrderId?: number;
+      /** Format: date-time */
+      requiredDate?: string;
+      /** Format: date-time */
+      scheduledDate?: string;
+      /** Format: date-time */
+      minimumStartDate?: string;
+      /** Format: double */
+      progressRate?: number;
+      rejectionReason?: string;
+      priority?: string;
+      materialAvailability?: string;
+      orderType?: string;
+      items?: components["schemas"]["PartOrderItemDto"][];
+      /** Format: int32 */
+      dday?: number;
+    };
+    ApiResponsePartOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PartOrderResponseDto"];
+    };
+    ApiResponseListMpsPlanResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsPlanResponse"][];
+    };
+    MpsPlanResponse: {
+      /** Format: int64 */
+      mpsPlanId?: number;
+      /** Format: int64 */
+      mpsId?: number;
+      /** Format: int32 */
+      cycleNumber?: number;
+      /** Format: date */
+      requiredDate?: string;
+      /** Format: int32 */
+      productionQuantity?: number;
+      /** Format: int32 */
+      remainingTotalProduction?: number;
+      /** @enum {string} */
+      status?:
+        | "PLANNED"
+        | "IN_PROGRESS"
+        | "COMPLETED"
+        | "DELAYED"
+        | "CANCELLED";
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    MaterialOrderItemRequestDto: {
+      /** Format: int64 */
+      materialId?: number;
+      /** Format: int64 */
+      quantity?: number;
+    };
+    MaterialOrderRequestDto: {
+      items?: components["schemas"]["MaterialOrderItemRequestDto"][];
+    };
+    ApiResponseMaterialOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MaterialOrderResponseDto"];
+    };
+    MaterialOrderItemDto: {
+      /** Format: int64 */
+      materialId?: number;
+      materialName?: string;
+      unit?: string;
+      /** Format: int64 */
+      quantity?: number;
+    };
+    MaterialOrderResponseDto: {
+      /** Format: int64 */
+      id?: number;
+      code?: string;
+      /** Format: int64 */
+      factoryId?: number;
+      factoryName?: string;
+      /** @enum {string} */
+      status?: "ORDERED" | "RECEIVED" | "CANCELED";
+      /** Format: date-time */
+      orderAt?: string;
+      /** Format: date-time */
+      receivedAt?: string;
+      items?: components["schemas"]["MaterialOrderItemDto"][];
+    };
+    PartOrderItemRequestDto: {
+      /** Format: int64 */
+      partId?: number;
+      /** Format: int64 */
+      quantity?: number;
+    };
+    PartOrderRequestDto: {
+      /** Format: int64 */
+      warehouseId?: number;
+      warehouseName?: string;
+      /** Format: date-time */
+      requiredDate?: string;
+      /** Format: int64 */
+      externalPartOrderId?: number;
+      items?: components["schemas"]["PartOrderItemRequestDto"][];
+    };
+    ApiResponseLong: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      /** Format: int64 */
+      data?: number;
+    };
+    ApiResponsePageResponseDtoPartOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PageResponseDtoPartOrderResponseDto"];
+    };
+    PageResponseDtoPartOrderResponseDto: {
+      content?: components["schemas"]["PartOrderResponseDto"][];
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    ApiResponseMpsResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsResponse"];
+    };
+    MpsResponse: {
+      /** Format: int64 */
+      mpsId?: number;
+      /** Format: int64 */
+      partId?: number;
+      /** Format: int64 */
+      warehouseId?: number;
+      /** Format: int64 */
+      factoryId?: number;
+      /** Format: int32 */
+      standardQuantity?: number;
+      /** Format: int32 */
+      expectedInventory?: number;
+      /** Format: int32 */
+      forecastQuantity?: number;
+      /** Format: int32 */
+      totalProduction?: number;
+      /** Format: int32 */
+      safetyStock?: number;
+      /** Format: int32 */
+      leadTime?: number;
+      /** @enum {string} */
+      status?: "PLANNED" | "PROCESSING" | "COMPLETED" | "CANCELLED";
+      /** Format: date */
+      targetDate?: string;
+      /** Format: date */
+      startDate?: string;
+      /** Format: int32 */
+      productionCycles?: number;
+      /** Format: int32 */
+      bufferDays?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ApiResponseMpsPlanResponse: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsPlanResponse"];
+    };
+    ApiResponsePageResponseDtoMaterialResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PageResponseDtoMaterialResponseDto"];
+    };
+    MaterialResponseDto: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+      unit?: string;
+      materialCode?: string;
+      /** Format: int64 */
+      materialCategoryId?: number;
+      materialCategoryName?: string;
+      /** Format: double */
+      quantity?: number;
+    };
+    PageResponseDtoMaterialResponseDto: {
+      content?: components["schemas"]["MaterialResponseDto1"][];
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    ApiResponseListMpsOrderInfoDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsOrderInfoDto"][];
+    };
+    MpsOrderInfoDto: {
+      /** Format: int64 */
+      orderId?: number;
+      orderCode?: string;
+      /** @enum {string} */
+      orderType?: "GENERAL" | "MPS";
+      /** @enum {string} */
+      status?:
+        | "UNDER_REVIEW"
+        | "PURCHASE_REQUEST"
+        | "PLAN_CONFIRMED"
+        | "DELAYED"
+        | "REJECTED"
+        | "IN_PROGRESS"
+        | "COMPLETED";
+      /** Format: date-time */
+      minimumStartDate?: string;
+      /** Format: date-time */
+      scheduledDate?: string;
+      /** @enum {string} */
+      materialAvailability?: "SUFFICIENT" | "INSUFFICIENT";
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
     };
     AgencyCartUpdateRequestDTO: {
       /** Format: int32 */
@@ -3570,9 +4551,9 @@ export interface components {
       /** Format: int32 */
       code?: number;
       message?: string;
-      data?: components["schemas"]["MaterialResponseDto"];
+      data?: components["schemas"]["MaterialResponseDto1"];
     };
-    MaterialResponseDto: {
+    MaterialResponseDto1: {
       /** Format: int64 */
       id?: number;
       name?: string;
@@ -3581,7 +4562,7 @@ export interface components {
       materialCategoryId?: number;
       materialCategoryName?: string;
     };
-    ApiResponsePageResponseDtoMaterialResponseDto: {
+    ApiResponsePageResponseDtoMaterialResponseDto1: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
@@ -3589,13 +4570,6 @@ export interface components {
       code?: number;
       message?: string;
       data?: components["schemas"]["PageResponseDtoMaterialResponseDto"];
-    };
-    PageResponseDtoMaterialResponseDto: {
-      content?: components["schemas"]["MaterialResponseDto"][];
-      /** Format: int64 */
-      totalElements?: number;
-      /** Format: int32 */
-      totalPages?: number;
     };
     ApiResponseListMaterialCategoryResponseDto: {
       /** Format: int32 */
@@ -3611,6 +4585,73 @@ export interface components {
       id?: number;
       name?: string;
       code?: string;
+    };
+    PurchaseOrderItemDto: {
+      materialCode?: string;
+      materialName?: string;
+      unit?: string;
+      /** Format: int64 */
+      quantity?: number;
+      /** Format: int64 */
+      standardQuantity?: number;
+      unitPrice?: number;
+      /** Format: int32 */
+      leadTimeDays?: number;
+    };
+    PurchaseOrderRequestDto: {
+      /** Format: int64 */
+      factoryId?: number;
+      factoryName?: string;
+      /** Format: date-time */
+      requiredAt?: string;
+      requesterName?: string;
+      items?: components["schemas"]["PurchaseOrderItemDto"][];
+    };
+    ApiResponsePurchaseOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PurchaseOrderResponseDto"];
+    };
+    PurchaseOrderResponseDto: {
+      /** Format: int64 */
+      id?: number;
+      orderCode?: string;
+      /** Format: date-time */
+      orderAt?: string;
+      /** Format: date-time */
+      requiredAt?: string;
+      /** Format: date-time */
+      expectedDeliveryAt?: string;
+      /** Format: int64 */
+      factoryId?: number;
+      factoryName?: string;
+      requesterName?: string;
+      /** @enum {string} */
+      urgency?: "HIGH" | "MEDIUM" | "LOW";
+      expectedAmount?: number;
+      /** @enum {string} */
+      status?: "ORDERED" | "RECEIVED" | "CANCELED";
+      items?: components["schemas"]["PurchaseOrderItemDto"][];
+    };
+    ApiResponsePageResponseDtoPurchaseOrderResponseDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["PageResponseDtoPurchaseOrderResponseDto"];
+    };
+    PageResponseDtoPurchaseOrderResponseDto: {
+      content?: components["schemas"]["PurchaseOrderResponseDto"][];
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
     };
     VendorUpdateRequestDTO: {
       name?: string;
@@ -4298,7 +5339,9 @@ export interface operations {
       };
       header?: never;
       path?: never;
-      cookie?: never;
+      cookie: {
+        ACCESS_TOKEN: string;
+      };
     };
     requestBody?: never;
     responses: {
@@ -4876,6 +5919,1003 @@ export interface operations {
       };
     };
   };
+  executeBatchMRP: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": number[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  applyBatchMRPResult: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": number[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  executeMRP: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  applyMRPResult: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  executeMps: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  confirmMps: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  createMaterialOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MaterialOrderRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  createPartOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartOrderRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  setMpsStartDateToNow: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  printMpsOrderInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  testMpsOrderAutoApply: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  testMpsAutoApply: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  createTestMpsOrder: {
+    parameters: {
+      query: {
+        factoryId: number;
+        partId: number;
+        quantity?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseLong"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  updatePartOrderProgress: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  completePartOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getPartOrders: {
+    parameters: {
+      query?: {
+        statuses?: (
+          | "UNDER_REVIEW"
+          | "PURCHASE_REQUEST"
+          | "PLAN_CONFIRMED"
+          | "DELAYED"
+          | "REJECTED"
+          | "IN_PROGRESS"
+          | "COMPLETED"
+        )[];
+        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
+        query?: string;
+        categoryId?: number;
+        groupId?: number;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getProductionPlans: {
+    parameters: {
+      query?: {
+        statuses?: (
+          | "UNDER_REVIEW"
+          | "PURCHASE_REQUEST"
+          | "PLAN_CONFIRMED"
+          | "DELAYED"
+          | "REJECTED"
+          | "IN_PROGRESS"
+          | "COMPLETED"
+        )[];
+        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
+        query?: string;
+        categoryId?: number;
+        groupId?: number;
+        page?: number;
+        size?: number;
+        includeRecentDays?: number;
+      };
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoPartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getPartOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        factoryId: number;
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMps: {
+    parameters: {
+      query: {
+        /** @description 부품 ID */
+        partId: number;
+        /** @description 예측 달 (YYYY-MM-DD 형식) */
+        forecastMonth: string;
+        /** @description 창고 ID */
+        warehouseId: number;
+      };
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMpsResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsPlans: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description MPS ID */
+        mpsId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsPlan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description MPS Plan ID */
+        mpsPlanId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMaterials: {
+    parameters: {
+      query?: {
+        categoryId?: number;
+        keyword?: string;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path: {
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMaterialsByFactoryAndCategory: {
+    parameters: {
+      query?: {
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path: {
+        factoryId: number;
+        categoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsOrdersReadyForProcessing: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsOrderInfoDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheck2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  unauthorizedTest2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  notFoundTest2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  forbiddenTest2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData2: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData_12: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
   updateCartItem: {
     parameters: {
       query?: never;
@@ -5213,7 +7253,7 @@ export interface operations {
       };
     };
   };
-  healthCheck2: {
+  healthCheck3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5233,7 +7273,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest2: {
+  unauthorizedTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5253,7 +7293,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest2: {
+  notFoundTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5273,7 +7313,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest2: {
+  forbiddenTest3: {
     parameters: {
       query?: never;
       header?: never;
@@ -5293,7 +7333,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData2: {
+  healthCheckData3: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -5315,7 +7355,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_12: {
+  healthCheckData_13: {
     parameters: {
       query?: never;
       header?: never;
@@ -6167,245 +8207,6 @@ export interface operations {
       };
     };
   };
-  healthCheck3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  unauthorizedTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  notFoundTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  forbiddenTest3: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData3: {
-    parameters: {
-      query?: {
-        fail?: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData_13: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString"];
-        };
-      };
-    };
-  };
-  getMaterialById1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  updateMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MaterialRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  deleteMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getAllMaterials1: {
-    parameters: {
-      query?: {
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  createMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MaterialRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
   healthCheck4: {
     parameters: {
       query?: never;
@@ -6528,6 +8329,245 @@ export interface operations {
       };
     };
   };
+  getMaterialById1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  updateMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MaterialRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  deleteMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getAllMaterials1: {
+    parameters: {
+      query?: {
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
+        };
+      };
+    };
+  };
+  createMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MaterialRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  healthCheck5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  unauthorizedTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  notFoundTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  forbiddenTest5: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData5: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData_15: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
   searchMaterials1: {
     parameters: {
       query?: {
@@ -6547,7 +8587,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
         };
       };
     };
@@ -6592,7 +8632,228 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
+        };
+      };
+    };
+  };
+  getOrders: {
+    parameters: {
+      query?: {
+        status?: "ORDERED" | "RECEIVED" | "CANCELED";
+        urgency?: "HIGH" | "MEDIUM" | "LOW";
+        query?: string;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoPurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  createMaterialOrder1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PurchaseOrderRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  receiveOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  cancelOrder1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getOrder1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  deleteOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheck6: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -6850,7 +9111,7 @@ export interface operations {
       };
     };
   };
-  healthCheck5: {
+  healthCheck7: {
     parameters: {
       query?: never;
       header?: never;

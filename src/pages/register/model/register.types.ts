@@ -1,3 +1,4 @@
+import { WORKSPACE_OPTIONS } from "@/shared/constants/workspace";
 import type { Schemas } from "@/shared/model";
 
 export type SignupRequest = Schemas["SignupRequest"];
@@ -6,17 +7,7 @@ export type SignupResponse = Schemas["SignupResponse"];
 export type Workspace = SignupRequest["workspace"];
 export type Position = SignupRequest["position"];
 
-export const WORKSPACE_OPTIONS: {
-  value: NonNullable<Workspace>;
-  label: string;
-}[] = [
-  { value: "PRODUCTION", label: "생산 관리" },
-  { value: "INVENTORY", label: "재고 관리" },
-  { value: "PURCHASE", label: "구매 관리" },
-  { value: "SALES", label: "판매 관리" },
-  { value: "MD", label: "기준 정보" },
-  { value: "HR", label: "인사 관리" },
-];
+export { WORKSPACE_OPTIONS };
 
 export const POSITION_OPTIONS: {
   value: NonNullable<Position>;

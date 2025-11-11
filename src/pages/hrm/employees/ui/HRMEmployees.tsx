@@ -6,6 +6,7 @@ import { useVendorsQuery } from "@/entities/vendor/api/vendor.api";
 import { useWmsBrancesQuery } from "@/entities/wms/api/wms.api";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { getWorkspaceLabel as resolveWorkspaceLabel } from "@/shared/constants/workspace";
 import type { Schemas } from "@/shared/model";
 import { Badge, Button, Card, SearchFilterBar, StatCard } from "@/shared/ui";
 
@@ -64,12 +65,16 @@ export const HRMEmployees = () => {
     return options;
   }, [workspaceFilter, factoriesData, warehousesData, vendorsData]);
 
+  const workspaceParam = workspaceFilter
+    ? (workspaceFilter as Schemas["UserInfoResponse"]["workspace"])
+    : undefined;
+
   // API 호출
   const { data, isError, refetch, isLoading } = useUserInfoQuery({
     page,
     size,
     sort: ["id,DESC"],
-    workspace: workspaceFilter || undefined,
+    workspace: workspaceParam,
     organizationId: organizationIdFilter
       ? Number(organizationIdFilter)
       : undefined,
@@ -80,15 +85,14 @@ export const HRMEmployees = () => {
   const totalElements = data?.data?.meta?.totalElements ?? 0;
 
   // 헬퍼 함수들
-  const getWorkspaceLabel = (workspace: string | undefined) => {
-    if (!workspace) return "-";
-    const workspaceMap: Record<string, string> = {
-      FACTORY: "공장",
-      WAREHOUSE: "창고",
-      AGENCY: "대리점",
-    };
-    return workspaceMap[workspace] || workspace;
+  const workspaceFallbackLabels = {
+    FACTORY: "공장",
+    WAREHOUSE: "창고",
+    AGENCY: "대리점",
   };
+
+  const getWorkspaceLabel = (workspace: string | undefined) =>
+    resolveWorkspaceLabel(workspace, workspaceFallbackLabels);
 
   const getPositionLabel = (position: string | undefined) => {
     if (!position) return "-";
