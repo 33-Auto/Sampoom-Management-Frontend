@@ -1,4 +1,4 @@
-import { redirect } from "react-router-dom";
+import { redirect, type LoaderFunctionArgs } from "react-router-dom";
 
 import { useAuthStore } from "@/entities/user";
 import { getMyProfile } from "@/entities/user/api/auth.api";
@@ -40,7 +40,14 @@ export const ensureAuthBootstrapped = async () => {
   }
 };
 
-export const bootstrapAuthLoader = async () => {
+export const bootstrapAuthLoader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const isAuthPage = url.pathname === "/login" || url.pathname === "/signup";
+
+  if (isAuthPage) {
+    return null;
+  }
+
   await ensureAuthBootstrapped();
   return null;
 };

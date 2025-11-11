@@ -27,14 +27,7 @@ import {
 } from "@/pages/wms/purchase-orders/model";
 import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  Table,
-  StatCard,
-  InfoBox,
-  SearchFilterBar,
-} from "@/shared/ui";
+import { Badge, Button, Table, InfoBox, SearchFilterBar } from "@/shared/ui";
 
 export function WmsPurchaseOrders() {
   const navigate = useNavigate();
@@ -126,54 +119,6 @@ export function WmsPurchaseOrders() {
       label: PURCHASE_ORDER_STATUS_LABELS[status],
     })),
   ];
-
-  const {
-    processingCount,
-    completedCount,
-
-    totalAmount,
-  } = useMemo(() => {
-    const processingStatuses = new Set<PurchaseOrderStatusKey>([
-      "CONFIRMED",
-      "PRODUCING",
-      "IN_PROGRESS",
-      "SHIPPING",
-    ]);
-    const completedStatuses = new Set<PurchaseOrderStatusKey>([
-      "COMPLETED",
-      "ARRIVED",
-    ]);
-    const canceledStatuses = new Set<PurchaseOrderStatusKey>(["CANCELED"]);
-
-    return orders.reduce(
-      (acc, order) => {
-        const statusKey = normalizePurchaseOrderStatus(order.orderStatus);
-        if (statusKey && processingStatuses.has(statusKey)) {
-          acc.processingCount += 1;
-        } else if (statusKey && completedStatuses.has(statusKey)) {
-          acc.completedCount += 1;
-        } else if (statusKey && canceledStatuses.has(statusKey)) {
-          acc.canceledCount += 1;
-        }
-
-        acc.totalAmount += Number(order.price ?? 0);
-        acc.totalOrderQuantity += Number(order.orderQuantity ?? 0);
-        acc.totalInboundQuantity += Number(order.inboundQuantity ?? 0);
-        acc.totalRestQuantity += Number(order.restQuantity ?? 0);
-
-        return acc;
-      },
-      {
-        processingCount: 0,
-        completedCount: 0,
-        canceledCount: 0,
-        totalAmount: 0,
-        totalOrderQuantity: 0,
-        totalInboundQuantity: 0,
-        totalRestQuantity: 0,
-      },
-    );
-  }, [orders]);
 
   const getStatusBadge = (status?: string | null) => {
     const statusKey = normalizePurchaseOrderStatus(status);
@@ -323,37 +268,6 @@ export function WmsPurchaseOrders() {
       {/* 메인 컨텐츠 */}
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* 자동화 현황 대시보드 */}
-
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-file-list-line"
-            label="전체 발주"
-            value={totalElements}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatCard
-            icon="ri-time-line"
-            label="진행 중"
-            value={processingCount}
-            iconBgColor="bg-indigo-100"
-            iconColor="text-indigo-600"
-          />
-          <StatCard
-            icon="ri-check-line"
-            label="완료"
-            value={completedCount}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
-          />
-          <StatCard
-            icon="ri-money-dollar-circle-line"
-            label="총 발주액"
-            value={formatCurrency(totalAmount)}
-            iconBgColor="bg-purple-100"
-            iconColor="text-purple-600"
-          />
-        </div>
 
         {/* 실시간 모니터링 알림 */}
         <InfoBox

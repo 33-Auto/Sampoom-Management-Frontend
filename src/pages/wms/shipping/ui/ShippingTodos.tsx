@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import {
@@ -17,14 +17,7 @@ import type {
   ShippingOrderDto,
   ShippingOrderItemDto,
 } from "@/pages/wms/shipping/model";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 type ShippingStatus = NonNullable<ShippingListParams["status"]>;
 
@@ -66,6 +59,8 @@ const sumAvailableStock = (items?: ShippingOrderItemDto[]) =>
 const formatNumber = (value: number) => value.toLocaleString("ko-KR");
 
 export function ShippingTodos() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShippingStatus | "">("");
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -117,6 +112,15 @@ export function ShippingTodos() {
     useShippingListQuery(queryParams);
 
   useEffect(() => {
+    const refreshRequested = (location.state as { refresh?: boolean } | null)
+      ?.refresh;
+    if (refreshRequested) {
+      refetch();
+      navigate(".", { replace: true, state: undefined });
+    }
+  }, [location.state, navigate, refetch]);
+
+  useEffect(() => {
     if (
       typeof defaultWarehouseId === "number" &&
       Number.isFinite(defaultWarehouseId)
@@ -136,53 +140,22 @@ export function ShippingTodos() {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const {
-    totalOrderCount,
-    pendingCount,
-    inProgressCount,
-    completedCount,
-    shortageQuantity,
-    totalRequestedQuantity,
-  } = useMemo(() => {
-    const pendingStatuses = new Set<ShippingStatus>(["PENDING"]);
-    const inProgressStatuses = new Set<ShippingStatus>([
-      "CONFIRMED",
-      "SHIPPING",
-      "DELIVERING",
-    ]);
-    const completedStatuses = new Set<ShippingStatus>(["COMPLETED", "ARRIVED"]);
+  const handleProcess = useCallback(
+    (order: ShippingOrderDto) => {
+      if (
+        typeof warehouseId !== "number" ||
+        Number.isNaN(warehouseId) ||
+        typeof order.orderId !== "number"
+      ) {
+        return;
+      }
 
-    return orders.reduce(
-      (acc, order) => {
-        const orderQuantity = sumOrderQuantity(order.items);
-        const availableStock = sumAvailableStock(order.items);
-        const shortage = Math.max(orderQuantity - availableStock, 0);
-        const status = (order.status ?? "") as ShippingStatus | "";
-
-        acc.totalOrderCount += 1;
-        acc.totalRequestedQuantity += orderQuantity;
-        acc.shortageQuantity += shortage;
-
-        if (status && pendingStatuses.has(status)) {
-          acc.pendingCount += 1;
-        } else if (status && inProgressStatuses.has(status)) {
-          acc.inProgressCount += 1;
-        } else if (status && completedStatuses.has(status)) {
-          acc.completedCount += 1;
-        }
-
-        return acc;
-      },
-      {
-        totalOrderCount: 0,
-        pendingCount: 0,
-        inProgressCount: 0,
-        completedCount: 0,
-        shortageQuantity: 0,
-        totalRequestedQuantity: 0,
-      },
-    );
-  }, [orders]);
+      navigate(`/wms/shipping/process/${warehouseId}/${order.orderId}`, {
+        state: { order },
+      });
+    },
+    [navigate, warehouseId],
+  );
 
   const columns = [
     {
@@ -238,6 +211,26 @@ export function ShippingTodos() {
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleDateString("ko-KR") : "-",
     },
+    {
+      key: "actions",
+      title: "처리",
+      width: "140px",
+      render: (_: unknown, row: ShippingOrderDto) => (
+        <Button
+          variant="default"
+          size="sm"
+          onClick={() => handleProcess(row)}
+          disabled={
+            typeof warehouseId !== "number" ||
+            Number.isNaN(warehouseId) ||
+            typeof row.orderId !== "number" ||
+            !row.items?.some((item) => (item.stock ?? 0) > 0)
+          }
+        >
+          출고 처리
+        </Button>
+      ),
+    },
   ];
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
@@ -254,37 +247,6 @@ export function ShippingTodos() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-truck-line"
-          label="전체 출고 요청"
-          value={totalElements || totalOrderCount}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-time-line"
-          label="출고 대기"
-          value={pendingCount}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
-          icon="ri-flight-takeoff-line"
-          label="진행 중"
-          value={inProgressCount}
-          iconBgColor="bg-indigo-100"
-          iconColor="text-indigo-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="완료"
-          value={completedCount}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-      </div>
-
       <InfoBox type="info" title="WMS 출고 관리 안내">
         <p className="text-sm">
           출고 요청은 창고의 가용 재고를 기반으로 진행됩니다. 재고 부족분은
@@ -362,12 +324,6 @@ export function ShippingTodos() {
         onRefresh={async () => {
           await refetch();
         }}
-        actionsRight={
-          <span className="text-sm text-gray-500 dark:text-grey-300">
-            요청 수량 합계: {formatNumber(totalRequestedQuantity)} EA / 부족
-            수량: {formatNumber(shortageQuantity)} EA
-          </span>
-        }
       >
         <Table
           columns={columns}

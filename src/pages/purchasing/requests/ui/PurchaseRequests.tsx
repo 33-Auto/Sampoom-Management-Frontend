@@ -13,7 +13,7 @@ import {
   PURCHASE_REQUEST_URGENCY,
 } from "@/pages/purchasing/requests/model";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
 
 export const PurchaseRequests = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -171,52 +171,8 @@ export const PurchaseRequests = () => {
     },
   ];
 
-  // 통계 계산
-  const totalRequests = totalElements;
-  const orderedRequests =
-    data?.data?.content?.filter((req) => req.status === "ORDERED").length ?? 0;
-  const receivedRequests =
-    data?.data?.content?.filter((req) => req.status === "RECEIVED").length ?? 0;
-  const totalAmount =
-    data?.data?.content?.reduce(
-      (sum, req) => sum + (req.expectedAmount || 0),
-      0,
-    ) ?? 0;
-
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-file-list-line"
-          label="전체 요청"
-          value={totalRequests}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-time-line"
-          label="주문됨"
-          value={orderedRequests}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="수령됨"
-          value={receivedRequests}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-money-dollar-circle-line"
-          label="총 요청액"
-          value={`₩${(totalAmount / 1000000).toFixed(0)}M`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-      </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}

@@ -12,16 +12,8 @@ import {
   WORK_CENTER_STATUS,
   WORK_CENTER_TYPE,
 } from "@/pages/master/workcenters/model";
-import { useWorkCenterStats } from "@/pages/master/workcenters/model/useWorkCenterStats";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 export const WorkCenterMaster = () => {
   const navigate = useNavigate();
@@ -175,71 +167,10 @@ export const WorkCenterMaster = () => {
     },
   ];
 
-  // 통계 계산 (API 데이터 기반)
   const workCenters = data?.data?.content ?? [];
-  const {
-    totalWorkCenters,
-    activeWorkCenters,
-    internalWorkCenters,
-    externalWorkCenters,
-    totalCapacity,
-    avgHourlyRate,
-  } = useWorkCenterStats(workCenters);
 
   return (
     <>
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
-        <StatCard
-          icon="ri-tools-line"
-          label="전체 작업장"
-          value={totalWorkCenters}
-          iconBgColor="bg-main-100"
-          iconColor="text-main-600"
-        />
-
-        <StatCard
-          icon="ri-play-circle-line"
-          label="가동 중"
-          value={activeWorkCenters}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-building-line"
-          label="내부 설비"
-          value={internalWorkCenters}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-truck-line"
-          label="외주 가공처"
-          value={externalWorkCenters}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-
-        <StatCard
-          icon="ri-time-line"
-          label="총 가용능력"
-          value={`${Math.round(totalCapacity)}h`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-
-        <StatCard
-          icon="ri-money-dollar-circle-line"
-          label="평균 시간당 비용"
-          value={`₩${avgHourlyRate.toLocaleString()}`}
-          iconBgColor="bg-teal-100"
-          iconColor="text-teal-600"
-        />
-      </div>
-
       {/* 작업장 능력 관리 안내 */}
       <InfoBox type="info" title="작업장 능력 관리 안내">
         <div className="flex items-center justify-around">

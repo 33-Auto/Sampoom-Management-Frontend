@@ -5,14 +5,7 @@ import { useMaterialCategoryOptions } from "@/entities/material";
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-  Badge,
-} from "@/shared/ui";
+import { Button, InfoBox, SearchFilterBar, Table, Badge } from "@/shared/ui";
 
 import { useItemsMasterQuery } from "../api/items.api";
 import type { ItemResponseDTO } from "../model";
@@ -157,18 +150,6 @@ export const ItemMaster = () => {
     },
   ];
 
-  // 통계 계산 (실제 데이터에서 계산)
-  const totalItems = totalElements;
-  const materialCount = items.filter((item) => item.type === "MATERIAL").length;
-  const partCount = items.filter((item) => item.type === "PART").length;
-  const leadTimes = items
-    .map((item) => item.leadTime)
-    .filter((lt): lt is number => lt !== undefined && lt !== null);
-  const avgLeadTime =
-    leadTimes.length > 0
-      ? Math.round(leadTimes.reduce((a, b) => a + b, 0) / leadTimes.length)
-      : 0;
-
   return (
     <div>
       {isError && (
@@ -184,40 +165,6 @@ export const ItemMaster = () => {
           </Button>
         </div>
       )}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-database-line"
-          label="전체 품목"
-          value={totalItems}
-          iconBgColor="bg-main-100"
-          iconColor="text-main-600"
-        />
-
-        <StatCard
-          icon="ri-instance-line"
-          label="원자재"
-          value={materialCount}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-tools-line"
-          label="부품"
-          value={partCount}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-time-line"
-          label="평균 리드 타임"
-          value={`${avgLeadTime}일`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-      </div>
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}

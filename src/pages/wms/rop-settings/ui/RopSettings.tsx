@@ -17,14 +17,7 @@ import type {
   // RopSettingStatus,
 } from "@/pages/wms/rop-settings/model";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 export function RopSettings() {
   const navigate = useNavigate();
@@ -197,18 +190,7 @@ export function RopSettings() {
     },
   ];
 
-  // 통계 계산 (API 데이터 기반)
   const ropSettings = data?.data?.content ?? [];
-  const totalSettings = totalElements;
-  const activeSettings = ropSettings.filter(
-    (item: RopResDto) => item.autoOrderStatus === "ACTIVE",
-  ).length;
-  const autoOrderSettings = ropSettings.filter(
-    (item: RopResDto) => item.autoOrderStatus === "ACTIVE",
-  ).length;
-  const lowStockItems = ropSettings.filter(
-    (item: RopResDto) => (item.quantity || 0) <= (item.rop || 0),
-  ).length;
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
     return (
@@ -226,38 +208,6 @@ export function RopSettings() {
     <>
       {/* 메인 컨텐츠 */}
       <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* 통계 카드 */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-file-list-3-line"
-            label="전체 설정"
-            value={totalSettings}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatCard
-            icon="ri-checkbox-circle-line"
-            label="활성 설정"
-            value={activeSettings}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
-          />
-          <StatCard
-            icon="ri-robot-line"
-            label="자동 발주"
-            value={autoOrderSettings}
-            iconBgColor="bg-purple-100"
-            iconColor="text-purple-600"
-          />
-          <StatCard
-            icon="ri-alert-line"
-            label="발주 필요"
-            value={lowStockItems}
-            iconBgColor="bg-red-100"
-            iconColor="text-red-600"
-          />
-        </div>
-
         {/* ROP 자동 계산 섹션 */}
         <InfoBox type="info" title="ROP 자동 계산">
           <div className="flex items-center justify-around">

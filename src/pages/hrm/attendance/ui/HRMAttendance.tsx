@@ -1,14 +1,6 @@
 import { useState } from "react";
 
-import {
-  Badge,
-  Button,
-  Input,
-  Select,
-  StatCard,
-  Table,
-  TableSection,
-} from "@/shared/ui";
+import { Badge, Button, Input, Select, Table, TableSection } from "@/shared/ui";
 
 import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
@@ -172,52 +164,8 @@ export const HRMAttendance = () => {
     return matchesDepartment && matchesStatus;
   });
 
-  const presentCount = attendanceData.filter(
-    (a) => a.status === "present" || a.status === "working",
-  ).length;
-  const leaveCount = attendanceData.filter(
-    (a) => a.status === "annual_leave" || a.status === "sick_leave",
-  ).length;
-  const lateCount = attendanceData.filter((a) => a.lateMinutes > 0).length;
-  const totalOvertimeHours = attendanceData.reduce(
-    (sum, a) => sum + a.overtime,
-    0,
-  );
-
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* Stats Cards */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-user-line"
-          label="출근 인원"
-          value={presentCount}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-calendar-line"
-          label="휴가 인원"
-          value={leaveCount}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-        <StatCard
-          icon="ri-time-line"
-          label="지각 인원"
-          value={lateCount}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
-          icon="ri-timer-line"
-          label="총 연장근무"
-          value={`${totalOvertimeHours}시간`}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-      </div>
-
       {/* Filters and Actions */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">

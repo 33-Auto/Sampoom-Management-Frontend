@@ -3,6 +3,8 @@ import createClient from "openapi-react-query";
 
 import type { paths } from "@/shared/model/v1";
 
+import { shouldSkipAuthRefresh } from "./auth-refresh.guard";
+
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 const applyDefaultHeaders = (request: Request) => {
@@ -28,6 +30,10 @@ const createAuthAwareFetchClient = () => {
     async onResponse({ request, response }) {
       // 401이 아니면 그냥 리턴
       if (response.status !== 401) {
+        return response;
+      }
+
+      if (shouldSkipAuthRefresh()) {
         return response;
       }
 

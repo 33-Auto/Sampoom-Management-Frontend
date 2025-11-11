@@ -27,10 +27,7 @@ const ErrorHandler = (props: ErrorHandlerProps) => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-bg-white px-4 text-center dark:bg-bg-black">
-      <h1 className="text-5xl font-semibold text-gray-400 md:text-6xl">오류</h1>
-      <h2 className="mt-6 text-2xl font-semibold md:text-3xl dark:text-gray-200">
-        뭔가 잘못되었습니다.
-      </h2>
+      <h2 className="text-3xl font-semibold text-gray-400 md:text-6xl">오류</h2>
 
       <p className="mt-4 max-w-2xl text-gray-500">
         {error?.message || "알 수 없는 에러가 발생했습니다."}

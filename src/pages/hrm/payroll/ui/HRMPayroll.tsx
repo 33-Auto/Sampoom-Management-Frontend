@@ -1,14 +1,6 @@
 import { useState } from "react";
 
-import {
-  Badge,
-  Button,
-  Input,
-  Select,
-  StatCard,
-  Table,
-  TableSection,
-} from "@/shared/ui";
+import { Badge, Button, Input, Select, Table, TableSection } from "@/shared/ui";
 
 import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
@@ -141,17 +133,6 @@ export const HRMPayroll = () => {
     return matchesDepartment;
   });
 
-  const totalGrossPay = filteredPayroll.reduce(
-    (sum, p) => sum + p.totalGross,
-    0,
-  );
-  const totalNetPay = filteredPayroll.reduce((sum, p) => sum + p.netPay, 0);
-  const totalDeductions = filteredPayroll.reduce(
-    (sum, p) => sum + p.totalDeductions,
-    0,
-  );
-  const paidCount = filteredPayroll.filter((p) => p.status === "paid").length;
-
   const handleViewPayroll = (payroll: any) => {
     setSelectedEmployee(payroll);
     setShowPayrollModal(true);
@@ -164,38 +145,6 @@ export const HRMPayroll = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* Stats Cards */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-money-dollar-circle-line"
-          label="총 지급액"
-          value={`${totalGrossPay.toLocaleString()}원`}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-wallet-line"
-          label="실수령액"
-          value={`${totalNetPay.toLocaleString()}원`}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-subtract-line"
-          label="총 공제액"
-          value={`${totalDeductions.toLocaleString()}원`}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="지급 완료"
-          value={paidCount}
-          iconBgColor="bg-teal-100"
-          iconColor="text-teal-600"
-        />
-      </div>
-
       {/* Filters and Actions */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">

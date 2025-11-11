@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Badge, Button, SearchFilterBar, StatCard } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar } from "@/shared/ui";
 
 import { departmentOptions, getDepartmentText } from "../../shared/utils";
 
@@ -220,18 +220,6 @@ export const HRMEvaluation = () => {
     return matchesSearch && matchesDepartment && matchesPeriod;
   });
 
-  const avgScore =
-    filteredEvaluations.length > 0
-      ? filteredEvaluations.reduce((sum, e) => sum + e.overallScore, 0) /
-        filteredEvaluations.length
-      : 0;
-  const completedCount = filteredEvaluations.filter(
-    (e) => e.status === "completed",
-  ).length;
-  const highPerformers = filteredEvaluations.filter(
-    (e) => e.overallScore >= 4.5,
-  ).length;
-
   const handleViewEvaluation = (evaluation: any) => {
     setSelectedEmployee(evaluation);
     setShowEvaluationModal(true);
@@ -239,40 +227,6 @@ export const HRMEvaluation = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* Stats Cards */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-star-line"
-          label="평균 평가점수"
-          value={avgScore.toFixed(1)}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="평가 완료"
-          value={completedCount}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-trophy-line"
-          label="우수 평가자"
-          value={highPerformers}
-          iconBgColor="bg-teal-100"
-          iconColor="text-teal-600"
-        />
-        <StatCard
-          icon="ri-progress-line"
-          label="평가 진행률"
-          value={`${Math.round(
-            (completedCount / filteredEvaluations.length) * 100,
-          )}%`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-      </div>
-
       {/* Filters and Actions */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">

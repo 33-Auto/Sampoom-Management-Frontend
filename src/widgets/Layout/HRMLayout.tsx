@@ -7,7 +7,7 @@ import NavigationTabs from "@/widgets/Header/NavigationTabs";
 const HRMLayout: React.FC = () => {
   const headerConfig = {
     moduleTitle: "인사 관리 (HRM)",
-    moduleDescription: "직원 정보만 조회합니다",
+    moduleDescription: "직원 정보를 조회합니다",
     moduleIcon: "ri-team-line",
     moduleColor: "bg-teal-600",
     navItems: [],

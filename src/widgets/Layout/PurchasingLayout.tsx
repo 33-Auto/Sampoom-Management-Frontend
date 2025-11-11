@@ -19,11 +19,6 @@ const PurchasingLayout: React.FC = () => {
       label: "구매 요청",
       icon: "ri-file-add-line",
     },
-    {
-      path: "/purchasing/orders",
-      label: "구매 주문",
-      icon: "ri-file-check-line",
-    },
   ];
 
   return (

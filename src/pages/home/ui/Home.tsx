@@ -103,6 +103,11 @@ export const Home = () => {
           path: "/production/planning",
           icon: "ri-calendar-line",
         },
+        {
+          title: "생산 스케줄",
+          path: "/production/mps",
+          icon: "ri-calendar-schedule-line",
+        },
       ],
     },
     {
@@ -118,17 +123,12 @@ export const Home = () => {
           path: "/purchasing/requests",
           icon: "ri-file-add-line",
         },
-        {
-          title: "구매 주문",
-          path: "/purchasing/orders",
-          icon: "ri-file-check-line",
-        },
       ],
     },
     {
       id: "hrm",
       title: "인사 관리 (HRM)",
-      description: "직원 정보만 조회합니다",
+      description: "직원 정보를 조회합니다",
       icon: "ri-team-line",
       color: "bg-teal-500",
       path: "/hrm/employees",
@@ -265,57 +265,6 @@ export const Home = () => {
               </div>
             </Card>
           ))}
-        </div>
-
-        {/* 빠른 통계 */}
-        <div className="mt-8">
-          <Card>
-            <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
-              시스템 현황
-            </h2>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  156
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  등록된 품목
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  23
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  대기 중인 주문
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                  8
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  생산 지시
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                  12
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  구매 요청
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">
-                  87
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  등록된 직원
-                </div>
-              </div>
-            </div>
-          </Card>
         </div>
       </div>
     </HomeLayout>

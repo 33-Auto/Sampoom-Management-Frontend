@@ -1186,6 +1186,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/factory/{factoryId}/mps/parts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * MPS 부품 정보 조회
+     * @description 해당 공장에 저장된 MPS의 모든 부품 정보(ID, 코드, 이름)를 조회합니다.
+     */
+    get: operations["getMpsPartInfos"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/factory/{factoryId}/mps/parts/{partId}/forecast-months": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 특정 부품의 예측 달 조회
+     * @description 특정 부품 ID에 대한 모든 예측 달(targetDate) 목록을 조회합니다.
+     */
+    get: operations["getPartForecastMonths"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/factory/{factoryId}/mps-plans/{mpsPlanId}": {
     parameters: {
       query?: never;
@@ -3786,6 +3826,30 @@ export interface components {
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;
+    };
+    ApiResponseListMpsPartInfoDto: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: components["schemas"]["MpsPartInfoDto"][];
+    };
+    MpsPartInfoDto: {
+      /** Format: int64 */
+      partId?: number;
+      partCode?: string;
+      partName?: string;
+    };
+    ApiResponseListLocalDate: {
+      /** Format: int32 */
+      status?: number;
+      success?: boolean;
+      /** Format: int32 */
+      code?: number;
+      message?: string;
+      data?: string[];
     };
     ApiResponseMpsPlanResponse: {
       /** Format: int32 */
@@ -6595,6 +6659,72 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getMpsPartInfos: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListMpsPartInfoDto"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getPartForecastMonths: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description 공장 ID */
+        factoryId: number;
+        /** @description 부품 ID */
+        partId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseListLocalDate"];
         };
       };
       /** @description Conflict */

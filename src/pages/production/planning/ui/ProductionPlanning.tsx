@@ -27,7 +27,7 @@ import {
   type ProductionPlanStatus,
 } from "@/pages/production/planning/model";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
 
 const DEFAULT_STATUS_FILTER = "UNDER_REVIEW";
 const EXCLUDED_STATUSES: ProductionPlanStatus[] = ["IN_PROGRESS", "COMPLETED"];
@@ -130,26 +130,6 @@ export const ProductionPlanning = () => {
     normalizedPlans.every((plan) =>
       selectedPlanIds.includes(String(plan.orderId)),
     );
-
-  const stats = useMemo(() => {
-    const statusCounter = plans.reduce<Record<string, number>>(
-      (acc: Record<string, number>, plan: ProductionPlanResponseDTO) => {
-        if (plan.status) {
-          acc[plan.status] = (acc[plan.status] ?? 0) + 1;
-        }
-        return acc;
-      },
-      {},
-    );
-
-    return {
-      total: plans.length,
-      planConfirmed: statusCounter.PLAN_CONFIRMED ?? 0,
-      underReview: statusCounter.UNDER_REVIEW ?? 0,
-      purchaseRequest: statusCounter.PURCHASE_REQUEST ?? 0,
-      delayed: statusCounter.DELAYED ?? 0,
-    };
-  }, [plans]);
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
@@ -522,37 +502,6 @@ export const ProductionPlanning = () => {
       )}
 
       <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-file-list-line"
-            label="전체 계획"
-            value={stats.total}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatCard
-            icon="ri-check-line"
-            label="확정 계획"
-            value={stats.planConfirmed}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
-          />
-          <StatCard
-            icon="ri-time-line"
-            label="검토 중"
-            value={stats.underReview}
-            iconBgColor="bg-yellow-100"
-            iconColor="text-yellow-600"
-          />
-          <StatCard
-            icon="ri-shopping-cart-line"
-            label="구매 요청"
-            value={stats.purchaseRequest}
-            iconBgColor="bg-yellow-100"
-            iconColor="text-yellow-600"
-          />
-        </div>
-
         <SearchFilterBar
           searchTerm={searchTerm}
           onSearchChange={(value) => {

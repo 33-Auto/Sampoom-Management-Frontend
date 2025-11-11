@@ -22,14 +22,7 @@ import {
   type PartOrderStatus,
 } from "@/pages/production/orders/model";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  Modal,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, Modal, SearchFilterBar, Table } from "@/shared/ui";
 
 export const WorkOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,25 +105,6 @@ export const WorkOrders = () => {
   const orders = data?.data?.content ?? [];
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
-
-  const stats = useMemo(() => {
-    const statusCounter = orders.reduce<Record<string, number>>(
-      (acc, order) => {
-        if (order.status) {
-          acc[order.status] = (acc[order.status] ?? 0) + 1;
-        }
-        return acc;
-      },
-      {},
-    );
-
-    return {
-      total: totalElements,
-      inProgress: statusCounter.IN_PROGRESS ?? 0,
-      completed: statusCounter.COMPLETED ?? 0,
-      delayed: statusCounter.DELAYED ?? 0,
-    };
-  }, [orders, totalElements]);
 
   const statusOptions = [
     { value: "", label: "전체 상태" },
@@ -316,37 +290,6 @@ export const WorkOrders = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-file-list-line"
-          label="전체 주문"
-          value={stats.total}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <StatCard
-          icon="ri-play-line"
-          label="진행 중"
-          value={stats.inProgress}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-        <StatCard
-          icon="ri-check-line"
-          label="완료"
-          value={stats.completed}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-timer-flash-line"
-          label="지연"
-          value={stats.delayed}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-      </div>
-
       <SearchFilterBar
         searchTerm={searchTerm}
         onSearchChange={(value) => {

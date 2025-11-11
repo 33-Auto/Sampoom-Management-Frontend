@@ -7,16 +7,8 @@ import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePagi
 import { useBomsQuery } from "@/pages/master/bom/api";
 import type { BomResponseDTO } from "@/pages/master/bom/model";
 import { BOM_COMPLEXITY, BOM_STATUS } from "@/pages/master/bom/model";
-import { useBomStats } from "@/pages/master/bom/model/useBomStats";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 export const BomMasterPage = () => {
   const navigate = useNavigate();
@@ -206,71 +198,10 @@ export const BomMasterPage = () => {
     },
   ];
 
-  // 통계 계산 (API 데이터 기반)
   const boms = data?.data?.content ?? [];
-  const {
-    totalBoms,
-    activeBoms,
-    reviewingBoms,
-    avgCost,
-    avgComponents,
-    complexBoms,
-  } = useBomStats(boms);
 
   return (
     <>
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-6">
-        <StatCard
-          icon="ri-file-list-3-line"
-          label="전체 BOM"
-          value={totalBoms}
-          iconBgColor="bg-main-100"
-          iconColor="text-main-600"
-        />
-
-        <StatCard
-          icon="ri-check-line"
-          label="활성 BOM"
-          value={activeBoms}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-time-line"
-          label="검토중"
-          value={reviewingBoms}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-
-        <StatCard
-          icon="ri-money-dollar-circle-line"
-          label="평균 비용"
-          value={`₩${Math.round(avgCost).toLocaleString()}`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-
-        <StatCard
-          icon="ri-stack-line"
-          label="평균 구성품"
-          value={`${avgComponents}개`}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-alert-line"
-          label="복잡 BOM"
-          value={complexBoms}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-      </div>
-
       {/* BOM 관리 안내 */}
       <InfoBox type="info" title="BOM 관리 안내">
         <p className="mb-1">

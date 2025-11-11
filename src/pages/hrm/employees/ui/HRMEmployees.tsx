@@ -8,7 +8,7 @@ import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { getWorkspaceLabel as resolveWorkspaceLabel } from "@/shared/constants/workspace";
 import type { Schemas } from "@/shared/model";
-import { Badge, Button, Card, SearchFilterBar, StatCard } from "@/shared/ui";
+import { Badge, Button, Card, SearchFilterBar } from "@/shared/ui";
 
 import { useUserInfoQuery } from "../api";
 
@@ -130,18 +130,6 @@ export const HRMEmployees = () => {
     return dateString.slice(0, 10);
   };
 
-  // 통계 계산
-  const totalEmployees = totalElements;
-  const activeEmployees = users.filter(
-    (u: UserInfo) => u.status === "ACTIVE",
-  ).length;
-  const leaveEmployees = users.filter(
-    (u: UserInfo) => u.status === "LEAVE",
-  ).length;
-  const retiredEmployees = users.filter(
-    (u: UserInfo) => u.status === "RETIRED",
-  ).length;
-
   // 조직 필터 옵션
   const workspaceOptions = [
     { value: "", label: "전체 조직" },
@@ -159,38 +147,6 @@ export const HRMEmployees = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* Stats Cards */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-team-line"
-          label="총 직원 수"
-          value={totalEmployees}
-          iconBgColor="bg-teal-100"
-          iconColor="text-teal-600"
-        />
-        <StatCard
-          icon="ri-user-line"
-          label="재직"
-          value={activeEmployees}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-        <StatCard
-          icon="ri-pause-circle-line"
-          label="휴직"
-          value={leaveEmployees}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <StatCard
-          icon="ri-logout-circle-line"
-          label="퇴직"
-          value={retiredEmployees}
-          iconBgColor="bg-red-100"
-          iconColor="text-red-600"
-        />
-      </div>
-
       {/* Filters and Actions */}
       <SearchFilterBar
         filters={[

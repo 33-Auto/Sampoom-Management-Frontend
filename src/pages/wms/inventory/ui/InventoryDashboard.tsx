@@ -23,14 +23,7 @@ import {
 } from "@/pages/wms/inventory/model";
 import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 export const InventoryDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -98,32 +91,6 @@ export const InventoryDashboard = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
   const items = data?.data?.content ?? [];
-
-  const { reorderPointCount, dangerCount, totalInventoryValue } =
-    useMemo(() => {
-      return items.reduce(
-        (acc, item) => {
-          const quantity = item.quantity ?? 0;
-          const rop = item.rop ?? 0;
-          const statusKey = normalizeInventoryStatus(item.status);
-          if (quantity <= rop) {
-            acc.reorderPointCount += 1;
-          }
-          if (statusKey === "DANGER") {
-            acc.dangerCount += 1;
-          }
-          acc.totalInventoryValue += Number(item.partValue ?? 0);
-          acc.totalQuantity += quantity;
-          return acc;
-        },
-        {
-          reorderPointCount: 0,
-          dangerCount: 0,
-          totalInventoryValue: 0,
-          totalQuantity: 0,
-        },
-      );
-    }, [items]);
 
   const categoryOptions = usePartCategoryOptions();
 
@@ -265,38 +232,6 @@ export const InventoryDashboard = () => {
     <>
       {/* 메인 컨텐츠 */}
       <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* 통계 카드 */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-stack-line"
-            label="전체 품목"
-            value={totalElements}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatCard
-            icon="ri-recycle-line"
-            label="재주문점 이하"
-            value={reorderPointCount}
-            iconBgColor="bg-amber-100"
-            iconColor="text-amber-600"
-          />
-          <StatCard
-            icon="ri-alert-line"
-            label="위험 재고"
-            value={dangerCount}
-            iconBgColor="bg-red-100"
-            iconColor="text-red-600"
-          />
-          <StatCard
-            icon="ri-money-dollar-circle-line"
-            label="총 재고가치"
-            value={formatCurrency(totalInventoryValue)}
-            iconBgColor="bg-emerald-100"
-            iconColor="text-emerald-600"
-          />
-        </div>
-
         {/* 필터 및 검색 */}
         <SearchFilterBar
           searchTerm={searchTerm}
