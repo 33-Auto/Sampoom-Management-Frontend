@@ -15,7 +15,6 @@ const mapProfileToUserResponse = (
   userId: profile.userId,
   userName: profile.userName,
   email: profile.email,
-  role: profile.position,
   workspace: profile.workspace,
   branch: profile.branch,
   position: profile.position,
