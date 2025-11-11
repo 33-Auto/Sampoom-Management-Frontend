@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +22,7 @@ const Register = () => {
     handleSubmit,
     watch,
     setError,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
     defaultValues: {
@@ -42,19 +44,32 @@ const Register = () => {
   const factoryBranchOptions = useFactoryBranchOptions();
   const wmsBranchOptions = useWmsBranchOptions();
 
-  // branch value에 해당하는 label 찾기
-  const branchOptions =
-    workspace === "FACTORY" ? factoryBranchOptions : wmsBranchOptions;
-  const branchLabel =
-    branchOptions.find((option: any) => option.value === branchValue)?.label ||
-    "";
+  const requiresFactoryBranch = workspace === "PRODUCTION";
+  const requiresInventoryBranch = workspace === "INVENTORY";
+  const requiresBranchSelection =
+    requiresFactoryBranch || requiresInventoryBranch;
+
+  const branchOptions = requiresFactoryBranch
+    ? factoryBranchOptions
+    : requiresInventoryBranch
+      ? wmsBranchOptions
+      : [];
+  const branchLabel = branchOptions.find(
+    (option: any) => option.value === branchValue,
+  )?.label;
+
+  useEffect(() => {
+    if (!requiresBranchSelection && branchValue !== "") {
+      setValue("branch", "");
+    }
+  }, [branchValue, requiresBranchSelection, setValue]);
 
   const onSubmit = handleSubmit(async (values) => {
     try {
       // branch value 대신 label을 전달
       await submitRegister({
         ...values,
-        branch: branchLabel,
+        branch: branchLabel ?? "",
       });
     } catch (error) {
       console.error(error);
@@ -115,18 +130,6 @@ const Register = () => {
                 ...WORKSPACE_OPTIONS,
               ]}
               errorText={errors.workspace?.message}
-            />
-
-            <Select
-              label="지점"
-              {...register("branch", {
-                required: "지점을 선택하세요.",
-                validate: (value) => value !== "" || "지점을 선택하세요.",
-              })}
-              value={branchValue}
-              options={branchOptions}
-              errorText={errors.branch?.message}
-              disabled={workspace === ""}
             />
 
             <Select

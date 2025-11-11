@@ -2,10 +2,16 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useUpdateProfileMutation } from "@/pages/hrm/employees/api";
+import { getWorkspaceLabel } from "@/shared/constants/workspace";
 import type { Schemas } from "@/shared/model";
 import { Button, Card, Select } from "@/shared/ui";
 
 type UserInfo = Schemas["UserInfoResponse"];
+
+const WORKSPACE_FALLBACK_LABELS = {
+  FACTORY: "공장",
+  WAREHOUSE: "창고",
+};
 
 const positionOptions = [
   { value: "STAFF", label: "사원" },
@@ -129,11 +135,10 @@ export function EmployeeProfileProcess() {
                     조직
                   </p>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    {user.workspace === "FACTORY"
-                      ? "공장"
-                      : user.workspace === "WAREHOUSE"
-                        ? "창고"
-                        : "대리점"}
+                    {getWorkspaceLabel(
+                      user.workspace as string | undefined,
+                      WORKSPACE_FALLBACK_LABELS,
+                    )}
                   </p>
                 </div>
                 <div>

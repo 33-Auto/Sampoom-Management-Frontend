@@ -6,17 +6,17 @@ export const users: SignupRequest[] = [
     email: "test2@naver.com",
     password: "12341234",
     userName: "Test User 2",
-    workspace: "Warehouse",
+    workspace: "HR",
     branch: "Busan",
-    position: "Employee",
+    position: "STAFF",
   },
   {
     email: "test1@naver.com",
     password: "12341234",
     userName: "Test User 1",
-    workspace: "Factory",
+    workspace: "MD",
     branch: "Seoul",
-    position: "Manager",
+    position: "MANAGER",
   },
 ];
 export let userIdCounter = 1;

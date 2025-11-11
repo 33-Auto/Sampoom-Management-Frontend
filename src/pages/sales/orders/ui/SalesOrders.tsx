@@ -1,7 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
-import { queryClient } from "@/shared/api";
-import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import {
   Button,
   Table,
@@ -10,7 +13,7 @@ import {
   StatCard,
 } from "@/shared/ui";
 
-import { getSalesOrdersQueryOptions } from "../api/sales-orders.api";
+import { useSalesOrdersQuery, type SalesOrderListQueryParams } from "../api";
 import {
   SALES_ORDER_STATUS_FILTER_OPTIONS,
   SALES_ORDER_STATUS_LABELS,
@@ -89,28 +92,43 @@ export const SalesOrders = () => {
     useState<SalesOrderStatusFilterValue>("ALL");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
-  const warehouseId = DEFAULT_WAREHOUSE_ID;
-
-  const queryOptions = useMemo(
-    () =>
-      getSalesOrdersQueryOptions({
-        warehouseId,
-        page,
-        size,
-        ...(fromText ? { from: fromText } : {}),
-        ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
-      }),
-    [warehouseId, page, size, fromText, statusFilter],
+  const { defaultWarehouseId } = useLoaderData() as {
+    defaultWarehouseId?: number;
+  };
+  const selectedWarehouseId = useBranchId("wms");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
   );
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
 
-  const { data, refetch } = queryClient.useQuery(
-    "get",
-    "/api/order/warehouse/{warehouseId}",
-    queryOptions,
-    {
-      placeholderData: (previousData) => previousData,
-    },
-  );
+  const queryParams = useMemo<SalesOrderListQueryParams | undefined>(() => {
+    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+      return undefined;
+    }
+
+    const params: SalesOrderListQueryParams = {
+      warehouseId,
+      page,
+      size,
+    };
+
+    if (fromText) {
+      params.from = fromText;
+    }
+
+    if (statusFilter !== "ALL") {
+      params.status = statusFilter as Exclude<
+        SalesOrderStatusFilterValue,
+        "ALL"
+      >;
+    }
+
+    return params;
+  }, [warehouseId, page, size, fromText, statusFilter]);
+
+  const { data, refetch } = useSalesOrdersQuery(queryParams);
   const pageData = data?.data;
   const rawContent = pageData?.content ?? [];
   const totalPages = pageData?.totalPages ?? 0;
@@ -120,6 +138,22 @@ export const SalesOrders = () => {
     () => rawContent.map((order) => mapOrderToRow(order)),
     [rawContent],
   );
+
+  useEffect(() => {
+    if (
+      typeof defaultWarehouseId === "number" &&
+      Number.isFinite(defaultWarehouseId)
+    ) {
+      const defaultIdString = String(defaultWarehouseId);
+      if (!selectedWarehouseId) {
+        setBranchSelection("wms", defaultIdString);
+      }
+    }
+  }, [defaultWarehouseId, selectedWarehouseId, setBranchSelection]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [warehouseId, setPage]);
 
   // 작업 버튼 - 취소/상세
   const statusOptions = useMemo(

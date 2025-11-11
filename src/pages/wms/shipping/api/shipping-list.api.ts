@@ -20,6 +20,7 @@ const getShippingListQueryOptions = (params?: ShippingListQueryParams) => {
   return {
     params: {
       query,
+      cookie: {} as { ACCESS_TOKEN: string },
     },
   };
 };

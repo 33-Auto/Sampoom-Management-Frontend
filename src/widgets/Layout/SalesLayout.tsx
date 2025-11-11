@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
+import { BranchSelectBar } from "@/features/branch-select";
 import ModuleHeader from "@/widgets/Header/ModuleHeader";
 import NavigationTabs from "@/widgets/Header/NavigationTabs";
 
@@ -21,9 +22,9 @@ const SalesLayout: React.FC = () => {
     <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-green-600" />
-      <div className="p-6">
-        <Outlet />
-      </div>
+      {/* 지점 선택 영역 */}
+      <BranchSelectBar moduleType="wms" />
+      <Outlet />
     </div>
   );
 };

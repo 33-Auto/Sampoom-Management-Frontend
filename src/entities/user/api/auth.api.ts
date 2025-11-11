@@ -1,11 +1,7 @@
 import { fetchClient, queryClient } from "@/shared/api";
-import type { SignupRequest } from "@/shared/model/models";
+import type { SignupRequest, UserResponse } from "@/shared/model/models";
 
-import type {
-  ApiResponseUserLoginResponse,
-  LoginRequest,
-  UserLoginResponse,
-} from "../model";
+import type { ApiResponseUserLoginResponse, UserLoginResponse } from "../model";
 
 export const useLoginMutation = () =>
   queryClient.useMutation("post", "/api/auth/login");
@@ -13,16 +9,22 @@ export const useLoginMutation = () =>
 export const useSignupMutation = () =>
   queryClient.useMutation("post", "/api/auth/signup");
 
-export const getMyProfile = async (
-  workspace: LoginRequest["workspace"],
-): Promise<UserLoginResponse> => {
-  const { data, error } = await fetchClient.GET("/api/user/profile", {
-    params: {
-      query: {
-        workspace,
-      },
-    },
-  });
+const mapProfileToUserResponse = (
+  profile: UserLoginResponse,
+): UserResponse => ({
+  userId: profile.userId,
+  userName: profile.userName,
+  email: profile.email,
+  workspace: profile.workspace,
+  branch: profile.branch,
+  position: profile.position,
+  organizationId: profile.organizationId,
+  startedAt: profile.startedAt,
+  endedAt: profile.endedAt,
+});
+
+export const getMyProfile = async (): Promise<UserResponse> => {
+  const { data, error } = await fetchClient.GET("/api/user/profile");
 
   if (error) {
     throw error;
@@ -33,17 +35,11 @@ export const getMyProfile = async (
     throw new Error(response?.message ?? "프로필 정보를 불러오지 못했습니다.");
   }
 
-  return response.data;
+  return mapProfileToUserResponse(response.data);
 };
 
-export const useProfileQuery = (workspace: LoginRequest["workspace"]) =>
-  queryClient.useQuery("get", "/api/user/profile", {
-    params: {
-      query: {
-        workspace,
-      },
-    },
-  });
+export const useProfileQuery = () =>
+  queryClient.useQuery("get", "/api/user/profile");
 
 export const useLogoutMutation = () =>
   queryClient.useMutation("post", "/api/auth/logout");

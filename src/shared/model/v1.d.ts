@@ -16,6 +16,20 @@ export interface paths {
     /**
      * 회원가입
      * @description 회원가입을 통해 인증 정보를 담은 유저를 생성합니다.
+     *     <br><br>email: 이메일(@필요)
+     *     <br>password: 비밀번호(8자~64자)
+     *     <br>workspace: 관리 부서
+     *     <br>branch: 지점명(APP, AGENCY 전용), WEB은 아무값
+     *     <br>userName: 이름
+     *     <br>position: 직급
+     *     <br><br>***Workspace***
+     *     <br>PRODUCTION: 생산 관리 부서
+     *     <br>INVENTORY: 재고 관리 부서
+     *     <br>PURCHASE: 구매 관리 부서
+     *     <br>SALES: 판매 관리 부서
+     *     <br>MD: 기준 정보(Master Data) 관리 부서
+     *     <br>HR: 인사(Human Resources) 관리 부서
+     *     <br>AGENCY: 대리점(APP)
      */
     post: operations["signup"];
     delete?: never;
@@ -36,6 +50,7 @@ export interface paths {
     /**
      * 토큰 재발급
      * @description 리프레시 토큰을 통해 토큰을 재발급합니다.
+     *     재로그인시 기존 리프레시/엑세스 토큰은 무효화됩니다.
      */
     post: operations["refresh"];
     delete?: never;
@@ -75,7 +90,16 @@ export interface paths {
     put?: never;
     /**
      * 로그인
-     * @description 로그인을 통해 토큰을 발급합니다.
+     * @description <br><br> 해당 회원의 이메일/비밀번호/관리 조직을 입력하세요.
+     *     <br>첫 생성 시 Role: USER로 생성되며, ADMIN으로 전환하려면 ADMIN 계정으로 해당 유저의 ID로 변경해야 합니다.
+     *     <br><br>***Workspace***
+     *     <br>PRODUCTION: 생산 관리 부서
+     *     <br>INVENTORY: 재고 관리 부서
+     *     <br>PURCHASE: 구매 관리 부서
+     *     <br>SALES: 판매 관리 부서
+     *     <br>MD: 기준 정보(Master Data) 관리 부서
+     *     <br>HR: 인사(Human Resources) 관리 부서
+     *     <br>AGENCY: 대리점(APP)
      */
     post: operations["login"];
     delete?: never;
@@ -205,10 +229,10 @@ export interface paths {
     head?: never;
     /**
      * 관리자 권한 프로필 정보 수정
-     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
-     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
-     *     <br> 변경할 Role 값을 요청으로 보내세요.
-     *     <br><br>***Role***
+     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 관리 조직 정보를 수정합니다.
+     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 관리 조직을 선택하세요.
+     *     <br> 변경할 Workspace 값을 요청으로 보내세요.
+     *     <br><br>***Workspace***
      *     <br>USER: 일반
      *     <br>ADMIN: 관리자
      */
@@ -228,10 +252,10 @@ export interface paths {
      *     <br><br> **정렬**
      *     <br> **page**: n번째 페이지부터 불러오기
      *     <br> **size**: 페이지 당 사이즈
-     *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
+     *     <br> **sort**: 정렬기준(id(아이디순), userName(이름순)),정렬순서(ASC,DESC)
      *     <br><br> **검색조건**
-     *     <br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
-     *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
+     *     <br> **workspace**: 권한(부서) (미지정 시 관리 조직 상관없이 전체 조회)
+     *     <br> **organizationId(agencyId)**: 대리점 ID (**workspace:AGENCY 필수**, 미지정 시 부서 내 전체 조회)
      */
     get: operations["getUsersInfo"];
     put?: never;
@@ -2753,9 +2777,16 @@ export interface components {
     SignupRequest: {
       email: string;
       password: string;
-      userName: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
+      userName: string;
       branch?: string;
       /** @enum {string} */
       position?:
@@ -2816,7 +2847,14 @@ export interface components {
       email: string;
       password: string;
       /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
     };
     ApiResponseLoginResponse: {
       /** Format: int32 */
@@ -2837,7 +2875,7 @@ export interface components {
     };
     RoleRequest: {
       /** @enum {string} */
-      role: "USER" | "ADMIN";
+      role: "ADMIN" | "USER";
     };
     ApiResponseRoleResponse: {
       /** Format: int32 */
@@ -2852,7 +2890,7 @@ export interface components {
       /** Format: int64 */
       userId?: number;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      role?: "ADMIN" | "USER";
     };
     InvitationCreateRequestDto: {
       /** @enum {string} */
@@ -2861,7 +2899,14 @@ export interface components {
       targetId: number;
       email: string;
       /** @enum {string} */
-      role: "USER" | "ADMIN";
+      workspace:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       /** @enum {string} */
       position:
         | "STAFF"
@@ -2892,7 +2937,14 @@ export interface components {
       userId?: number;
       userName?: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       branch?: string;
       /** @enum {string} */
       position?:
@@ -2924,8 +2976,6 @@ export interface components {
       /** Format: int64 */
       userId?: number;
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** @enum {string} */
       employeeStatus?: "ACTIVE" | "LEAVE" | "RETIRED";
     };
@@ -2974,8 +3024,6 @@ export interface components {
       userId?: number;
       userName?: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      /** @enum {string} */
       position?:
         | "STAFF"
         | "SENIOR_STAFF"
@@ -3002,10 +3050,15 @@ export interface components {
       userId?: number;
       email?: string;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** Format: int64 */
       organizationId?: number;
       branch?: string;
@@ -3056,10 +3109,15 @@ export interface components {
       userId?: number;
       email?: string;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** Format: int64 */
       organizationId?: number;
       branch?: string;
@@ -3120,6 +3178,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["OrderResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     OrderResDto: {
       /** Format: int64 */
@@ -3142,19 +3202,14 @@ export interface components {
       createdAt?: string;
       items?: components["schemas"]["ItemCategoryDto"][];
     };
-    ApiResponseVoid1: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: Record<string, never>;
-    };
     ApiResponsePageOrderResDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageOrderResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PageOrderResDto: {
       /** Format: int32 */
@@ -3196,6 +3251,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageOrderWithStockDto"];
+      /** Format: int32 */
+      code?: number;
     };
     OrderWithStockDto: {
       /** Format: int64 */
@@ -3253,15 +3310,10 @@ export interface components {
       /** Format: int32 */
       status?: number;
       success?: boolean;
+      /** Format: int32 */
+      code?: number;
       message?: string;
       data?: string;
-    };
-    ApiResponseVoid2: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: Record<string, never>;
     };
     RopReqDto: {
       /** Format: int64 */
@@ -3318,6 +3370,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["CategoryResDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     CategoryResDto: {
       /** Format: int64 */
@@ -3330,6 +3384,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["GroupResDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     GroupResDto: {
       /** Format: int64 */
@@ -3342,6 +3398,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageRopResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PageRopResDto: {
       /** Format: int64 */
@@ -3389,6 +3447,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PagePOResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     POResDto: {
       /** Format: int64 */
@@ -3445,6 +3505,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["POResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     ApiResponseListPartItemDto: {
       /** Format: int32 */
@@ -3452,6 +3514,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PartItemDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     PartItemDto: {
       /** Format: int64 */
@@ -3465,6 +3529,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PagePartResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PagePartResDto: {
       /** Format: int64 */
@@ -3649,15 +3715,6 @@ export interface components {
       /** Format: int64 */
       externalPartOrderId?: number;
       items?: components["schemas"]["PartOrderItemRequestDto"][];
-    };
-    ApiResponseString1: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
     };
     ApiResponseLong: {
       /** Format: int32 */
@@ -3937,15 +3994,6 @@ export interface components {
       lowStockParts?: number;
       /** Format: int64 */
       totalQuantity?: number;
-    };
-    ApiResponseString2: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
     };
     ApiResponseListCategorySimpleResponseDTO: {
       /** Format: int32 */
@@ -4491,15 +4539,6 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string;
     };
-    ApiResponseString3: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
-    };
     MaterialRequestDto: {
       name?: string;
       /** Format: int64 */
@@ -4522,15 +4561,6 @@ export interface components {
       /** Format: int64 */
       materialCategoryId?: number;
       materialCategoryName?: string;
-    };
-    ApiResponseString4: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
     };
     ApiResponsePageResponseDtoMaterialResponseDto1: {
       /** Format: int32 */
@@ -4972,7 +5002,14 @@ export interface operations {
   updateEmployeeStatus: {
     parameters: {
       query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
       };
       header?: never;
       path: {
@@ -4999,9 +5036,7 @@ export interface operations {
   };
   getMyProfile: {
     parameters: {
-      query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
@@ -5046,7 +5081,14 @@ export interface operations {
   updateUserProfile: {
     parameters: {
       query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
       };
       header?: never;
       path: {
@@ -5080,7 +5122,14 @@ export interface operations {
         size?: number;
         /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
         sort?: string[];
-        workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace?:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
         organizationId?: number;
       };
       header?: never;
@@ -5159,7 +5208,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5181,7 +5230,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5290,7 +5339,9 @@ export interface operations {
       };
       header?: never;
       path?: never;
-      cookie?: never;
+      cookie: {
+        ACCESS_TOKEN: string;
+      };
     };
     requestBody?: never;
     responses: {
@@ -5320,7 +5371,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5340,7 +5391,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5360,7 +5411,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5380,7 +5431,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5402,7 +5453,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5444,7 +5495,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5468,7 +5519,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5492,7 +5543,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5544,7 +5595,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5568,7 +5619,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5711,7 +5762,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5731,7 +5782,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5751,7 +5802,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5771,7 +5822,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5793,7 +5844,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5863,7 +5914,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -6155,7 +6206,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
       /** @description Conflict */
@@ -6186,7 +6237,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
       /** @description Conflict */
@@ -6217,7 +6268,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
       /** @description Conflict */
@@ -6246,7 +6297,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
       /** @description Conflict */
@@ -6851,7 +6902,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
       /** @description Conflict */
@@ -7319,7 +7370,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString2"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
@@ -8273,7 +8324,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString3"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
@@ -8512,7 +8563,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString4"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
