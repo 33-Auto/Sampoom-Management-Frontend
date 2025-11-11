@@ -46,7 +46,8 @@ const Register = () => {
   const branchOptions =
     workspace === "FACTORY" ? factoryBranchOptions : wmsBranchOptions;
   const branchLabel =
-    branchOptions.find((option) => option.value === branchValue)?.label || "";
+    branchOptions.find((option: any) => option.value === branchValue)?.label ||
+    "";
 
   const onSubmit = handleSubmit(async (values) => {
     try {

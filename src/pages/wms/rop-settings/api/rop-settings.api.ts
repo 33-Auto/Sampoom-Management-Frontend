@@ -7,7 +7,8 @@ type RopSettingsListQueryParams = Partial<RopSettingsListParams> & {
 
 // 공통 옵션 생성 함수
 const getRopSettingsQueryOptions = (params?: RopSettingsListQueryParams) => {
-  const query: Record<string, unknown> = {
+  const query: RopSettingsListParams = {
+    warehouseId: params?.warehouseId ?? 0,
     page: params?.page ?? 0,
     size: params?.size ?? 10,
     keyword: params?.keyword,
