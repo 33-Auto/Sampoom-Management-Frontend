@@ -9,7 +9,6 @@ import {
   Badge,
   Button,
   SearchFilterBar,
-  StatCard,
   Table,
   TableSection,
 } from "@/shared/ui";
@@ -169,40 +168,6 @@ export function ReceivingMaterials() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-file-list-3-line"
-          label="전체 입고건"
-          value={100000}
-          iconBgColor="bg-main-100"
-          iconColor="text-main-600"
-        />
-        <StatCard
-          icon="ri-time-line"
-          label="입고 대기"
-          value={5000}
-          iconBgColor="bg-main-100"
-          iconColor="text-yellow-600"
-        />
-
-        <StatCard
-          icon="ri-stack-line"
-          label="부분 입고"
-          value={250}
-          iconBgColor="bg-main-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-checkbox-circle-line"
-          label="입고 완료"
-          value={9750}
-          iconBgColor="bg-main-100"
-          iconColor="text-green-600"
-        />
-      </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
