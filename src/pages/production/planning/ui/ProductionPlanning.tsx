@@ -1,5 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { MrpBatchResultModal } from "@/features/production-planning/mrp-modal";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
@@ -10,7 +15,6 @@ import {
   extractPlansFromMrpResponse,
 } from "@/pages/production/planning/api";
 import {
-  DEFAULT_FACTORY_ID,
   DEFAULT_INCLUDE_RECENT_DAYS,
   PRODUCTION_PLAN_PRIORITY_BADGE_VARIANTS,
   PRODUCTION_PLAN_PRIORITY_LABELS,
@@ -44,6 +48,15 @@ export const ProductionPlanning = () => {
   const executeBatchMrpMutation = useBatchMrpExecutionMutation();
   const applyBatchMrpMutation = useBatchMrpApplyMutation();
 
+  const { defaultFactoryId } = useLoaderData() as {
+    defaultFactoryId?: number;
+  };
+  const selectedFactoryId = useBranchId("factory");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
+  const factoryId = selectedFactoryId ? Number(selectedFactoryId) : undefined;
+
   const selectedStatuses = useMemo<ProductionPlanStatus[]>(() => {
     if (statusFilter.trim().length === 0) {
       return [];
@@ -67,15 +80,42 @@ export const ProductionPlanning = () => {
       : [];
   }, [priorityFilter]);
 
-  const { data, isLoading, isError, refetch } = useProductionPlansQuery({
-    factoryId: DEFAULT_FACTORY_ID,
-    query: searchTerm === "" ? undefined : searchTerm,
-    priorities: selectedPriorities.length > 0 ? selectedPriorities : undefined,
-    statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
-    includeRecentDays: DEFAULT_INCLUDE_RECENT_DAYS,
-    page,
-    size,
-  });
+  const queryParams = useMemo(() => {
+    if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+      return undefined;
+    }
+    return {
+      factoryId,
+      query: searchTerm === "" ? undefined : searchTerm,
+      priorities:
+        selectedPriorities.length > 0 ? selectedPriorities : undefined,
+      statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+      includeRecentDays: DEFAULT_INCLUDE_RECENT_DAYS,
+      page,
+      size,
+    };
+  }, [factoryId, searchTerm, selectedPriorities, selectedStatuses, page, size]);
+
+  const { data, isLoading, isError, refetch } =
+    useProductionPlansQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultFactoryId === "number" &&
+      Number.isFinite(defaultFactoryId)
+    ) {
+      const defaultIdString = String(defaultFactoryId);
+      if (!selectedFactoryId) {
+        setBranchSelection("factory", defaultIdString);
+      }
+    }
+  }, [defaultFactoryId, selectedFactoryId, setBranchSelection]);
+
+  useEffect(() => {
+    if (typeof factoryId === "number" && Number.isFinite(factoryId)) {
+      onPageChange(0);
+    }
+  }, [factoryId, onPageChange]);
 
   const plans = (data?.data?.content ?? []) as ProductionPlanResponseDTO[];
   const totalElements = data?.data?.totalElements ?? 0;
@@ -234,6 +274,13 @@ export const ProductionPlanning = () => {
     if (selectedPlanIds.length === 0 || executeBatchMrpMutation.isPending) {
       return;
     }
+    if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+      setMrpResultPlans([]);
+      setMrpError("공장을 선택한 후 MRP를 실행할 수 있습니다.");
+      setIsMrpModalOpen(true);
+      return;
+    }
+
     const orderIds = selectedPlanIds
       .map((id) => Number(id))
       .filter((value): value is number => Number.isFinite(value));
@@ -253,7 +300,7 @@ export const ProductionPlanning = () => {
       {
         params: {
           path: {
-            factoryId: DEFAULT_FACTORY_ID,
+            factoryId,
           },
         },
         body: orderIds,
@@ -297,11 +344,16 @@ export const ProductionPlanning = () => {
       return;
     }
 
+    if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+      setMrpError("공장을 선택한 후 MRP 결과를 적용할 수 있습니다.");
+      return;
+    }
+
     applyBatchMrpMutation.mutate(
       {
         params: {
           path: {
-            factoryId: DEFAULT_FACTORY_ID,
+            factoryId,
           },
         },
         body: orderIds,
@@ -442,6 +494,16 @@ export const ProductionPlanning = () => {
       render: (value: string | undefined) => renderStatusBadge(value ?? null),
     },
   ];
+
+  if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="rounded-lg border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-600 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+          상단에서 공장을 선택하면 생산 계획 데이터를 확인할 수 있습니다.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

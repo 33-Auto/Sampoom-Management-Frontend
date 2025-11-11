@@ -6,8 +6,6 @@ export type PartOrdersQueryParams = PartOrderListParams & {
   factoryId?: number;
 };
 
-export const DEFAULT_FACTORY_ID = 164;
-
 const buildQuery = (params?: PartOrdersQueryParams) => {
   const query: Record<string, unknown> = {
     page: params?.page ?? 0,
@@ -37,7 +35,7 @@ const buildQuery = (params?: PartOrdersQueryParams) => {
 const getPartOrdersQueryOptions = (params?: PartOrdersQueryParams) => ({
   params: {
     path: {
-      factoryId: params?.factoryId ?? DEFAULT_FACTORY_ID,
+      factoryId: params?.factoryId ?? Number.NaN,
     },
     query: buildQuery(params),
   },
@@ -57,5 +55,8 @@ export const usePartOrdersQuery = (params?: PartOrdersQueryParams) =>
     getPartOrdersQueryOptions(params),
     {
       placeholderData: (previousData) => previousData,
+      enabled:
+        typeof params?.factoryId === "number" &&
+        Number.isFinite(params.factoryId),
     },
   );

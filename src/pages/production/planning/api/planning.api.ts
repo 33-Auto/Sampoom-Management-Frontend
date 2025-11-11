@@ -3,10 +3,7 @@ import type {
   ProductionPlanResponseDTO,
   ProductionPlanBatchResponse,
 } from "@/pages/production/planning/model";
-import {
-  DEFAULT_FACTORY_ID,
-  DEFAULT_INCLUDE_RECENT_DAYS,
-} from "@/pages/production/planning/model";
+import { DEFAULT_INCLUDE_RECENT_DAYS } from "@/pages/production/planning/model";
 import { queryClient } from "@/shared/api";
 
 export type ProductionPlansQueryParams = ProductionPlanListParams & {
@@ -45,7 +42,7 @@ const getProductionPlansQueryOptions = (
 ) => ({
   params: {
     path: {
-      factoryId: params?.factoryId ?? DEFAULT_FACTORY_ID,
+      factoryId: params?.factoryId ?? Number.NaN,
     },
     query: buildProductionPlansQuery(params),
   },
@@ -67,6 +64,9 @@ export const useProductionPlansQuery = (params?: ProductionPlansQueryParams) =>
     getProductionPlansQueryOptions(params),
     {
       placeholderData: (previousData) => previousData,
+      enabled:
+        typeof params?.factoryId === "number" &&
+        Number.isFinite(params.factoryId),
     },
   );
 

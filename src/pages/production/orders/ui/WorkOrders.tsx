@@ -1,10 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import {
   usePartOrdersQuery,
-  DEFAULT_FACTORY_ID,
+  type PartOrdersQueryParams,
 } from "@/pages/production/orders/api";
 import {
   DEFAULT_PART_ORDER_STATUSES,
@@ -37,6 +42,14 @@ export const WorkOrders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+  const { defaultFactoryId } = useLoaderData() as {
+    defaultFactoryId?: number;
+  };
+  const selectedFactoryId = useBranchId("factory");
+  const factoryId = selectedFactoryId ? Number(selectedFactoryId) : undefined;
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
 
   const selectedStatuses = useMemo<PartOrderStatus[]>(() => {
     if (statusFilter.trim().length === 0) {
@@ -61,14 +74,40 @@ export const WorkOrders = () => {
       : [];
   }, [priorityFilter]);
 
-  const { data, isLoading, isError, refetch } = usePartOrdersQuery({
-    factoryId: DEFAULT_FACTORY_ID,
-    query: searchTerm === "" ? undefined : searchTerm,
-    statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
-    priorities: selectedPriorities.length > 0 ? selectedPriorities : undefined,
-    page,
-    size,
-  });
+  const queryParams = useMemo<PartOrdersQueryParams | undefined>(() => {
+    if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+      return undefined;
+    }
+    return {
+      factoryId,
+      query: searchTerm === "" ? undefined : searchTerm,
+      statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+      priorities:
+        selectedPriorities.length > 0 ? selectedPriorities : undefined,
+      page,
+      size,
+    };
+  }, [factoryId, searchTerm, selectedStatuses, selectedPriorities, page, size]);
+
+  const { data, isLoading, isError, refetch } = usePartOrdersQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultFactoryId === "number" &&
+      Number.isFinite(defaultFactoryId)
+    ) {
+      const defaultIdString = String(defaultFactoryId);
+      if (!selectedFactoryId) {
+        setBranchSelection("factory", defaultIdString);
+      }
+    }
+  }, [defaultFactoryId, selectedFactoryId, setBranchSelection]);
+
+  useEffect(() => {
+    if (typeof factoryId === "number" && Number.isFinite(factoryId)) {
+      onPageChange(0);
+    }
+  }, [factoryId, onPageChange]);
 
   const orders = data?.data?.content ?? [];
   const totalElements = data?.data?.totalElements ?? 0;
@@ -264,6 +303,16 @@ export const WorkOrders = () => {
       ),
     },
   ];
+
+  if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="rounded-lg border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-600 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+          상단에서 공장을 선택하면 부품 주문 현황을 확인할 수 있습니다.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">

@@ -1,35 +1,45 @@
 import type { ShippingListParams } from "@/pages/wms/shipping/model";
 import { queryClient } from "@/shared/api";
 
-const DEFAULT_WAREHOUSE_ID = 168;
+type ShippingListQueryParams = Partial<ShippingListParams> & {
+  warehouseId?: number;
+};
 
-const getShippingListQueryOptions = (params?: ShippingListParams) => ({
-  params: {
-    query: {
-      warehouseId: params?.warehouseId ?? DEFAULT_WAREHOUSE_ID,
-      categoryId: params?.categoryId,
-      groupId: params?.groupId,
-      keyword: params?.keyword,
-      status: params?.status,
-      page: params?.page ?? 0,
-      size: params?.size ?? 10,
+const getShippingListQueryOptions = (params?: ShippingListQueryParams) => {
+  const query: ShippingListParams = {
+    warehouseId:
+      typeof params?.warehouseId === "number" ? params.warehouseId : Number.NaN,
+    categoryId: params?.categoryId,
+    groupId: params?.groupId,
+    keyword: params?.keyword,
+    status: params?.status,
+    page: params?.page ?? 0,
+    size: params?.size ?? 10,
+  };
+
+  return {
+    params: {
+      query,
     },
-  },
-});
+  };
+};
 
-export const shippingListQueryOptions = (params?: ShippingListParams) =>
+export const shippingListQueryOptions = (params?: ShippingListQueryParams) =>
   queryClient.queryOptions(
     "get",
     "/api/order/outbound",
     getShippingListQueryOptions(params),
   );
 
-export const useShippingListQuery = (params: ShippingListParams) =>
+export const useShippingListQuery = (params?: ShippingListQueryParams) =>
   queryClient.useQuery(
     "get",
     "/api/order/outbound",
     getShippingListQueryOptions(params),
     {
       placeholderData: (previousData) => previousData,
+      enabled: typeof params?.warehouseId === "number",
     },
   );
+
+export type { ShippingListQueryParams };

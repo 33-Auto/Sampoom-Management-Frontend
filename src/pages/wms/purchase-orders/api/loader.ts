@@ -1,11 +1,30 @@
-import { queryClient as tanstackQueryClient } from "@/shared/api/query";
-
-import { purchaseOrderListQueryOptions } from "./purchase-orders.api";
-
-export function loader() {
-  tanstackQueryClient.prefetchQuery(
-    purchaseOrderListQueryOptions({ warehouseId: 168 }),
+export async function loader() {
+  const { queryClient } = await import("@/shared/api/query");
+  const { wmsBranchesQueryOptions } = await import("@/entities/wms");
+  const { purchaseOrderListQueryOptions } = await import(
+    "./purchase-orders.api"
   );
 
-  return null;
+  const branchesData = await queryClient.ensureQueryData(
+    wmsBranchesQueryOptions(),
+  );
+
+  const branches = (branchesData as any)?.data ?? branchesData ?? [];
+  const firstActive = branches.find(
+    (branch: any) =>
+      branch?.status === "ACTIVE" &&
+      branch?.id !== null &&
+      branch?.id !== undefined,
+  );
+
+  const defaultWarehouseId =
+    typeof firstActive?.id === "number" ? firstActive.id : undefined;
+
+  if (typeof defaultWarehouseId === "number") {
+    await queryClient.ensureQueryData(
+      purchaseOrderListQueryOptions({ warehouseId: defaultWarehouseId }),
+    );
+  }
+
+  return { defaultWarehouseId };
 }

@@ -38,14 +38,8 @@ const PositionMaster = lazy(async () => ({
 // ============================================================================
 // Production Pages - 생산 관리 모듈 (지연 로딩)
 // ============================================================================
-const WorkOrders = lazy(async () => ({
-  default: (await import("@/pages/production/orders")).WorkOrders,
-}));
 const WorkOrderDetail = lazy(async () => ({
   default: (await import("@/pages/production/orders/detail")).WorkOrderDetail,
-}));
-const ProductionPlanning = lazy(async () => ({
-  default: (await import("@/pages/production/planning")).ProductionPlanning,
 }));
 
 // ============================================================================
@@ -77,10 +71,6 @@ const SalesOrderDetail = lazy(async () => ({
 
 const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
-}));
-
-const WmsPurchaseOrders = lazy(async () => ({
-  default: (await import("@/pages/wms/purchase-orders")).WmsPurchaseOrders,
 }));
 
 // ============================================================================
@@ -398,7 +388,15 @@ const routes: RouteObject[] = [
           },
           {
             path: "orders",
-            element: <WmsPurchaseOrders />,
+            lazy: async () => {
+              const { WmsPurchaseOrders } = await import(
+                "@/pages/wms/purchase-orders"
+              );
+              const { loader } = await import(
+                "@/pages/wms/purchase-orders/api/loader"
+              );
+              return { Component: WmsPurchaseOrders, loader };
+            },
           },
           {
             path: "orders/stocking/:purchaseOrderId",
@@ -426,10 +424,11 @@ const routes: RouteObject[] = [
           {
             path: "rop-settings",
             lazy: async () => {
-              const { RopSettings: Component } = await import(
-                "@/pages/wms/rop-settings"
+              const { RopSettings } = await import("@/pages/wms/rop-settings");
+              const { ropSettingsLoader } = await import(
+                "@/pages/wms/rop-settings/api/rop-settings.loader"
               );
-              return { Component };
+              return { Component: RopSettings, loader: ropSettingsLoader };
             },
           },
           {
@@ -457,7 +456,13 @@ const routes: RouteObject[] = [
           },
           {
             path: "orders",
-            element: <WorkOrders />,
+            lazy: async () => {
+              const { WorkOrders } = await import("@/pages/production/orders");
+              const { loader } = await import(
+                "@/pages/production/orders/api/loader"
+              );
+              return { Component: WorkOrders, loader };
+            },
           },
           {
             path: "orders/:id",
@@ -465,7 +470,15 @@ const routes: RouteObject[] = [
           },
           {
             path: "planning",
-            element: <ProductionPlanning />,
+            lazy: async () => {
+              const { ProductionPlanning } = await import(
+                "@/pages/production/planning"
+              );
+              const { loader } = await import(
+                "@/pages/production/planning/api/loader"
+              );
+              return { Component: ProductionPlanning, loader };
+            },
           },
         ],
       },

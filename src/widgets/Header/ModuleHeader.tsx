@@ -47,10 +47,11 @@ const ModuleHeader: React.FC<ModuleHeaderProps> = ({
             >
               <i className={`${moduleIcon} text-2xl text-white`}></i>
             </div>
-            <div>
+            <div className="flex flex-col gap-1">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {moduleTitle}
               </h1>
+
               <p className="text-gray-600 dark:text-gray-400">
                 {moduleDescription}
               </p>

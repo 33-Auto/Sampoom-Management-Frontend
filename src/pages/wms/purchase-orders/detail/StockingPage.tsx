@@ -5,9 +5,9 @@ import {
   useLoaderData,
 } from "react-router-dom";
 
+import { useBranchId } from "@/features/branch-select/model/branch-selection.store";
 import { StockingProcessForm } from "@/features/stocking-process";
 import type { StockingProcessLoaderResult } from "@/features/stocking-process/api/stocking-process.loader";
-import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
 import { Button } from "@/shared/ui";
 
 type LocationState = {
@@ -19,12 +19,18 @@ export default function StockingPage() {
   const { purchaseOrderId } = useParams();
   const { state } = useLocation() as { state: LocationState };
   const loaderData = useLoaderData() as StockingProcessLoaderResult;
+  const selectedWarehouseId = useBranchId("wms");
 
   if (!purchaseOrderId) {
     throw new Error("purchaseOrderId가 필요합니다.");
   }
 
-  const warehouseId = state?.warehouseId ?? DEFAULT_WAREHOUSE_ID;
+  const warehouseId =
+    (selectedWarehouseId ? Number(selectedWarehouseId) : undefined) ??
+    state?.warehouseId;
+  if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+    throw new Error("warehouseId가 선택되지 않았습니다.");
+  }
   const detail = loaderData?.data;
 
   if (!detail) {
@@ -44,7 +50,11 @@ export default function StockingPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-8">
           <div className="mb-2 flex items-center space-x-3">
-            <Button variant="secondary" size="sm" onClick={async () => navigate(-1)}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={async () => navigate(-1)}
+            >
               <i className="ri-arrow-left-line mr-2" />
               발주 목록
             </Button>

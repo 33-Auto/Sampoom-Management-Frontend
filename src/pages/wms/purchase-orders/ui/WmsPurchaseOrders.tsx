@@ -1,14 +1,21 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import {
   STATUS_ORDER,
   normalizePurchaseOrderStatus,
 } from "@/entities/purchase-order/lib/status";
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { usePurchaseOrderQuery } from "@/pages/wms/purchase-orders/api";
+import {
+  type PurchaseOrderListQueryParams,
+  usePurchaseOrderQuery,
+} from "@/pages/wms/purchase-orders/api";
 import type {
   POResDto,
   PurchaseOrderListParams,
@@ -18,7 +25,6 @@ import {
   PURCHASE_ORDER_STATUS_BADGE_VARIANTS,
   PURCHASE_ORDER_STATUS_LABELS,
 } from "@/pages/wms/purchase-orders/model";
-import { DEFAULT_WAREHOUSE_ID } from "@/shared/config/warehouse";
 import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
 import { createKeyRecord } from "@/shared/lib/utils";
 import {
@@ -43,18 +49,62 @@ export function WmsPurchaseOrders() {
   const { page, size, setPage, onPageChange, onSizeChange } =
     usePaginationTable({});
 
-  const { data, isLoading, isError, refetch } = usePurchaseOrderQuery({
-    warehouseId: DEFAULT_WAREHOUSE_ID,
-    keyword: searchTerm === "" ? undefined : searchTerm,
-    categoryId: selectedCategory === "" ? undefined : Number(selectedCategory),
-    groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
-    status:
-      statusFilter === ""
-        ? undefined
-        : (statusFilter as PurchaseOrderListParams["status"]),
+  const { defaultWarehouseId } = useLoaderData() as {
+    defaultWarehouseId?: number;
+  };
+  const selectedWarehouseId = useBranchId("wms");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
+
+  const queryParams = useMemo<PurchaseOrderListQueryParams | undefined>(() => {
+    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+      return undefined;
+    }
+    return {
+      warehouseId,
+      keyword: searchTerm === "" ? undefined : searchTerm,
+      categoryId:
+        selectedCategory === "" ? undefined : Number(selectedCategory),
+      groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
+      status:
+        statusFilter === ""
+          ? undefined
+          : (statusFilter as PurchaseOrderListParams["status"]),
+      page,
+      size,
+    };
+  }, [
+    warehouseId,
+    searchTerm,
+    selectedCategory,
+    selectedGroup,
+    statusFilter,
     page,
     size,
-  });
+  ]);
+
+  const { data, isLoading, isError, refetch } =
+    usePurchaseOrderQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultWarehouseId === "number" &&
+      Number.isFinite(defaultWarehouseId)
+    ) {
+      const defaultIdString = String(defaultWarehouseId);
+      if (!selectedWarehouseId) {
+        setBranchSelection("wms", defaultIdString);
+      }
+    }
+  }, [defaultWarehouseId, selectedWarehouseId, setBranchSelection]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [warehouseId, setPage]);
 
   const orders = data?.data?.content ?? [];
   const totalElements = data?.data?.totalElements ?? 0;
@@ -141,9 +191,12 @@ export function WmsPurchaseOrders() {
     if (!row.purchaseOrderId) {
       return;
     }
+    if (typeof warehouseId !== "number") {
+      return;
+    }
     navigate(`/wms/orders/stocking/${row.purchaseOrderId}`, {
       state: {
-        warehouseId: DEFAULT_WAREHOUSE_ID,
+        warehouseId,
       },
     });
   };
@@ -252,6 +305,18 @@ export function WmsPurchaseOrders() {
       ),
     },
   ];
+
+  if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <InfoBox type="info" title="창고 선택 필요">
+          <p className="text-sm">
+            상단에서 창고를 선택하면 발주 현황을 확인할 수 있습니다.
+          </p>
+        </InfoBox>
+      </div>
+    );
+  }
 
   return (
     <>

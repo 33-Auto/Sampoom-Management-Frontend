@@ -3,3 +3,4 @@ export {
   ropSettingsQueryOptions,
   useRopSettingsQuery,
 } from "./rop-settings.api";
+export type { RopSettingsListQueryParams } from "./rop-settings.api";

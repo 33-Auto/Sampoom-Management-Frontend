@@ -1,10 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import {
+  useBranchId,
+  useBranchSelectionStore,
+} from "@/features/branch-select/model/branch-selection.store";
 import { PaginationTableSection } from "@/features/table-pagination";
 import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { useRopSettingsQuery } from "@/pages/wms/rop-settings/api";
+import {
+  type RopSettingsListQueryParams,
+  useRopSettingsQuery,
+} from "@/pages/wms/rop-settings/api";
 import type {
   RopResDto,
   // RopSettingStatus,
@@ -27,22 +34,66 @@ export function RopSettings() {
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   // Pagination 처리를 위한 커스텀 훅
-  const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
+  const { page, size, onPageChange, onSizeChange, setPage } =
+    usePaginationTable({});
 
-  const { data, isLoading, isError, refetch } = useRopSettingsQuery({
-    warehouseId: 168,
-    keyword: searchTerm === "" ? undefined : searchTerm,
-    categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
-    groupId: groupFilter === "" ? undefined : Number(groupFilter),
-    autoOrderStatus:
-      statusFilter === ""
-        ? undefined
-        : statusFilter === "활성"
-          ? "ACTIVE"
-          : "INACTIVE",
+  const { defaultWarehouseId } = useLoaderData() as {
+    defaultWarehouseId?: number;
+  };
+  const selectedWarehouseId = useBranchId("wms");
+  const setBranchSelection = useBranchSelectionStore(
+    (state) => state.setSelection,
+  );
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
+
+  const queryParams = useMemo<RopSettingsListQueryParams | undefined>(() => {
+    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+      return undefined;
+    }
+    return {
+      warehouseId,
+      keyword: searchTerm === "" ? undefined : searchTerm,
+      categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
+      groupId: groupFilter === "" ? undefined : Number(groupFilter),
+      autoOrderStatus:
+        statusFilter === ""
+          ? undefined
+          : statusFilter === "활성"
+            ? "ACTIVE"
+            : "INACTIVE",
+      page,
+      size,
+    };
+  }, [
+    warehouseId,
+    searchTerm,
+    categoryFilter,
+    groupFilter,
+    statusFilter,
     page,
     size,
-  });
+  ]);
+
+  const { data, isLoading, isError, refetch } =
+    useRopSettingsQuery(queryParams);
+
+  useEffect(() => {
+    if (
+      typeof defaultWarehouseId === "number" &&
+      Number.isFinite(defaultWarehouseId)
+    ) {
+      const defaultIdString = String(defaultWarehouseId);
+      if (!selectedWarehouseId) {
+        setBranchSelection("wms", defaultIdString);
+      }
+    }
+  }, [defaultWarehouseId, selectedWarehouseId, setBranchSelection]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [warehouseId, setPage]);
 
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
@@ -158,6 +209,18 @@ export function RopSettings() {
   const lowStockItems = ropSettings.filter(
     (item: RopResDto) => (item.quantity || 0) <= (item.rop || 0),
   ).length;
+
+  if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <InfoBox type="info" title="창고 선택 필요">
+          <p className="text-sm">
+            상단에서 창고를 선택하면 ROP 설정을 확인할 수 있습니다.
+          </p>
+        </InfoBox>
+      </div>
+    );
+  }
 
   return (
     <>

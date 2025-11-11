@@ -50,7 +50,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         )}
         <select
           id={selectId}
-          className={cn(className, selectVariants({ error: hasError }))}
+          className={cn(selectVariants({ error: hasError }), className)}
           ref={ref}
           {...props}
         >
