@@ -50,7 +50,7 @@ export function UserMenu({
   }, []);
 
   const displayName = user.userName ?? "-";
-  const displayRole = user.role ?? "-";
+  const displayRole = user.position ?? user.role ?? user.workspace ?? "-";
   const displayEmail = user.email ?? "-";
 
   const toggleMenu = () => {

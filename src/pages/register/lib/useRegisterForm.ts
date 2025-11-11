@@ -2,7 +2,10 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSignupMutation } from "../api";
-import type { RegisterFormValues } from "../model/register.types";
+import type {
+  RegisterFormValues,
+  SignupRequest,
+} from "../model/register.types";
 
 export function useRegisterForm() {
   const navigate = useNavigate();
@@ -21,15 +24,17 @@ export function useRegisterForm() {
         throw new Error("직급을 선택해주세요.");
       }
 
+      const payload: SignupRequest = {
+        email,
+        password,
+        userName,
+        ...(workspace ? { workspace } : {}),
+        ...(branch ? { branch } : {}),
+        ...(position ? { position } : {}),
+      };
+
       await signupMutation.mutateAsync({
-        body: {
-          email,
-          password,
-          userName,
-          workspace,
-          branch,
-          position,
-        },
+        body: payload,
       });
 
       navigate("/login");

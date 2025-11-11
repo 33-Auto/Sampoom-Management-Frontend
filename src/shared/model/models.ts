@@ -8,56 +8,45 @@ export type Operations = operations;
 
 // Auth
 export type LoginRequest = Schemas["LoginRequest"];
+export type SignupRequest = Schemas["SignupRequest"];
+export type SignupResponse = Schemas["SignupResponse"];
 
 // LoginResponse from OpenAPI doesn't have all fields we need
-export interface LoginResponse {
-  userId?: number;
-  userName?: string;
-  email?: string;
+export type LoginResponse = Schemas["LoginResponse"] & {
+  userName?: Schemas["UserLoginResponse"]["userName"];
+  email?: Schemas["UserLoginResponse"]["email"];
   role?: string;
-  workspace?: string;
-  branch?: string;
-  position?: string;
-  accessToken?: string;
-  refreshToken?: string;
-  expiresIn?: number;
-}
+  workspace?: Schemas["UserLoginResponse"]["workspace"];
+  branch?: Schemas["UserLoginResponse"]["branch"];
+  position?: Schemas["UserLoginResponse"]["position"];
+  organizationId?: Schemas["UserLoginResponse"]["organizationId"];
+  startedAt?: Schemas["UserLoginResponse"]["startedAt"];
+  endedAt?: Schemas["UserLoginResponse"]["endedAt"];
+};
 
 // UserResponse for auth store
-export interface UserResponse {
-  userId?: number;
-  userName?: string;
-  email?: string;
+export type UserResponse = {
   role?: string;
-  workspace?: string;
-  branch?: string;
-  position?: string;
-}
-
-//! TODO: 가입 OPENAPI로 변경
-export interface SignupRequest {
-  email: string;
-  password: string;
-  userName: string;
-  workspace: string;
-  branch: string;
-  position: string;
-}
-
-export interface SignupResponse {
-  userId: number;
-  userName: string;
-  email: string;
-}
+} & Pick<
+  Schemas["UserLoginResponse"],
+  | "userId"
+  | "userName"
+  | "email"
+  | "workspace"
+  | "branch"
+  | "position"
+  | "organizationId"
+  | "startedAt"
+  | "endedAt"
+>;
 
 // Mock
-export interface ApiResponseLoginResponse {
-  status?: number;
-  success?: boolean;
-  code?: number;
-  message?: string;
+export type ApiResponseLoginResponse = Omit<
+  Schemas["ApiResponseLoginResponse"],
+  "data"
+> & {
   data?: LoginResponse;
-}
+};
 
 // Factory
 export interface PartOrderItemDto {

@@ -16,6 +16,20 @@ export interface paths {
     /**
      * 회원가입
      * @description 회원가입을 통해 인증 정보를 담은 유저를 생성합니다.
+     *     <br><br>email: 이메일(@필요)
+     *     <br>password: 비밀번호(8자~64자)
+     *     <br>workspace: 관리 부서
+     *     <br>branch: 지점명(APP, AGENCY 전용), WEB은 아무값
+     *     <br>userName: 이름
+     *     <br>position: 직급
+     *     <br><br>***Workspace***
+     *     <br>PRODUCTION: 생산 관리 부서
+     *     <br>INVENTORY: 재고 관리 부서
+     *     <br>PURCHASE: 구매 관리 부서
+     *     <br>SALES: 판매 관리 부서
+     *     <br>MD: 기준 정보(Master Data) 관리 부서
+     *     <br>HR: 인사(Human Resources) 관리 부서
+     *     <br>AGENCY: 대리점(APP)
      */
     post: operations["signup"];
     delete?: never;
@@ -36,6 +50,7 @@ export interface paths {
     /**
      * 토큰 재발급
      * @description 리프레시 토큰을 통해 토큰을 재발급합니다.
+     *     재로그인시 기존 리프레시/엑세스 토큰은 무효화됩니다.
      */
     post: operations["refresh"];
     delete?: never;
@@ -75,7 +90,16 @@ export interface paths {
     put?: never;
     /**
      * 로그인
-     * @description 로그인을 통해 토큰을 발급합니다.
+     * @description <br><br> 해당 회원의 이메일/비밀번호/관리 조직을 입력하세요.
+     *     <br>첫 생성 시 Role: USER로 생성되며, ADMIN으로 전환하려면 ADMIN 계정으로 해당 유저의 ID로 변경해야 합니다.
+     *     <br><br>***Workspace***
+     *     <br>PRODUCTION: 생산 관리 부서
+     *     <br>INVENTORY: 재고 관리 부서
+     *     <br>PURCHASE: 구매 관리 부서
+     *     <br>SALES: 판매 관리 부서
+     *     <br>MD: 기준 정보(Master Data) 관리 부서
+     *     <br>HR: 인사(Human Resources) 관리 부서
+     *     <br>AGENCY: 대리점(APP)
      */
     post: operations["login"];
     delete?: never;
@@ -205,10 +229,10 @@ export interface paths {
     head?: never;
     /**
      * 관리자 권한 프로필 정보 수정
-     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 조직 정보를 수정합니다.
-     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 조직을 선택하세요.
-     *     <br> 변경할 Role 값을 요청으로 보내세요.
-     *     <br><br>***Role***
+     * @description 관리자 권한으로 유저ID와 조직을 통해 직원의 관리 조직 정보를 수정합니다.
+     *     <br><br> 해당 회원의 userId 를 입력하고 알맞는 관리 조직을 선택하세요.
+     *     <br> 변경할 Workspace 값을 요청으로 보내세요.
+     *     <br><br>***Workspace***
      *     <br>USER: 일반
      *     <br>ADMIN: 관리자
      */
@@ -228,10 +252,10 @@ export interface paths {
      *     <br><br> **정렬**
      *     <br> **page**: n번째 페이지부터 불러오기
      *     <br> **size**: 페이지 당 사이즈
-     *     <br> **sort**: 정렬기준(id, userName),정렬순서(ASC,DESC)
+     *     <br> **sort**: 정렬기준(id(아이디순), userName(이름순)),정렬순서(ASC,DESC)
      *     <br><br> **검색조건**
-     *     <br> **workspace**: 조직 (미지정 시 조직 상관없이 전체 조회)
-     *     <br> **organizationId**: 조직 ID (**workspace 필수**, 미지정 시 조직 내 전체 조회)
+     *     <br> **workspace**: 권한(부서) (미지정 시 관리 조직 상관없이 전체 조회)
+     *     <br> **organizationId(agencyId)**: 대리점 ID (**workspace:AGENCY 필수**, 미지정 시 부서 내 전체 조회)
      */
     get: operations["getUsersInfo"];
     put?: never;
@@ -762,586 +786,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/factory/{factoryId}/part/orders/mrp/batch": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 일괄 MRP 실행
-     * @description 여러 부품 주문에 대해 MRP를 일괄 실행합니다.
-     */
-    post: operations["executeBatchMRP"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/orders/apply-mrp/batch": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 일괄 MRP 결과 적용
-     * @description 여러 부품 주문에 대해 MRP 결과를 일괄 적용합니다.
-     */
-    post: operations["applyBatchMRPResult"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/order/{orderId}/mrp": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * MRP 실행
-     * @description 검토중인 부품 주문에 대해 MRP를 실행합니다.
-     */
-    post: operations["executeMRP"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/order/{orderId}/apply-mrp": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * MRP 결과 적용
-     * @description MRP 실행 결과를 적용합니다. 자재 부족 시 구매요청과 생산지시를 함께 처리하고, 자재 충분 시 생산지시만 처리합니다.
-     */
-    post: operations["applyMRPResult"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/mps/{mpsId}/execute": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * MPS 실행
-     * @description MPS를 실행하여 상세 생산 계획(MpsPlan)을 생성합니다.
-     */
-    post: operations["executeMps"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/mps/{mpsId}/confirm": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * MPS 확정
-     * @description MPS를 확정하여 각 MpsPlan을 기반으로 PartOrder를 생성합니다.
-     */
-    post: operations["confirmMps"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/material/order": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 자재 주문 생성
-     * @description 공장에 필요한 자재 주문을 생성합니다.
-     */
-    post: operations["createMaterialOrder"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * 부품 주문 생성
-     * @description 적절한 공장을 자동으로 선택하여 부품 주문을 생성합니다. 여러 아이템이 있는 경우 각각 단건으로 나누어 개별 주문을 생성합니다.
-     */
-    post: operations["createPartOrder"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/{orderId}/test/set-start-now": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [테스트용] MPS 주문 시작일을 현재 시간으로 설정
-     * @description MPS 주문의 최소 시작일을 현재 시간으로 설정하여 즉시 자동 처리 대상이 되도록 합니다.
-     */
-    post: operations["setMpsStartDateToNow"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/{orderId}/test/print-info": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [테스트용] MPS 주문 정보 출력
-     * @description MPS 주문의 상세 정보를 로그로 출력합니다.
-     */
-    post: operations["printMpsOrderInfo"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/{orderId}/test/auto-apply": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [테스트용] 특정 MPS 주문 자동 MRP 결과 적용
-     * @description 특정 MPS 주문에 대해 자동 MRP 결과 적용을 수동으로 실행합니다.
-     */
-    post: operations["testMpsOrderAutoApply"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/test/mps-auto-apply": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [테스트용] MPS 주문 자동 MRP 결과 적용 스케줄러 수동 실행
-     * @description MPS 주문의 자동 MRP 결과 적용 스케줄러를 수동으로 실행합니다. 테스트 목적으로 사용됩니다.
-     */
-    post: operations["testMpsAutoApply"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/test/create-mps": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * [테스트용] MPS 주문 생성 및 테스트 준비
-     * @description 테스트용 MPS 주문을 생성하고 MRP 실행 후 시작일을 현재 시간으로 설정합니다.
-     */
-    post: operations["createTestMpsOrder"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/order/{orderId}/progress": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 부품 주문 진행률 업데이트
-     * @description 부품 주문의 진행률과 D-day를 업데이트합니다.
-     */
-    patch: operations["updatePartOrderProgress"];
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/order/{orderId}/complete": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 부품 주문 완료 처리
-     * @description 진행 중인 부품 주문을 완료 상태로 변경합니다.
-     */
-    patch: operations["completePartOrder"];
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/orders": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 부품 주문 목록 조회
-     * @description 공장의 부품 주문 목록을 조회합니다. 여러 상태와 우선순위를 동시에 필터링할 수 있으며, 부품명/부품코드/주문코드로 검색할 수 있습니다.
-     */
-    get: operations["getPartOrders"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/orders/production-plans": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 생산계획 목록 조회
-     * @description 생산계획 탭용 조회 - 계획 상태와 최근 IN_PROGRESS로 전환된 데이터를 포함하여 조회합니다. includeRecentDays=-1로 전체 데이터 조회 가능합니다.
-     */
-    get: operations["getProductionPlans"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/part/order/{orderId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 부품 주문 조회
-     * @description 특정 부품 주문의 상세 정보를 조회합니다.
-     */
-    get: operations["getPartOrder"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/mps": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * MPS 상세 조회
-     * @description 부품ID, 예측달, 창고ID로 MPS를 조회합니다.
-     */
-    get: operations["getMps"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/mps/{mpsId}/plans": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * MPS 계획 목록 조회
-     * @description MPS ID로 해당하는 MpsPlan 목록을 조회합니다.
-     */
-    get: operations["getMpsPlans"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/mps-plans/{mpsPlanId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * MpsPlan 상세 조회
-     * @description 특정 MpsPlan의 상세 정보를 조회합니다.
-     */
-    get: operations["getMpsPlan"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/material": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 공장별 자재 검색/목록 조회
-     * @description 특정 공장의 자재를 페이징 조회합니다. 카테고리(categoryId)로 필터링하고, keyword(자재명/자재코드)로 검색합니다.
-     */
-    get: operations["getMaterials"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/{factoryId}/material/category/{categoryId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 공장별 자재 카테고리별 자재 조회
-     * @description 특정 공장의 특정 카테고리에 속한 자재를 조회합니다.
-     */
-    get: operations["getMaterialsByFactoryAndCategory"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/part/order/test/mps-ready": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * [테스트용] 자동 처리 대상 MPS 주문 조회
-     * @description 현재 자동 처리 대상인 MPS 주문들을 조회합니다.
-     */
-    get: operations["getMpsOrdersReadyForProcessing"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * HealthCheck API
-     * @description 서버 상태 체크 API입니다.
-     */
-    get: operations["healthCheck2"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health-unauthorized": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["unauthorizedTest2"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health-notfound": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["notFoundTest2"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health-forbidden": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["forbiddenTest2"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health-error": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["healthCheckData2"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/factory/health-data": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["healthCheckData_12"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/agency/{agencyId}/cart/{cartItemId}": {
     parameters: {
       query?: never;
@@ -1554,7 +998,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck3"];
+    get: operations["healthCheck2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1570,7 +1014,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest3"];
+    get: operations["unauthorizedTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1586,7 +1030,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest3"];
+    get: operations["notFoundTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1602,7 +1046,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest3"];
+    get: operations["forbiddenTest2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1618,7 +1062,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData3"];
+    get: operations["healthCheckData2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1634,7 +1078,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_13"];
+    get: operations["healthCheckData_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2133,7 +1577,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck4"];
+    get: operations["healthCheck3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2149,7 +1593,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest4"];
+    get: operations["unauthorizedTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2165,7 +1609,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest4"];
+    get: operations["notFoundTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2181,7 +1625,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest4"];
+    get: operations["forbiddenTest3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2197,7 +1641,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData4"];
+    get: operations["healthCheckData3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2213,7 +1657,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_14"];
+    get: operations["healthCheckData_13"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2285,7 +1729,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck5"];
+    get: operations["healthCheck4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2301,7 +1745,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["unauthorizedTest5"];
+    get: operations["unauthorizedTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2317,7 +1761,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["notFoundTest5"];
+    get: operations["notFoundTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2333,7 +1777,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["forbiddenTest5"];
+    get: operations["forbiddenTest4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2349,7 +1793,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData5"];
+    get: operations["healthCheckData4"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2365,7 +1809,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["healthCheckData_15"];
+    get: operations["healthCheckData_14"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2426,114 +1870,6 @@ export interface paths {
      * @description 특정 카테고리에 속한 자재를 조회합니다.
      */
     get: operations["getMaterialsByCategory1"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/purchase/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 자재 주문 목록 조회
-     * @description 주문 상태 필터와 검색(자재명/자재코드/주문코드), 긴급도 필터로 목록을 조회합니다.
-     */
-    get: operations["getOrders"];
-    put?: never;
-    /**
-     * 자재 주문 생성
-     * @description 공장에 필요한 자재 주문을 생성합니다.
-     */
-    post: operations["createMaterialOrder1"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/purchase/{orderId}/receive": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 자재 주문 입고 처리
-     * @description 주문된 자재를 입고 처리합니다.
-     */
-    patch: operations["receiveOrder"];
-    trace?: never;
-  };
-  "/api/purchase/{orderId}/cancel": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * 자재 주문 취소
-     * @description 주문을 취소 처리합니다.
-     */
-    patch: operations["cancelOrder1"];
-    trace?: never;
-  };
-  "/api/purchase/{orderId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 자재 주문 단건 조회
-     * @description 특정 자재 주문의 상세를 조회합니다.
-     */
-    get: operations["getOrder1"];
-    put?: never;
-    post?: never;
-    /**
-     * 자재 주문 삭제
-     * @description 주문을 삭제합니다(소프트 삭제).
-     */
-    delete: operations["deleteOrder"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/purchase/health": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * HealthCheck API
-     * @description 서버 상태 체크 API입니다.
-     */
-    get: operations["healthCheck6"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2677,7 +2013,7 @@ export interface paths {
      * HealthCheck API
      * @description 서버 상태 체크 API입니다.
      */
-    get: operations["healthCheck7"];
+    get: operations["healthCheck5"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2753,9 +2089,16 @@ export interface components {
     SignupRequest: {
       email: string;
       password: string;
-      userName: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
+      userName: string;
       branch?: string;
       /** @enum {string} */
       position?:
@@ -2816,7 +2159,14 @@ export interface components {
       email: string;
       password: string;
       /** @enum {string} */
-      workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
     };
     ApiResponseLoginResponse: {
       /** Format: int32 */
@@ -2837,7 +2187,7 @@ export interface components {
     };
     RoleRequest: {
       /** @enum {string} */
-      role: "USER" | "ADMIN";
+      role: "ADMIN" | "USER";
     };
     ApiResponseRoleResponse: {
       /** Format: int32 */
@@ -2852,7 +2202,7 @@ export interface components {
       /** Format: int64 */
       userId?: number;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      role?: "ADMIN" | "USER";
     };
     InvitationCreateRequestDto: {
       /** @enum {string} */
@@ -2861,7 +2211,14 @@ export interface components {
       targetId: number;
       email: string;
       /** @enum {string} */
-      role: "USER" | "ADMIN";
+      workspace:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       /** @enum {string} */
       position:
         | "STAFF"
@@ -2892,7 +2249,14 @@ export interface components {
       userId?: number;
       userName?: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       branch?: string;
       /** @enum {string} */
       position?:
@@ -2924,8 +2288,6 @@ export interface components {
       /** Format: int64 */
       userId?: number;
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** @enum {string} */
       employeeStatus?: "ACTIVE" | "LEAVE" | "RETIRED";
     };
@@ -2974,8 +2336,6 @@ export interface components {
       userId?: number;
       userName?: string;
       /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      /** @enum {string} */
       position?:
         | "STAFF"
         | "SENIOR_STAFF"
@@ -3002,10 +2362,15 @@ export interface components {
       userId?: number;
       email?: string;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** Format: int64 */
       organizationId?: number;
       branch?: string;
@@ -3056,10 +2421,15 @@ export interface components {
       userId?: number;
       email?: string;
       /** @enum {string} */
-      role?: "USER" | "ADMIN";
+      workspace?:
+        | "MD"
+        | "SALES"
+        | "INVENTORY"
+        | "PRODUCTION"
+        | "PURCHASE"
+        | "HR"
+        | "AGENCY";
       userName?: string;
-      /** @enum {string} */
-      workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
       /** Format: int64 */
       organizationId?: number;
       branch?: string;
@@ -3120,6 +2490,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["OrderResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     OrderResDto: {
       /** Format: int64 */
@@ -3142,19 +2514,14 @@ export interface components {
       createdAt?: string;
       items?: components["schemas"]["ItemCategoryDto"][];
     };
-    ApiResponseVoid1: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: Record<string, never>;
-    };
     ApiResponsePageOrderResDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageOrderResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PageOrderResDto: {
       /** Format: int32 */
@@ -3168,10 +2535,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     PageableObject: {
@@ -3196,6 +2563,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageOrderWithStockDto"];
+      /** Format: int32 */
+      code?: number;
     };
     OrderWithStockDto: {
       /** Format: int64 */
@@ -3229,10 +2598,10 @@ export interface components {
       number?: number;
       sort?: components["schemas"]["SortObject"];
       pageable?: components["schemas"]["PageableObject"];
-      /** Format: int32 */
-      numberOfElements?: number;
       first?: boolean;
       last?: boolean;
+      /** Format: int32 */
+      numberOfElements?: number;
       empty?: boolean;
     };
     PartStockDto: {
@@ -3253,15 +2622,10 @@ export interface components {
       /** Format: int32 */
       status?: number;
       success?: boolean;
+      /** Format: int32 */
+      code?: number;
       message?: string;
       data?: string;
-    };
-    ApiResponseVoid2: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      message?: string;
-      data?: Record<string, never>;
     };
     RopReqDto: {
       /** Format: int64 */
@@ -3318,6 +2682,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["CategoryResDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     CategoryResDto: {
       /** Format: int64 */
@@ -3330,6 +2696,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["GroupResDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     GroupResDto: {
       /** Format: int64 */
@@ -3342,6 +2710,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PageRopResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PageRopResDto: {
       /** Format: int64 */
@@ -3389,6 +2759,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PagePOResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     POResDto: {
       /** Format: int64 */
@@ -3445,6 +2817,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["POResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     ApiResponseListPartItemDto: {
       /** Format: int32 */
@@ -3452,6 +2826,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PartItemDto"][];
+      /** Format: int32 */
+      code?: number;
     };
     PartItemDto: {
       /** Format: int64 */
@@ -3465,6 +2841,8 @@ export interface components {
       success?: boolean;
       message?: string;
       data?: components["schemas"]["PagePartResDto"];
+      /** Format: int32 */
+      code?: number;
     };
     PagePartResDto: {
       /** Format: int64 */
@@ -3499,308 +2877,6 @@ export interface components {
       /** Format: int32 */
       partValue?: number;
       status?: string;
-    };
-    ApiResponseListPartOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PartOrderResponseDto"][];
-    };
-    PartOrderItemDto: {
-      /** Format: int64 */
-      partId?: number;
-      partName?: string;
-      partCode?: string;
-      partGroup?: string;
-      partCategory?: string;
-      partGroupName?: string;
-      partCategoryName?: string;
-      /** Format: int64 */
-      quantity?: number;
-    };
-    PartOrderResponseDto: {
-      /** Format: int64 */
-      orderId?: number;
-      orderCode?: string;
-      warehouseName?: string;
-      /** Format: date-time */
-      orderDate?: string;
-      status?: string;
-      factoryName?: string;
-      /** Format: int64 */
-      factoryId?: number;
-      /** Format: int64 */
-      externalPartOrderId?: number;
-      /** Format: date-time */
-      requiredDate?: string;
-      /** Format: date-time */
-      scheduledDate?: string;
-      /** Format: date-time */
-      minimumStartDate?: string;
-      /** Format: double */
-      progressRate?: number;
-      rejectionReason?: string;
-      priority?: string;
-      materialAvailability?: string;
-      orderType?: string;
-      items?: components["schemas"]["PartOrderItemDto"][];
-      /** Format: int32 */
-      dday?: number;
-    };
-    ApiResponsePartOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PartOrderResponseDto"];
-    };
-    ApiResponseListMpsPlanResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MpsPlanResponse"][];
-    };
-    MpsPlanResponse: {
-      /** Format: int64 */
-      mpsPlanId?: number;
-      /** Format: int64 */
-      mpsId?: number;
-      /** Format: int32 */
-      cycleNumber?: number;
-      /** Format: date */
-      requiredDate?: string;
-      /** Format: int32 */
-      productionQuantity?: number;
-      /** Format: int32 */
-      remainingTotalProduction?: number;
-      /** @enum {string} */
-      status?:
-        | "PLANNED"
-        | "IN_PROGRESS"
-        | "COMPLETED"
-        | "DELAYED"
-        | "CANCELLED";
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    MaterialOrderItemRequestDto: {
-      /** Format: int64 */
-      materialId?: number;
-      /** Format: int64 */
-      quantity?: number;
-    };
-    MaterialOrderRequestDto: {
-      items?: components["schemas"]["MaterialOrderItemRequestDto"][];
-    };
-    ApiResponseMaterialOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MaterialOrderResponseDto"];
-    };
-    MaterialOrderItemDto: {
-      /** Format: int64 */
-      materialId?: number;
-      materialName?: string;
-      unit?: string;
-      /** Format: int64 */
-      quantity?: number;
-    };
-    MaterialOrderResponseDto: {
-      /** Format: int64 */
-      id?: number;
-      code?: string;
-      /** Format: int64 */
-      factoryId?: number;
-      factoryName?: string;
-      /** @enum {string} */
-      status?: "ORDERED" | "RECEIVED" | "CANCELED";
-      /** Format: date-time */
-      orderAt?: string;
-      /** Format: date-time */
-      receivedAt?: string;
-      items?: components["schemas"]["MaterialOrderItemDto"][];
-    };
-    PartOrderItemRequestDto: {
-      /** Format: int64 */
-      partId?: number;
-      /** Format: int64 */
-      quantity?: number;
-    };
-    PartOrderRequestDto: {
-      /** Format: int64 */
-      warehouseId?: number;
-      warehouseName?: string;
-      /** Format: date-time */
-      requiredDate?: string;
-      /** Format: int64 */
-      externalPartOrderId?: number;
-      items?: components["schemas"]["PartOrderItemRequestDto"][];
-    };
-    ApiResponseString1: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
-    };
-    ApiResponseLong: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      /** Format: int64 */
-      data?: number;
-    };
-    ApiResponsePageResponseDtoPartOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PageResponseDtoPartOrderResponseDto"];
-    };
-    PageResponseDtoPartOrderResponseDto: {
-      content?: components["schemas"]["PartOrderResponseDto"][];
-      /** Format: int64 */
-      totalElements?: number;
-      /** Format: int32 */
-      totalPages?: number;
-    };
-    ApiResponseMpsResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MpsResponse"];
-    };
-    MpsResponse: {
-      /** Format: int64 */
-      mpsId?: number;
-      /** Format: int64 */
-      partId?: number;
-      /** Format: int64 */
-      warehouseId?: number;
-      /** Format: int64 */
-      factoryId?: number;
-      /** Format: int32 */
-      standardQuantity?: number;
-      /** Format: int32 */
-      expectedInventory?: number;
-      /** Format: int32 */
-      forecastQuantity?: number;
-      /** Format: int32 */
-      totalProduction?: number;
-      /** Format: int32 */
-      safetyStock?: number;
-      /** Format: int32 */
-      leadTime?: number;
-      /** @enum {string} */
-      status?: "PLANNED" | "PROCESSING" | "COMPLETED" | "CANCELLED";
-      /** Format: date */
-      targetDate?: string;
-      /** Format: date */
-      startDate?: string;
-      /** Format: int32 */
-      productionCycles?: number;
-      /** Format: int32 */
-      bufferDays?: number;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    ApiResponseMpsPlanResponse: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MpsPlanResponse"];
-    };
-    ApiResponsePageResponseDtoMaterialResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PageResponseDtoMaterialResponseDto"];
-    };
-    MaterialResponseDto: {
-      /** Format: int64 */
-      id?: number;
-      name?: string;
-      unit?: string;
-      materialCode?: string;
-      /** Format: int64 */
-      materialCategoryId?: number;
-      materialCategoryName?: string;
-      /** Format: double */
-      quantity?: number;
-    };
-    PageResponseDtoMaterialResponseDto: {
-      content?: components["schemas"]["MaterialResponseDto1"][];
-      /** Format: int64 */
-      totalElements?: number;
-      /** Format: int32 */
-      totalPages?: number;
-    };
-    ApiResponseListMpsOrderInfoDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["MpsOrderInfoDto"][];
-    };
-    MpsOrderInfoDto: {
-      /** Format: int64 */
-      orderId?: number;
-      orderCode?: string;
-      /** @enum {string} */
-      orderType?: "GENERAL" | "MPS";
-      /** @enum {string} */
-      status?:
-        | "UNDER_REVIEW"
-        | "PURCHASE_REQUEST"
-        | "PLAN_CONFIRMED"
-        | "DELAYED"
-        | "REJECTED"
-        | "IN_PROGRESS"
-        | "COMPLETED";
-      /** Format: date-time */
-      minimumStartDate?: string;
-      /** Format: date-time */
-      scheduledDate?: string;
-      /** @enum {string} */
-      materialAvailability?: "SUFFICIENT" | "INSUFFICIENT";
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
     };
     AgencyCartUpdateRequestDTO: {
       /** Format: int32 */
@@ -3937,15 +3013,6 @@ export interface components {
       lowStockParts?: number;
       /** Format: int64 */
       totalQuantity?: number;
-    };
-    ApiResponseString2: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
     };
     ApiResponseListCategorySimpleResponseDTO: {
       /** Format: int32 */
@@ -4491,15 +3558,6 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string;
     };
-    ApiResponseString3: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
-    };
     MaterialRequestDto: {
       name?: string;
       /** Format: int64 */
@@ -4512,9 +3570,9 @@ export interface components {
       /** Format: int32 */
       code?: number;
       message?: string;
-      data?: components["schemas"]["MaterialResponseDto1"];
+      data?: components["schemas"]["MaterialResponseDto"];
     };
-    MaterialResponseDto1: {
+    MaterialResponseDto: {
       /** Format: int64 */
       id?: number;
       name?: string;
@@ -4523,16 +3581,7 @@ export interface components {
       materialCategoryId?: number;
       materialCategoryName?: string;
     };
-    ApiResponseString4: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: string;
-    };
-    ApiResponsePageResponseDtoMaterialResponseDto1: {
+    ApiResponsePageResponseDtoMaterialResponseDto: {
       /** Format: int32 */
       status?: number;
       success?: boolean;
@@ -4540,6 +3589,13 @@ export interface components {
       code?: number;
       message?: string;
       data?: components["schemas"]["PageResponseDtoMaterialResponseDto"];
+    };
+    PageResponseDtoMaterialResponseDto: {
+      content?: components["schemas"]["MaterialResponseDto"][];
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
     };
     ApiResponseListMaterialCategoryResponseDto: {
       /** Format: int32 */
@@ -4555,73 +3611,6 @@ export interface components {
       id?: number;
       name?: string;
       code?: string;
-    };
-    PurchaseOrderItemDto: {
-      materialCode?: string;
-      materialName?: string;
-      unit?: string;
-      /** Format: int64 */
-      quantity?: number;
-      /** Format: int64 */
-      standardQuantity?: number;
-      unitPrice?: number;
-      /** Format: int32 */
-      leadTimeDays?: number;
-    };
-    PurchaseOrderRequestDto: {
-      /** Format: int64 */
-      factoryId?: number;
-      factoryName?: string;
-      /** Format: date-time */
-      requiredAt?: string;
-      requesterName?: string;
-      items?: components["schemas"]["PurchaseOrderItemDto"][];
-    };
-    ApiResponsePurchaseOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PurchaseOrderResponseDto"];
-    };
-    PurchaseOrderResponseDto: {
-      /** Format: int64 */
-      id?: number;
-      orderCode?: string;
-      /** Format: date-time */
-      orderAt?: string;
-      /** Format: date-time */
-      requiredAt?: string;
-      /** Format: date-time */
-      expectedDeliveryAt?: string;
-      /** Format: int64 */
-      factoryId?: number;
-      factoryName?: string;
-      requesterName?: string;
-      /** @enum {string} */
-      urgency?: "HIGH" | "MEDIUM" | "LOW";
-      expectedAmount?: number;
-      /** @enum {string} */
-      status?: "ORDERED" | "RECEIVED" | "CANCELED";
-      items?: components["schemas"]["PurchaseOrderItemDto"][];
-    };
-    ApiResponsePageResponseDtoPurchaseOrderResponseDto: {
-      /** Format: int32 */
-      status?: number;
-      success?: boolean;
-      /** Format: int32 */
-      code?: number;
-      message?: string;
-      data?: components["schemas"]["PageResponseDtoPurchaseOrderResponseDto"];
-    };
-    PageResponseDtoPurchaseOrderResponseDto: {
-      content?: components["schemas"]["PurchaseOrderResponseDto"][];
-      /** Format: int64 */
-      totalElements?: number;
-      /** Format: int32 */
-      totalPages?: number;
     };
     VendorUpdateRequestDTO: {
       name?: string;
@@ -4972,7 +3961,14 @@ export interface operations {
   updateEmployeeStatus: {
     parameters: {
       query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
       };
       header?: never;
       path: {
@@ -4999,9 +3995,7 @@ export interface operations {
   };
   getMyProfile: {
     parameters: {
-      query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
@@ -5046,7 +4040,14 @@ export interface operations {
   updateUserProfile: {
     parameters: {
       query: {
-        workspace: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
       };
       header?: never;
       path: {
@@ -5080,7 +4081,14 @@ export interface operations {
         size?: number;
         /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
         sort?: string[];
-        workspace?: "FACTORY" | "WAREHOUSE" | "AGENCY";
+        workspace?:
+          | "MD"
+          | "SALES"
+          | "INVENTORY"
+          | "PRODUCTION"
+          | "PURCHASE"
+          | "HR"
+          | "AGENCY";
         organizationId?: number;
       };
       header?: never;
@@ -5159,7 +4167,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5181,7 +4189,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5320,7 +4328,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5340,7 +4348,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5360,7 +4368,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5380,7 +4388,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5402,7 +4410,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid1"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5444,7 +4452,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5468,7 +4476,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5492,7 +4500,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5544,7 +4552,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5568,7 +4576,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5711,7 +4719,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5731,7 +4739,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5751,7 +4759,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5771,7 +4779,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5793,7 +4801,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
+          "*/*": components["schemas"]["ApiResponseVoid"];
         };
       };
     };
@@ -5859,1003 +4867,6 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid2"];
-        };
-      };
-    };
-  };
-  executeBatchMRP: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": number[];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  applyBatchMRPResult: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": number[];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  executeMRP: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  applyMRPResult: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  executeMps: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description 공장 ID */
-        factoryId: number;
-        /** @description MPS ID */
-        mpsId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  confirmMps: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description 공장 ID */
-        factoryId: number;
-        /** @description MPS ID */
-        mpsId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createMaterialOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MaterialOrderRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createPartOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PartOrderRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  setMpsStartDateToNow: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  printMpsOrderInfo: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  testMpsOrderAutoApply: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  testMpsAutoApply: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createTestMpsOrder: {
-    parameters: {
-      query: {
-        factoryId: number;
-        partId: number;
-        quantity?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseLong"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  updatePartOrderProgress: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  completePartOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getPartOrders: {
-    parameters: {
-      query?: {
-        statuses?: (
-          | "UNDER_REVIEW"
-          | "PURCHASE_REQUEST"
-          | "PLAN_CONFIRMED"
-          | "DELAYED"
-          | "REJECTED"
-          | "IN_PROGRESS"
-          | "COMPLETED"
-        )[];
-        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
-        query?: string;
-        categoryId?: number;
-        groupId?: number;
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getProductionPlans: {
-    parameters: {
-      query?: {
-        statuses?: (
-          | "UNDER_REVIEW"
-          | "PURCHASE_REQUEST"
-          | "PLAN_CONFIRMED"
-          | "DELAYED"
-          | "REJECTED"
-          | "IN_PROGRESS"
-          | "COMPLETED"
-        )[];
-        priorities?: ("HIGH" | "MEDIUM" | "LOW")[];
-        query?: string;
-        categoryId?: number;
-        groupId?: number;
-        page?: number;
-        size?: number;
-        includeRecentDays?: number;
-      };
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoPartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getPartOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        factoryId: number;
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePartOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMps: {
-    parameters: {
-      query: {
-        /** @description 부품 ID */
-        partId: number;
-        /** @description 예측 달 (YYYY-MM-DD 형식) */
-        forecastMonth: string;
-        /** @description 창고 ID */
-        warehouseId: number;
-      };
-      header?: never;
-      path: {
-        /** @description 공장 ID */
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMpsResponse"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMpsPlans: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description 공장 ID */
-        factoryId: number;
-        /** @description MPS ID */
-        mpsId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListMpsPlanResponse"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMpsPlan: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description MPS Plan ID */
-        mpsPlanId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMpsPlanResponse"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMaterials: {
-    parameters: {
-      query?: {
-        categoryId?: number;
-        keyword?: string;
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path: {
-        factoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMaterialsByFactoryAndCategory: {
-    parameters: {
-      query?: {
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path: {
-        factoryId: number;
-        categoryId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getMpsOrdersReadyForProcessing: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseListMpsOrderInfoDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheck2: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  unauthorizedTest2: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  notFoundTest2: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  forbiddenTest2: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData2: {
-    parameters: {
-      query?: {
-        fail?: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData_12: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString1"];
-        };
-      };
-      /** @description Conflict */
-      409: {
         headers: {
           [name: string]: unknown;
         };
@@ -7202,7 +5213,7 @@ export interface operations {
       };
     };
   };
-  healthCheck3: {
+  healthCheck2: {
     parameters: {
       query?: never;
       header?: never;
@@ -7222,7 +5233,7 @@ export interface operations {
       };
     };
   };
-  unauthorizedTest3: {
+  unauthorizedTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -7242,7 +5253,7 @@ export interface operations {
       };
     };
   };
-  notFoundTest3: {
+  notFoundTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -7262,7 +5273,7 @@ export interface operations {
       };
     };
   };
-  forbiddenTest3: {
+  forbiddenTest2: {
     parameters: {
       query?: never;
       header?: never;
@@ -7282,7 +5293,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData3: {
+  healthCheckData2: {
     parameters: {
       query?: {
         fail?: boolean;
@@ -7304,7 +5315,7 @@ export interface operations {
       };
     };
   };
-  healthCheckData_13: {
+  healthCheckData_12: {
     parameters: {
       query?: never;
       header?: never;
@@ -7319,7 +5330,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString2"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
@@ -8156,6 +6167,245 @@ export interface operations {
       };
     };
   };
+  healthCheck3: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 서버 상태 OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  unauthorizedTest3: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  notFoundTest3: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  forbiddenTest3: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData3: {
+    parameters: {
+      query?: {
+        fail?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  healthCheckData_13: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseString"];
+        };
+      };
+    };
+  };
+  getMaterialById1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  updateMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MaterialRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  deleteMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        materialId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseVoid"];
+        };
+      };
+    };
+  };
+  getAllMaterials1: {
+    parameters: {
+      query?: {
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
+        };
+      };
+    };
+  };
+  createMaterial1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MaterialRequestDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
+        };
+      };
+    };
+  };
   healthCheck4: {
     parameters: {
       query?: never;
@@ -8273,246 +6523,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponseString3"];
-        };
-      };
-    };
-  };
-  getMaterialById1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  updateMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MaterialRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  deleteMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        materialId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getAllMaterials1: {
-    parameters: {
-      query?: {
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
-        };
-      };
-    };
-  };
-  createMaterial1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["MaterialRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseMaterialResponseDto"];
-        };
-      };
-    };
-  };
-  healthCheck5: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  unauthorizedTest5: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  notFoundTest5: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  forbiddenTest5: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData5: {
-    parameters: {
-      query?: {
-        fail?: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheckData_15: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseString4"];
+          "*/*": components["schemas"]["ApiResponseString"];
         };
       };
     };
@@ -8536,7 +6547,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
         };
       };
     };
@@ -8581,228 +6592,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto1"];
-        };
-      };
-    };
-  };
-  getOrders: {
-    parameters: {
-      query?: {
-        status?: "ORDERED" | "RECEIVED" | "CANCELED";
-        urgency?: "HIGH" | "MEDIUM" | "LOW";
-        query?: string;
-        page?: number;
-        size?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePageResponseDtoPurchaseOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  createMaterialOrder1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PurchaseOrderRequestDto"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  receiveOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  cancelOrder1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  getOrder1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponsePurchaseOrderResponseDto"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  deleteOrder: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orderId: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-    };
-  };
-  healthCheck6: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 서버 상태 OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
-        };
-      };
-      /** @description Conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiResponseVoid"];
+          "*/*": components["schemas"]["ApiResponsePageResponseDtoMaterialResponseDto"];
         };
       };
     };
@@ -9060,7 +6850,7 @@ export interface operations {
       };
     };
   };
-  healthCheck7: {
+  healthCheck5: {
     parameters: {
       query?: never;
       header?: never;

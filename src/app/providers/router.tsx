@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 
 // ============================================================================
 // Public Pages - 인증 없이 접근 가능한 페이지
@@ -21,6 +21,9 @@ import ProductionLayout from "@/widgets/Layout/ProductionLayout";
 import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import SalesLayout from "@/widgets/Layout/SalesLayout";
 import WMSLayout from "@/widgets/Layout/WMSLayout";
+
+import { bootstrapAuthLoader } from "@/app/providers/loaders/bootstrap-auth.loader";
+import { useAuthStore } from "@/entities/user";
 
 // ============================================================================
 // Master Pages - 기준 정보 관리 모듈 (지연 로딩)
@@ -100,9 +103,20 @@ const EmployeeStatusProcess = lazy(async () => ({
 // ============================================================================
 // Routes Configuration - 라우트 설정
 // ============================================================================
+const requireAuth: RouteObject["loader"] = () => {
+  const { user } = useAuthStore.getState();
+
+  if (!user) {
+    throw redirect("/login");
+  }
+
+  return null;
+};
+
 const routes: RouteObject[] = [
   {
     element: <AppLayout />,
+    loader: bootstrapAuthLoader,
     children: [
       // ----------------------------------------------------------------------------
       // Public Routes - 공개 페이지
@@ -129,6 +143,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/master",
+        loader: requireAuth,
         element: <MasterLayout />,
         children: [
           { path: "items", element: <ItemMaster /> },
@@ -302,6 +317,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/sales",
+        loader: requireAuth,
         element: <SalesLayout />,
         children: [
           {
@@ -330,6 +346,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/wms",
+        loader: requireAuth,
         element: <WMSLayout />,
         children: [
           {
@@ -448,6 +465,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/production",
+        loader: requireAuth,
         element: <ProductionLayout />,
         children: [
           {
@@ -488,6 +506,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/purchasing",
+        loader: requireAuth,
         element: <PurchasingLayout />,
         children: [
           {
@@ -510,6 +529,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/hrm",
+        loader: requireAuth,
         element: <HRMLayout />,
         children: [
           {
@@ -544,6 +564,7 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/warehouse",
+        loader: requireAuth,
         element: <Navigate to="/warehouse/orders" replace />,
       },
       // {
@@ -557,6 +578,7 @@ const routes: RouteObject[] = [
       // },
       {
         path: "/warehouse/orders",
+        loader: requireAuth,
         lazy: async () => {
           const { default: Component } = await import(
             "@/pages/warehouse-orders"
@@ -583,10 +605,12 @@ const routes: RouteObject[] = [
       // ----------------------------------------------------------------------------
       {
         path: "/factory",
+        loader: requireAuth,
         element: <Navigate to="/factory/dashboard" replace />,
       },
       {
         path: "/factory/dashboard",
+        loader: requireAuth,
         lazy: async () => {
           const { FactoryDashboard: Component } = await import(
             "@/pages/factory"
@@ -596,6 +620,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/factory/orders",
+        loader: requireAuth,
         lazy: async () => {
           const { FactoryOrders: Component } = await import(
             "@/pages/factory/orders"
@@ -614,6 +639,7 @@ const routes: RouteObject[] = [
       // },
       {
         path: "/factory/bom",
+        loader: requireAuth,
         lazy: async () => {
           const { FactoryBOM: Component } = await import("@/pages/factory/bom");
           return { Component };
@@ -621,6 +647,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/factory/employees",
+        loader: requireAuth,
         lazy: async () => {
           const { FactoryEmployees: Component } = await import(
             "@/pages/factory/employees"

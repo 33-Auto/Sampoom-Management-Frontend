@@ -2,20 +2,9 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "@/entities/user";
-import type { UserResponse } from "@/shared/model/models";
 
 import { getMyProfile, useLoginMutation } from "../api";
-import type { LoginFormValues, LoginProfile } from "../model/login.types";
-
-const mapProfileToUser = (profile: LoginProfile): UserResponse => ({
-  userId: profile.userId,
-  userName: profile.userName,
-  email: profile.email,
-  role: profile.role,
-  workspace: profile.workspace,
-  branch: profile.branch,
-  position: profile.position,
-});
+import type { LoginFormValues } from "../model/login.types";
 
 export function useLoginForm() {
   const navigate = useNavigate();
@@ -38,13 +27,12 @@ export function useLoginForm() {
         },
       });
 
-      const profile = await getMyProfile(workspace);
+      const userData = await getMyProfile();
 
-      if (!profile?.workspace) {
+      if (!userData?.workspace) {
         throw new Error("프로필 정보를 불러오지 못했습니다.");
       }
 
-      const userData = mapProfileToUser(profile);
       loginAction(userData);
       // navigate(`/${profile.workspace.toLowerCase()}/`);
       navigate("/");
