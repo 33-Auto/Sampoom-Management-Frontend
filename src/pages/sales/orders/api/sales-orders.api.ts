@@ -8,39 +8,47 @@ import { queryClient } from "@/shared/api";
 const DEFAULT_PAGE = 0;
 const DEFAULT_SIZE = 20;
 
-export const getSalesOrdersQueryOptions = ({
-  warehouseId,
-  page,
-  size,
-  status,
-  from,
-}: SalesOrderListParams) => ({
-  params: {
-    path: { warehouseId },
-    query: {
-      page: page ?? DEFAULT_PAGE,
-      size: size ?? DEFAULT_SIZE,
-      status,
-      // TODO(from-filter): 대리점 검색 파라미터 처리 로직 정리 후 반영
-      from,
-    },
-  },
-});
+type SalesOrderListQueryParams = Partial<SalesOrderListParams> & {
+  warehouseId?: number;
+};
 
-export const salesOrdersListQueryOptions = (params: SalesOrderListParams) =>
+export const getSalesOrdersQueryOptions = (
+  params?: SalesOrderListQueryParams,
+) => {
+  const warehouseId =
+    typeof params?.warehouseId === "number" ? params.warehouseId : Number.NaN;
+
+  return {
+    params: {
+      path: { warehouseId },
+      query: {
+        page: params?.page ?? DEFAULT_PAGE,
+        size: params?.size ?? DEFAULT_SIZE,
+        status: params?.status,
+        // TODO(from-filter): 대리점 검색 파라미터 처리 로직 정리 후 반영
+        from: params?.from ?? undefined,
+      },
+    },
+  };
+};
+
+export const salesOrdersListQueryOptions = (
+  params?: SalesOrderListQueryParams,
+) =>
   queryClient.queryOptions(
     "get",
     "/api/order/warehouse/{warehouseId}",
     getSalesOrdersQueryOptions(params),
   );
 
-export const useSalesOrdersQuery = (params: SalesOrderListParams) =>
+export const useSalesOrdersQuery = (params?: SalesOrderListQueryParams) =>
   queryClient.useQuery(
     "get",
     "/api/order/warehouse/{warehouseId}",
     getSalesOrdersQueryOptions(params),
     {
       placeholderData: (previousData) => previousData,
+      enabled: typeof params?.warehouseId === "number",
     },
   );
 
@@ -65,3 +73,5 @@ export const useCancelOrderMutation = () =>
 export type SalesOrderListData = SalesOrderListResponse["data"];
 
 export type SalesOrderListItem = SalesOrderDto;
+
+export type { SalesOrderListQueryParams };

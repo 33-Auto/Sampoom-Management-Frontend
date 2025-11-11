@@ -7,4 +7,5 @@ export {
   useCancelOrderMutation,
   type SalesOrderListData,
   type SalesOrderListItem,
+  type SalesOrderListQueryParams,
 } from "./sales-orders.api";
