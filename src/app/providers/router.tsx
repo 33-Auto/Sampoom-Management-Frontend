@@ -22,7 +22,10 @@ import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import SalesLayout from "@/widgets/Layout/SalesLayout";
 import WMSLayout from "@/widgets/Layout/WMSLayout";
 
-import { bootstrapAuthLoader } from "@/app/providers/loaders/bootstrap-auth.loader";
+import {
+  bootstrapAuthLoader,
+  ensureAuthBootstrapped,
+} from "@/app/providers/loaders/bootstrap-auth.loader";
 import { useAuthStore } from "@/entities/user";
 
 // ============================================================================
@@ -103,11 +106,16 @@ const EmployeeStatusProcess = lazy(async () => ({
 // ============================================================================
 // Routes Configuration - 라우트 설정
 // ============================================================================
-const requireAuth: RouteObject["loader"] = () => {
+const requireAuth: RouteObject["loader"] = async () => {
   const { user } = useAuthStore.getState();
 
   if (!user) {
-    throw redirect("/login");
+    await ensureAuthBootstrapped();
+
+    const { user: authenticatedUser } = useAuthStore.getState();
+    if (!authenticatedUser) {
+      throw redirect("/login");
+    }
   }
 
   return null;
