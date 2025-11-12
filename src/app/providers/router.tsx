@@ -139,16 +139,10 @@ const normalizeRouterError = (error: unknown): Error => {
   }
 
   if (isRouteErrorResponse(error)) {
-    const message =
-      (typeof error.data === "object" && error.data !== null
-        ? (error.data as { message?: string }).message
-        : undefined) ??
-      error.statusText ??
-      "요청을 처리하는 중 오류가 발생했습니다.";
-
-    const routeError = new Error(message);
+    const routeError = new Error(
+      error.statusText ?? "요청을 처리하는 중 오류가 발생했습니다.",
+    );
     (routeError as any).status = error.status;
-    (routeError as any).data = error.data;
     return routeError;
   }
 
