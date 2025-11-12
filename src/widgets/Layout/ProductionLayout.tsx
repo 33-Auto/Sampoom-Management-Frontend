@@ -25,6 +25,11 @@ const ProductionLayout: React.FC = () => {
       label: "생산 계획(MRP)",
       icon: "ri-calendar-line",
     },
+    {
+      path: "/production/mps",
+      label: "생산 스케줄(MPS)",
+      icon: "ri-calendar-schedule-line",
+    },
   ];
 
   return (

@@ -1,14 +1,6 @@
 import { useState } from "react";
 
-import {
-  Button,
-  SearchFilterBar,
-  StatCard,
-  Table,
-  TableSection,
-} from "@/shared/ui";
-
-import { useDepartmentStats } from "../model/useDepartmentStats";
+import { Button, SearchFilterBar, Table, TableSection } from "@/shared/ui";
 
 export const DepartmentMaster = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -160,48 +152,9 @@ export const DepartmentMaster = () => {
     { key: "createdDate", title: "생성일", width: "120px" },
   ];
 
-  // 통계 계산 (훅으로 분리)
-  const { totalDepts, activeDepts, totalEmployees, totalBudget } =
-    useDepartmentStats(departmentData);
-
   return (
     <>
       {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-organization-chart"
-          label="전체 부서"
-          value={totalDepts}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-check-line"
-          label="활성 부서"
-          value={activeDepts}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-team-line"
-          label="총 인원"
-          value={`${totalEmployees}명`}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-
-        <StatCard
-          icon="ri-money-dollar-circle-line"
-          label="총 예산"
-          value={`₩${(totalBudget / 100000000).toFixed(1)}억`}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-      </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}

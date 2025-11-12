@@ -27,7 +27,10 @@ export const BranchSelectBar: React.FC<BranchSelectBarProps> = ({
 }) => {
   return (
     <div
-      className={cn("border-b border-gray-200 bg-white", containerClassName)}
+      className={cn(
+        "border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-bg-card-black",
+        containerClassName,
+      )}
     >
       <div className={cn("mx-auto px-10 py-2", innerClassName)}>
         <div

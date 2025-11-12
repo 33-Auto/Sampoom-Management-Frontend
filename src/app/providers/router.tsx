@@ -1,7 +1,13 @@
 /* eslint-disable import/order */
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import type { RouteObject } from "react-router-dom";
-import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  redirect,
+  isRouteErrorResponse,
+  useRouteError,
+} from "react-router-dom";
 
 // ============================================================================
 // Public Pages - 인증 없이 접근 가능한 페이지
@@ -27,6 +33,8 @@ import {
   ensureAuthBootstrapped,
 } from "@/app/providers/loaders/bootstrap-auth.loader";
 import { useAuthStore } from "@/entities/user";
+import { ErrorHandler } from "@/shared/ui";
+import { setSkipAuthRefresh } from "@/shared/api/auth-refresh.guard";
 
 // ============================================================================
 // Master Pages - 기준 정보 관리 모듈 (지연 로딩)
@@ -47,13 +55,13 @@ const PositionMaster = lazy(async () => ({
 const WorkOrderDetail = lazy(async () => ({
   default: (await import("@/pages/production/orders/detail")).WorkOrderDetail,
 }));
+const MasterProductionSchedule = lazy(async () => ({
+  default: (await import("@/pages/production/mps")).MasterProductionSchedule,
+}));
 
 // ============================================================================
 // Purchasing Pages - 구매 관리 모듈 (지연 로딩)
 // ============================================================================
-const PurchaseOrders = lazy(async () => ({
-  default: (await import("@/pages/purchasing/orders")).PurchaseOrders,
-}));
 const PurchaseRequests = lazy(async () => ({
   default: (await import("@/pages/purchasing/requests")).PurchaseRequests,
 }));
@@ -77,6 +85,10 @@ const SalesOrderDetail = lazy(async () => ({
 
 const ReceivingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
+}));
+
+const ShippingProcess = lazy(async () => ({
+  default: (await import("@/pages/wms/shipping/process/ui")).ShippingProcess,
 }));
 
 // ============================================================================
@@ -121,10 +133,62 @@ const requireAuth: RouteObject["loader"] = async () => {
   return null;
 };
 
+const normalizeRouterError = (error: unknown): Error => {
+  if (error instanceof Error) {
+    return error;
+  }
+
+  if (isRouteErrorResponse(error)) {
+    const message =
+      (typeof error.data === "object" && error.data !== null
+        ? (error.data as { message?: string }).message
+        : undefined) ??
+      error.statusText ??
+      "요청을 처리하는 중 오류가 발생했습니다.";
+
+    const routeError = new Error(message);
+    (routeError as any).status = error.status;
+    (routeError as any).data = error.data;
+    return routeError;
+  }
+
+  if (typeof error === "string") {
+    return new Error(error);
+  }
+
+  return new Error("알 수 없는 오류가 발생했습니다.");
+};
+
+const RouterErrorBoundary = () => {
+  const error = useRouteError();
+  const normalizedError = normalizeRouterError(error);
+
+  setSkipAuthRefresh(true);
+
+  useEffect(() => {
+    setSkipAuthRefresh(true);
+
+    return () => {
+      setSkipAuthRefresh(false);
+    };
+  }, []);
+
+  const handleReset = () => {
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
+  };
+
+  return (
+    <ErrorHandler error={normalizedError} resetErrorBoundary={handleReset} />
+  );
+};
+
 const routes: RouteObject[] = [
   {
     element: <AppLayout />,
     loader: bootstrapAuthLoader,
+    errorElement: <RouterErrorBoundary />,
     children: [
       // ----------------------------------------------------------------------------
       // Public Routes - 공개 페이지
@@ -372,6 +436,10 @@ const routes: RouteObject[] = [
             },
           },
           {
+            path: "shipping/process/:warehouseId/:orderId",
+            element: <ShippingProcess />,
+          },
+          {
             path: "inventory",
             lazy: async () => {
               const { InventoryDashboard } = await import(
@@ -506,6 +574,10 @@ const routes: RouteObject[] = [
               return { Component: ProductionPlanning, loader };
             },
           },
+          {
+            path: "mps",
+            element: <MasterProductionSchedule />,
+          },
         ],
       },
 
@@ -524,10 +596,6 @@ const routes: RouteObject[] = [
           {
             path: "requests",
             element: <PurchaseRequests />,
-          },
-          {
-            path: "orders",
-            element: <PurchaseOrders />,
           },
         ],
       },

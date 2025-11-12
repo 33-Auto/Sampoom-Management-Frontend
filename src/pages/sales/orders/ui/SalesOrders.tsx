@@ -1,17 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
+import { useAgencyBranchOptions } from "@/entities/agency";
 import {
   useBranchId,
   useBranchSelectionStore,
 } from "@/features/branch-select/model/branch-selection.store";
-import {
-  Button,
-  Table,
-  SearchFilterBar,
-  TableSection,
-  StatCard,
-} from "@/shared/ui";
+import { Button, Table, SearchFilterBar, TableSection } from "@/shared/ui";
 
 import { useSalesOrdersQuery, type SalesOrderListQueryParams } from "../api";
 import {
@@ -87,7 +82,7 @@ const mapOrderToRow = (order: SalesOrderDto): SalesOrderRow => {
 };
 
 export const SalesOrders = () => {
-  const [fromText, setFromText] = useState(""); // 고객사 필터
+  const [fromAgencyId, setFromAgencyId] = useState(""); // 고객사 필터
   const [statusFilter, setStatusFilter] =
     useState<SalesOrderStatusFilterValue>("ALL");
   const [page, setPage] = useState(0);
@@ -103,6 +98,12 @@ export const SalesOrders = () => {
     ? Number(selectedWarehouseId)
     : undefined;
 
+  const agencyOptions = useAgencyBranchOptions();
+  const selectedAgencyOption = useMemo(
+    () => agencyOptions.find((option) => option.value === fromAgencyId),
+    [agencyOptions, fromAgencyId],
+  );
+
   const queryParams = useMemo<SalesOrderListQueryParams | undefined>(() => {
     if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
       return undefined;
@@ -114,8 +115,8 @@ export const SalesOrders = () => {
       size,
     };
 
-    if (fromText) {
-      params.from = fromText;
+    if (selectedAgencyOption?.value) {
+      params.from = selectedAgencyOption.label;
     }
 
     if (statusFilter !== "ALL") {
@@ -126,7 +127,14 @@ export const SalesOrders = () => {
     }
 
     return params;
-  }, [warehouseId, page, size, fromText, statusFilter]);
+  }, [
+    warehouseId,
+    page,
+    size,
+    selectedAgencyOption?.label,
+    selectedAgencyOption?.value,
+    statusFilter,
+  ]);
 
   const { data, refetch } = useSalesOrdersQuery(queryParams);
   const pageData = data?.data;
@@ -206,69 +214,21 @@ export const SalesOrders = () => {
     },
   ];
 
-  // 통계 계산 (현재 페이지 기준 간단 집계)
-  const totalOrders = totalElements;
-  const { confirmedOrders, shippingOrPending, completedOrders } =
-    useMemo(() => {
-      const confirmed = orders.filter((o) => o.status === "CONFIRMED").length;
-      const inProgress = orders.filter(
-        (o) => o.status === "SHIPPING" || o.status === "PENDING",
-      ).length;
-      const completed = orders.filter((o) => o.status === "COMPLETED").length;
-      return {
-        confirmedOrders: confirmed,
-        shippingOrPending: inProgress,
-        completedOrders: completed,
-      };
-    }, [orders]);
-
   return (
     <>
       <div className="p-6">
-        {/* 통계 카드 - 공통 StatCard 사용 */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-          <StatCard
-            icon="ri-file-list-line"
-            label="전체 주문"
-            value={totalOrders}
-            iconBgColor="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-
-          <StatCard
-            icon="ri-notification-line"
-            label="확인된 주문"
-            value={confirmedOrders}
-            iconBgColor="bg-red-100"
-            iconColor="text-red-600"
-          />
-
-          <StatCard
-            icon="ri-time-line"
-            label="진행 중(PENDING/SHIPPING)"
-            value={shippingOrPending}
-            iconBgColor="bg-yellow-100"
-            iconColor="text-yellow-600"
-          />
-
-          <StatCard
-            icon="ri-check-double-line"
-            label="완료된 주문"
-            value={completedOrders}
-            iconBgColor="bg-green-100"
-            iconColor="text-green-600"
-          />
-        </div>
-
         {/* 필터 및 검색 - 공통 컴포넌트 사용 */}
         <SearchFilterBar
-          searchTerm={fromText}
-          onSearchChange={(v) => {
-            setFromText(v);
-            setPage(0);
-          }}
-          searchPlaceholder="고객사(From) 검색..."
           filters={[
+            {
+              key: "agency",
+              value: fromAgencyId,
+              options: agencyOptions,
+              onChange: (value: string) => {
+                setFromAgencyId(value);
+                setPage(0);
+              },
+            },
             {
               key: "status",
               value: statusFilter,

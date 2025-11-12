@@ -9,7 +9,7 @@ export const useAgencyBranchOptions = () => {
     const branches = (data as any)?.data ?? data ?? [];
 
     return [
-      { label: "지점 선택", value: "" },
+      { label: "고객사 선택", value: undefined },
       ...branches
         .filter((branch: any) => branch?.status === "ACTIVE")
         .map((branch: any) => ({

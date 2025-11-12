@@ -6,9 +6,8 @@ import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePagi
 import { usePartnersQuery } from "@/pages/master/partners/api";
 import type { PartnerResponseDTO } from "@/pages/master/partners/model";
 import { PARTNER_STATUS } from "@/pages/master/partners/model";
-import { usePartnerStats } from "@/pages/master/partners/model/usePartnerStats";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
 
 export const PartnerMaster = () => {
   const navigate = useNavigate();
@@ -110,32 +109,10 @@ export const PartnerMaster = () => {
     },
   ];
 
-  // 통계 계산 (API 데이터 기반)
   const partners = data?.data?.content ?? [];
-  const { totalPartners, activePartners } = usePartnerStats(partners);
 
   return (
     <>
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <StatCard
-          icon="ri-building-line"
-          label="전체 거래처"
-          value={totalPartners}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-check-line"
-          label="활성 거래처"
-          value={activePartners}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-      </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}

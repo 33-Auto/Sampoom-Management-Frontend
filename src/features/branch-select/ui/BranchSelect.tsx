@@ -86,7 +86,7 @@ export const BranchSelect: React.FC<BranchSelectProps> = ({
       <i className={cn("text-gray-600", icon, iconClassName)} />
       <span
         className={cn(
-          "text-sm font-medium whitespace-nowrap text-gray-700",
+          "text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-300",
           spanClassName,
         )}
       >

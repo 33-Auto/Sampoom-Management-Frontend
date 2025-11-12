@@ -10,16 +10,8 @@ import type {
   RoutingStatus,
 } from "@/pages/master/routings/model";
 import { ROUTING_STATUS } from "@/pages/master/routings/model";
-import { useRoutingStats } from "@/pages/master/routings/model/useRoutingStats";
 import { createKeyRecord } from "@/shared/lib/utils";
-import {
-  Badge,
-  Button,
-  InfoBox,
-  SearchFilterBar,
-  StatCard,
-  Table,
-} from "@/shared/ui";
+import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
 
 export const RoutingMaster = () => {
   const navigate = useNavigate();
@@ -135,51 +127,12 @@ export const RoutingMaster = () => {
     },
   ];
 
-  // 통계 계산 (훅으로 분리)
-  const { totalRoutings, activeRoutings, avgLeadTime, avgOperations } =
-    useRoutingStats(routings);
-
   return (
     <>
       {/* 메인 컨텐츠 */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 좌측: 공정 목록 */}
         <div className="lg:col-span-2">
-          {/* 통계 카드 */}
-          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-            <StatCard
-              icon="ri-route-line"
-              label="전체 공정"
-              value={totalRoutings}
-              iconBgColor="bg-main-100"
-              iconColor="text-main-600"
-            />
-
-            <StatCard
-              icon="ri-check-line"
-              label="활성 공정"
-              value={activeRoutings}
-              iconBgColor="bg-green-100"
-              iconColor="text-green-600"
-            />
-
-            <StatCard
-              icon="ri-time-line"
-              label="평균 리드타임"
-              value={`${avgLeadTime}분`}
-              iconBgColor="bg-blue-100"
-              iconColor="text-blue-600"
-            />
-
-            <StatCard
-              icon="ri-list-check"
-              label="평균 공정수"
-              value={`${avgOperations}개`}
-              iconBgColor="bg-purple-100"
-              iconColor="text-purple-600"
-            />
-          </div>
-
           {/* 필터 및 검색 */}
           <SearchFilterBar
             searchTerm={searchTerm}

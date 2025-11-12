@@ -6,9 +6,8 @@ import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePagi
 import { useBranchesQuery } from "@/pages/master/branches/api";
 import type { BranchResponseDTO } from "@/pages/master/branches/model";
 import { BRANCH_STATUS, BRANCH_TYPE } from "@/pages/master/branches/model";
-import { useBranchStats } from "@/pages/master/branches/model/useBranchStats";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, StatCard, Table } from "@/shared/ui";
+import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
 
 export const BranchMaster = () => {
   const navigate = useNavigate();
@@ -143,49 +142,10 @@ export const BranchMaster = () => {
     },
   ];
 
-  // 통계 계산 (API 데이터 기반)
   const branches = data?.data?.content ?? [];
-  const { totalBranches, activeBranches, warehouses, factories } =
-    useBranchStats(branches);
 
   return (
     <>
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <StatCard
-          icon="ri-store-line"
-          label="전체 지점"
-          value={totalBranches}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-
-        <StatCard
-          icon="ri-check-line"
-          label="활성 지점"
-          value={activeBranches}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
-
-        <StatCard
-          icon="ri-archive-line"
-          label="창고"
-          value={warehouses}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-
-        <StatCard
-          icon="ri-building-2-line"
-          label="공장"
-          value={factories}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-      </div>
-
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
