@@ -1,4 +1,5 @@
 import type { MpsPlanResult, PartOrderResult } from "@/entities/mps";
+import { cn } from "@/shared/lib";
 import { Badge, Button, Modal, Table } from "@/shared/ui";
 
 const formatDate = (value?: string | null, withTime = false) => {
@@ -46,7 +47,7 @@ const statusLabels: Record<string, string> = {
 
 const orderStatusVariants: Record<
   string,
-  "default" | "warning" | "error" | "success"
+  "default" | "warning" | "error" | "success" | "info"
 > = {
   UNDER_REVIEW: "warning",
   PURCHASE_REQUEST: "warning",
@@ -66,6 +67,26 @@ const orderStatusLabels: Record<string, string> = {
   IN_PROGRESS: "진행중",
   COMPLETED: "완료",
 };
+
+interface SummaryCardProps {
+  label: string;
+  value: number;
+  valueClassName?: string;
+}
+
+const SummaryCard = ({ label, value, valueClassName }: SummaryCardProps) => (
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
+    <p className="text-sm text-gray-600 dark:text-gray-300">{label}</p>
+    <p
+      className={cn(
+        "mt-2 text-2xl font-bold text-gray-900 dark:text-gray-100",
+        valueClassName,
+      )}
+    >
+      {value}
+    </p>
+  </div>
+);
 
 const buildExecutionSummary = (plans: MpsPlanResult[]) => {
   const total = plans.length;
@@ -225,8 +246,8 @@ export const MpsExecutionResultModal = ({
 }: MpsExecutionResultModalProps) => {
   const summary =
     mode === "execute"
-      ? buildExecutionSummary(plans)
-      : buildConfirmSummary(orders);
+      ? { mode: "execute" as const, data: buildExecutionSummary(plans) }
+      : { mode: "confirm" as const, data: buildConfirmSummary(orders) };
 
   const isEmpty = mode === "execute" ? plans.length === 0 : orders.length === 0;
 
@@ -261,42 +282,53 @@ export const MpsExecutionResultModal = ({
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {mode === "execute" ? "총 생산 주기" : "총 주문"}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {summary.total}
-              </p>
+          {summary.mode === "execute" ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <SummaryCard
+                label="총 생산 주기"
+                value={summary.data.total}
+                valueClassName="text-gray-900 dark:text-gray-100"
+              />
+              <SummaryCard
+                label="완료된 주기"
+                value={summary.data.completed}
+                valueClassName="text-green-600 dark:text-green-400"
+              />
+              <SummaryCard
+                label="진행 중"
+                value={summary.data.inProgress}
+                valueClassName="text-orange-500 dark:text-orange-400"
+              />
+              <SummaryCard
+                label="지연"
+                value={summary.data.delayed}
+                valueClassName="text-red-500 dark:text-red-400"
+              />
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {mode === "execute" ? "완료된 주기" : "계획 확정"}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
-                {mode === "execute" ? summary.completed : summary.confirmed}
-              </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <SummaryCard
+                label="총 주문"
+                value={summary.data.total}
+                valueClassName="text-gray-900 dark:text-gray-100"
+              />
+              <SummaryCard
+                label="계획 확정"
+                value={summary.data.confirmed}
+                valueClassName="text-green-600 dark:text-green-400"
+              />
+              <SummaryCard
+                label="자재 부족"
+                value={summary.data.materialInsufficient}
+                valueClassName="text-orange-500 dark:text-orange-400"
+              />
+              <SummaryCard
+                label="완료"
+                value={summary.data.completed}
+                valueClassName="text-red-500 dark:text-red-400"
+              />
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {mode === "execute" ? "진행 중" : "자재 부족"}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-orange-500 dark:text-orange-400">
-                {mode === "execute"
-                  ? summary.inProgress
-                  : summary.materialInsufficient}
-              </p>
-            </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {mode === "execute" ? "지연" : "완료"}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-red-500 dark:text-red-400">
-                {mode === "execute" ? summary.delayed : summary.completed}
-              </p>
-            </div>
-          </div>
+          )}
 
           <Table
             columns={tableColumns}

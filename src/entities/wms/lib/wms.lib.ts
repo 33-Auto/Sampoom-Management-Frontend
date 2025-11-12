@@ -2,19 +2,39 @@ import { useMemo } from "react";
 
 import { useWmsBrancesQuery } from "../api";
 
-const useWarehousesRaw = () => {
+type RawBranch = {
+  id?: number;
+  name?: string;
+  status?: string;
+};
+
+type WarehouseBranch = RawBranch & { id: number };
+
+const useWarehousesRaw = (): RawBranch[] => {
   const { data } = useWmsBrancesQuery();
 
-  return useMemo(() => {
+  return useMemo<RawBranch[]>(() => {
     const branches = (data as any)?.data ?? data ?? [];
 
-    return Array.isArray(branches)
-      ? branches.map((branch: any) => ({
-          id: typeof branch?.id === "number" ? branch.id : undefined,
-          name: branch?.name,
-          status: branch?.status,
-        }))
-      : [];
+    if (!Array.isArray(branches)) {
+      return [];
+    }
+
+    return branches.map((branch: any) => {
+      const normalized: RawBranch = {};
+
+      if (typeof branch?.id === "number" && Number.isFinite(branch.id)) {
+        normalized.id = branch.id;
+      }
+      if (typeof branch?.name === "string") {
+        normalized.name = branch.name;
+      }
+      if (typeof branch?.status === "string") {
+        normalized.status = branch.status;
+      }
+
+      return normalized;
+    });
   }, [data]);
 };
 
@@ -41,13 +61,8 @@ export function useWarehouses() {
   return useMemo(
     () =>
       branches.filter(
-        (
-          branch,
-        ): branch is {
-          id: number;
-          name?: string;
-          status?: string;
-        } => typeof branch.id === "number" && Number.isFinite(branch.id),
+        (branch): branch is WarehouseBranch =>
+          typeof branch.id === "number" && Number.isFinite(branch.id),
       ),
     [branches],
   );
