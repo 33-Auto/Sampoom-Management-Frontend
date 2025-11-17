@@ -128,7 +128,7 @@ export const RoutingMaster = () => {
   ];
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 메인 컨텐츠 */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 좌측: 공정 목록 */}
@@ -386,6 +386,6 @@ export const RoutingMaster = () => {
           리드 타임 자동 갱신
         </p>
       </InfoBox>
-    </>
+    </div>
   );
 };

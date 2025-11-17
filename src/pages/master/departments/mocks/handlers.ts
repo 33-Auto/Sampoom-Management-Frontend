@@ -1,10 +1,10 @@
 import { http } from "msw";
 
-import { apiSuccess, sleep } from "@/shared/mocks";
+import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 import { mockDepartmentsMaster } from "./data";
 
-export const departmentsMasterHandlers = [
+export const handlers = [
   http.get("/api/master/departments", async () => {
     await sleep(500);
     return apiSuccess(mockDepartmentsMaster);
@@ -15,12 +15,7 @@ export const departmentsMasterHandlers = [
     const deptCode = String(params.deptCode);
     const dept = mockDepartmentsMaster.find((d) => d.deptCode === deptCode);
     if (!dept) {
-      return new Response(
-        JSON.stringify({ error: "부서를 찾을 수 없습니다" }),
-        {
-          status: 404,
-        },
-      );
+      return apiFail(404, "부서를 찾을 수 없습니다");
     }
     return apiSuccess(dept);
   }),
@@ -46,12 +41,7 @@ export const departmentsMasterHandlers = [
     const dept = mockDepartmentsMaster.find((d) => d.deptCode === deptCode);
 
     if (!dept) {
-      return new Response(
-        JSON.stringify({ error: "부서를 찾을 수 없습니다" }),
-        {
-          status: 404,
-        },
-      );
+      return apiFail(404, "부서를 찾을 수 없습니다");
     }
 
     const updatedDept = { ...dept, ...updates };

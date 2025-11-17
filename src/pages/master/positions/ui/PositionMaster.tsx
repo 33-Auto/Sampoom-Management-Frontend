@@ -198,7 +198,7 @@ export const PositionMaster = () => {
   );
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 메인 컨텐츠 */}
       {/* 통계 카드 */}
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
@@ -307,6 +307,6 @@ export const PositionMaster = () => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -153,7 +153,7 @@ export const DepartmentMaster = () => {
   ];
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 메인 컨텐츠 */}
       {/* 필터 및 검색 */}
       <SearchFilterBar
@@ -202,6 +202,6 @@ export const DepartmentMaster = () => {
           emptyText="조건에 맞는 부서가 없습니다"
         />
       </TableSection>
-    </>
+    </div>
   );
 };

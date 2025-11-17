@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useNotification } from "@/app/providers/NotificationContext";
-import { workCenterMasterData } from "@/mocks/factoryData";
+import { mockWorkCentersMaster } from "@/pages/master/workcenters/mocks/data";
 import { Button, Card, Input, Select } from "@/shared/ui";
 
 export const RoutingCreate = () => {
@@ -50,9 +50,9 @@ export const RoutingCreate = () => {
   // 작업장 옵션을 작업장 마스터 데이터에서 가져오기
   const workCenterOptions = [
     { value: "", label: "작업장 선택" },
-    ...workCenterMasterData
+    ...mockWorkCentersMaster
       .filter((wc) => wc.status === "가동")
-      .map((wc) => ({
+      .map((wc: (typeof mockWorkCentersMaster)[0]) => ({
         value: wc.workCenterCode,
         label: `${wc.workCenterCode} - ${wc.workCenterName}`,
       })),
