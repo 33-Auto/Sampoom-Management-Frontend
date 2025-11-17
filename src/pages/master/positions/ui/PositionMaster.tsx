@@ -1,13 +1,29 @@
-import { useState } from "react";
+import {
+  MasterListLayout,
+  useMasterListControls,
+} from "@/features/master-list";
+import { Button } from "@/shared/ui";
 
-import { Button, Input, Select, Table } from "@/shared/ui";
+import {
+  createPositionFilters,
+  positionColumns,
+  type PositionRecord,
+} from "./masterListConfig";
 
 export const PositionMaster = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [levelFilter, setLevelFilter] = useState("전체");
+  const {
+    searchTerm,
+    handleSearchChange,
+    filters,
+    handleFilterChange,
+    pagination,
+  } = useMasterListControls([{ key: "category", initialValue: "전체" }]);
+
+  const levelFilter = filters.category ?? "전체";
+  const { page, size, onPageChange, onSizeChange } = pagination;
 
   // 직급 데이터
-  const positionData = [
+  const positionData: PositionRecord[] = [
     {
       positionCode: "POS001",
       positionName: "대표이사",
@@ -116,73 +132,9 @@ export const PositionMaster = () => {
     return matchesSearch && matchesLevel;
   });
 
-  const columns = [
-    { key: "positionCode", title: "직급 코드", width: "120px" },
-    { key: "positionName", title: "직급명", width: "120px" },
-    {
-      key: "level",
-      title: "레벨",
-      width: "80px",
-      render: (value: number) => (
-        <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: "category",
-      title: "구분",
-      width: "100px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "임원"
-              ? "bg-purple-100 text-purple-800"
-              : value === "관리직"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: "baseSalary",
-      title: "기본급",
-      width: "120px",
-      render: (value: number) => `₩${value?.toLocaleString() || 0}`,
-    },
-    {
-      key: "allowance",
-      title: "수당",
-      width: "120px",
-      render: (value: number) => `₩${value?.toLocaleString() || 0}`,
-    },
-    {
-      key: "employeeCount",
-      title: "인원수",
-      width: "80px",
-      render: (value: number) => `${value}명`,
-    },
-    { key: "description", title: "설명" },
-    {
-      key: "status",
-      title: "상태",
-      width: "80px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "활성"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
-    },
-  ];
+  const totalElements = filteredData.length;
+  const totalPages = Math.max(1, Math.ceil(totalElements / size));
+  const paginatedData = filteredData.slice(page * size, page * size + size);
 
   // 통계 계산
   const totalPositions = positionData.length;
@@ -198,115 +150,105 @@ export const PositionMaster = () => {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* 메인 컨텐츠 */}
-      {/* 통계 카드 */}
-      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <i className="ri-user-star-line text-xl text-blue-600"></i>
+    <MasterListLayout
+      title="직급 목록"
+      headerSlot={
+        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                <i className="ri-user-star-line text-xl text-blue-600"></i>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">전체 직급</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {totalPositions}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">전체 직급</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalPositions}
-              </p>
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                <i className="ri-check-line text-xl text-green-600"></i>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">활성 직급</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {activePositions}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
+                <i className="ri-team-line text-xl text-purple-600"></i>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">총 인원</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {totalEmployees}명
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
+                <i className="ri-money-dollar-circle-line text-xl text-yellow-600"></i>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">평균 기본급</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  ₩{avgSalary.toLocaleString()}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <i className="ri-check-line text-xl text-green-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">활성 직급</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {activePositions}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <i className="ri-team-line text-xl text-purple-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">총 인원</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {totalEmployees}명
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <i className="ri-money-dollar-circle-line text-xl text-yellow-600"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">평균 기본급</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ₩{avgSalary.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 직급 관리 테이블 */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">직급 목록</h2>
-            <div className="flex space-x-3">
-              <Button variant="outline">
-                <i className="ri-download-line mr-2"></i>
-                내보내기
-              </Button>
-              <Button variant="default">
-                <i className="ri-add-line mr-2"></i>새 직급 등록
-              </Button>
-            </div>
-          </div>
-
-          {/* 검색 및 필터 */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <Input
-              placeholder="직급명, 코드, 구분으로 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-              options={[
-                { value: "전체", label: "전체 구분" },
-                { value: "임원", label: "임원" },
-                { value: "관리직", label: "관리직" },
-                { value: "일반직", label: "일반직" },
-              ]}
-              value={levelFilter}
-              onChange={(e) => setLevelFilter(e.target.value)}
-            />
-            <Button variant="secondary" size="sm">
-              <i className="ri-refresh-line mr-2"></i>
-              새로고침
-            </Button>
-          </div>
-        </div>
-
-        <div className="p-6">
-          <Table
-            columns={columns}
-            data={filteredData}
-            emptyText="조건에 맞는 직급이 없습니다"
-          />
-        </div>
-      </div>
-    </div>
+      }
+      search={{
+        term: searchTerm,
+        onChange: handleSearchChange,
+        placeholder: "직급명, 코드, 구분으로 검색...",
+      }}
+      filters={createPositionFilters({
+        categoryValue: levelFilter,
+        onCategoryChange: (value) => handleFilterChange("category", value),
+      })}
+      actions={
+        <>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleSearchChange("")}
+          >
+            <i className="ri-refresh-line mr-2"></i>
+            새로고침
+          </Button>
+          <Button variant="outline">
+            <i className="ri-download-line mr-2"></i>
+            내보내기
+          </Button>
+          <Button variant="default">
+            <i className="ri-add-line mr-2"></i>새 직급 등록
+          </Button>
+        </>
+      }
+      table={{
+        columns: positionColumns,
+        data: paginatedData,
+        emptyText: "조건에 맞는 직급이 없습니다",
+      }}
+      pagination={{
+        totalElements,
+        page,
+        totalPages,
+        size,
+        onPageChange,
+        onSizeChange,
+      }}
+    />
   );
 };

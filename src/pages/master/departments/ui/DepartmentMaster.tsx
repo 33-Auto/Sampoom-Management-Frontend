@@ -1,13 +1,29 @@
-import { useState } from "react";
+import {
+  MasterListLayout,
+  useMasterListControls,
+} from "@/features/master-list";
+import { Button } from "@/shared/ui";
 
-import { Button, SearchFilterBar, Table, TableSection } from "@/shared/ui";
+import {
+  createDepartmentFilters,
+  departmentColumns,
+  type DepartmentRecord,
+} from "./masterListConfig";
 
 export const DepartmentMaster = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("전체");
+  const {
+    searchTerm,
+    handleSearchChange,
+    filters,
+    handleFilterChange,
+    pagination,
+  } = useMasterListControls([{ key: "status", initialValue: "전체" }]);
+
+  const statusFilter = filters.status ?? "전체";
+  const { page, size, onPageChange, onSizeChange } = pagination;
 
   // 부서 데이터
-  const departmentData = [
+  const departmentData: DepartmentRecord[] = [
     {
       deptCode: "DEPT001",
       deptName: "경영진",
@@ -100,12 +116,6 @@ export const DepartmentMaster = () => {
     },
   ];
 
-  const statusOptions = [
-    { value: "전체", label: "전체 상태" },
-    { value: "활성", label: "활성" },
-    { value: "비활성", label: "비활성" },
-  ];
-
   const filteredData = departmentData.filter((dept) => {
     const matchesSearch =
       dept.deptName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -116,92 +126,48 @@ export const DepartmentMaster = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const columns = [
-    { key: "deptCode", title: "부서 코드", width: "120px" },
-    { key: "deptName", title: "부서명" },
-    { key: "parentDept", title: "상위 부서", width: "150px" },
-    { key: "manager", title: "부서장", width: "120px" },
-    {
-      key: "employeeCount",
-      title: "인원수",
-      width: "80px",
-      render: (value: number) => `${value}명`,
-    },
-    {
-      key: "budget",
-      title: "예산",
-      width: "150px",
-      render: (value: number) => `₩${(value / 100000000).toFixed(1)}억`,
-    },
-    {
-      key: "status",
-      title: "상태",
-      width: "80px",
-      render: (value: string) => (
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
-            value === "활성"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {value}
-        </span>
-      ),
-    },
-    { key: "createdDate", title: "생성일", width: "120px" },
-  ];
+  const totalElements = filteredData.length;
+  const totalPages = Math.max(1, Math.ceil(totalElements / size));
+  const paginatedData = filteredData.slice(page * size, page * size + size);
+
+  const filtersConfig = createDepartmentFilters({
+    statusValue: statusFilter,
+    onStatusChange: (value) => handleFilterChange("status", value),
+  });
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* 메인 컨텐츠 */}
-      {/* 필터 및 검색 */}
-      <SearchFilterBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder="부서명, 코드, 부서장으로 검색..."
-        filters={[
-          {
-            key: "status",
-            value: statusFilter,
-            options: statusOptions,
-            onChange: setStatusFilter,
-          },
-        ]}
-        actions={
-          <>
-            <Button variant="outline">
-              <i className="ri-download-line mr-2"></i>
-              내보내기
-            </Button>
-            <Button variant="default">
-              <i className="ri-add-line mr-2"></i>새 부서 등록
-            </Button>
-          </>
-        }
-      />
-
-      {/* 부서 관리 테이블 */}
-      <TableSection
-        title="부서 목록"
-        metaRight={
-          <span className="text-sm text-gray-500">
-            총 {filteredData.length}개 부서
-          </span>
-        }
-        actionsRight={
-          <Button variant="secondary" size="sm">
-            <i className="ri-refresh-line mr-2"></i>
-            새로고침
+    <MasterListLayout
+      title="부서 목록"
+      search={{
+        term: searchTerm,
+        onChange: handleSearchChange,
+        placeholder: "부서명, 코드, 부서장으로 검색...",
+      }}
+      filters={filtersConfig}
+      actions={
+        <>
+          <Button variant="outline">
+            <i className="ri-download-line mr-2"></i>
+            내보내기
           </Button>
-        }
-      >
-        <Table
-          columns={columns}
-          data={filteredData}
-          emptyText="조건에 맞는 부서가 없습니다"
-        />
-      </TableSection>
-    </div>
+          <Button variant="default">
+            <i className="ri-add-line mr-2"></i>새 부서 등록
+          </Button>
+        </>
+      }
+      table={{
+        columns: departmentColumns,
+        data: paginatedData,
+        emptyText: "조건에 맞는 부서가 없습니다",
+      }}
+      pagination={{
+        totalElements,
+        page,
+        totalPages,
+        size,
+        onPageChange,
+        onSizeChange,
+      }}
+    />
   );
 };
