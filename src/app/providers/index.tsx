@@ -25,7 +25,8 @@ const renderApp = () => {
 // MSW(Mock Service Worker) 활성화 여부를 환경 변수로 제어합니다.
 // VITE_USE_MOCK=true로 설정하면 MSW가 활성화됩니다.
 const shouldUseMock =
-  import.meta.env.DEV && import.meta.env.VITE_USE_MOCK === "true";
+  // import.meta.env.DEV && // vercl 설정상 Vite의 빌드 시점에서 false로 치환됨 그래서 주석처리
+  import.meta.env.VITE_USE_MOCK === "true";
 
 if (shouldUseMock) {
   import("./mocks/browser")
