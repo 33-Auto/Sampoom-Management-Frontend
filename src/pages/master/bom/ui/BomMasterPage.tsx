@@ -201,7 +201,7 @@ export const BomMasterPage = () => {
   const boms = data?.data?.content ?? [];
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* BOM 관리 안내 */}
       <InfoBox type="info" title="BOM 관리 안내">
         <p className="mb-1">
@@ -330,6 +330,6 @@ export const BomMasterPage = () => {
           errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
         />
       </PaginationTableSection>
-    </>
+    </div>
   );
 };

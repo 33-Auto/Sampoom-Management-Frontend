@@ -80,8 +80,12 @@ export const ItemMaster = () => {
       key: "categoryName",
       title: "카테고리",
       width: "200px",
-      render: (value: string, row: ItemResponseDTO) =>
-        `${row.categoryName}` + `${row.groupName ? " > " + row.groupName : ""}`,
+      render: (value: string, row: ItemResponseDTO) => {
+        const categoryName = row.categoryName || "";
+        const groupName = row.groupName || "";
+        if (!categoryName && !groupName) return "-";
+        return categoryName + (groupName ? " > " + groupName : "");
+      },
     },
     {
       key: "type",
@@ -151,7 +155,7 @@ export const ItemMaster = () => {
   ];
 
   return (
-    <div>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {isError && (
         <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           데이터를 불러오는데 실패했습니다.

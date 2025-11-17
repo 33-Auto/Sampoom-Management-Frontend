@@ -330,9 +330,23 @@ export function BomProcessForm({
 
   const getComplexityLevel = () => {
     const itemCount = bomMaterials.length;
-    if (itemCount <= 5) return { level: "단순", color: "text-green-600" };
-    if (itemCount <= 15) return { level: "보통", color: "text-yellow-600" };
-    return { level: "복잡", color: "text-red-600" };
+    if (itemCount <= 5)
+      return {
+        level: "단순",
+        color: "text-green-600",
+        darkColor: "dark:text-green-400",
+      };
+    if (itemCount <= 15)
+      return {
+        level: "보통",
+        color: "text-yellow-600",
+        darkColor: "dark:text-yellow-400",
+      };
+    return {
+      level: "복잡",
+      color: "text-red-600",
+      darkColor: "dark:text-red-400",
+    };
   };
 
   const complexity = getComplexityLevel();
@@ -455,7 +469,7 @@ export function BomProcessForm({
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 구성품 목록 (원자재)
                 {bomMaterials.length > 0 && (
-                  <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-sm text-blue-800">
+                  <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-sm text-blue-800 dark:bg-blue-900/40 dark:text-blue-200">
                     {bomMaterials.length}개
                   </span>
                 )}
@@ -470,54 +484,57 @@ export function BomProcessForm({
             </div>
 
             {bomMaterials.length === 0 ? (
-              <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-                <i className="ri-inbox-line mb-4 text-4xl text-gray-400"></i>
-                <p className="mb-2 text-lg text-gray-600">
+              <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center dark:border-gray-700">
+                <i className="ri-inbox-line mb-4 text-4xl text-gray-400 dark:text-gray-500"></i>
+                <p className="mb-2 text-lg text-gray-600 dark:text-gray-400">
                   등록된 원자재가 없습니다
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-500">
                   원자재 추가 버튼을 클릭하여 구성품을 추가하세요
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-lg border border-gray-200">
+              <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                        <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">
                           원자재 코드
                         </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                        <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">
                           원자재명
                         </th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-700">
+                        <th className="px-4 py-3 text-center font-medium text-gray-700 dark:text-gray-300">
                           수량
                         </th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-700">
+                        <th className="px-4 py-3 text-center font-medium text-gray-700 dark:text-gray-300">
                           단위
                         </th>
-                        <th className="px-4 py-3 text-right font-medium text-gray-700">
+                        <th className="px-4 py-3 text-right font-medium text-gray-700 dark:text-gray-300">
                           단가
                         </th>
-                        <th className="px-4 py-3 text-right font-medium text-gray-700">
+                        <th className="px-4 py-3 text-right font-medium text-gray-700 dark:text-gray-300">
                           총액
                         </th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-700">
+                        <th className="px-4 py-3 text-center font-medium text-gray-700 dark:text-gray-300">
                           작업
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                       {bomMaterials.map((item) => (
-                        <tr key={item.materialId} className="hover:bg-gray-50">
+                        <tr
+                          key={item.materialId}
+                          className="hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                        >
                           <td className="px-4 py-3">
-                            <span className="rounded bg-gray-100 px-2 py-1 font-mono text-sm">
+                            <span className="rounded bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800 dark:text-gray-100">
                               {item.materialCode}
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            <div className="font-medium text-gray-900">
+                            <div className="font-medium text-gray-900 dark:text-gray-100">
                               {item.materialName}
                             </div>
                           </td>
@@ -531,17 +548,17 @@ export function BomProcessForm({
                                   Number(e.target.value),
                                 )
                               }
-                              className="w-20 rounded border px-2 py-1 text-center focus:ring-2 focus:ring-main-500 focus:outline-none"
+                              className="w-20 rounded border border-gray-300 bg-white px-2 py-1 text-center text-gray-900 focus:ring-2 focus:ring-main-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
                               min="1"
                             />
                           </td>
-                          <td className="px-4 py-3 text-center text-gray-600">
+                          <td className="px-4 py-3 text-center text-gray-600 dark:text-gray-400">
                             {item.unit}
                           </td>
-                          <td className="px-4 py-3 text-right text-gray-900">
+                          <td className="px-4 py-3 text-right text-gray-900 dark:text-gray-100">
                             ₩{item.standardCost.toLocaleString()}
                           </td>
-                          <td className="px-4 py-3 text-right font-semibold text-gray-900">
+                          <td className="px-4 py-3 text-right font-semibold text-gray-900 dark:text-gray-100">
                             ₩
                             {(
                               item.standardCost * item.quantity
@@ -552,7 +569,7 @@ export function BomProcessForm({
                               onClick={() =>
                                 handleRemoveMaterial(item.materialId)
                               }
-                              className="rounded p-2 text-red-600 transition-colors hover:bg-red-50 hover:text-red-800"
+                              className="rounded p-2 text-red-600 transition-colors hover:bg-red-50 hover:text-red-800 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300"
                               title="삭제"
                             >
                               <i className="ri-delete-bin-line"></i>
@@ -568,34 +585,44 @@ export function BomProcessForm({
           </div>
 
           {bomMaterials.length > 0 && (
-            <div className="rounded-lg bg-gray-50 p-6">
-              <h4 className="mb-4 text-lg font-semibold text-gray-900">
+            <div className="rounded-lg bg-gray-50 p-6 dark:bg-gray-800/50">
+              <h4 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 요약 정보
               </h4>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {bomMaterials.length}
                   </div>
-                  <div className="text-sm text-gray-600">원자재 수</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    원자재 수
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {totalQuantity}
                   </div>
-                  <div className="text-sm text-gray-600">총 수량</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    총 수량
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className={`text-2xl font-bold ${complexity.color}`}>
+                  <div
+                    className={`text-2xl font-bold ${complexity.color} ${complexity.darkColor}`}
+                  >
                     {complexity.level}
                   </div>
-                  <div className="text-sm text-gray-600">복잡도</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    복잡도
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                     ₩{totalCost.toLocaleString()}
                   </div>
-                  <div className="text-sm text-gray-600">총 원가</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    총 원가
+                  </div>
                 </div>
               </div>
             </div>
@@ -641,7 +668,7 @@ export function BomProcessForm({
         title="원자재 선택"
         widthClassName="max-w-6xl"
       >
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-lg bg-white p-4 dark:bg-bg-card-black">
           <div className="flex gap-4">
             <div className="flex-1">
               <Input
@@ -653,7 +680,6 @@ export function BomProcessForm({
             </div>
             <div className="w-48">
               <Select
-                label="카테고리"
                 value={materialCategoryId}
                 onChange={(e) => setMaterialCategoryId(e.target.value)}
                 options={categoryOptions}
@@ -664,12 +690,12 @@ export function BomProcessForm({
           <div className="max-h-[60vh] overflow-y-auto">
             <div className="grid gap-3">
               {materialsLoading ? (
-                <div className="py-12 text-center text-gray-500">
+                <div className="py-12 text-center text-gray-500 dark:text-gray-400">
                   <i className="ri-loader-4-line mb-4 animate-spin text-4xl"></i>
                   <p>원자재를 불러오는 중...</p>
                 </div>
               ) : materials.length === 0 ? (
-                <div className="py-12 text-center text-gray-500">
+                <div className="py-12 text-center text-gray-500 dark:text-gray-400">
                   <i className="ri-search-line mb-4 text-4xl"></i>
                   <p>검색 조건에 맞는 원자재가 없습니다</p>
                 </div>
@@ -677,36 +703,38 @@ export function BomProcessForm({
                 materials.map((material) => (
                   <div
                     key={material.id}
-                    className="cursor-pointer rounded-lg border p-4 transition-colors hover:bg-gray-50"
+                    className="cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-bg-card-black dark:hover:bg-gray-800"
                     onClick={() => handleAddMaterial(material)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="mb-2 flex items-center gap-3">
-                          <span className="rounded bg-gray-100 px-2 py-1 font-mono text-sm">
+                          <span className="rounded bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800 dark:text-gray-100">
                             {material.materialCode}
                           </span>
-                          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800">
+                          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800 dark:bg-blue-900/40 dark:text-blue-200">
                             원자재
                           </span>
                         </div>
-                        <h4 className="mb-1 font-semibold text-gray-900">
+                        <h4 className="mb-1 font-semibold text-gray-900 dark:text-gray-100">
                           {material.name}
                         </h4>
                         {material.materialCategoryName && (
-                          <p className="mb-2 text-sm text-gray-600">
+                          <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">
                             {material.materialCategoryName}
                           </p>
                         )}
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                           <span>단위: {material.materialUnit}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-semibold text-gray-900">
+                        <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                           ₩{(material.standardCost || 0).toLocaleString()}
                         </div>
-                        <div className="text-sm text-gray-500">단가</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          단가
+                        </div>
                       </div>
                     </div>
                   </div>

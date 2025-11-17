@@ -83,10 +83,6 @@ const SalesOrderDetail = lazy(async () => ({
 //   default: (await import("@/pages/wms/shipping")).ShippingTodos,
 // }));
 
-const ReceivingProcess = lazy(async () => ({
-  default: (await import("@/pages/wms/receiving/process")).ReceivingProcess,
-}));
-
 const ShippingProcess = lazy(async () => ({
   default: (await import("@/pages/wms/shipping/process/ui")).ShippingProcess,
 }));
@@ -452,34 +448,6 @@ const routes: RouteObject[] = [
             },
           },
           {
-            path: "receiving",
-            lazy: async () => {
-              const { ReceivingMaterials } = await import(
-                "@/pages/wms/receiving"
-              );
-              const { loader } = await import(
-                "@/pages/wms/receiving/api/loader"
-              );
-              return { Component: ReceivingMaterials, loader };
-            },
-          },
-          {
-            path: "receiving/process/:warehouseId/:processId",
-            element: <ReceivingProcess />,
-            loader: async ({ params }) => {
-              if (!params.warehouseId || !params.processId) {
-                throw new Error("warehouseId와 processId가 필요합니다.");
-              }
-              const { ReceivingProcessLoader } = await import(
-                "@/features/receiving-process/api/receiving-process.loader"
-              );
-              return ReceivingProcessLoader(
-                Number(params.warehouseId),
-                Number(params.processId),
-              );
-            },
-          },
-          {
             path: "orders",
             lazy: async () => {
               const { WmsPurchaseOrders } = await import(
@@ -633,103 +601,6 @@ const routes: RouteObject[] = [
             element: <HRMEvaluation />,
           },
         ],
-      },
-
-      // ----------------------------------------------------------------------------
-      // Warehouse Module - 창고 대시보드 (지연 로딩)
-      // ----------------------------------------------------------------------------
-      {
-        path: "/warehouse",
-        loader: requireAuth,
-        element: <Navigate to="/warehouse/orders" replace />,
-      },
-      // {
-      //   path: "/warehouse/dashboard",
-      //   lazy: async () => {
-      //     const { WarehouseDashboard: Component } = await import(
-      //       "@/pages/warehouse"
-      //     );
-      //     return { Component };
-      //   },
-      // },
-      {
-        path: "/warehouse/orders",
-        loader: requireAuth,
-        lazy: async () => {
-          const { default: Component } = await import(
-            "@/pages/warehouse-orders"
-          );
-          const { loader } = await import(
-            "@/pages/warehouse-orders/api/loader"
-          );
-          return { Component, loader };
-        },
-      },
-      // {
-      //   path: "/warehouse/inventory",
-      //   lazy: async () => {
-      //     const { WarehouseInventory: Component } = await import(
-      //       "@/pages/warehouse/inventory"
-      //     );
-      //     const { loader } = await import("@/pages/wms/inventory/api/loader");
-      //     return { Component, loader };
-      //   },
-      // },
-
-      // ----------------------------------------------------------------------------
-      // Factory Module - 생산 관리 (지연 로딩)
-      // ----------------------------------------------------------------------------
-      {
-        path: "/factory",
-        loader: requireAuth,
-        element: <Navigate to="/factory/dashboard" replace />,
-      },
-      {
-        path: "/factory/dashboard",
-        loader: requireAuth,
-        lazy: async () => {
-          const { FactoryDashboard: Component } = await import(
-            "@/pages/factory"
-          );
-          return { Component };
-        },
-      },
-      {
-        path: "/factory/orders",
-        loader: requireAuth,
-        lazy: async () => {
-          const { FactoryOrders: Component } = await import(
-            "@/pages/factory/orders"
-          );
-          return { Component };
-        },
-      },
-      // {
-      //   path: "/factory/materials",
-      //   lazy: async () => {
-      //     const { default: Component } = await import(
-      //       "@/pages/factory/materials/page"
-      //     );
-      //     return { Component };
-      //   },
-      // },
-      {
-        path: "/factory/bom",
-        loader: requireAuth,
-        lazy: async () => {
-          const { FactoryBOM: Component } = await import("@/pages/factory/bom");
-          return { Component };
-        },
-      },
-      {
-        path: "/factory/employees",
-        loader: requireAuth,
-        lazy: async () => {
-          const { FactoryEmployees: Component } = await import(
-            "@/pages/factory/employees"
-          );
-          return { Component };
-        },
       },
 
       // ----------------------------------------------------------------------------

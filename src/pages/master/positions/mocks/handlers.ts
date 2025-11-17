@@ -1,10 +1,10 @@
 import { http } from "msw";
 
-import { apiSuccess, sleep } from "@/shared/mocks";
+import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 import { mockPositionsMaster } from "./data";
 
-export const positionsMasterHandlers = [
+export const handlers = [
   http.get("/api/master/positions", async () => {
     await sleep(500);
     return apiSuccess(mockPositionsMaster);
@@ -17,12 +17,7 @@ export const positionsMasterHandlers = [
       (p) => p.positionCode === positionCode,
     );
     if (!position) {
-      return new Response(
-        JSON.stringify({ error: "직급을 찾을 수 없습니다" }),
-        {
-          status: 404,
-        },
-      );
+      return apiFail(404, "직급을 찾을 수 없습니다");
     }
     return apiSuccess(position);
   }),
@@ -52,12 +47,7 @@ export const positionsMasterHandlers = [
       );
 
       if (!position) {
-        return new Response(
-          JSON.stringify({ error: "직급을 찾을 수 없습니다" }),
-          {
-            status: 404,
-          },
-        );
+        return apiFail(404, "직급을 찾을 수 없습니다");
       }
 
       const updatedPosition = { ...position, ...updates };

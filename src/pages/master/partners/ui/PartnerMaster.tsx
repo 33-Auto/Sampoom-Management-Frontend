@@ -112,7 +112,7 @@ export const PartnerMaster = () => {
   const partners = data?.data?.content ?? [];
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}
@@ -179,6 +179,6 @@ export const PartnerMaster = () => {
           errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
         />
       </PaginationTableSection>
-    </>
+    </div>
   );
 };

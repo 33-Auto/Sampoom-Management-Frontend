@@ -170,7 +170,7 @@ export const WorkCenterMaster = () => {
   const workCenters = data?.data?.content ?? [];
 
   return (
-    <>
+    <div className="mx-auto max-w-7xl px-6 py-8">
       {/* 작업장 능력 관리 안내 */}
       <InfoBox type="info" title="작업장 능력 관리 안내">
         <div className="flex items-center justify-around">
@@ -273,6 +273,6 @@ export const WorkCenterMaster = () => {
           errorText={isError ? "데이터 로딩 중 오류가 발생했습니다." : ""}
         />
       </PaginationTableSection>
-    </>
+    </div>
   );
 };

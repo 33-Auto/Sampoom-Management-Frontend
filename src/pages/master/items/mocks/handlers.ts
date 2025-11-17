@@ -4,79 +4,77 @@ import { apiSuccess, sleep } from "@/shared/mocks";
 
 import { mockItemsMaster } from "./data";
 
-export const itemsMasterHandlers = [
-  // 전체 품목 목록 조회
-  http.get("/api/master/items", async () => {
+export const handlers = [
+  // 품목 검색 (실제로는 /api/part/items/search 사용)
+  http.get("/api/part/items/search", async ({ request }) => {
     await sleep(500);
-    return apiSuccess(mockItemsMaster);
-  }),
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page")) || 0;
+    const size = Number(url.searchParams.get("size")) || 10;
+    const keyword = url.searchParams.get("keyword") || "";
+    const type = url.searchParams.get("type");
+    const materialCategoryId = url.searchParams.get("materialCategoryId");
+    const partCategoryId = url.searchParams.get("partCategoryId");
+    const partGroupId = url.searchParams.get("partGroupId");
 
-  // 특정 품목 조회
-  http.get("/api/master/items/:itemCode", async ({ params }) => {
-    await sleep(300);
-    const itemCode = String(params.itemCode);
-    const item = mockItemsMaster.find((i) => i.itemCode === itemCode);
-    if (!item) {
-      return new Response(
-        JSON.stringify({ error: "품목을 찾을 수 없습니다" }),
-        {
-          status: 404,
-        },
-      );
-    }
-    return apiSuccess(item);
-  }),
+    let filteredItems = [...mockItemsMaster];
 
-  // 품목 등록
-  http.post("/api/master/items", async ({ request }) => {
-    await sleep(400);
-    const newItem = (await request.json()) as Partial<
-      (typeof mockItemsMaster)[0]
-    >;
-    const createdItem = {
-      ...newItem,
-      itemCode: `MAT-${String(mockItemsMaster.length + 1).padStart(3, "0")}`,
-    };
-    return apiSuccess(createdItem, 201);
-  }),
-
-  // 품목 수정
-  http.put("/api/master/items/:itemCode", async ({ params, request }) => {
-    await sleep(300);
-    const updates = (await request.json()) as Partial<
-      (typeof mockItemsMaster)[0]
-    >;
-    const itemCode = String(params.itemCode);
-    const item = mockItemsMaster.find((i) => i.itemCode === itemCode);
-
-    if (!item) {
-      return new Response(
-        JSON.stringify({ error: "품목을 찾을 수 없습니다" }),
-        {
-          status: 404,
-        },
+    // 필터링
+    if (keyword) {
+      filteredItems = filteredItems.filter(
+        (item) =>
+          item.code?.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.itemCode?.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.name?.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.itemName?.toLowerCase().includes(keyword.toLowerCase()),
       );
     }
 
-    const updatedItem = { ...item, ...updates };
-    return apiSuccess(updatedItem);
-  }),
+    if (type && type !== "ALL") {
+      filteredItems = filteredItems.filter(
+        (item) => item.type === type || item.itemType === type,
+      );
+    }
 
-  // 상태별 품목 조회
-  http.get("/api/master/items/status/:status", async ({ params }) => {
-    await sleep(400);
-    const filteredItems = mockItemsMaster.filter(
-      (item) => item.status === params.status,
-    );
-    return apiSuccess(filteredItems);
-  }),
+    // materialCategoryId 필터링 (0이 아닌 경우만)
+    if (materialCategoryId && materialCategoryId !== "0") {
+      const matCatId = Number(materialCategoryId);
+      if (!Number.isNaN(matCatId)) {
+        filteredItems = filteredItems.filter(
+          (item) => item.categoryId === matCatId,
+        );
+      }
+    }
 
-  // 타입별 품목 조회
-  http.get("/api/master/items/type/:type", async ({ params }) => {
-    await sleep(400);
-    const filteredItems = mockItemsMaster.filter(
-      (item) => item.itemType === params.type,
-    );
-    return apiSuccess(filteredItems);
+    // partCategoryId 필터링 (0이 아닌 경우만)
+    if (partCategoryId && partCategoryId !== "0") {
+      const partCatId = Number(partCategoryId);
+      if (!Number.isNaN(partCatId)) {
+        filteredItems = filteredItems.filter(
+          (item) => item.categoryId === partCatId,
+        );
+      }
+    }
+
+    // partGroupId 필터링 (0이 아닌 경우만)
+    if (partGroupId && partGroupId !== "0") {
+      const grpId = Number(partGroupId);
+      if (!Number.isNaN(grpId)) {
+        filteredItems = filteredItems.filter((item) => item.groupId === grpId);
+      }
+    }
+
+    // 페이지네이션
+    const start = page * size;
+    const end = start + size;
+    const content = filteredItems.slice(start, end);
+
+    return apiSuccess({
+      content,
+      page,
+      size,
+      totalPages: Math.ceil(filteredItems.length / size),
+      totalElements: filteredItems.length,
+    });
   }),
 ];

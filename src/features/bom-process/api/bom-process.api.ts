@@ -3,23 +3,34 @@ import type { Schemas } from "@/shared/model";
 
 // BOM 상세 조회 Query
 export const useBomDetailQuery = (
-  bomId: number,
+  bomId?: number,
   options?: { enabled?: boolean },
-) =>
-  queryClient.useQuery(
+) => {
+  const hasValidBomId = typeof bomId === "number" && !Number.isNaN(bomId);
+
+  return queryClient.useQuery(
     "get",
     "/api/part/boms/{bomId}",
-    {
-      params: {
-        path: {
-          bomId,
+    hasValidBomId
+      ? {
+          params: {
+            path: {
+              bomId,
+            },
+          },
+        }
+      : {
+          params: {
+            path: {
+              bomId: 0,
+            },
+          },
         },
-      },
-    },
     {
-      enabled: options?.enabled !== false,
+      enabled: hasValidBomId && (options?.enabled ?? true),
     },
   );
+};
 
 // BOM 생성 Mutation
 export const useCreateBomProcessMutation = () =>
