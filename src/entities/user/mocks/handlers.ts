@@ -1,4 +1,4 @@
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 import type {
@@ -40,7 +40,21 @@ export const handlers = [
       position: user.position!,
     };
 
-    return apiSuccess(responseData);
+    // 로그인시에 쿠키를 설정하기 위해 따로 응답을 보내줌
+    return HttpResponse.json(
+      {
+        status: 200,
+        success: true,
+        data: responseData,
+        message: "Login successful",
+      },
+      {
+        headers: {
+          "set-cookie": `ACCESS_TOKEN=${Date.now()}, REFRESH_TOKEN=${Date.now()}`,
+        },
+        status: 200,
+      },
+    );
   }),
 
   // 회원가입 - 두 가지 엔드포인트 지원
@@ -122,18 +136,14 @@ export const handlers = [
     // }
 
     // 새로운 토큰 발급 (실제로는 JWT 생성이지만 MSW에서는 더미 토큰 반환)
+
+    const accessToken = Date.now().toString();
+    const refreshToken = Date.now().toString();
     const refreshResponse: Schemas["RefreshResponse"] = {
-      accessToken: `mock_access_token_${Date.now()}`,
-      refreshToken: `mock_refresh_token_${Date.now()}`,
+      accessToken,
+      refreshToken,
       expiresIn: 3600, // 1시간
     };
-
-    // 쿠키 설정을 위한 응답 생성
-    const response = apiSuccess(
-      refreshResponse,
-      200,
-      "Token refreshed successfully",
-    );
 
     // 쿠키에 새 토큰 설정 (실제 서버와 동일하게)
     // response.headers.set(
@@ -141,7 +151,20 @@ export const handlers = [
     //   `REFRESH_TOKEN=${refreshResponse.refreshToken}; HttpOnly; Secure; SameSite=Strict; Path=/`
     // );
 
-    return response;
+    return HttpResponse.json(
+      {
+        status: 200,
+        success: true,
+        data: refreshResponse,
+        message: "Refresh successful",
+      },
+      {
+        headers: {
+          "set-cookie": `ACCESS_TOKEN=${accessToken}, REFRESH_TOKEN=${refreshToken}`,
+        },
+        status: 200,
+      },
+    );
   }),
 
   // 로그아웃
