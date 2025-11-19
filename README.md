@@ -2,6 +2,26 @@
 
 이 프로젝트는 Sampoom Management 시스템을 위한 프론트엔드 애플리케이션입니다. Vite, React, TypeScript를 기반으로 구축되었습니다.
 
+## 📸 스크린샷 (Screenshots)
+
+### 1. 로그인 화면 (Login Page)
+
+사용자는 이메일과 비밀번호를 입력하여 시스템에 접속할 수 있습니다.
+
+![Login Page](public/screenshots/login.png)
+
+### 2. 대시보드 (Dashboard)
+
+로그인 후 사용자는 자신의 워크스페이스에 맞는 대시보드를 확인할 수 있습니다.
+
+![Dashboard](public/screenshots/dashboard.png)
+
+### 3. 모듈 화면 (Module Page - 예: 생산 관리)
+
+각 모듈별로 특화된 기능을 제공하며, 사이드바를 통해 쉽게 이동할 수 있습니다.
+
+![Production Module](public/screenshots/production.png)
+
 ## 💻 프로젝트 시작하기
 
 ### 1. 사전 요구 사항
