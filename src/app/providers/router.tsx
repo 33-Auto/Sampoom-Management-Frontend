@@ -617,6 +617,11 @@ const routes: RouteObject[] = [
 // ============================================================================
 // Create Router - 라우터 생성 및 내보내기
 // ============================================================================
-const router = createBrowserRouter(routes);
+// MSW가 준비되기 전에 router가 생성될 수 있으므로,
+// router를 함수로 만들어서 필요할 때 만들도록 한다
+const createRouter = () => createBrowserRouter(routes);
 
+// 기본 export는 함수로 변경 (하위 호환성을 위해 router도 export)
+const router = createRouter();
 export default router;
+export { createRouter };

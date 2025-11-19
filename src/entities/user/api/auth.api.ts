@@ -24,18 +24,25 @@ const mapProfileToUserResponse = (
 });
 
 export const getMyProfile = async (): Promise<UserResponse> => {
-  const { data, error } = await fetchClient.GET("/api/user/profile");
+  try {
+    const { data, error } = await fetchClient.GET("/api/user/profile");
 
-  if (error) {
-    throw error;
+    if (error) {
+      throw error;
+    }
+
+    const response = data as ApiResponseUserLoginResponse | undefined;
+    if (!response?.success || !response.data) {
+      throw new Error(
+        response?.message ?? "프로필 정보를 불러오지 못했습니다.",
+      );
+    }
+
+    return mapProfileToUserResponse(response.data);
+  } catch (err) {
+    console.error("getMyProfile 에러:", err);
+    throw err;
   }
-
-  const response = data as ApiResponseUserLoginResponse | undefined;
-  if (!response?.success || !response.data) {
-    throw new Error(response?.message ?? "프로필 정보를 불러오지 못했습니다.");
-  }
-
-  return mapProfileToUserResponse(response.data);
 };
 
 export const useProfileQuery = () =>
