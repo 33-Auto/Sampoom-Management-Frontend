@@ -107,6 +107,8 @@
 
 ![FSD Dependency Graph](public/fsd-dependencies.svg)
 
+[🔍 새 탭에서 원본 그래프 보기](public/fsd-dependencies.svg)
+
 ### 디렉토리 구조
 
 ```
