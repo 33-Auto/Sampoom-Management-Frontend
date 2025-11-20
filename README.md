@@ -101,6 +101,12 @@
 
 이 프로젝트는 **FSD (Feature-Sliced Design)** 아키텍처를 기반으로 구성되어 있습니다. FSD는 확장 가능하고 유지보수가 용이한 프론트엔드 애플리케이션을 위한 방법론입니다.
 
+### 의존성 그래프 (Dependency Graph)
+
+프로젝트의 상위 레벨 의존성 구조는 다음과 같습니다.
+
+![FSD Dependency Graph](public/fsd-dependencies.svg)
+
 ### 디렉토리 구조
 
 ```
