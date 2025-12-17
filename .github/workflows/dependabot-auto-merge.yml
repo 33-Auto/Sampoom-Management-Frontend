@@ -11,8 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      GH_TOKEN: ${{ secrets.DEPEND_MERGE }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,4 +19,4 @@ jobs:
       - name: Merge PR
         run: gh pr merge "${{ github.head_ref }}" --merge --auto
         env:
-          GH_TOKEN: ${{ secrets.DEPEND_MERGE }}
+          GH_TOKEN: ${{ github.token }}
