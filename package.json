@@ -79,7 +79,7 @@
     "all-contributors-cli": "^6.26.1",
     "concurrently": "^9.2.1",
     "cross-fetch": "^4.1.0",
-    "dependency-cruiser": "^17.3.3",
+    "dependency-cruiser": "^17.3.4",
     "eslint": "^9.39.2",
     "eslint-config-ts-prefixer": "^4.1.0",
     "eslint-import-resolver-typescript": "^4.4.4",
