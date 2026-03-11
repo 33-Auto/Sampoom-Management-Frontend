@@ -14,6 +14,10 @@ interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   loading?: boolean;
   emptyText?: string;
   errorText?: string;
+  selectable?: boolean;
+  rowKey?: string;
+  selectedRowKeys?: (string | number)[];
+  onSelectionChange?: (selectedKeys: (string | number)[]) => void;
 }
 
 // 현재 Table은 Promise 데이터를 지원한다.
@@ -26,6 +30,10 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
     loading = false,
     emptyText = "데이터가 없습니다.",
     errorText = "",
+    selectable = false,
+    rowKey = "id",
+    selectedRowKeys = [],
+    onSelectionChange,
     className,
     ...rest
   } = props;
@@ -55,12 +63,64 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
   const finalData = data || resolvedData;
   const isLoading = loading || isPromiseLoading;
 
+  const handleSelectAll = (checked: boolean) => {
+    if (!onSelectionChange) return;
+    if (checked) {
+      const allKeys = finalData.map((record) => record[rowKey]);
+      onSelectionChange(allKeys);
+    } else {
+      onSelectionChange([]);
+    }
+  };
+
+  const handleSelectRow = (key: string | number, checked: boolean) => {
+    if (!onSelectionChange) return;
+    if (checked) {
+      onSelectionChange([...selectedRowKeys, key]);
+    } else {
+      onSelectionChange(
+        selectedRowKeys.filter((k) => String(k) !== String(key)),
+      );
+    }
+  };
+
+  const isAllSelected =
+    finalData.length > 0 &&
+    finalData.every((record) =>
+      selectedRowKeys.some(
+        (selectedKey) => String(selectedKey) === String(record[rowKey]),
+      ),
+    );
+
+  const someSelected =
+    finalData.length > 0 &&
+    finalData.some((record) =>
+      selectedRowKeys.some(
+        (selectedKey) => String(selectedKey) === String(record[rowKey]),
+      ),
+    );
+
+  const isIndeterminate = someSelected && !isAllSelected;
+
   return (
     <div className="overflow-hidden rounded-lg border border-grey-200 bg-white dark:border-gray-700 dark:bg-bg-card-black">
       <div className="overflow-x-auto">
         <table ref={ref} className={`w-full ${className || ""}`} {...rest}>
           <thead className="bg-grey-50">
             <tr>
+              {selectable && (
+                <th className="w-10 px-6 py-3 text-left dark:bg-grey-800">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-grey-300 text-main-600 focus:ring-main-500"
+                    checked={isAllSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = isIndeterminate;
+                    }}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                  />
+                </th>
+              )}
               {columns.map((column) => (
                 <th
                   key={column.key}
@@ -76,7 +136,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
             {isLoading ? (
               <tr>
                 <td
-                  colSpan={columns.length}
+                  colSpan={columns.length + (selectable ? 1 : 0)}
                   className="px-6 py-8 text-center text-grey-500 dark:text-white"
                 >
                   <div className="flex items-center justify-center space-x-2">
@@ -90,30 +150,57 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
             ) : finalData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={columns.length}
+                  colSpan={columns.length + (selectable ? 1 : 0)}
                   className="px-6 py-8 text-center text-grey-500 dark:text-white"
                 >
                   {errorText.length > 0 ? errorText : emptyText}
                 </td>
               </tr>
             ) : (
-              finalData.map((record, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-grey-50 transition-colors dark:hover:bg-grey-800"
-                >
-                  {columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className="px-6 py-4 text-sm whitespace-nowrap text-grey-900 dark:text-grey-100"
-                    >
-                      {column.render
-                        ? column.render(record[column.key], record)
-                        : record[column.key]}
-                    </td>
-                  ))}
-                </tr>
-              ))
+              finalData.map((record, index) => {
+                const key = record[rowKey];
+                const isSelected = selectedRowKeys.some(
+                  (selectedKey) => String(selectedKey) === String(key),
+                );
+
+                return (
+                  <tr
+                    key={key ?? index}
+                    className={`cursor-pointer transition-colors ${
+                      isSelected
+                        ? "bg-main-50 dark:bg-main-900/20"
+                        : "hover:bg-grey-50 dark:hover:bg-grey-800"
+                    }`}
+                    onClick={() => {
+                      if (selectable) handleSelectRow(key, !isSelected);
+                    }}
+                  >
+                    {selectable && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-grey-300 text-main-600 focus:ring-main-500"
+                          checked={!!isSelected}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleSelectRow(key, e.target.checked);
+                          }}
+                        />
+                      </td>
+                    )}
+                    {columns.map((column) => (
+                      <td
+                        key={column.key}
+                        className="px-6 py-4 text-sm whitespace-nowrap text-grey-900 dark:text-grey-100"
+                      >
+                        {column.render
+                          ? column.render(record[column.key], record)
+                          : record[column.key]}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
