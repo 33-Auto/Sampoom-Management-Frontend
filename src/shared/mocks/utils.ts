@@ -27,5 +27,8 @@ export function apiFail(status = 500, message = "Internal Server Error") {
   );
 }
 
-export const sleep = async (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = async (ms: number): Promise<void> => {
+  // 성능 측정 모드에서는 딜레이 없이 바로 반환
+  if (import.meta.env.VITE_PERF_MODE === "true") return;
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
