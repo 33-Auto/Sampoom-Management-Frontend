@@ -125,12 +125,6 @@ export const ProductionPlanning = () => {
 
   const isMrpRunning = executeBatchMrpMutation.isPending;
 
-  const allVisibleSelected =
-    normalizedPlans.length > 0 &&
-    normalizedPlans.every((plan) =>
-      selectedPlanIds.includes(String(plan.orderId)),
-    );
-
   const statusOptions = [
     { value: "", label: "전체 상태" },
     ...Object.entries(PRODUCTION_PLAN_STATUS_LABELS)
@@ -221,33 +215,6 @@ export const ProductionPlanning = () => {
     setPriorityFilter("");
     onPageChange(0);
     void refetch();
-  };
-
-  const togglePlanSelection = (key: string, checked: boolean) => {
-    setSelectedPlanIds((prev) => {
-      if (checked) {
-        return prev.includes(key) ? prev : [...prev, key];
-      }
-      return prev.filter((id) => id !== key);
-    });
-  };
-
-  const handleToggleAll = () => {
-    if (allVisibleSelected) {
-      setSelectedPlanIds((prev) =>
-        prev.filter(
-          (id) => !normalizedPlans.some((plan) => String(plan.orderId) === id),
-        ),
-      );
-    } else {
-      setSelectedPlanIds((prev) => {
-        const next = new Set(prev);
-        normalizedPlans.forEach((plan) => {
-          next.add(String(plan.orderId));
-        });
-        return Array.from(next);
-      });
-    }
   };
 
   const handleRunMRP = () => {
@@ -369,21 +336,6 @@ export const ProductionPlanning = () => {
   const keys = createKeyRecord<ProductionPlanResponseDTO>(normalizedPlans);
 
   const columns = [
-    {
-      key: "select",
-      title: "선택",
-      width: "70px",
-      render: (_value: unknown, row: ProductionPlanResponseDTO) => (
-        <input
-          type="checkbox"
-          className="h-4 w-4"
-          checked={selectedPlanIds.includes(String(row.orderId))}
-          onChange={(event) =>
-            togglePlanSelection(String(row.orderId), event.target.checked)
-          }
-        />
-      ),
-    },
     {
       key: keys.orderCode ?? "orderCode",
       title: "계획 코드",
@@ -540,14 +492,7 @@ export const ProductionPlanning = () => {
                 <i className="ri-play-line mr-2"></i>
                 MRP 실행
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleToggleAll}
-                disabled={normalizedPlans.length === 0}
-              >
-                {allVisibleSelected ? "선택 해제" : "전체 선택"}
-              </Button>
+
               <Button
                 variant="secondary"
                 size="sm"
@@ -574,6 +519,10 @@ export const ProductionPlanning = () => {
           }}
         >
           <Table
+            selectable
+            rowKey="orderId"
+            selectedRowKeys={selectedPlanIds}
+            onSelectionChange={(keys) => setSelectedPlanIds(keys.map(String))}
             columns={columns}
             data={normalizedPlans}
             loading={isLoading && data === undefined}
