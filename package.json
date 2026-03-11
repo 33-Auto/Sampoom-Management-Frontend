@@ -15,7 +15,7 @@
     "start": "vite",
     "dev": "vite --mode dev",
     "build": "vite build",
-    "build:mock": "vite build --mode dev",
+    "build:mock": "vite build --mode mock",
     "preview": "vite preview",
     "preview:mock": "vite preview",
     "test": "vitest run",
