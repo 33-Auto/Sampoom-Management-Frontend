@@ -1,4 +1,4 @@
-import { queryClient as tanstackQueryClient } from "@/shared/api/query";
+import { queryClient as tanstackQueryClient } from "@/shared/api";
 
 import { itemsMasterQueryOptions } from "./items.api";
 

@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import type { PartnerResponseDTO } from "@/entities/partner";
 import {
   MasterListLayout,
   useMasterListControls,
 } from "@/features/master-list";
 import { usePartnersQuery } from "@/pages/master/partners/api";
-import type { PartnerResponseDTO } from "@/pages/master/partners/model";
 import {
   createPartnerColumns,
   createPartnerFilters,

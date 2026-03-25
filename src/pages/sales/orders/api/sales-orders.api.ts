@@ -3,7 +3,7 @@ import type {
   SalesOrderListParams,
   SalesOrderListResponse,
 } from "@/pages/sales/orders/model";
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_SIZE = 20;
@@ -15,12 +15,11 @@ type SalesOrderListQueryParams = Partial<SalesOrderListParams> & {
 export const getSalesOrdersQueryOptions = (
   params?: SalesOrderListQueryParams,
 ) => {
-  const warehouseId =
-    typeof params?.warehouseId === "number" ? params.warehouseId : Number.NaN;
-
   return {
     params: {
-      path: { warehouseId },
+      path: {
+        warehouseId: params?.warehouseId as number,
+      },
       query: {
         page: params?.page ?? DEFAULT_PAGE,
         size: params?.size ?? DEFAULT_SIZE,
@@ -35,40 +34,50 @@ export const getSalesOrdersQueryOptions = (
 export const salesOrdersListQueryOptions = (
   params?: SalesOrderListQueryParams,
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/order/warehouse/{warehouseId}",
     getSalesOrdersQueryOptions(params),
   );
 
 export const useSalesOrdersQuery = (params?: SalesOrderListQueryParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/order/warehouse/{warehouseId}",
     getSalesOrdersQueryOptions(params),
     {
-      placeholderData: (previousData) => previousData,
+      placeholderData: (previousData: any) => previousData,
       enabled: typeof params?.warehouseId === "number",
     },
   );
 
 export const salesOrderDetailQueryOptions = (orderId: number) =>
-  queryClient.queryOptions("get", "/api/order/{orderId}", {
+  api.queryOptions("get", "/api/order/{orderId}", {
     params: {
-      path: { orderId },
+      path: {
+        orderId,
+      },
     },
   });
 
 export const useSalesOrderDetailQuery = (orderId?: number) =>
-  queryClient.useQuery("get", "/api/order/{orderId}", {
-    params: {
-      path: { orderId: orderId as number },
+  api.useQuery(
+    "get",
+    "/api/order/{orderId}",
+    {
+      params: {
+        path: {
+          orderId: (orderId as number) ?? 0,
+        },
+      },
     },
-    enabled: typeof orderId === "number" && !Number.isNaN(orderId),
-  });
+    {
+      enabled: typeof orderId === "number",
+    },
+  );
 
 export const useCancelOrderMutation = () =>
-  queryClient.useMutation("patch", "/api/order/cancel/{orderId}");
+  api.useMutation("patch", "/api/order/cancel/{orderId}");
 
 export type SalesOrderListData = SalesOrderListResponse["data"];
 

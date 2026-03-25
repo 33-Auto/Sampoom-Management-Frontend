@@ -5,36 +5,31 @@ import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import {
   STATUS_ORDER,
   normalizePurchaseOrderStatus,
-} from "@/entities/purchase-order/lib/status";
-import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  type PurchaseOrderListQueryParams,
-  usePurchaseOrderQuery,
-} from "@/pages/wms/purchase-orders/api";
-import type {
-  POResDto,
-  PurchaseOrderListParams,
-  PurchaseOrderStatusKey,
-} from "@/pages/wms/purchase-orders/model";
-import {
+  type POResDto,
+  type PurchaseOrderStatusKey,
   PURCHASE_ORDER_STATUS_BADGE_VARIANTS,
   PURCHASE_ORDER_STATUS_LABELS,
-} from "@/pages/wms/purchase-orders/model";
-import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
+} from "@/entities/purchase-order";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
+import {
+  type PurchaseOrderListQueryParams,
+  usePurchaseOrdersQuery,
+} from "@/pages/wms/purchase-orders/api";
+import { usePaginationTable, formatCurrency, formatNumber } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, Table, InfoBox, SearchFilterBar } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Table,
+  InfoBox,
+  SearchFilterBar,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 export function WmsPurchaseOrders() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatusKey | "">(
-    "",
-  );
+  const [statusFilter, setStatusFilter] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
 
@@ -53,35 +48,30 @@ export function WmsPurchaseOrders() {
     ? Number(selectedWarehouseId)
     : undefined;
 
-  const queryParams = useMemo<PurchaseOrderListQueryParams | undefined>(() => {
-    if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
-      return undefined;
-    }
-    return {
-      warehouseId,
+  const queryParams = useMemo<PurchaseOrderListQueryParams>(
+    () => ({
+      warehouseId: warehouseId ?? 0, // Provide a default or handle undefined appropriately if warehouseId can be undefined
       keyword: searchTerm === "" ? undefined : searchTerm,
       categoryId:
         selectedCategory === "" ? undefined : Number(selectedCategory),
       groupId: selectedGroup === "" ? undefined : Number(selectedGroup),
-      status:
-        statusFilter === ""
-          ? undefined
-          : (statusFilter as PurchaseOrderListParams["status"]),
+      status: (statusFilter === "" ? undefined : statusFilter) as any,
       page,
       size,
-    };
-  }, [
-    warehouseId,
-    searchTerm,
-    selectedCategory,
-    selectedGroup,
-    statusFilter,
-    page,
-    size,
-  ]);
+    }),
+    [
+      warehouseId,
+      searchTerm,
+      selectedCategory,
+      selectedGroup,
+      statusFilter,
+      page,
+      size,
+    ],
+  );
 
   const { data, isLoading, isError, refetch } =
-    usePurchaseOrderQuery(queryParams);
+    usePurchaseOrdersQuery(queryParams);
 
   useEffect(() => {
     if (

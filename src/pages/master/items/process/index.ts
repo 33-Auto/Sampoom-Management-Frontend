@@ -1,1 +1,1 @@
-export { ItemProcess } from "./ui/ItemProcess";
+export { ItemProcess } from "./components/ItemProcess";

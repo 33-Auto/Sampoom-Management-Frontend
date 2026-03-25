@@ -2,15 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import type { ProcessResponseDTO, RoutingStatus } from "@/entities/routing";
 import {
   MasterListLayout,
   useMasterListControls,
 } from "@/features/master-list";
 import { useRoutingsQuery } from "@/pages/master/routings/api";
-import type {
-  ProcessResponseDTO,
-  RoutingStatus,
-} from "@/pages/master/routings/model";
 import { createKeyRecord } from "@/shared/lib/utils";
 import { Button, InfoBox } from "@/shared/ui";
 

@@ -1,6 +1,7 @@
+import type { ProcessResponseDTO, RoutingStatus } from "@/entities/routing";
 import type { MasterListFilter } from "@/features/master-list";
 import { Badge, Button } from "@/shared/ui";
-import type { Column } from "@/shared/ui/Table/Table";
+import type { Column } from "@/shared/ui";
 
 import {
   buildRoutingStatusOptions,
@@ -10,7 +11,6 @@ import {
   formatRoutingStepCount,
   getRoutingStatusVariant,
 } from "../lib/formatters";
-import type { ProcessResponseDTO, RoutingStatus } from "../model";
 
 interface RoutingColumnsParams {
   keys: Record<keyof ProcessResponseDTO, keyof ProcessResponseDTO>;
@@ -64,34 +64,34 @@ export const createRoutingColumns = ({
   onInspect,
   onEdit,
 }: RoutingColumnsParams): Column[] => [
-  { key: keys.code, title: "공정 코드", width: "120px" },
-  { key: keys.partCode, title: "품목 코드", width: "120px" },
-  { key: keys.partName, title: "품목명" },
+  { key: keys.code as any, title: "공정 코드", width: "120px" },
+  { key: keys.partCode as any, title: "품목 코드", width: "120px" },
+  { key: keys.partName as any, title: "품목명" },
   {
-    key: keys.categoryName,
+    key: keys.categoryName as any,
     title: "카테고리",
     width: "160px",
-    render: (_value: string, row: ProcessResponseDTO) =>
+    render: (_value: any, row: ProcessResponseDTO) =>
       formatRoutingCategoryPath(row.categoryName, row.groupName),
   },
-  { key: keys.version, title: "버전", width: "80px" },
+  { key: keys.version as any, title: "버전", width: "80px" },
   {
-    key: keys.totalStepMinutes,
+    key: keys.totalStepMinutes as any,
     title: "총 리드타임",
     width: "120px",
-    render: (value: number) => formatRoutingMinutes(value),
+    render: (value: any) => formatRoutingMinutes(value),
   },
   {
-    key: keys.stepCount,
+    key: keys.stepCount as any,
     title: "공정 수",
     width: "80px",
-    render: (value: number) => formatRoutingStepCount(value),
+    render: (value: any) => formatRoutingStepCount(value),
   },
   {
-    key: keys.status,
+    key: keys.status as any,
     title: "상태",
     width: "80px",
-    render: (value: string) => {
+    render: (value: any) => {
       const typedValue = value as RoutingStatus | null | undefined;
       return (
         <Badge variant={getRoutingStatusVariant(typedValue)}>

@@ -5,9 +5,9 @@ import {
   useLoaderData,
 } from "react-router-dom";
 
-import { useBranchId } from "@/features/branch-select/model/branch-selection.store";
+import { useBranchId } from "@/features/branch-select";
 import { StockingProcessForm } from "@/features/stocking-process";
-import type { StockingProcessLoaderResult } from "@/features/stocking-process/api/stocking-process.loader";
+import type { StockingProcessLoaderResult } from "@/features/stocking-process";
 import { Button } from "@/shared/ui";
 
 type LocationState = {

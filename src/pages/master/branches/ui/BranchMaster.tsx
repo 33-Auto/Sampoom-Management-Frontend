@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import type { BranchResponseDTO } from "@/entities/branch";
 import {
   MasterListLayout,
   useMasterListControls,
 } from "@/features/master-list";
 import { useBranchesQuery } from "@/pages/master/branches/api";
-import type { BranchResponseDTO } from "@/pages/master/branches/model";
 import {
   createBranchColumns,
   createBranchFilters,

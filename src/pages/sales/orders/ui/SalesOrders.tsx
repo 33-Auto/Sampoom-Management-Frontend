@@ -2,10 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import { useAgencyBranchOptions } from "@/entities/agency";
-import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
 import { Button, Table, SearchFilterBar, TableSection } from "@/shared/ui";
 
 import { useSalesOrdersQuery, type SalesOrderListQueryParams } from "../api";

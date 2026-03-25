@@ -1,2 +1,2 @@
-export { EmployeeProfileProcess } from "./ui/EmployeeProfileProcess";
-export { EmployeeStatusProcess } from "./ui/EmployeeStatusProcess";
+export { EmployeeProfileProcess } from "./components/EmployeeProfileProcess";
+export { EmployeeStatusProcess } from "./components/EmployeeStatusProcess";

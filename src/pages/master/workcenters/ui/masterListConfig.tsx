@@ -1,6 +1,11 @@
+import type {
+  WorkCenterResponseDTO,
+  WorkCenterStatus,
+  WorkCenterType,
+} from "@/entities/workcenter";
 import type { MasterListFilter } from "@/features/master-list";
 import { Badge, Button, InfoBox } from "@/shared/ui";
-import type { Column } from "@/shared/ui/Table/Table";
+import type { Column } from "@/shared/ui";
 
 import {
   buildWorkCenterStatusOptions,
@@ -13,11 +18,6 @@ import {
   getWorkCenterStatusVariant,
   getWorkCenterTypeBadgeVariant,
 } from "../lib/formatters";
-import type {
-  WorkCenterResponseDTO,
-  WorkCenterStatus,
-  WorkCenterType,
-} from "../model";
 
 interface WorkCenterColumnsParams {
   keys: Record<keyof WorkCenterResponseDTO, keyof WorkCenterResponseDTO>;
@@ -55,10 +55,10 @@ export const createWorkCenterColumns = ({
   keys,
   onEdit,
 }: WorkCenterColumnsParams): Column[] => [
-  { key: keys.code, title: "작업장 코드", width: "120px" },
-  { key: keys.name, title: "작업장명" },
+  { key: keys.code as any, title: "작업장 코드", width: "120px" },
+  { key: keys.name as any, title: "작업장명" },
   {
-    key: keys.type,
+    key: keys.type as any,
     title: "유형",
     width: "120px",
     render: (value: string) => {
@@ -71,25 +71,25 @@ export const createWorkCenterColumns = ({
     },
   },
   {
-    key: keys.dailyOperatingHours,
+    key: keys.dailyOperatingHours as any,
     title: "일일 가용시간",
     width: "120px",
-    render: (value: number) => formatOperatingHours(value),
+    render: (value: any) => formatOperatingHours(value),
   },
   {
-    key: keys.efficiency,
+    key: keys.efficiency as any,
     title: "효율",
     width: "80px",
-    render: (value: number) => formatEfficiency(value),
+    render: (value: any) => formatEfficiency(value),
   },
   {
-    key: keys.costPerHour,
+    key: keys.costPerHour as any,
     title: "시간당 비용",
     width: "120px",
-    render: (value: number) => formatCostPerHour(value),
+    render: (value: any) => formatCostPerHour(value),
   },
   {
-    key: keys.status,
+    key: keys.status as any,
     title: "상태",
     width: "80px",
     render: (value: string) => {

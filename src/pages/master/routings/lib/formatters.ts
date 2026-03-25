@@ -1,5 +1,5 @@
-import type { RoutingStatus } from "@/pages/master/routings/model";
-import { ROUTING_STATUS } from "@/pages/master/routings/model";
+import type { RoutingStatus } from "@/entities/routing";
+import { ROUTING_STATUS } from "@/entities/routing";
 
 export const formatRoutingStatus = (value?: RoutingStatus | null) => {
   if (!value) return "-";

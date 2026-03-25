@@ -1,5 +1,5 @@
 import type { PurchaseRequestListParams } from "@/pages/purchasing/requests/model";
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 
 // 공통 옵션 생성 함수
 const getPurchaseRequestQueryOptions = (
@@ -16,23 +16,21 @@ const getPurchaseRequestQueryOptions = (
   },
 });
 
-// queryOptions를 반환하는 함수 (loader 등에서 사용)
 export const purchaseRequestListQueryOptions = (
   params?: PurchaseRequestListParams,
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/purchase/",
     getPurchaseRequestQueryOptions(params),
   );
 
-// useQuery hook (컴포넌트에서 사용)
 export const usePurchaseRequestQuery = (params?: PurchaseRequestListParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/purchase/",
     getPurchaseRequestQueryOptions(params),
     {
-      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+      placeholderData: (previousData: any) => previousData,
     },
   );

@@ -1,5 +1,5 @@
-import type { PurchaseOrderListParams } from "@/pages/wms/purchase-orders/model";
-import { queryClient } from "@/shared/api";
+import type { PurchaseOrderListParams } from "@/entities/purchase-order";
+import { api } from "@/shared/api";
 
 type PurchaseOrderListQueryParams = Partial<PurchaseOrderListParams> & {
   warehouseId?: number;
@@ -30,23 +30,23 @@ const getPurchaseOrderQueryOptions = (
 };
 
 // queryOptions를 반환하는 함수 (loader 등에서 사용)
-export const purchaseOrderListQueryOptions = (
+export const purchaseOrdersListQueryOptions = (
   params?: PurchaseOrderListQueryParams,
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/warehouse/po",
     getPurchaseOrderQueryOptions(params),
   );
 
 // useQuery hook (컴포넌트에서 사용)
-export const usePurchaseOrderQuery = (params?: PurchaseOrderListQueryParams) =>
-  queryClient.useQuery(
+export const usePurchaseOrdersQuery = (params?: PurchaseOrderListQueryParams) =>
+  api.useQuery(
     "get",
     "/api/warehouse/po",
     getPurchaseOrderQueryOptions(params),
     {
-      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+      placeholderData: (previousData: any) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
       enabled: typeof params?.warehouseId === "number",
     },
   );

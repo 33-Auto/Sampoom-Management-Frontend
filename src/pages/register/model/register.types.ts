@@ -1,4 +1,4 @@
-import { WORKSPACE_OPTIONS } from "@/shared/constants/workspace";
+import { WORKSPACE_OPTIONS } from "@/shared/constants";
 import type { Schemas } from "@/shared/model";
 
 export type SignupRequest = Schemas["SignupRequest"];

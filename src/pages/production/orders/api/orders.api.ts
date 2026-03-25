@@ -1,6 +1,7 @@
-import type { PartOrderListParams } from "@/pages/production/orders/model";
-import { DEFAULT_PART_ORDER_STATUSES } from "@/pages/production/orders/model";
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
+
+import type { PartOrderListParams } from "../model/orders.model";
+import { DEFAULT_PART_ORDER_STATUSES } from "../model/orders.model";
 
 export type PartOrdersQueryParams = PartOrderListParams & {
   factoryId?: number;
@@ -42,19 +43,19 @@ const getPartOrdersQueryOptions = (params?: PartOrdersQueryParams) => ({
 });
 
 export const partOrdersListQueryOptions = (params?: PartOrdersQueryParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/factory/{factoryId}/part/orders",
     getPartOrdersQueryOptions(params),
   );
 
 export const usePartOrdersQuery = (params?: PartOrdersQueryParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/factory/{factoryId}/part/orders",
     getPartOrdersQueryOptions(params),
     {
-      placeholderData: (previousData) => previousData,
+      placeholderData: (previousData: any) => previousData,
       enabled:
         typeof params?.factoryId === "number" &&
         Number.isFinite(params.factoryId),

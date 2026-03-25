@@ -1,5 +1,5 @@
-import type { BranchListParams } from "@/pages/master/branches/model";
-import { queryClient } from "@/shared/api";
+import type { BranchListParams } from "@/entities/branch";
+import { api } from "@/shared/api";
 
 // 공통 옵션 생성 함수
 const getBranchesQueryOptions = (params?: BranchListParams) => ({
@@ -16,7 +16,7 @@ const getBranchesQueryOptions = (params?: BranchListParams) => ({
 
 // queryOptions를 반환하는 함수 (loader 등에서 사용)
 export const branchesListQueryOptions = (params?: BranchListParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/site/branches/search",
     getBranchesQueryOptions(params),
@@ -24,7 +24,7 @@ export const branchesListQueryOptions = (params?: BranchListParams) =>
 
 // useQuery hook (컴포넌트에서 사용)
 export const useBranchesQuery = (params?: BranchListParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/site/branches/search",
     getBranchesQueryOptions(params),

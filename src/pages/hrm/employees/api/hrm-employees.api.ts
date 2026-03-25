@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 import type { Operations } from "@/shared/model";
 
 // 공통 옵션 생성 함수
@@ -20,7 +20,7 @@ const getUserInfoQueryOptions = (
 export const userInfoQueryOptions = (
   params?: Operations["getUsersInfo"]["parameters"]["query"],
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/user/info" as any,
     getUserInfoQueryOptions(params),
@@ -30,7 +30,7 @@ export const userInfoQueryOptions = (
 export const useUserInfoQuery = (
   params?: Operations["getUsersInfo"]["parameters"]["query"],
 ) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/user/info" as any,
     getUserInfoQueryOptions(params),
@@ -41,10 +41,9 @@ export const useUserInfoQuery = (
 
 // 공장, 창고, 대리점 목록은 entities에서 가져옴
 
-// 프로필 수정
-export const useUpdateProfileMutation = () =>
-  queryClient.useMutation("patch", "/api/user/profile/{userId}");
+// 프로필 수정 (관리자용)
+export const useEmployeeProfileMutation = () =>
+  api.useMutation("patch", "/api/user/profile/{userId}");
 
-// 상태 변경
-export const useUpdateStatusMutation = () =>
-  queryClient.useMutation("patch", "/api/user/status/{userId}");
+export const useEmployeeStatusMutation = () =>
+  api.useMutation("patch", "/api/user/status/{userId}");

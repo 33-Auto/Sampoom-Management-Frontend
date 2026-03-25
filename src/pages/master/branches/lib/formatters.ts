@@ -1,5 +1,5 @@
-import type { BranchStatus, BranchType } from "@/pages/master/branches/model";
-import { BRANCH_STATUS, BRANCH_TYPE } from "@/pages/master/branches/model";
+import type { BranchStatus, BranchType } from "@/entities/branch";
+import { BRANCH_STATUS, BRANCH_TYPE } from "@/entities/branch";
 
 const TYPE_LABELS: Record<BranchType, string> = {
   WAREHOUSE: "창고",

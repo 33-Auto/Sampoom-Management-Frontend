@@ -1,1 +1,1 @@
-export { useLoginMutation, getMyProfile } from "@/entities/user/api/auth.api";
+export { useLoginMutation, getMyProfile } from "@/entities/user";

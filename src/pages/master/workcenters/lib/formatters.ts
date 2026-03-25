@@ -1,11 +1,5 @@
-import type {
-  WorkCenterStatus,
-  WorkCenterType,
-} from "@/pages/master/workcenters/model";
-import {
-  WORK_CENTER_STATUS,
-  WORK_CENTER_TYPE,
-} from "@/pages/master/workcenters/model";
+import type { WorkCenterStatus, WorkCenterType } from "@/entities/workcenter";
+import { WORK_CENTER_STATUS, WORK_CENTER_TYPE } from "@/entities/workcenter";
 
 type WorkCenterTypeKey = Exclude<WorkCenterType, undefined>;
 type WorkCenterStatusKey = Exclude<WorkCenterStatus, undefined>;

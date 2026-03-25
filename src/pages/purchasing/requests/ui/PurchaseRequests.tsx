@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { usePurchaseRequestQuery } from "@/pages/purchasing/requests/api";
 import type {
   PurchaseOrderResponseDto,
@@ -12,8 +10,15 @@ import {
   PURCHASE_REQUEST_STATUS,
   PURCHASE_REQUEST_URGENCY,
 } from "@/pages/purchasing/requests/model";
+import { usePaginationTable } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Button,
+  Badge,
+  PaginationTableSection,
+  SearchFilterBar,
+  Table,
+} from "@/shared/ui";
 
 export const PurchaseRequests = () => {
   const [searchTerm, setSearchTerm] = useState("");

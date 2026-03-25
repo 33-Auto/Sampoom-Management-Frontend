@@ -1,6 +1,6 @@
 import type { MasterListFilter } from "@/features/master-list";
 import { Badge, Button } from "@/shared/ui";
-import type { Column } from "@/shared/ui/Table/Table";
+import type { Column } from "@/shared/ui";
 
 import {
   buildItemTypeFilterOptions,

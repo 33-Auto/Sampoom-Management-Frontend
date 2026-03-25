@@ -1,1 +1,1 @@
-export { RopProcess } from "./ui/RopProcess";
+export { RopProcess } from "./components/RopProcess";

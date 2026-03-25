@@ -13,10 +13,10 @@ import {
   type PartOrderResult,
 } from "@/entities/mps";
 import { useWarehouses } from "@/entities/wms";
-import { useBranchId } from "@/features/branch-select/model/branch-selection.store";
+import { useBranchId } from "@/features/branch-select";
 // import { BranchSelectBar } from "@/features/branch-select/ui/BranchSelectBar";
 import { MpsExecutionResultModal } from "@/features/production-mps";
-import { formatNumber } from "@/shared/lib/format/number";
+import { formatNumber } from "@/shared/lib";
 import { Badge, Button, InfoBox, SearchFilterBar } from "@/shared/ui";
 // import { ModuleHeader, NavigationTabs } from "@/widgets/Header";
 

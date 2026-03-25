@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 import type { ItemsMasterParams } from "../model";
 
@@ -16,14 +16,14 @@ const getItemsMasterQueryOptions = (params?: ItemsMasterParams) => ({
   },
 });
 export const itemsMasterQueryOptions = (params?: ItemsMasterParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/part/items/search",
     getItemsMasterQueryOptions(params),
   );
 
 export const useItemsMasterQuery = (params: ItemsMasterParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/part/items/search",
     getItemsMasterQueryOptions(params),

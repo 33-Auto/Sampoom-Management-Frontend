@@ -1,5 +1,5 @@
 import type { MaterialListParams } from "@/pages/master/bom/model";
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 
 // 공통 옵션 생성 함수
 const getMaterialsQueryOptions = (params?: MaterialListParams) => ({
@@ -13,21 +13,14 @@ const getMaterialsQueryOptions = (params?: MaterialListParams) => ({
   },
 });
 
-// queryOptions를 반환하는 함수
 export const materialsListQueryOptions = (params?: MaterialListParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
-    "/api/part/materials/search",
+    "/api/part/materials",
     getMaterialsQueryOptions(params),
   );
 
-// useQuery hook (컴포넌트에서 사용)
 export const useMaterialsQuery = (params?: MaterialListParams) =>
-  queryClient.useQuery(
-    "get",
-    "/api/part/materials/search",
-    getMaterialsQueryOptions(params),
-    {
-      placeholderData: (previousData) => previousData,
-    },
-  );
+  api.useQuery("get", "/api/part/materials", getMaterialsQueryOptions(params), {
+    placeholderData: (previousData: any) => previousData,
+  });

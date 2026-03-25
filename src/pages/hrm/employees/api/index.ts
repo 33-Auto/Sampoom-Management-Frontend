@@ -1,6 +1,6 @@
 export {
   useUserInfoQuery,
-  useUpdateProfileMutation,
-  useUpdateStatusMutation,
+  useEmployeeProfileMutation,
+  useEmployeeStatusMutation,
   userInfoQueryOptions,
 } from "./hrm-employees.api";

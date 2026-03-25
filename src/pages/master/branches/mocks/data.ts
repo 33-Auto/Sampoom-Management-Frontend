@@ -1,4 +1,4 @@
-import type { BranchResponseDTO } from "../model";
+import type { BranchResponseDTO } from "@/entities/branch";
 
 export const mockBranchesMaster: BranchResponseDTO[] = [
   {

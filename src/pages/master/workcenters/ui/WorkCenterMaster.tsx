@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
+import type {
+  WorkCenterResponseDTO,
+  WorkCenterType,
+} from "@/entities/workcenter";
+import { useWorkCentersQuery } from "@/entities/workcenter";
 import {
   MasterListLayout,
   useMasterListControls,
 } from "@/features/master-list";
-import { useWorkCentersQuery } from "@/pages/master/workcenters/api";
-import type {
-  WorkCenterResponseDTO,
-  WorkCenterType,
-} from "@/pages/master/workcenters/model";
 import {
   createWorkCenterColumns,
   createWorkCenterFilters,
@@ -43,8 +43,11 @@ export const WorkCenterMaster = () => {
     size,
   });
 
-  const totalElements = data?.data?.totalElements ?? 0;
-  const totalPages = data?.data?.totalPages ?? 0;
+  const responseData = data?.data;
+  const isDataValid = responseData && typeof responseData !== "string";
+
+  const totalElements = isDataValid ? (responseData.totalElements ?? 0) : 0;
+  const totalPages = isDataValid ? (responseData.totalPages ?? 0) : 0;
 
   const handleCreateNew = () => {
     navigate("/master/workcenters/process");
@@ -56,9 +59,8 @@ export const WorkCenterMaster = () => {
     });
   };
 
-  const keys = createKeyRecord<WorkCenterResponseDTO>(
-    data?.data?.content ?? [],
-  );
+  const content = isDataValid ? (responseData.content ?? []) : [];
+  const keys = createKeyRecord<WorkCenterResponseDTO>(content);
 
   const columns = createWorkCenterColumns({
     keys,
@@ -71,7 +73,7 @@ export const WorkCenterMaster = () => {
     onStatusChange: (value) => handleFilterChange("status", value),
   });
 
-  const workCenters = data?.data?.content ?? [];
+  const workCenters = content;
 
   return (
     <MasterListLayout

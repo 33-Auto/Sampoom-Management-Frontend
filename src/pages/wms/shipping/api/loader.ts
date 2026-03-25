@@ -1,5 +1,5 @@
 export async function loader() {
-  const { queryClient } = await import("@/shared/api/query");
+  const { queryClient } = await import("@/shared/api");
   const { wmsBranchesQueryOptions } = await import("@/entities/wms");
   const { shippingListQueryOptions } = await import("./shipping-list.api");
 

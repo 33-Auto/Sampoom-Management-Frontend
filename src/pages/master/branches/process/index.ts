@@ -1,1 +1,1 @@
-export { BranchProcess } from "./ui";
+export { BranchProcess } from "./components";

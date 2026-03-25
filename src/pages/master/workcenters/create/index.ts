@@ -1,1 +1,1 @@
-export { CreateWorkCenter } from "./ui";
+export { CreateWorkCenter } from "./components";

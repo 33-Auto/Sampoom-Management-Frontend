@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/query";
+import { queryClient } from "@/shared/api";
 
 import { branchesListQueryOptions } from "./branches.api";
 

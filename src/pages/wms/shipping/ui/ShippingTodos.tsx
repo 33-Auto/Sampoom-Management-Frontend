@@ -2,22 +2,23 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
-import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  type ShippingListQueryParams,
-  useShippingListQuery,
-} from "@/pages/wms/shipping/api/shipping-list.api";
 import type {
   ShippingListParams,
   ShippingOrderDto,
   ShippingOrderItemDto,
-} from "@/pages/wms/shipping/model";
-import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
+} from "@/entities/shipping";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
+import { usePaginationTable, formatNumber } from "@/shared/lib";
+import {
+  Badge,
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  Table,
+  PaginationTableSection,
+} from "@/shared/ui";
+
+import { useShippingListQuery, type ShippingListQueryParams } from "../api";
 
 type ShippingStatus = NonNullable<ShippingListParams["status"]>;
 
@@ -55,8 +56,6 @@ const sumOrderQuantity = (items?: ShippingOrderItemDto[]) =>
 
 const sumAvailableStock = (items?: ShippingOrderItemDto[]) =>
   items?.reduce((acc, item) => acc + (item.stock ?? 0), 0) ?? 0;
-
-const formatNumber = (value: number) => value.toLocaleString("ko-KR");
 
 export function ShippingTodos() {
   const navigate = useNavigate();

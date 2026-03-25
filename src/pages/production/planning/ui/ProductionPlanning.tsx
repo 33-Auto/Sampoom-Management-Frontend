@@ -2,19 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { MrpBatchResultModal } from "@/features/production-planning/mrp-modal";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  useBatchMrpApplyMutation,
-  useBatchMrpExecutionMutation,
-  useProductionPlansQuery,
-  extractPlansFromMrpResponse,
-} from "@/pages/production/planning/api";
-import {
   DEFAULT_INCLUDE_RECENT_DAYS,
   PRODUCTION_PLAN_PRIORITY_BADGE_VARIANTS,
   PRODUCTION_PLAN_PRIORITY_LABELS,
@@ -25,9 +12,24 @@ import {
   type ProductionPlanPriority,
   type ProductionPlanResponseDTO,
   type ProductionPlanStatus,
-} from "@/pages/production/planning/model";
+} from "@/entities/production";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
+import { MrpBatchResultModal } from "@/features/production-planning/mrp-modal";
+import {
+  useBatchMrpApplyMutation,
+  useBatchMrpExecutionMutation,
+  useProductionPlansQuery,
+  extractPlansFromMrpResponse,
+} from "@/pages/production/planning/api";
+import { usePaginationTable } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  SearchFilterBar,
+  Table,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 const DEFAULT_STATUS_FILTER = "UNDER_REVIEW";
 const EXCLUDED_STATUSES: ProductionPlanStatus[] = ["IN_PROGRESS", "COMPLETED"];
@@ -253,7 +255,7 @@ export const ProductionPlanning = () => {
         body: orderIds,
       },
       {
-        onSuccess: (response) => {
+        onSuccess: (response: any) => {
           const plans = extractPlansFromMrpResponse(response);
           if (plans.length === 0) {
             setMrpResultPlans([]);
@@ -263,7 +265,7 @@ export const ProductionPlanning = () => {
           setMrpError(null);
           setMrpResultPlans(plans);
         },
-        onError: (error) => {
+        onError: (error: any) => {
           const message =
             error instanceof Error
               ? error.message
@@ -313,7 +315,7 @@ export const ProductionPlanning = () => {
           setSelectedPlanIds([]);
           void refetch();
         },
-        onError: (error) => {
+        onError: (error: any) => {
           const message =
             error instanceof Error
               ? error.message

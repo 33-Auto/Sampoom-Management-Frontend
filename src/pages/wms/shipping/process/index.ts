@@ -1,1 +1,1 @@
-export { ShippingProcess } from "./ui/ShippingProcess";
+export { ShippingProcess } from "./components/ShippingProcess";

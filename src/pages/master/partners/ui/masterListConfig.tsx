@@ -1,13 +1,13 @@
+import type { PartnerResponseDTO, PartnerStatus } from "@/entities/partner";
 import type { MasterListFilter } from "@/features/master-list";
 import { Badge, Button } from "@/shared/ui";
-import type { Column } from "@/shared/ui/Table/Table";
+import type { Column } from "@/shared/ui";
 
 import {
   buildPartnerStatusOptions,
   formatPartnerStatus,
   getPartnerStatusVariant,
 } from "../lib/formatters";
-import type { PartnerResponseDTO, PartnerStatus } from "../model";
 
 interface PartnerColumnsParams {
   keys: Record<keyof PartnerResponseDTO, keyof PartnerResponseDTO>;
@@ -35,16 +35,16 @@ export const createPartnerColumns = ({
   keys,
   onEdit,
 }: PartnerColumnsParams): Column[] => [
-  { key: keys.vendorCode, title: "거래처 코드", width: "120px" },
-  { key: keys.name, title: "거래처명" },
-  { key: keys.businessNumber, title: "사업자번호", width: "130px" },
-  { key: keys.ceoName, title: "대표자", width: "100px" },
-  { key: keys.address, title: "주소" },
+  { key: keys.vendorCode as any, title: "거래처 코드", width: "120px" },
+  { key: keys.name as any, title: "거래처명" },
+  { key: keys.businessNumber as any, title: "사업자번호", width: "130px" },
+  { key: keys.ceoName as any, title: "대표자", width: "100px" },
+  { key: keys.address as any, title: "주소" },
   {
-    key: keys.status,
+    key: keys.status as any,
     title: "상태",
     width: "80px",
-    render: (value: string) => {
+    render: (value: any) => {
       const typedValue = value as PartnerStatus | null | undefined;
       return (
         <Badge variant={getPartnerStatusVariant(typedValue)}>

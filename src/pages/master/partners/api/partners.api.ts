@@ -1,5 +1,5 @@
-import type { PartnerListParams } from "@/pages/master/partners/model";
-import { queryClient } from "@/shared/api";
+import type { PartnerListParams } from "@/entities/partner";
+import { api } from "@/shared/api";
 
 // 공통 옵션 생성 함수
 const getPartnersQueryOptions = (params?: PartnerListParams) => ({
@@ -15,7 +15,7 @@ const getPartnersQueryOptions = (params?: PartnerListParams) => ({
 
 // queryOptions를 반환하는 함수 (loader 등에서 사용)
 export const partnersListQueryOptions = (params?: PartnerListParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/site/vendors/search",
     getPartnersQueryOptions(params),
@@ -23,7 +23,7 @@ export const partnersListQueryOptions = (params?: PartnerListParams) =>
 
 // useQuery hook (컴포넌트에서 사용)
 export const usePartnersQuery = (params?: PartnerListParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/site/vendors/search",
     getPartnersQueryOptions(params),

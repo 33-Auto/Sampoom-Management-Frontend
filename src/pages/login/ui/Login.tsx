@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-import { users } from "@/entities/user/mocks/data";
+import { users } from "@/entities/user";
 import Logo from "@/shared/assets/logo_text_dark.svg";
 import { Button, Card, Input, Select } from "@/shared/ui";
 

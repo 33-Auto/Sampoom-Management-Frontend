@@ -1,10 +1,9 @@
-export async function loader() {
-  const { queryClient } = await import("@/shared/api/query");
-  const { wmsBranchesQueryOptions } = await import("@/entities/wms");
-  const { purchaseOrderListQueryOptions } = await import(
-    "./purchase-orders.api"
-  );
+import { wmsBranchesQueryOptions } from "@/entities/wms";
+import { queryClient } from "@/shared/api";
 
+import { purchaseOrdersListQueryOptions } from "./purchase-orders.api";
+
+export async function loader() {
   const branchesData = await queryClient.ensureQueryData(
     wmsBranchesQueryOptions(),
   );
@@ -22,7 +21,7 @@ export async function loader() {
 
   if (typeof defaultWarehouseId === "number") {
     await queryClient.ensureQueryData(
-      purchaseOrderListQueryOptions({ warehouseId: defaultWarehouseId }),
+      purchaseOrdersListQueryOptions({ warehouseId: defaultWarehouseId }),
     );
   }
 

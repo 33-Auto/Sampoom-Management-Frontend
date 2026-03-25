@@ -2,22 +2,22 @@ import { useEffect, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
-import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { type RopSettings as RopResDto } from "@/entities/rop";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
 import {
   type RopSettingsListQueryParams,
   useRopSettingsQuery,
 } from "@/pages/wms/rop-settings/api";
-import type {
-  RopResDto,
-  // RopSettingStatus,
-} from "@/pages/wms/rop-settings/model";
+import { usePaginationTable } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  Table,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 export function RopSettings() {
   const navigate = useNavigate();

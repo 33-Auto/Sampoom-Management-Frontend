@@ -2,9 +2,9 @@ import type {
   ProductionPlanListParams,
   ProductionPlanResponseDTO,
   ProductionPlanBatchResponse,
-} from "@/pages/production/planning/model";
-import { DEFAULT_INCLUDE_RECENT_DAYS } from "@/pages/production/planning/model";
-import { queryClient } from "@/shared/api";
+} from "@/entities/production";
+import { DEFAULT_INCLUDE_RECENT_DAYS } from "@/entities/production";
+import { api } from "@/shared/api";
 
 export type ProductionPlansQueryParams = ProductionPlanListParams & {
   factoryId?: number;
@@ -51,19 +51,19 @@ const getProductionPlansQueryOptions = (
 export const productionPlansListQueryOptions = (
   params?: ProductionPlansQueryParams,
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/factory/{factoryId}/part/orders/production-plans",
     getProductionPlansQueryOptions(params),
   );
 
 export const useProductionPlansQuery = (params?: ProductionPlansQueryParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/factory/{factoryId}/part/orders/production-plans",
     getProductionPlansQueryOptions(params),
     {
-      placeholderData: (previousData) => previousData,
+      placeholderData: (previousData: any) => previousData,
       enabled:
         typeof params?.factoryId === "number" &&
         Number.isFinite(params.factoryId),
@@ -71,13 +71,10 @@ export const useProductionPlansQuery = (params?: ProductionPlansQueryParams) =>
   );
 
 export const useBatchMrpExecutionMutation = () =>
-  queryClient.useMutation(
-    "post",
-    "/api/factory/{factoryId}/part/orders/mrp/batch",
-  );
+  api.useMutation("post", "/api/factory/{factoryId}/part/orders/mrp/batch");
 
 export const useBatchMrpApplyMutation = () =>
-  queryClient.useMutation(
+  api.useMutation(
     "post",
     "/api/factory/{factoryId}/part/orders/apply-mrp/batch",
   );

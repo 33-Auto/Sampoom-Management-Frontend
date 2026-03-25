@@ -1,1 +1,1 @@
-export { BomProcess } from "./ui/BomProcess";
+export { BomProcess } from "./components/BomProcess";

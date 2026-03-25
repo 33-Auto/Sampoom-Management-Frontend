@@ -1,14 +1,19 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useFactoryBranchesQuery } from "@/entities/factory/api/factory.api";
-import { useVendorsQuery } from "@/entities/vendor/api/vendor.api";
-import { useWmsBrancesQuery } from "@/entities/wms/api/wms.api";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import { getWorkspaceLabel as resolveWorkspaceLabel } from "@/shared/constants/workspace";
+import { useFactoryBranchesQuery } from "@/entities/factory";
+import { useVendorsQuery } from "@/entities/vendor";
+import { useWmsBrancesQuery } from "@/entities/wms";
+import { getWorkspaceLabel as resolveWorkspaceLabel } from "@/shared/constants";
+import { usePaginationTable } from "@/shared/lib";
 import type { Schemas } from "@/shared/model";
-import { Badge, Button, Card, SearchFilterBar } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  SearchFilterBar,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 import { useUserInfoQuery } from "../api";
 

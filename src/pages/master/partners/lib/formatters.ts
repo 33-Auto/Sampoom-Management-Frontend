@@ -1,5 +1,5 @@
-import type { PartnerStatus } from "@/pages/master/partners/model";
-import { PARTNER_STATUS } from "@/pages/master/partners/model";
+import type { PartnerStatus } from "@/entities/partner";
+import { PARTNER_STATUS } from "@/entities/partner";
 
 const STATUS_LABELS: Record<PartnerStatus, string> = {
   ACTIVE: "활성",

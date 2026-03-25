@@ -1,1 +1,1 @@
-export { WorkCenterProcess } from "./ui";
+export { WorkCenterProcess } from "./components";

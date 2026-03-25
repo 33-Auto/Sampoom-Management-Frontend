@@ -1,5 +1,5 @@
-import type { ShippingListParams } from "@/pages/wms/shipping/model";
-import { queryClient } from "@/shared/api";
+import type { ShippingListParams } from "@/entities/shipping";
+import { api } from "@/shared/api";
 
 type ShippingListQueryParams = Partial<ShippingListParams> & {
   warehouseId?: number;
@@ -26,14 +26,14 @@ const getShippingListQueryOptions = (params?: ShippingListQueryParams) => {
 };
 
 export const shippingListQueryOptions = (params?: ShippingListQueryParams) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/order/outbound",
     getShippingListQueryOptions(params),
   );
 
 export const useShippingListQuery = (params?: ShippingListQueryParams) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/order/outbound",
     getShippingListQueryOptions(params),

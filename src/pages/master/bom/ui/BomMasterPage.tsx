@@ -2,13 +2,19 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
 import { useBomsQuery } from "@/pages/master/bom/api";
 import type { BomResponseDTO } from "@/pages/master/bom/model";
 import { BOM_COMPLEXITY, BOM_STATUS } from "@/pages/master/bom/model";
+import { usePaginationTable } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  SearchFilterBar,
+  PaginationTableSection,
+  InfoBox,
+  Table,
+} from "@/shared/ui";
 
 export const BomMasterPage = () => {
   const navigate = useNavigate();

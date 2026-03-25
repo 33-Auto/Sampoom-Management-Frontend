@@ -1,1 +1,1 @@
-export { WorkOrderDetail } from "./ui";
+export { WorkOrderDetail } from "./components";

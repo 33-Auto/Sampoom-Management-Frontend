@@ -1,4 +1,4 @@
-import type { ProductionPlanResponseDTO } from "../model";
+import type { ProductionPlanResponseDTO } from "@/entities/production";
 
 export type ProductionPlanRecord = ProductionPlanResponseDTO;
 

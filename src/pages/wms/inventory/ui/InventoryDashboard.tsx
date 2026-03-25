@@ -1,29 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
-import { normalizeInventoryStatus } from "@/entities/inventory/lib/status";
-import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
 import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
-import {
-  type InventoryListQueryParams,
-  useWarehouseInventoryQuery,
-} from "@/pages/wms/inventory/api";
-import type {
-  InventoryStatusKey,
-  PartResDto,
-} from "@/pages/wms/inventory/model";
-import {
+  type InventoryStatusKey,
+  type PartResDto,
   INVENTORY_STATUS_BADGE_VARIANTS,
   INVENTORY_STATUS_LABELS,
-} from "@/pages/wms/inventory/model";
-import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
+  normalizeInventoryStatus,
+} from "@/entities/inventory";
+import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
+import {
+  type InventoryListQueryParams,
+  useInventoryQuery,
+} from "@/pages/wms/inventory/api";
+import { usePaginationTable, formatCurrency, formatNumber } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, InfoBox, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  InfoBox,
+  SearchFilterBar,
+  Table,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 export const InventoryDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -69,8 +69,7 @@ export const InventoryDashboard = () => {
     size,
   ]);
 
-  const { data, isLoading, isError, refetch } =
-    useWarehouseInventoryQuery(queryParams);
+  const { data, isLoading, isError, refetch } = useInventoryQuery(queryParams);
 
   useEffect(() => {
     if (

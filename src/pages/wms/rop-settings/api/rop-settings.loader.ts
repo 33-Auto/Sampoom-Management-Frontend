@@ -1,8 +1,9 @@
-export async function ropSettingsLoader() {
-  const { queryClient } = await import("@/shared/api/query");
-  const { wmsBranchesQueryOptions } = await import("@/entities/wms");
-  const { ropSettingsQueryOptions } = await import("./rop-settings.api");
+import { wmsBranchesQueryOptions } from "@/entities/wms";
+import { queryClient } from "@/shared/api";
 
+import { ropSettingsListQueryOptions } from "./rop-settings.api";
+
+export async function ropSettingsLoader() {
   const branchesData = await queryClient.ensureQueryData(
     wmsBranchesQueryOptions(),
   );
@@ -20,7 +21,7 @@ export async function ropSettingsLoader() {
 
   if (typeof defaultWarehouseId === "number") {
     await queryClient.ensureQueryData(
-      ropSettingsQueryOptions({ warehouseId: defaultWarehouseId }),
+      ropSettingsListQueryOptions({ warehouseId: defaultWarehouseId }),
     );
   }
 

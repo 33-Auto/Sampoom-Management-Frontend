@@ -1,6 +1,11 @@
+import type {
+  BranchResponseDTO,
+  BranchStatus,
+  BranchType,
+} from "@/entities/branch";
 import type { MasterListFilter } from "@/features/master-list";
 import { Badge, Button } from "@/shared/ui";
-import type { Column } from "@/shared/ui/Table/Table";
+import type { Column } from "@/shared/ui";
 
 import {
   buildBranchStatusOptions,
@@ -10,7 +15,6 @@ import {
   getBranchStatusVariant,
   getBranchTypeBadgeVariant,
 } from "../lib/formatters";
-import type { BranchResponseDTO, BranchStatus, BranchType } from "../model";
 
 interface BranchColumnsParams {
   keys: Record<keyof BranchResponseDTO, keyof BranchResponseDTO>;
@@ -48,13 +52,13 @@ export const createBranchColumns = ({
   keys,
   onEdit,
 }: BranchColumnsParams): Column[] => [
-  { key: keys.branchCode, title: "지점 코드", width: "120px" },
-  { key: keys.name, title: "지점명" },
+  { key: keys.branchCode as any, title: "지점 코드", width: "120px" },
+  { key: keys.name as any, title: "지점명" },
   {
-    key: keys.type,
+    key: keys.type as any,
     title: "유형",
     width: "120px",
-    render: (value: string) => {
+    render: (value: any) => {
       const typedValue = value as BranchType | null | undefined;
       return (
         <Badge variant={getBranchTypeBadgeVariant(typedValue)}>
@@ -63,9 +67,9 @@ export const createBranchColumns = ({
       );
     },
   },
-  { key: keys.address, title: "주소" },
+  { key: keys.address as any, title: "주소" },
   {
-    key: keys.status,
+    key: keys.status as any,
     title: "상태",
     width: "80px",
     render: (value: string) => {

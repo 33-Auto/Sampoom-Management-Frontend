@@ -1,4 +1,4 @@
-import type { PartResDto } from "@/shared/model/models";
+import type { PartResDto } from "@/shared/model";
 
 export type WarehouseInventoryItem = PartResDto & {
   warehouseId: number;

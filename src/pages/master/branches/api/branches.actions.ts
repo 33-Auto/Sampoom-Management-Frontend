@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 import type { Schemas } from "@/shared/model";
 
 // 타입 정의 (OpenAPI에서 가져오기)
@@ -7,12 +7,10 @@ export type BranchUpdateRequestDTO = Schemas["BranchUpdateRequestDTO"];
 
 // Create mutation
 export const useCreateBranchMutation = () =>
-  queryClient.useMutation("post", "/api/site/branches");
+  api.useMutation("post", "/api/site/branches");
 
-// Update mutation (PUT 사용)
 export const useUpdateBranchMutation = () =>
-  queryClient.useMutation("put", "/api/site/branches/{id}");
+  api.useMutation("put", "/api/site/branches/{id}");
 
-// Delete mutation (deactivateBranch)
 export const useDeleteBranchMutation = () =>
-  queryClient.useMutation("delete", "/api/site/branches/{id}");
+  api.useMutation("delete", "/api/site/branches/{id}");

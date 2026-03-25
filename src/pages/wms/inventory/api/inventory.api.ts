@@ -1,5 +1,5 @@
-import type { InventoryListParams } from "@/pages/wms/inventory/model";
-import { queryClient } from "@/shared/api";
+import type { InventoryListParams } from "@/entities/inventory";
+import { api } from "@/shared/api";
 
 type InventoryListQueryParams = Partial<InventoryListParams> & {
   warehouseId?: number;
@@ -30,22 +30,13 @@ const getInventoryQueryOptions = (params?: InventoryListQueryParams) => {
 
 // queryOptions를 반환하는 함수 (loader 등에서 사용)
 export const inventoryListQueryOptions = (params?: InventoryListQueryParams) =>
-  queryClient.queryOptions(
-    "get",
-    "/api/warehouse/",
-    getInventoryQueryOptions(params),
-  );
+  api.queryOptions("get", "/api/warehouse/", getInventoryQueryOptions(params));
 
 // useQuery hook (컴포넌트에서 사용)
-export const useWarehouseInventoryQuery = (params?: InventoryListQueryParams) =>
-  queryClient.useQuery(
-    "get",
-    "/api/warehouse/",
-    getInventoryQueryOptions(params),
-    {
-      placeholderData: (previousData) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
-      enabled: typeof params?.warehouseId === "number",
-    },
-  );
+export const useInventoryQuery = (params?: InventoryListQueryParams) =>
+  api.useQuery("get", "/api/warehouse/", getInventoryQueryOptions(params), {
+    placeholderData: (previousData: any) => previousData, // 이전 페이지 데이터를 유지하여 깜빡임 최소화
+    enabled: typeof params?.warehouseId === "number",
+  });
 
 export type { InventoryListQueryParams };

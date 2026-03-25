@@ -1,1 +1,1 @@
-export { RoutingCreate } from "./ui";
+export { RoutingCreate } from "./components";

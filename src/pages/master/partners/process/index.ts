@@ -1,1 +1,1 @@
-export { PartnerProcess } from "./ui";
+export { PartnerProcess } from "./components";

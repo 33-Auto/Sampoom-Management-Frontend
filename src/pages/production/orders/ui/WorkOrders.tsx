@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
-import {
-  useBranchId,
-  useBranchSelectionStore,
-} from "@/features/branch-select/model/branch-selection.store";
-import { PaginationTableSection } from "@/features/table-pagination";
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
 import {
   usePartOrdersQuery,
   type PartOrdersQueryParams,
@@ -20,9 +15,17 @@ import {
   type PartOrderPriority,
   type PartOrderResponseDTO,
   type PartOrderStatus,
-} from "@/pages/production/orders/model";
+} from "@/pages/production/orders/model/orders.model";
+import { usePaginationTable } from "@/shared/lib";
 import { createKeyRecord } from "@/shared/lib/utils";
-import { Badge, Button, Modal, SearchFilterBar, Table } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Modal,
+  SearchFilterBar,
+  Table,
+  PaginationTableSection,
+} from "@/shared/ui";
 
 export const WorkOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
