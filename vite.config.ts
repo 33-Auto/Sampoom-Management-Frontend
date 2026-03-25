@@ -28,6 +28,11 @@ export default defineConfig({
             // 기타 라이브러리
             return "vendor";
           }
+
+          // shared/ui 를 하나의 청크로 묶어서 순환 참조 방지 및 캐싱 효율화
+          if (id.includes("src/shared/ui")) {
+            return "shared-ui";
+          }
         },
       },
     },
