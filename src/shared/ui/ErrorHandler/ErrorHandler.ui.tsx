@@ -1,6 +1,6 @@
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { Button } from "@/shared/ui";
+import { Button } from "../Button";
 
 type ErrorHandlerProps = {
   error: any;

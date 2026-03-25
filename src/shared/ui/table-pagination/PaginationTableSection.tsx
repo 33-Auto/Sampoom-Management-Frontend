@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TableSection } from "@/shared/ui";
+import { TableSection } from "../TableSection";
 
 import { PaginationMeta } from "./PaginationMeta";
 import { PaginationNavigation } from "./PaginationNavigation";
