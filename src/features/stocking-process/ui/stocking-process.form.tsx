@@ -1,8 +1,7 @@
 import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { useNotification } from "@/app/providers/NotificationContext";
-import { formatCurrency, formatNumber } from "@/shared/lib/format/number";
+import { useNotification, formatCurrency, formatNumber } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 import { Button, Card, InfoBox, Input } from "@/shared/ui";
 

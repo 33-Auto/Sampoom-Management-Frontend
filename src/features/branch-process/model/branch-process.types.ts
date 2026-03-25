@@ -1,4 +1,4 @@
-import type { BranchResponseDTO } from "@/pages/master/branches/model";
+import type { BranchResponseDTO } from "@/entities/branch";
 
 export type BranchProcessFormProps = {
   branchId?: number;

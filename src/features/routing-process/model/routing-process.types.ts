@@ -1,6 +1,6 @@
 import type { z } from "zod";
 
-import type { ProcessResponseDTO } from "@/pages/master/routings/model";
+import type { ProcessResponseDTO } from "@/entities/routing";
 
 import type { RoutingProcessSchema } from "./routing-process.contract";
 

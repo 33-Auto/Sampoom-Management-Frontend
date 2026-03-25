@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 
-import { useNotification } from "@/app/providers/NotificationContext";
 import {
   usePartCategoryOptions,
   usePartGroupOptions,
   usePartSelectOptions,
 } from "@/entities/part";
+import { useNotification } from "@/shared/lib";
 import { Button, InfoBox, Input, Select } from "@/shared/ui";
 
 import {

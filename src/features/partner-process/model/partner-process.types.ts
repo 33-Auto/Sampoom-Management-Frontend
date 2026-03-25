@@ -1,4 +1,4 @@
-import type { PartnerResponseDTO } from "@/pages/master/partners/model";
+import type { PartnerResponseDTO } from "@/entities/partner";
 
 export type PartnerProcessFormProps = {
   partnerId?: number;

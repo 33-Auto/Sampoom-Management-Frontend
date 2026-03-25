@@ -9,3 +9,5 @@ export {
   useStockingMutation,
   stockingProcessQueryOptions,
 } from "./api";
+export { stockingProcessLoader } from "./api/stocking-process.loader";
+export type { StockingProcessLoaderResult } from "./api/stocking-process.loader";

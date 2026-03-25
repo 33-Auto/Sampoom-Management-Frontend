@@ -1,8 +1,8 @@
-import type { RopResDto } from "@/pages/wms/rop-settings/model";
+import type { RopSettings } from "@/entities/rop";
 
 export type RopProcessFormProps = {
   ropId?: number;
-  ropData?: RopResDto;
+  ropData?: RopSettings;
   onSuccess?: () => void;
   onCancel?: () => void;
 };

@@ -1,7 +1,7 @@
 import type {
   ShippingOrderDto,
   ShippingOrderItemDto,
-} from "@/pages/wms/shipping/model";
+} from "@/entities/shipping";
 
 import type { ShippingProcessFormData } from "./shipping-process.contract";
 

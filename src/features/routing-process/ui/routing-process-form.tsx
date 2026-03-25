@@ -2,14 +2,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { useNotification } from "@/app/providers/NotificationContext";
 import {
   usePartCategoryOptions,
   usePartGroupOptions,
   usePartSelectOptions,
 } from "@/entities/part";
-import type { ProcessStepCreateRequestDTO } from "@/pages/master/routings/model";
-import { useWorkCentersQuery } from "@/pages/master/workcenters/api";
+import type { ProcessStepCreateRequestDTO } from "@/entities/routing";
+import { useWorkCentersQuery } from "@/entities/workcenter";
+import { useNotification } from "@/shared/lib";
 import { Button, Input, Select } from "@/shared/ui";
 
 import {
@@ -124,7 +124,7 @@ export function RoutingProcessForm({
   // WorkCenters 옵션 가져오기
   const { data: workCentersData } = useWorkCentersQuery({});
   const workCenterOptions =
-    workCentersData?.data?.content?.map((wc) => ({
+    workCentersData?.data?.content?.map((wc: any) => ({
       value: wc.id?.toString() || "",
       label: `${wc.code || ""} - ${wc.name || ""}`,
     })) || [];
@@ -194,7 +194,7 @@ export function RoutingProcessForm({
 
   const onSubmit = (data: RoutingProcessFormData) => {
     const stepsData: ProcessStepCreateRequestDTO[] = data.steps.map(
-      (step: RoutingProcessFormData["steps"][0], index: number) => ({
+      (step, index) => ({
         stepOrder: step.stepOrder || index + 1,
         stepName: step.stepName,
         workCenterId: step.workCenterId,

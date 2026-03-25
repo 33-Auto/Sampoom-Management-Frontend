@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useNotification } from "@/app/providers/NotificationContext";
-import { useAuthStore } from "@/entities/user";
-import { useLogoutMutation } from "@/entities/user/api";
-import type { UserResponse } from "@/shared/model/models";
+import { useAuthStore, useLogoutMutation } from "@/entities/user";
+import { useNotification } from "@/shared/lib";
+import type { UserResponse } from "@/shared/model";
 
 interface UserMenuProps {
   user: UserResponse;

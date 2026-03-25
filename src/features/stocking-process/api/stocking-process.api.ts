@@ -1,7 +1,7 @@
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 
 export const stockingProcessQueryOptions = (purchaseOrderId: number) =>
-  queryClient.queryOptions("get", "/api/warehouse/po/{purchaseOrderId}", {
+  api.queryOptions("get", "/api/warehouse/po/{purchaseOrderId}", {
     params: {
       path: {
         purchaseOrderId,
@@ -10,7 +10,7 @@ export const stockingProcessQueryOptions = (purchaseOrderId: number) =>
   });
 
 export const useStockingProcessQuery = (purchaseOrderId: number) =>
-  queryClient.useQuery("get", "/api/warehouse/po/{purchaseOrderId}", {
+  api.useQuery("get", "/api/warehouse/po/{purchaseOrderId}", {
     params: {
       path: {
         purchaseOrderId,
@@ -19,4 +19,4 @@ export const useStockingProcessQuery = (purchaseOrderId: number) =>
   });
 
 export const useStockingMutation = () =>
-  queryClient.useMutation("patch", "/api/warehouse/stocking");
+  api.useMutation("patch", "/api/warehouse/stocking");

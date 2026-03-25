@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
-import { useNotification } from "@/app/providers/NotificationContext";
+import {
+  useMaterialsQuery,
+  type MaterialResponseDTO,
+} from "@/entities/material";
 import {
   usePartCategoryOptions,
   usePartGroupOptions,
   usePartSelectOptions,
 } from "@/entities/part";
-import { useMaterialsQuery } from "@/pages/master/bom/api";
-import type { MaterialResponseDTO } from "@/pages/master/bom/model";
+import { useNotification } from "@/shared/lib";
 import { Button, Card, Input, Modal, Select } from "@/shared/ui";
 
 import {

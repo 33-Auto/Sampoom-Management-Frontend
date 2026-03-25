@@ -1,7 +1,7 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export const materialDetailQueryOptions = (materialId: number) =>
-  queryClient.queryOptions("get", "/api/part/materials/{materialId}", {
+  api.queryOptions("get", "/api/part/materials/{materialId}", {
     params: {
       path: {
         materialId,
@@ -10,7 +10,7 @@ export const materialDetailQueryOptions = (materialId: number) =>
   });
 
 export const partDetailQueryOptions = (partId: number) =>
-  queryClient.queryOptions("get", "/api/part/parts/{partId}", {
+  api.queryOptions("get", "/api/part/parts/{partId}", {
     params: {
       path: {
         partId,
@@ -18,13 +18,13 @@ export const partDetailQueryOptions = (partId: number) =>
     },
   });
 export const useCreateMaterialMutation = () =>
-  queryClient.useMutation("post", "/api/part/materials");
+  api.useMutation("post", "/api/part/materials");
 
 export const useCreatePartMutation = () =>
-  queryClient.useMutation("post", "/api/part/parts");
+  api.useMutation("post", "/api/part/parts");
 
 export const useUpdateMaterialMutation = () =>
-  queryClient.useMutation("put", "/api/part/materials/{materialId}");
+  api.useMutation("put", "/api/part/materials/{materialId}");
 
 export const useUpdatePartMutation = () =>
-  queryClient.useMutation("put", "/api/part/parts/{partId}");
+  api.useMutation("put", "/api/part/parts/{partId}");

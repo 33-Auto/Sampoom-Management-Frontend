@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useNotification } from "@/app/providers/NotificationContext";
+import { useNotification } from "@/shared/lib";
 import { Button, Input, Select } from "@/shared/ui";
 
 import {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { ShippingOrderItemDto } from "@/pages/wms/shipping/model";
+import type { ShippingOrderItemDto } from "@/entities/shipping";
 
 import { toShippingProcessItems } from "./shipping-process.types";
 

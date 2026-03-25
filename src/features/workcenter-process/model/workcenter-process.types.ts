@@ -1,4 +1,4 @@
-import type { WorkCenterResponseDTO } from "@/pages/master/workcenters/model";
+import type { WorkCenterResponseDTO } from "@/entities/workcenter";
 
 export type WorkCenterProcessFormProps = {
   workCenterId?: number;

@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export const useShippingProcessMutation = () =>
-  queryClient.useMutation("patch", "/api/warehouse/delivery");
+  api.useMutation("patch", "/api/warehouse/delivery");

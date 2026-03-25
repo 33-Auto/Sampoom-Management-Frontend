@@ -1,12 +1,12 @@
 // TODO: 타입 체크 임시 비활성화 - 타입 에러 수정 후 이 줄 제거
 // @ts-nocheck
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export const useReceivingProcessQuery = (
   warehouseId: number,
   processId: number,
 ) =>
-  queryClient.useQuery(
+  api.useQuery(
     "get",
     "/api/warehouse/receiving/{warehouseId}/process/{processId}",
     {
@@ -23,7 +23,7 @@ export const receivingProcessQueryOptions = (
   warehouseId: number,
   processId: number,
 ) =>
-  queryClient.queryOptions(
+  api.queryOptions(
     "get",
     "/api/warehouse/receiving/{warehouseId}/process/{processId}",
     {

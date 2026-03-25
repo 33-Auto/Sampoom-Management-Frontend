@@ -4,7 +4,7 @@ import { useAgencyBranchOptions } from "@/entities/agency";
 import { useFactoryBranchOptions } from "@/entities/factory";
 import { useWmsBranchOptions } from "@/entities/wms";
 import { cn } from "@/shared/lib";
-import { Select, type Option } from "@/shared/ui/Select/Select";
+import { Select, type Option } from "@/shared/ui";
 
 import { useBranchSelectionStore } from "../model/branch-selection.store";
 

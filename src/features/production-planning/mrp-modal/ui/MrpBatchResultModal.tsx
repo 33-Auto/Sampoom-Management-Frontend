@@ -5,7 +5,7 @@ import {
   PRODUCTION_PLAN_STATUS_BADGE_VARIANTS,
   PRODUCTION_PLAN_STATUS_LABELS,
   type ProductionPlanResponseDTO,
-} from "@/pages/production/planning/model";
+} from "@/entities/production";
 import { Badge, Button, Modal } from "@/shared/ui";
 
 const formatDate = (value?: string) => {

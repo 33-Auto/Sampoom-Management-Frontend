@@ -4,4 +4,8 @@ export type {
   BranchModuleType,
   BranchSelectBarProps,
 } from "./ui";
-export { useBranchSelectionStore, createBranchSelector } from "./model";
+export {
+  useBranchSelectionStore,
+  createBranchSelector,
+  useBranchId,
+} from "./model";

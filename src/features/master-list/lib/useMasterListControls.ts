@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { usePaginationTable } from "@/features/table-pagination/lib/hook/usePaginationTable";
+import { usePaginationTable } from "@/shared/lib";
 
 export interface MasterListFilterConfig {
   key: string;

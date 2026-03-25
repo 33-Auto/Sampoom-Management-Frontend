@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { useNotification } from "@/app/providers/NotificationContext";
-import { formatNumber } from "@/shared/lib/format/number";
+import { useNotification, formatNumber } from "@/shared/lib";
 import { Button, Card, Input, Table } from "@/shared/ui";
 
 import { useShippingProcessMutation } from "../api";

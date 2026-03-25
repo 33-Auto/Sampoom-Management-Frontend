@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 
-import { PaginationTableSection } from "@/features/table-pagination";
 import { cn } from "@/shared/lib/utils";
-import { SearchFilterBar, Table } from "@/shared/ui";
-import type { TableProps } from "@/shared/ui/Table/Table";
+import { PaginationTableSection, SearchFilterBar, Table } from "@/shared/ui";
+import type { TableProps } from "@/shared/ui";
 
 interface MasterListFilterOption {
   value: string;

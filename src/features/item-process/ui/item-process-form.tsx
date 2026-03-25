@@ -2,10 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { useNotification } from "@/app/providers/NotificationContext";
 import { useMaterialCategoryOptions } from "@/entities/material";
 import { usePartCategoryOptions, usePartGroupOptions } from "@/entities/part";
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
+import { useNotification } from "@/shared/lib";
 import type { Schemas } from "@/shared/model";
 import { Button, Input, Select } from "@/shared/ui";
 
@@ -152,7 +152,7 @@ export function ItemProcessForm({
   const {
     data: materialDetailResponse,
     // isLoading: loadingMaterial
-  } = queryClient.useQuery(
+  } = api.useQuery(
     "get",
     "/api/part/materials/{materialId}",
     {
@@ -170,7 +170,7 @@ export function ItemProcessForm({
   const {
     data: partDetailResponse,
     // isLoading: loadingPart
-  } = queryClient.useQuery(
+  } = api.useQuery(
     "get",
     "/api/part/parts/{partId}",
     {

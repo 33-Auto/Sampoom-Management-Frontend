@@ -4,8 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { useNotification } from "@/app/providers/NotificationContext";
-import { cn } from "@/shared/lib";
+import { useNotification, cn } from "@/shared/lib";
 import { Button, Card, InfoBox, Input, Textarea } from "@/shared/ui";
 
 import { useReceivingProcessQuery } from "../api/receiving-process.api";

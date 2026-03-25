@@ -1,13 +1,13 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 // Routing 생성 Mutation
 export const useCreateRoutingMutation = () =>
-  queryClient.useMutation("post", "/api/part/processes");
+  api.useMutation("post", "/api/part/processes");
 
 // Routing 수정 Mutation (PUT)
 export const useUpdateRoutingMutation = () =>
-  queryClient.useMutation("put", "/api/part/processes/{id}");
+  api.useMutation("put", "/api/part/processes/{id}");
 
 // Routing 삭제 Mutation
 export const useDeleteRoutingMutation = () =>
-  queryClient.useMutation("delete", "/api/part/processes/{id}");
+  api.useMutation("delete", "/api/part/processes/{id}");
