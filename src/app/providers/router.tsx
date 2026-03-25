@@ -1,4 +1,4 @@
-/* eslint-disable import/order */
+/* eslint-disable import-x/order */
 import { lazy, useEffect } from "react";
 import type { RouteObject } from "react-router-dom";
 import {
@@ -12,14 +12,32 @@ import {
 // ============================================================================
 // Public Pages - 인증 없이 접근 가능한 페이지
 // ============================================================================
+import {
+  bootstrapAuthLoader,
+  ensureAuthBootstrapped,
+} from "@/app/providers/loaders/bootstrap-auth.loader";
+import { useAuthStore } from "@/entities/user";
 import { Home } from "@/pages/home";
-import { Login } from "@/pages/login/ui";
-import { Register } from "@/pages/register/ui/Register";
-import { Notfound } from "@/pages/Notfound/Notfound";
+import { Login } from "@/pages/login";
+import { Notfound } from "@/pages/Notfound";
+import { Register } from "@/pages/register";
+import { InventoryDashboard, inventoryLoader } from "@/pages/wms/inventory";
+import {
+  WmsPurchaseOrders,
+  wmsPurchaseOrdersLoader,
+} from "@/pages/wms/purchase-orders";
+import {
+  RopSettings,
+  ropSettingsLoader,
+  RopProcess,
+} from "@/pages/wms/rop-settings";
+import { ShippingTodos, shippingLoader } from "@/pages/wms/shipping";
 
 // ============================================================================
 // Layouts - 각 모듈별 레이아웃 컴포넌트 (즉시 로딩)
 // ============================================================================
+import { setSkipAuthRefresh } from "@/shared/api";
+import { ErrorHandler } from "@/shared/ui";
 import AppLayout from "@/widgets/Layout/AppLayout";
 import HRMLayout from "@/widgets/Layout/HRMLayout";
 import MasterLayout from "@/widgets/Layout/MasterLayout";
@@ -27,14 +45,6 @@ import ProductionLayout from "@/widgets/Layout/ProductionLayout";
 import PurchasingLayout from "@/widgets/Layout/PurchasingLayout";
 import SalesLayout from "@/widgets/Layout/SalesLayout";
 import WMSLayout from "@/widgets/Layout/WMSLayout";
-
-import {
-  bootstrapAuthLoader,
-  ensureAuthBootstrapped,
-} from "@/app/providers/loaders/bootstrap-auth.loader";
-import { useAuthStore } from "@/entities/user";
-import { ErrorHandler } from "@/shared/ui";
-import { setSkipAuthRefresh } from "@/shared/api/auth-refresh.guard";
 
 // ============================================================================
 // Master Pages - 기준 정보 관리 모듈 (지연 로딩)
@@ -50,66 +60,12 @@ const PositionMaster = lazy(async () => ({
 }));
 
 // ============================================================================
-// Production Pages - 생산 관리 모듈 (지연 로딩)
-// ============================================================================
-const WorkOrderDetail = lazy(async () => ({
-  default: (await import("@/pages/production/orders/detail")).WorkOrderDetail,
-}));
-const MasterProductionSchedule = lazy(async () => ({
-  default: (await import("@/pages/production/mps")).MasterProductionSchedule,
-}));
-
-// ============================================================================
 // Purchasing Pages - 구매 관리 모듈 (지연 로딩)
 // ============================================================================
-const PurchaseRequests = lazy(async () => ({
-  default: (await import("@/pages/purchasing/requests")).PurchaseRequests,
-}));
 
 // ============================================================================
-// Sales Pages - 판매 관리 모듈 (지연 로딩)
+// Routes Configuration - 라우트 설정
 // ============================================================================
-const SalesOrderDetail = lazy(async () => ({
-  default: (await import("@/pages/sales/orders/detail")).SalesOrderDetail,
-}));
-
-// ============================================================================
-// WMS Pages - 창고 관리 모듈 (지연 로딩)
-// ============================================================================
-// const InventoryDashboard = lazy(async () => ({
-//   default: (await import("@/pages/wms/inventory")).InventoryDashboard,
-// }));
-// const ShippingTodos = lazy(async () => ({
-//   default: (await import("@/pages/wms/shipping")).ShippingTodos,
-// }));
-
-const ShippingProcess = lazy(async () => ({
-  default: (await import("@/pages/wms/shipping/process/ui")).ShippingProcess,
-}));
-
-// ============================================================================
-// HRM Pages - 인사 관리 모듈 (지연 로딩)
-// ============================================================================
-const HRMEmployees = lazy(async () => ({
-  default: (await import("@/pages/hrm/employees")).HRMEmployees,
-}));
-const HRMPayroll = lazy(async () => ({
-  default: (await import("@/pages/hrm/payroll")).HRMPayroll,
-}));
-const HRMAttendance = lazy(async () => ({
-  default: (await import("@/pages/hrm/attendance")).HRMAttendance,
-}));
-const HRMEvaluation = lazy(async () => ({
-  default: (await import("@/pages/hrm/evaluation")).HRMEvaluation,
-}));
-const EmployeeProfileProcess = lazy(async () => ({
-  default: (await import("@/pages/hrm/employees/process"))
-    .EmployeeProfileProcess,
-}));
-const EmployeeStatusProcess = lazy(async () => ({
-  default: (await import("@/pages/hrm/employees/process"))
-    .EmployeeStatusProcess,
-}));
 
 // ============================================================================
 // Routes Configuration - 라우트 설정
@@ -216,102 +172,84 @@ const routes: RouteObject[] = [
         children: [
           { path: "items", element: <ItemMaster /> },
           {
-            path: "items/process",
-            lazy: async () => ({
-              Component: (await import("@/pages/master/items/process"))
-                .ItemProcess,
-            }),
+            path: "items/process/:id",
+            lazy: async () => {
+              const { ItemProcess } = await import("@/pages/master/items");
+              return { Component: ItemProcess };
+            },
           },
           {
-            path: "items/process/:id",
-            lazy: async () => ({
-              Component: (await import("@/pages/master/items/process"))
-                .ItemProcess,
-            }),
+            path: "items/new",
+            lazy: async () => {
+              const { ItemProcess } = await import("@/pages/master/items");
+              return { Component: ItemProcess };
+            },
           },
           {
             path: "bom",
             lazy: async () => {
-              const { BomMasterPage: Component } = await import(
-                "@/pages/master/bom"
-              );
-              const { bomsLoader } = await import(
-                "@/pages/master/bom/api/bom.loaders"
-              );
+              const { BomMasterPage: Component, bomsLoader } =
+                await import("@/pages/master/bom");
               return { Component, loader: bomsLoader };
             },
           },
           {
             path: "bom/process",
             lazy: async () => ({
-              Component: (await import("@/pages/master/bom/process"))
-                .BomProcess,
+              Component: (await import("@/pages/master/bom")).BomProcess,
             }),
           },
           {
             path: "bom/process/:id",
             lazy: async () => ({
-              Component: (await import("@/pages/master/bom/process"))
-                .BomProcess,
+              Component: (await import("@/pages/master/bom")).BomProcess,
             }),
           },
           {
             path: "partners",
             lazy: async () => {
-              const { PartnerMaster: Component } = await import(
-                "@/pages/master/partners"
-              );
-              const { partnersLoader } = await import(
-                "@/pages/master/partners/api/partners.loaders"
-              );
+              const { PartnerMaster: Component, partnersLoader } =
+                await import("@/pages/master/partners");
               return { Component, loader: partnersLoader };
             },
           },
           {
             path: "partners/process",
             lazy: async () => {
-              const { PartnerProcess: Component } = await import(
-                "@/pages/master/partners/process"
-              );
+              const { PartnerProcess: Component } =
+                await import("@/pages/master/partners");
               return { Component };
             },
           },
           {
             path: "partners/process/:id",
             lazy: async () => {
-              const { PartnerProcess: Component } = await import(
-                "@/pages/master/partners/process"
-              );
+              const { PartnerProcess: Component } =
+                await import("@/pages/master/partners");
               return { Component };
             },
           },
           {
             path: "branches",
             lazy: async () => {
-              const { BranchMaster: Component } = await import(
-                "@/pages/master/branches"
-              );
-              const { branchesLoader } = await import(
-                "@/pages/master/branches/api/branches.loaders"
-              );
+              const { BranchMaster: Component, branchesLoader } =
+                await import("@/pages/master/branches");
               return { Component, loader: branchesLoader };
             },
           },
           {
             path: "branches/process",
             lazy: async () => {
-              const { BranchProcess: Component } = await import(
-                "@/pages/master/branches/process"
-              );
+              const { BranchProcess: Component } =
+                await import("@/pages/master/branches");
               return { Component };
             },
           },
           {
             path: "branches/process/:id",
             lazy: async () => {
-              const { BranchProcess: Component } = await import(
-                "@/pages/master/branches/process"
-              );
+              const { BranchProcess: Component } =
+                await import("@/pages/master/branches");
               return { Component };
             },
           },
@@ -320,60 +258,48 @@ const routes: RouteObject[] = [
           {
             path: "workcenters",
             lazy: async () => {
-              const { WorkCenterMaster: Component } = await import(
-                "@/pages/master/workcenters"
-              );
-              const { workCentersLoader } = await import(
-                "@/pages/master/workcenters/api/workcenters.loaders"
-              );
+              const { WorkCenterMaster: Component, workCentersLoader } =
+                await import("@/pages/master/workcenters");
               return { Component, loader: workCentersLoader };
             },
           },
           {
             path: "workcenters/process",
             lazy: async () => {
-              const { WorkCenterProcess: Component } = await import(
-                "@/pages/master/workcenters/process"
-              );
+              const { WorkCenterProcess: Component } =
+                await import("@/pages/master/workcenters");
               return { Component };
             },
           },
           {
             path: "workcenters/process/:id",
             lazy: async () => {
-              const { WorkCenterProcess: Component } = await import(
-                "@/pages/master/workcenters/process"
-              );
+              const { WorkCenterProcess: Component } =
+                await import("@/pages/master/workcenters");
               return { Component };
             },
           },
           {
             path: "routings",
             lazy: async () => {
-              const { RoutingMaster: Component } = await import(
-                "@/pages/master/routings"
-              );
-              const { routingsLoader } = await import(
-                "@/pages/master/routings/api/routings.loaders"
-              );
+              const { RoutingMaster: Component, routingsLoader } =
+                await import("@/pages/master/routings");
               return { Component, loader: routingsLoader };
             },
           },
           {
             path: "routings/process",
             lazy: async () => {
-              const { RoutingProcess: Component } = await import(
-                "@/pages/master/routings/process"
-              );
+              const { RoutingProcess: Component } =
+                await import("@/pages/master/routings");
               return { Component };
             },
           },
           {
             path: "routings/process/:id",
             lazy: async () => {
-              const { RoutingProcess: Component } = await import(
-                "@/pages/master/routings/process"
-              );
+              const { RoutingProcess: Component } =
+                await import("@/pages/master/routings");
               return { Component };
             },
           },
@@ -395,16 +321,17 @@ const routes: RouteObject[] = [
           {
             path: "orders",
             lazy: async () => {
-              const { SalesOrders } = await import("@/pages/sales/orders");
-              const { loader } = await import(
-                "@/pages/sales/orders/api/loader"
-              );
-              return { Component: SalesOrders, loader };
+              const { SalesOrders, salesOrdersLoader } =
+                await import("@/pages/sales/orders");
+              return { Component: SalesOrders, loader: salesOrdersLoader };
             },
           },
           {
             path: "orders/:id",
-            element: <SalesOrderDetail />,
+            lazy: async () => {
+              const { SalesOrderDetail } = await import("@/pages/sales/orders");
+              return { Component: SalesOrderDetail };
+            },
           },
         ],
       },
@@ -424,52 +351,44 @@ const routes: RouteObject[] = [
           {
             path: "shipping",
             lazy: async () => {
-              const { ShippingTodos } = await import("@/pages/wms/shipping");
-              const { loader } = await import(
-                "@/pages/wms/shipping/api/loader"
-              );
-              return { Component: ShippingTodos, loader };
+              return {
+                Component: ShippingTodos,
+                loader: shippingLoader,
+              };
             },
           },
           {
             path: "shipping/process/:warehouseId/:orderId",
-            element: <ShippingProcess />,
+            lazy: async () => {
+              const { ShippingProcess } = await import("@/pages/wms/shipping");
+              return { Component: ShippingProcess };
+            },
           },
           {
             path: "inventory",
             lazy: async () => {
-              const { InventoryDashboard } = await import(
-                "@/pages/wms/inventory"
-              );
-              const { loader } = await import(
-                "@/pages/wms/inventory/api/loader"
-              );
-              return { Component: InventoryDashboard, loader };
+              return {
+                Component: InventoryDashboard,
+                loader: inventoryLoader,
+              };
             },
           },
           {
             path: "orders",
             lazy: async () => {
-              const { WmsPurchaseOrders } = await import(
-                "@/pages/wms/purchase-orders"
-              );
-              const { loader } = await import(
-                "@/pages/wms/purchase-orders/api/loader"
-              );
-              return { Component: WmsPurchaseOrders, loader };
+              return {
+                Component: WmsPurchaseOrders,
+                loader: wmsPurchaseOrdersLoader,
+              };
             },
           },
           {
             path: "orders/stocking/:purchaseOrderId",
             lazy: async () => {
-              const { default: Component } = await import(
-                "@/pages/wms/purchase-orders/detail/StockingPage"
-              );
-              const { stockingProcessLoader } = await import(
-                "@/features/stocking-process/api/stocking-process.loader"
-              );
+              const { StockingPage, stockingProcessLoader } =
+                await import("@/pages/wms/purchase-orders");
               return {
-                Component,
+                Component: StockingPage,
                 loader: async ({ params }) => {
                   const purchaseOrderId = Number(params.purchaseOrderId);
                   if (Number.isNaN(purchaseOrderId)) {
@@ -485,20 +404,16 @@ const routes: RouteObject[] = [
           {
             path: "rop-settings",
             lazy: async () => {
-              const { RopSettings } = await import("@/pages/wms/rop-settings");
-              const { ropSettingsLoader } = await import(
-                "@/pages/wms/rop-settings/api/rop-settings.loader"
-              );
-              return { Component: RopSettings, loader: ropSettingsLoader };
+              return {
+                Component: RopSettings,
+                loader: ropSettingsLoader,
+              };
             },
           },
           {
             path: "rop-settings/process/:id?",
             lazy: async () => {
-              const { RopProcess: Component } = await import(
-                "@/pages/wms/rop-settings/process"
-              );
-              return { Component };
+              return { Component: RopProcess };
             },
           },
         ],
@@ -519,32 +434,37 @@ const routes: RouteObject[] = [
           {
             path: "orders",
             lazy: async () => {
-              const { WorkOrders } = await import("@/pages/production/orders");
-              const { loader } = await import(
-                "@/pages/production/orders/api/loader"
-              );
-              return { Component: WorkOrders, loader };
+              const { WorkOrders, workOrdersLoader } =
+                await import("@/pages/production/orders");
+              return { Component: WorkOrders, loader: workOrdersLoader };
             },
           },
           {
             path: "orders/:id",
-            element: <WorkOrderDetail />,
+            lazy: async () => {
+              const { WorkOrderDetail } =
+                await import("@/pages/production/orders");
+              return { Component: WorkOrderDetail };
+            },
           },
           {
             path: "planning",
             lazy: async () => {
-              const { ProductionPlanning } = await import(
-                "@/pages/production/planning"
-              );
-              const { loader } = await import(
-                "@/pages/production/planning/api/loader"
-              );
-              return { Component: ProductionPlanning, loader };
+              const { ProductionPlanning, productionPlanningLoader } =
+                await import("@/pages/production/planning");
+              return {
+                Component: ProductionPlanning,
+                loader: productionPlanningLoader,
+              };
             },
           },
           {
             path: "mps",
-            element: <MasterProductionSchedule />,
+            lazy: async () => {
+              const { MasterProductionSchedule } =
+                await import("@/pages/production/mps");
+              return { Component: MasterProductionSchedule };
+            },
           },
         ],
       },
@@ -563,7 +483,14 @@ const routes: RouteObject[] = [
           },
           {
             path: "requests",
-            element: <PurchaseRequests />,
+            lazy: async () => {
+              const { PurchaseRequests, purchasingRequestsLoader } =
+                await import("@/pages/purchasing/requests");
+              return {
+                Component: PurchaseRequests,
+                loader: purchasingRequestsLoader,
+              };
+            },
           },
         ],
       },
@@ -578,27 +505,48 @@ const routes: RouteObject[] = [
         children: [
           {
             path: "employees",
-            element: <HRMEmployees />,
+            lazy: async () => {
+              const { HRMEmployees, hrmEmployeesLoader } =
+                await import("@/pages/hrm/employees");
+              return { Component: HRMEmployees, loader: hrmEmployeesLoader };
+            },
           },
           {
             path: "employees/process/:id",
-            element: <EmployeeProfileProcess />,
+            lazy: async () => {
+              const { EmployeeProfileProcess } =
+                await import("@/pages/hrm/employees");
+              return { Component: EmployeeProfileProcess };
+            },
           },
           {
             path: "employees/status/:id",
-            element: <EmployeeStatusProcess />,
+            lazy: async () => {
+              const { EmployeeStatusProcess } =
+                await import("@/pages/hrm/employees");
+              return { Component: EmployeeStatusProcess };
+            },
           },
           {
             path: "payroll",
-            element: <HRMPayroll />,
+            lazy: async () => {
+              const { HRMPayroll } = await import("@/pages/hrm/payroll");
+              return { Component: HRMPayroll };
+            },
           },
           {
             path: "attendance",
-            element: <HRMAttendance />,
+            lazy: async () => {
+              const { HRMAttendance } = await import("@/pages/hrm/attendance");
+              return { Component: HRMAttendance };
+            },
           },
           {
             path: "evaluation",
-            element: <HRMEvaluation />,
+            lazy: async () => {
+              const { HRMEvaluation } = await import("@/pages/hrm/evaluation");
+              return { Component: HRMEvaluation };
+            },
           },
         ],
       },

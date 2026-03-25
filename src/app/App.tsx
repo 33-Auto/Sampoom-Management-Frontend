@@ -8,7 +8,7 @@ import { RouterProvider } from "react-router";
 
 import router from "@/app/providers/router";
 import { useAuthStore } from "@/entities/user";
-import { queryClient } from "@/shared/api/query";
+import { queryClient } from "@/shared/api";
 import { useThemeStore } from "@/shared/lib";
 import { ErrorHandler } from "@/shared/ui";
 

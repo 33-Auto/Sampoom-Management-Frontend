@@ -1,7 +1,6 @@
 import { redirect, type LoaderFunctionArgs } from "react-router-dom";
 
-import { useAuthStore } from "@/entities/user";
-import { getMyProfile } from "@/entities/user/api/auth.api";
+import { useAuthStore, getMyProfile } from "@/entities/user";
 
 let hasBootstrappedAuth = false;
 let bootstrapAuthPromise: Promise<void> | null = null;

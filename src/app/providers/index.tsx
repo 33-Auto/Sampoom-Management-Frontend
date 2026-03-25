@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import "@/app/styles/global.css";
 
-import { NotificationProvider } from "./NotificationContext";
+import { NotificationProvider } from "@/shared/lib";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
