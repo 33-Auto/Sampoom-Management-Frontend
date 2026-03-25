@@ -1,7 +1,7 @@
 export { Button } from "./Button";
 export { Input } from "./Input";
-export { Table } from "./Table";
-export { Select } from "./Select";
+export { Table, type Column, type TableProps } from "./Table";
+export { Select, type Option } from "./Select";
 export { Textarea } from "./Textarea";
 export { ErrorHandler } from "./ErrorHandler";
 export { StatCard } from "./StatCard";
@@ -13,3 +13,4 @@ export { Badge } from "./Badge";
 export { ThemeToggle } from "./ThemeToggle";
 export { Modal } from "./Modal/Modal";
 export { ToastContainer } from "./Toast";
+export * from "./table-pagination";

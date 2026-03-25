@@ -3,8 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui";
 
 type ErrorHandlerProps = {
-  error: Error;
-  resetErrorBoundary?: (...args: any[]) => void;
+  error: any;
+  resetErrorBoundary: (...args: any[]) => void;
 };
 
 const isDev =

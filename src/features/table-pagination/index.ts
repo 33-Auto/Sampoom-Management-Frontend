@@ -1,1 +1,0 @@
-export { PaginationTableSection } from "./ui";

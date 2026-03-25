@@ -83,4 +83,4 @@ const createAuthAwareFetchClient = () => {
 };
 
 export const fetchClient = createAuthAwareFetchClient();
-export const queryClient = createClient(fetchClient);
+export const api = createClient(fetchClient);

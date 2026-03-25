@@ -1,2 +1,3 @@
-export type { Schemas } from "./models";
-export type { Operations } from "./models";
+export type { Schemas, Operations } from "./models";
+export type { paths } from "./v1";
+export * from "./models";

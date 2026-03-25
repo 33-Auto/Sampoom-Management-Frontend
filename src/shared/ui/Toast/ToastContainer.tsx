@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-import { useNotification } from "@/app/providers/NotificationContext";
+import { useNotification } from "@/shared/lib";
 
 import { Toast } from "./Toast";
 

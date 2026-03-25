@@ -1,8 +1,17 @@
-// TODO 추후에 useContext를 zustand로 대체할 예정
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 
-import { Button, ToastContainer, Modal } from "@/shared/ui";
+// Note: circular dependency with shared/ui might occur if we import from @/shared/ui here.
+// But NotificationProvider needs ToastContainer and Modal.
+// Actually, ToastContainer is what uses useNotification.
+// So NotificationProvider should NOT import ToastContainer if ToastContainer is in shared/ui.
+// Wait, NotificationProvider IS the one that renders them.
+// This is a common FSD dilemma.
+// If NotificationProvider is in shared/lib, and it renders shared/ui components, it's fine.
+// But if shared/ui components use useNotification (which is in shared/lib), it's ALSO fine.
+
+import { Button, Modal } from "@/shared/ui";
+import { ToastContainer } from "@/shared/ui/Toast/ToastContainer";
 
 interface ToastNotification {
   id: string;
@@ -24,23 +33,16 @@ interface ConfirmModal {
 }
 
 interface NotificationContextType {
-  // Toast 관련
   toasts: ToastNotification[];
   showToast: (toast: Omit<ToastNotification, "id">) => void;
   removeToast: (id: string) => void;
-
-  // 확인 모달 관련
   confirmModal: ConfirmModal | null;
   showConfirm: (modal: Omit<ConfirmModal, "id">) => void;
   hideConfirm: () => void;
-
-  // 편의 메서드
   showSuccess: (title: string, message?: string) => void;
   showError: (title: string, message?: string) => void;
   showWarning: (title: string, message?: string) => void;
   showInfo: (title: string, message?: string) => void;
-
-  // 기존 호환을 위한 메서드
   addNotification?: (notification: any) => void;
 }
 
@@ -55,10 +57,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const showToast = (toast: Omit<ToastNotification, "id">) => {
     const id = Date.now().toString();
     const newToast = { ...toast, id };
-
     setToasts((prev) => [...prev, newToast]);
-
-    // 자동 제거
     const duration = toast.duration || 5000;
     setTimeout(() => {
       removeToast(id);
@@ -78,7 +77,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setConfirmModal(null);
   };
 
-  // 편의 메서드들
   const showSuccess = (title: string, message?: string) => {
     showToast({ type: "success", title, message });
   };
@@ -95,7 +93,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     showToast({ type: "info", title, message });
   };
 
-  // 기존 호환을 위한 메서드
   const addNotification = (notification: any) => {
     if (notification.type && notification.message) {
       showToast({ type: notification.type, title: notification.message });
