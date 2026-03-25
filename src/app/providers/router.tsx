@@ -20,18 +20,7 @@ import { useAuthStore } from "@/entities/user";
 import { Home } from "@/pages/home";
 import { Login } from "@/pages/login";
 import { Notfound } from "@/pages/Notfound";
-import { Register } from "@/pages/register";
-import { InventoryDashboard, inventoryLoader } from "@/pages/wms/inventory";
-import {
-  WmsPurchaseOrders,
-  wmsPurchaseOrdersLoader,
-} from "@/pages/wms/purchase-orders";
-import {
-  RopSettings,
-  ropSettingsLoader,
-  RopProcess,
-} from "@/pages/wms/rop-settings";
-import { ShippingTodos, shippingLoader } from "@/pages/wms/shipping";
+// (Removed static imports to enable true lazy loading)
 
 // ============================================================================
 // Layouts - 각 모듈별 레이아웃 컴포넌트 (즉시 로딩)
@@ -159,7 +148,10 @@ const routes: RouteObject[] = [
       },
       {
         path: "/signup",
-        element: <Register />,
+        lazy: async () => {
+          const { Register: Component } = await import("@/pages/register");
+          return { Component };
+        },
       },
 
       // ----------------------------------------------------------------------------
@@ -351,6 +343,8 @@ const routes: RouteObject[] = [
           {
             path: "shipping",
             lazy: async () => {
+              const { ShippingTodos, shippingLoader } =
+                await import("@/pages/wms/shipping");
               return {
                 Component: ShippingTodos,
                 loader: shippingLoader,
@@ -367,6 +361,8 @@ const routes: RouteObject[] = [
           {
             path: "inventory",
             lazy: async () => {
+              const { InventoryDashboard, inventoryLoader } =
+                await import("@/pages/wms/inventory");
               return {
                 Component: InventoryDashboard,
                 loader: inventoryLoader,
@@ -376,6 +372,8 @@ const routes: RouteObject[] = [
           {
             path: "orders",
             lazy: async () => {
+              const { WmsPurchaseOrders, wmsPurchaseOrdersLoader } =
+                await import("@/pages/wms/purchase-orders");
               return {
                 Component: WmsPurchaseOrders,
                 loader: wmsPurchaseOrdersLoader,
@@ -404,6 +402,8 @@ const routes: RouteObject[] = [
           {
             path: "rop-settings",
             lazy: async () => {
+              const { RopSettings, ropSettingsLoader } =
+                await import("@/pages/wms/rop-settings");
               return {
                 Component: RopSettings,
                 loader: ropSettingsLoader,
@@ -413,7 +413,9 @@ const routes: RouteObject[] = [
           {
             path: "rop-settings/process/:id?",
             lazy: async () => {
-              return { Component: RopProcess };
+              const { RopProcess: Component } =
+                await import("@/pages/wms/rop-settings");
+              return { Component };
             },
           },
         ],
