@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export const useMaterialCategoriesQuery = () =>
-  queryClient.useQuery("get", "/api/part/materials/category");
+  api.useQuery("get", "/api/part/materials/category");

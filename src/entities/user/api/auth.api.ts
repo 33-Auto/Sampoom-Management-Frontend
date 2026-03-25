@@ -1,13 +1,13 @@
-import { fetchClient, queryClient } from "@/shared/api";
-import type { SignupRequest, UserResponse } from "@/shared/model/models";
+import { fetchClient, api } from "@/shared/api";
+import type { SignupRequest, UserResponse } from "@/shared/model";
 
 import type { ApiResponseUserLoginResponse, UserLoginResponse } from "../model";
 
 export const useLoginMutation = () =>
-  queryClient.useMutation("post", "/api/auth/login");
+  api.useMutation("post", "/api/auth/login");
 
 export const useSignupMutation = () =>
-  queryClient.useMutation("post", "/api/auth/signup");
+  api.useMutation("post", "/api/auth/signup");
 
 const mapProfileToUserResponse = (
   profile: UserLoginResponse,
@@ -45,11 +45,14 @@ export const getMyProfile = async (): Promise<UserResponse> => {
   }
 };
 
-export const useProfileQuery = () =>
-  queryClient.useQuery("get", "/api/user/profile");
+export const myProfileQueryOptions = () =>
+  api.queryOptions("get", "/api/user/profile", {});
+
+export const useMyProfileQuery = () =>
+  api.useQuery("get", "/api/user/profile", {});
 
 export const useLogoutMutation = () =>
-  queryClient.useMutation("post", "/api/auth/logout");
+  api.useMutation("post", "/api/auth/logout");
 
 export const register = async (userInfo: SignupRequest) => {
   const { data, error } = await fetchClient.POST("/api/user/signup" as any, {

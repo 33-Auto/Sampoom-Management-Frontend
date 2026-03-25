@@ -1,2 +1,2 @@
-export { useMaterialCategoryQuery } from "./category.api";
-export { useMaterialGroupQuery } from "./group.api";
+export { useItemCategoriesQuery } from "./category.api";
+export { useItemGroupsQuery } from "./group.api";

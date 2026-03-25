@@ -8,7 +8,7 @@ import type {
   SignupResponse,
   UserResponse,
   Schemas,
-} from "@/shared/model/models";
+} from "@/shared/model";
 
 import {
   addUser,

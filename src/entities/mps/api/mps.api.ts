@@ -1,6 +1,7 @@
-import { queryClient } from "@/shared/api";
-import { queryClient as tanstackQueryClient } from "@/shared/api/query";
-import type { paths } from "@/shared/model/v1";
+import { useQuery } from "@tanstack/react-query";
+
+import { api, queryClient } from "@/shared/api";
+import type { paths } from "@/shared/model";
 
 type GetMpsPartInfosOperation =
   paths["/api/factory/{factoryId}/mps/parts"]["get"];
@@ -61,14 +62,12 @@ const getMpsPartsQueryOptions = (factoryId?: number) => ({
 });
 
 export const useMpsPartsQuery = (factoryId?: number) =>
-  queryClient.useQuery(
-    "get",
-    "/api/factory/{factoryId}/mps/parts",
-    getMpsPartsQueryOptions(factoryId),
-    {
-      enabled: typeof factoryId === "number" && Number.isFinite(factoryId),
-      placeholderData: (previousData) => previousData,
-    },
+  useQuery(
+    api.queryOptions(
+      "get",
+      "/api/factory/{factoryId}/mps/parts",
+      getMpsPartsQueryOptions(factoryId),
+    ) as any,
   );
 
 const getPartForecastMonthsQueryOptions = (
@@ -87,18 +86,12 @@ export const usePartForecastMonthsQuery = (
   factoryId?: number,
   partId?: number,
 ) =>
-  queryClient.useQuery(
-    "get",
-    "/api/factory/{factoryId}/mps/parts/{partId}/forecast-months",
-    getPartForecastMonthsQueryOptions(factoryId, partId),
-    {
-      enabled:
-        typeof factoryId === "number" &&
-        Number.isFinite(factoryId) &&
-        typeof partId === "number" &&
-        Number.isFinite(partId),
-      placeholderData: (previousData) => previousData,
-    },
+  useQuery(
+    api.queryOptions(
+      "get",
+      "/api/factory/{factoryId}/mps/parts/{partId}/forecast-months",
+      getPartForecastMonthsQueryOptions(factoryId, partId),
+    ) as any,
   );
 
 const getMpsQueryParams = (params: MpsQueryParams) => ({
@@ -115,7 +108,7 @@ const getMpsQueryParams = (params: MpsQueryParams) => ({
 });
 
 const getMpsQueryOptions = (params: MpsQueryParams) =>
-  queryClient.queryOptions(
+  (api as any).queryOptions(
     "get",
     "/api/factory/{factoryId}/mps",
     getMpsQueryParams(params),
@@ -127,7 +120,7 @@ export const fetchMpsByWarehouse = async (
   const { queryKey, queryFn, ...restOptions } = getMpsQueryOptions(params);
 
   try {
-    const response = await tanstackQueryClient.fetchQuery({
+    const response = await queryClient.fetchQuery({
       queryKey,
       queryFn,
       // 강제로 재요청하도록 기본 staleTime을 0으로 설정
@@ -146,13 +139,7 @@ export const fetchMpsByWarehouse = async (
 };
 
 export const useExecuteMpsMutation = () =>
-  queryClient.useMutation(
-    "post",
-    "/api/factory/{factoryId}/mps/{mpsId}/execute",
-  );
+  api.useMutation("post", "/api/factory/{factoryId}/mps/{mpsId}/execute");
 
 export const useConfirmMpsMutation = () =>
-  queryClient.useMutation(
-    "post",
-    "/api/factory/{factoryId}/mps/{mpsId}/confirm",
-  );
+  api.useMutation("post", "/api/factory/{factoryId}/mps/{mpsId}/confirm");

@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export const useAgencyBranchesQuery = () =>
-  queryClient.useQuery("get", "/api/site/vendors");
+  api.useQuery("get", "/api/site/vendors");

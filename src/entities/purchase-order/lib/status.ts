@@ -1,7 +1,7 @@
 import {
   PURCHASE_ORDER_STATUS_LABELS,
   type PurchaseOrderStatusKey,
-} from "@/pages/wms/purchase-orders/model";
+} from "../model";
 
 export const STATUS_ORDER: PurchaseOrderStatusKey[] = [
   "PENDING",

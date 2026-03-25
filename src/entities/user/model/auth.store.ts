@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { UserResponse } from "@/shared/model/models";
+import type { UserResponse } from "@/shared/model";
 
 interface AuthState {
   isLoggedIn: boolean;

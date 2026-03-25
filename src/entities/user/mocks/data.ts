@@ -1,4 +1,4 @@
-import type { SignupRequest, UserResponse } from "@/shared/model/models";
+import type { SignupRequest, UserResponse } from "@/shared/model";
 
 // 메모리 상에 사용자 데이터 저장
 // 각 workspace별 예시 사용자 데이터

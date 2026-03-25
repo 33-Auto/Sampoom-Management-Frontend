@@ -1,4 +1,4 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
 export interface PartSearchEntry {
   id: number;
@@ -10,7 +10,7 @@ export const usePartSearchQuery = (
   partCategoryId: number,
   partGroupId: number,
 ) =>
-  queryClient.useQuery("get", "/api/part/items/search", {
+  api.useQuery("get", "/api/part/items/search", {
     params: {
       query: {
         partCategoryId,

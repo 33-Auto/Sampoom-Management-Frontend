@@ -1,4 +1,3 @@
-import { queryClient } from "@/shared/api/base";
+import { api } from "@/shared/api";
 
-export const useVendorsQuery = () =>
-  queryClient.useQuery("get", "/api/site/vendors");
+export const useVendorsQuery = () => api.useQuery("get", "/api/site/vendors");

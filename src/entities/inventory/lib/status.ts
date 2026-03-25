@@ -1,7 +1,4 @@
-import {
-  INVENTORY_STATUS_LABELS,
-  type InventoryStatusKey,
-} from "@/pages/wms/inventory/model";
+import { INVENTORY_STATUS_LABELS, type InventoryStatusKey } from "../model";
 
 const LABEL_TO_STATUS: Record<string, InventoryStatusKey> = Object.entries(
   INVENTORY_STATUS_LABELS,

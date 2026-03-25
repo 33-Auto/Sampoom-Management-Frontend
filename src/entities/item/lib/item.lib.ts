@@ -1,8 +1,8 @@
-import { useMaterialCategoryQuery, useMaterialGroupQuery } from "../api";
+import { useItemCategoriesQuery, useItemGroupsQuery } from "../api";
 import { usePartSearchQuery } from "../api/part.api";
 // 전체를 포함한 카테고리 옵션 '데이터'들 반환
 export function useCategoryOptions() {
-  const { data } = useMaterialCategoryQuery();
+  const { data } = useItemCategoriesQuery();
 
   const baseOption = { label: "전체 카테고리", value: "" };
 
@@ -20,7 +20,7 @@ export function useCategoryOptions() {
 }
 
 export function useGroupOptions(categoryId: number) {
-  const { data } = useMaterialGroupQuery(categoryId);
+  const { data } = useItemGroupsQuery(categoryId);
 
   const baseOption = { label: "전체 그룹", value: "" };
 

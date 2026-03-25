@@ -1,15 +1,15 @@
-import { queryClient } from "@/shared/api";
+import { api } from "@/shared/api";
 
 export function usePartSearchQuery(
   partCategoryId: number,
   partGroupId: number,
 ) {
-  return queryClient.useQuery("get", "/api/part/items/search", {
+  return api.useQuery("get", "/api/part/parts", {
     params: {
       query: {
-        partCategoryId: partCategoryId,
-        partGroupId: partGroupId,
+        groupId: partGroupId,
       },
     },
+    enabled: !!partGroupId,
   });
 }
