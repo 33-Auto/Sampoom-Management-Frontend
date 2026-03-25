@@ -7,6 +7,49 @@ import { mockWorkCenters, type WorkCenterRecord } from "./data";
 let workCenters = [...mockWorkCenters];
 
 export const handlers = [
+  http.get("/api/part/work-centers", async ({ request }) => {
+    await sleep(300);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") || "0");
+    const size = Number(url.searchParams.get("size") || "10");
+    const type = url.searchParams.get("type");
+    const status = url.searchParams.get("status");
+    const queryParameter = url.searchParams.get("query");
+
+    let filtered = [...workCenters];
+
+    if (type) {
+      filtered = filtered.filter((wc) => wc.type === type);
+    }
+    if (status) {
+      filtered = filtered.filter((wc) => wc.status === status);
+    }
+    if (queryParameter) {
+      const lowerQuery = queryParameter.toLowerCase();
+      filtered = filtered.filter(
+        (wc) =>
+          wc.name.toLowerCase().includes(lowerQuery) ||
+          wc.code.toLowerCase().includes(lowerQuery),
+      );
+    }
+
+    const start = page * size;
+    const end = start + size;
+    const content = filtered.slice(start, end);
+
+    return apiSuccess(
+      {
+        content,
+        totalElements: filtered.length,
+        totalPages: Math.ceil(filtered.length / size),
+        size,
+        number: page,
+      },
+      200,
+      "작업장 목록을 조회했습니다.",
+    );
+  }),
+
   http.post("/api/part/work-centers", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<WorkCenterRecord>;
