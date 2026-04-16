@@ -26,7 +26,7 @@ const filterRecords = (url: URL) => {
 };
 
 export const handlers = [
-  http.get("/api/warehouse/rop", async ({ request }) => {
+  http.get("*/api/warehouse/rop", async ({ request }) => {
     await sleep(350);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? "0");

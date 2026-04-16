@@ -39,7 +39,7 @@ const filterOrders = (url: URL) => {
 };
 
 export const handlers = [
-  http.get("/api/order/outbound", async ({ request }) => {
+  http.get("*/api/order/outbound", async ({ request }) => {
     await sleep(400);
     const url = new URL(request.url);
     const warehouseId = Number(url.searchParams.get("warehouseId"));

@@ -40,28 +40,29 @@ const initMSW = async (): Promise<void> => {
 
 const renderApp = async () => {
   // MSW(Mock Service Worker) 활성화 여부를 환경 변수로 제어 한다.
-  // VITE_USE_MOCK=true로 설정하면 MSW가 활성화
+  // VITE_USE_MOCK=true이거나 특정 성능 테스트 경로인 경우 활성화
   const shouldUseMock =
     import.meta.env.VITE_USE_MOCK === "true" ||
     window.location.pathname.includes("/perf-stress-test");
 
-  // MSW가 필요한 경우 완전히 시작될 때까지 기다립니다.
+  console.log(`[Init] shouldUseMock: ${shouldUseMock}`);
+
   if (shouldUseMock) {
     try {
-      // promise가 완료 될 때까지 기다린다
+      // MSW가 준비될 때까지 기다림
       await initMSW();
+      console.log("[Init] MSW is ready. Proceeding with App rendering.");
     } catch (error) {
-      console.error(
-        "MSW initialization failed, continuing without mocks:",
-        error,
-      );
+      console.error("[Init] MSW failed to start:", error);
     }
   }
 
-  // MSW 준비가 완료된 후 App을 동적으로 import하여 router가 생성되도록 한다.
+  // **중요**: MSW 준비가 완료된 후 'App'과 그 하위 모듈들을 임포트하여
+  // 모듈 초기화 시점에 발생하는 API 요청(싱글톤 생성 등)이 누락되지 않게 함.
   const { default: App } = await import("@/app/App");
 
-  // MSW 준비가 완료된 후 앱을 렌더링합니다.
+  if (!rootElement) return;
+
   root.render(
     <React.StrictMode>
       <NotificationProvider>
@@ -71,5 +72,4 @@ const renderApp = async () => {
   );
 };
 
-// 앱 초기화 시작
 renderApp();

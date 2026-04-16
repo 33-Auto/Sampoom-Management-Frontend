@@ -16,7 +16,7 @@ type StockingMutationPayload = {
 };
 
 export const handlers = [
-  http.get("/api/warehouse/po/:purchaseOrderId", async ({ params }) => {
+  http.get("*/api/warehouse/po/:purchaseOrderId", async ({ params }) => {
     await sleep(350);
     const purchaseOrderId = Number(params.purchaseOrderId);
 
@@ -35,7 +35,7 @@ export const handlers = [
     return apiSuccess(detail);
   }),
 
-  http.patch("/api/warehouse/stocking", async ({ request }) => {
+  http.patch("*/api/warehouse/stocking", async ({ request }) => {
     await sleep(450);
     const payload = (await request.json()) as StockingMutationPayload;
 
