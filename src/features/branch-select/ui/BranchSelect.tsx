@@ -7,8 +7,7 @@ import { cn } from "@/shared/lib";
 import { Select, type Option } from "@/shared/ui";
 
 import { useBranchSelectionStore } from "../model/branch-selection.store";
-
-export type BranchModuleType = "agency" | "wms" | "factory";
+import type { BranchModuleType } from "../model/types";
 
 const moduleConfig: Record<
   BranchModuleType,
