@@ -6,7 +6,7 @@ import { mockPartnersMaster } from "./data";
 
 export const handlers = [
   // 거래처 목록 조회 (검색)
-  http.get("/api/site/vendors/search", async ({ request }) => {
+  http.get("*/api/site/vendors/search", async ({ request }) => {
     await sleep(500);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 0;
@@ -50,7 +50,7 @@ export const handlers = [
   }),
 
   // 특정 거래처 조회
-  http.get("/api/site/vendors/:vendorId", async ({ params }) => {
+  http.get("*/api/site/vendors/:vendorId", async ({ params }) => {
     await sleep(300);
     const vendorId = Number(params.vendorId);
     const partner = mockPartnersMaster.find((p) => p.id === vendorId);
@@ -61,7 +61,7 @@ export const handlers = [
   }),
 
   // 거래처 등록
-  http.post("/api/site/vendors", async ({ request }) => {
+  http.post("*/api/site/vendors", async ({ request }) => {
     await sleep(400);
     const newPartner = (await request.json()) as Partial<
       (typeof mockPartnersMaster)[0]
@@ -75,7 +75,7 @@ export const handlers = [
   }),
 
   // 거래처 수정
-  http.put("/api/site/vendors/:vendorId", async ({ params, request }) => {
+  http.put("*/api/site/vendors/:vendorId", async ({ params, request }) => {
     await sleep(300);
     const updates = (await request.json()) as Partial<
       (typeof mockPartnersMaster)[0]

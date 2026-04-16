@@ -5,7 +5,7 @@ import { apiSuccess, sleep } from "@/shared/mocks";
 import { mockBomMasterList, mockBomMaterials } from "./data";
 
 export const handlers = [
-  http.get("/api/part/boms/search", async ({ request }) => {
+  http.get("*/api/part/boms/search", async ({ request }) => {
     await sleep(500);
 
     const url = new URL(request.url);
@@ -77,7 +77,7 @@ export const handlers = [
     });
   }),
 
-  http.get("/api/part/materials/search", async ({ request }) => {
+  http.get("*/api/part/materials/search", async ({ request }) => {
     await sleep(400);
 
     const url = new URL(request.url);

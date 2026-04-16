@@ -7,7 +7,7 @@ import { mockBranchRecords, type BranchRecord } from "./data";
 let branchRecords = [...mockBranchRecords];
 
 export const handlers = [
-  http.post("/api/site/branches", async ({ request }) => {
+  http.post("*/api/site/branches", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<BranchRecord>;
 
@@ -32,7 +32,7 @@ export const handlers = [
     return apiSuccess(nextRecord, 201, "지점이 생성되었습니다.");
   }),
 
-  http.put("/api/site/branches/:id", async ({ params, request }) => {
+  http.put("*/api/site/branches/:id", async ({ params, request }) => {
     await sleep(350);
     const id = Number(params.id);
 
@@ -65,7 +65,7 @@ export const handlers = [
     return apiSuccess(updatedRecord, 200, "지점이 수정되었습니다.");
   }),
 
-  http.delete("/api/site/branches/:id", async ({ params }) => {
+  http.delete("*/api/site/branches/:id", async ({ params }) => {
     await sleep(300);
     const id = Number(params.id);
 

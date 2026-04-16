@@ -13,7 +13,7 @@ let materialDetails = [...mockMaterialDetails];
 let partDetails = [...mockPartDetails];
 
 export const handlers = [
-  http.get("/api/part/materials/:materialId", async ({ params }) => {
+  http.get("*/api/part/materials/:materialId", async ({ params }) => {
     await sleep(300);
 
     if (!params.materialId || params.materialId === "search") {
@@ -37,7 +37,7 @@ export const handlers = [
     return apiSuccess(material);
   }),
 
-  http.get("/api/part/parts/:partId", async ({ params }) => {
+  http.get("*/api/part/parts/:partId", async ({ params }) => {
     await sleep(300);
     const partId = Number(params.partId);
 
@@ -54,7 +54,7 @@ export const handlers = [
     return apiSuccess(part);
   }),
 
-  http.post("/api/part/materials", async ({ request }) => {
+  http.post("*/api/part/materials", async ({ request }) => {
     await sleep(500);
     const payload = (await request.json()) as Partial<MockMaterialDetail>;
 
@@ -84,7 +84,7 @@ export const handlers = [
     return apiSuccess(nextMaterial, 201, "원자재가 생성되었습니다.");
   }),
 
-  http.post("/api/part/parts", async ({ request }) => {
+  http.post("*/api/part/parts", async ({ request }) => {
     await sleep(500);
     const payload = (await request.json()) as Partial<MockPartDetail>;
 
@@ -111,7 +111,7 @@ export const handlers = [
     return apiSuccess(nextPart, 201, "부품이 생성되었습니다.");
   }),
 
-  http.put("/api/part/materials/:materialId", async ({ params, request }) => {
+  http.put("*/api/part/materials/:materialId", async ({ params, request }) => {
     await sleep(450);
 
     if (!params.materialId || params.materialId === "search") {
@@ -147,7 +147,7 @@ export const handlers = [
     return apiSuccess(updatedMaterial, 200, "원자재가 수정되었습니다.");
   }),
 
-  http.put("/api/part/parts/:partId", async ({ params, request }) => {
+  http.put("*/api/part/parts/:partId", async ({ params, request }) => {
     await sleep(450);
     const partId = Number(params.partId);
 
