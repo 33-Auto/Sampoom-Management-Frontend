@@ -153,6 +153,17 @@ const routes: RouteObject[] = [
           return { Component };
         },
       },
+      {
+        path: "/perf-stress-test",
+        lazy: async () => {
+          const { InventoryDashboard, inventoryLoader } =
+            await import("@/pages/wms/inventory");
+          return {
+            Component: InventoryDashboard,
+            loader: inventoryLoader,
+          };
+        },
+      },
 
       // ----------------------------------------------------------------------------
       // Master Module - 기준 정보 관리
