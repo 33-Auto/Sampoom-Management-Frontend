@@ -5,12 +5,12 @@ import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 import { mockPositionsMaster } from "./data";
 
 export const handlers = [
-  http.get("/api/master/positions", async () => {
+  http.get("*/api/master/positions", async () => {
     await sleep(500);
     return apiSuccess(mockPositionsMaster);
   }),
 
-  http.get("/api/master/positions/:positionCode", async ({ params }) => {
+  http.get("*/api/master/positions/:positionCode", async ({ params }) => {
     await sleep(300);
     const positionCode = String(params.positionCode);
     const position = mockPositionsMaster.find(
@@ -22,7 +22,7 @@ export const handlers = [
     return apiSuccess(position);
   }),
 
-  http.post("/api/master/positions", async ({ request }) => {
+  http.post("*/api/master/positions", async ({ request }) => {
     await sleep(400);
     const newPosition = (await request.json()) as Partial<
       (typeof mockPositionsMaster)[0]

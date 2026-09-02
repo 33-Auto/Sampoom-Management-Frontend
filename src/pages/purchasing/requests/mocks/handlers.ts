@@ -5,7 +5,7 @@ import { apiSuccess, sleep } from "@/shared/mocks";
 import { mockPurchaseRequests } from "./data";
 
 export const handlers = [
-  http.get("/api/purchase/", async ({ request }) => {
+  http.get("*/api/purchase/", async ({ request }) => {
     await sleep(300);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? "0");
