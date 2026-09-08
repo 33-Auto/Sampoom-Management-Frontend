@@ -7,7 +7,7 @@ import { mockBomDetails, type MockBomDetail } from "./data";
 let bomDetails = [...mockBomDetails];
 
 export const handlers = [
-  http.get("/api/part/boms/:bomId", async ({ params }) => {
+  http.get("*/api/part/boms/:bomId", async ({ params }) => {
     await sleep(400);
 
     // params.bomId가 없거나 undefined인지 확인
@@ -35,7 +35,7 @@ export const handlers = [
     return apiSuccess(bom);
   }),
 
-  http.post("/api/part/boms", async ({ request }) => {
+  http.post("*/api/part/boms", async ({ request }) => {
     await sleep(500);
     const payload = (await request.json()) as Partial<MockBomDetail>;
 
@@ -63,7 +63,7 @@ export const handlers = [
     return apiSuccess(nextBom, 201, "BOM이 생성되었습니다.");
   }),
 
-  http.put("/api/part/boms/:bomId", async ({ params, request }) => {
+  http.put("*/api/part/boms/:bomId", async ({ params, request }) => {
     await sleep(450);
 
     // params.bomId가 없거나 undefined인지 확인
@@ -106,7 +106,7 @@ export const handlers = [
     return apiSuccess(updatedBom, 200, "BOM이 수정되었습니다.");
   }),
 
-  http.delete("/api/part/boms/:bomId", async ({ params }) => {
+  http.delete("*/api/part/boms/:bomId", async ({ params }) => {
     await sleep(300);
 
     // params.bomId가 없거나 undefined인지 확인

@@ -6,7 +6,7 @@ import { mockItemsMaster } from "./data";
 
 export const handlers = [
   // 품목 검색 (실제로는 /api/part/items/search 사용)
-  http.get("/api/part/items/search", async ({ request }) => {
+  http.get("*/api/part/items/search", async ({ request }) => {
     await sleep(500);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 0;

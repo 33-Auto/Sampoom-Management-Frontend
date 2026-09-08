@@ -6,7 +6,7 @@ import { mockBranchesMaster } from "./data";
 
 export const handlers = [
   // 지점 목록 조회 (검색)
-  http.get("/api/site/branches/search", async ({ request }) => {
+  http.get("*/api/site/branches/search", async ({ request }) => {
     await sleep(500);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 0;
@@ -54,7 +54,7 @@ export const handlers = [
   }),
 
   // 특정 지점 조회
-  http.get("/api/site/branches/:branchId", async ({ params }) => {
+  http.get("*/api/site/branches/:branchId", async ({ params }) => {
     await sleep(300);
     const branchId = Number(params.branchId);
     const branch = mockBranchesMaster.find((b) => b.id === branchId);
@@ -65,7 +65,7 @@ export const handlers = [
   }),
 
   // 지점 등록
-  http.post("/api/site/branches", async ({ request }) => {
+  http.post("*/api/site/branches", async ({ request }) => {
     await sleep(400);
     const newBranch = (await request.json()) as Partial<
       (typeof mockBranchesMaster)[0]
@@ -81,7 +81,7 @@ export const handlers = [
   }),
 
   // 지점 수정
-  http.put("/api/site/branches/:branchId", async ({ params, request }) => {
+  http.put("*/api/site/branches/:branchId", async ({ params, request }) => {
     await sleep(300);
     const updates = (await request.json()) as Partial<
       (typeof mockBranchesMaster)[0]
