@@ -7,7 +7,7 @@ import { mockRoutingRecords, type RoutingRecord } from "./data";
 let routingRecords = [...mockRoutingRecords];
 
 export const handlers = [
-  http.post("/api/part/processes", async ({ request }) => {
+  http.post("*/api/part/processes", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<RoutingRecord>;
 
@@ -32,7 +32,7 @@ export const handlers = [
     return apiSuccess(nextRecord, 201, "라우팅이 생성되었습니다.");
   }),
 
-  http.put("/api/part/processes/:id", async ({ params, request }) => {
+  http.put("*/api/part/processes/:id", async ({ params, request }) => {
     await sleep(350);
     const id = Number(params.id);
 
@@ -63,7 +63,7 @@ export const handlers = [
     return apiSuccess(updatedRecord, 200, "라우팅이 수정되었습니다.");
   }),
 
-  http.delete("/api/part/processes/:id", async ({ params }) => {
+  http.delete("*/api/part/processes/:id", async ({ params }) => {
     await sleep(300);
     const id = Number(params.id);
 

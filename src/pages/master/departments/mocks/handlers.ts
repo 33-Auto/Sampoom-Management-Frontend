@@ -5,12 +5,12 @@ import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 import { mockDepartmentsMaster } from "./data";
 
 export const handlers = [
-  http.get("/api/master/departments", async () => {
+  http.get("*/api/master/departments", async () => {
     await sleep(500);
     return apiSuccess(mockDepartmentsMaster);
   }),
 
-  http.get("/api/master/departments/:deptCode", async ({ params }) => {
+  http.get("*/api/master/departments/:deptCode", async ({ params }) => {
     await sleep(300);
     const deptCode = String(params.deptCode);
     const dept = mockDepartmentsMaster.find((d) => d.deptCode === deptCode);
@@ -20,7 +20,7 @@ export const handlers = [
     return apiSuccess(dept);
   }),
 
-  http.post("/api/master/departments", async ({ request }) => {
+  http.post("*/api/master/departments", async ({ request }) => {
     await sleep(400);
     const newDept = (await request.json()) as Partial<
       (typeof mockDepartmentsMaster)[0]
@@ -32,19 +32,22 @@ export const handlers = [
     return apiSuccess(createdDept, 201);
   }),
 
-  http.put("/api/master/departments/:deptCode", async ({ params, request }) => {
-    await sleep(300);
-    const updates = (await request.json()) as Partial<
-      (typeof mockDepartmentsMaster)[0]
-    >;
-    const deptCode = String(params.deptCode);
-    const dept = mockDepartmentsMaster.find((d) => d.deptCode === deptCode);
+  http.put(
+    "*/api/master/departments/:deptCode",
+    async ({ params, request }) => {
+      await sleep(300);
+      const updates = (await request.json()) as Partial<
+        (typeof mockDepartmentsMaster)[0]
+      >;
+      const deptCode = String(params.deptCode);
+      const dept = mockDepartmentsMaster.find((d) => d.deptCode === deptCode);
 
-    if (!dept) {
-      return apiFail(404, "부서를 찾을 수 없습니다");
-    }
+      if (!dept) {
+        return apiFail(404, "부서를 찾을 수 없습니다");
+      }
 
-    const updatedDept = { ...dept, ...updates };
-    return apiSuccess(updatedDept);
-  }),
+      const updatedDept = { ...dept, ...updates };
+      return apiSuccess(updatedDept);
+    },
+  ),
 ];

@@ -64,7 +64,7 @@ const filterOrders = (url: URL) => {
 };
 
 export const handlers = [
-  http.get("/api/warehouse/po", async ({ request }) => {
+  http.get("*/api/warehouse/po", async ({ request }) => {
     await sleep(400);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? "0");

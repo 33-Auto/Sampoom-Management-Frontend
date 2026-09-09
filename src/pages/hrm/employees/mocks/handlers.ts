@@ -7,7 +7,7 @@ import { mockEmployeeRecords, type EmployeeRecord } from "./data";
 let employeeRecords = [...mockEmployeeRecords];
 
 export const handlers = [
-  http.get("/api/user/info", async ({ request }) => {
+  http.get("*/api/user/info", async ({ request }) => {
     await sleep(300);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? "0");
@@ -53,7 +53,7 @@ export const handlers = [
     });
   }),
 
-  http.patch("/api/user/profile/:userId", async ({ params, request }) => {
+  http.patch("*/api/user/profile/:userId", async ({ params, request }) => {
     await sleep(350);
     const userId = Number(params.userId);
     if (!userId || Number.isNaN(userId)) {
@@ -84,7 +84,7 @@ export const handlers = [
     return apiSuccess(updatedRecord, 200, "프로필이 수정되었습니다.");
   }),
 
-  http.patch("/api/user/status/:userId", async ({ params, request }) => {
+  http.patch("*/api/user/status/:userId", async ({ params, request }) => {
     await sleep(300);
     const userId = Number(params.userId);
     if (!userId || Number.isNaN(userId)) {
