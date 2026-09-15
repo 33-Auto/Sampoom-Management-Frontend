@@ -7,7 +7,7 @@ import { mockWorkCenters, type WorkCenterRecord } from "./data";
 let workCenters = [...mockWorkCenters];
 
 export const handlers = [
-  http.get("/api/part/work-centers", async ({ request }) => {
+  http.get("*/api/part/work-centers", async ({ request }) => {
     await sleep(300);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") || "0");
@@ -50,7 +50,7 @@ export const handlers = [
     );
   }),
 
-  http.post("/api/part/work-centers", async ({ request }) => {
+  http.post("*/api/part/work-centers", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<WorkCenterRecord>;
 
@@ -77,7 +77,7 @@ export const handlers = [
     return apiSuccess(nextRecord, 201, "작업장이 생성되었습니다.");
   }),
 
-  http.patch("/api/part/work-centers/:id", async ({ params, request }) => {
+  http.patch("*/api/part/work-centers/:id", async ({ params, request }) => {
     await sleep(350);
     const id = Number(params.id);
 
@@ -108,7 +108,7 @@ export const handlers = [
     return apiSuccess(updatedCenter, 200, "작업장이 수정되었습니다.");
   }),
 
-  http.delete("/api/part/work-centers/:id", async ({ params }) => {
+  http.delete("*/api/part/work-centers/:id", async ({ params }) => {
     await sleep(300);
     const id = Number(params.id);
 
