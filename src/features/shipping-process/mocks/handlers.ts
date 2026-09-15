@@ -16,7 +16,7 @@ type ShippingMutationPayload = {
 };
 
 export const handlers = [
-  http.patch("/api/warehouse/delivery", async ({ request }) => {
+  http.patch("*/api/warehouse/delivery", async ({ request }) => {
     await sleep(500);
     const payload = (await request.json()) as ShippingMutationPayload;
 

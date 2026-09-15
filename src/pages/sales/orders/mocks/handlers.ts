@@ -13,45 +13,48 @@ const getOrdersByWarehouse = (warehouseId: number) => {
 };
 
 export const handlers = [
-  http.get("/api/order/warehouse/:warehouseId", async ({ params, request }) => {
-    await sleep(350);
-    const warehouseId = Number(params.warehouseId);
-    if (!warehouseId || Number.isNaN(warehouseId)) {
-      return apiFail(400, "warehouseId가 필요합니다.");
-    }
+  http.get(
+    "*/api/order/warehouse/:warehouseId",
+    async ({ params, request }) => {
+      await sleep(350);
+      const warehouseId = Number(params.warehouseId);
+      if (!warehouseId || Number.isNaN(warehouseId)) {
+        return apiFail(400, "warehouseId가 필요합니다.");
+      }
 
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") ?? "0");
-    const size = Number(url.searchParams.get("size") ?? "20");
-    const status = url.searchParams.get("status");
-    const query = url.searchParams.get("query")?.toLowerCase();
-    const from = url.searchParams.get("from");
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get("page") ?? "0");
+      const size = Number(url.searchParams.get("size") ?? "20");
+      const status = url.searchParams.get("status");
+      const query = url.searchParams.get("query")?.toLowerCase();
+      const from = url.searchParams.get("from");
 
-    const filtered = getOrdersByWarehouse(warehouseId).filter((order) => {
-      const matchesStatus = !status || order.status === status;
-      const matchesFrom = !from || order.agencyName === from;
-      const matchesQuery =
-        !query ||
-        (order.orderNumber?.toLowerCase().includes(query) ?? false) ||
-        (order.agencyName?.toLowerCase().includes(query) ?? false);
+      const filtered = getOrdersByWarehouse(warehouseId).filter((order) => {
+        const matchesStatus = !status || order.status === status;
+        const matchesFrom = !from || order.agencyName === from;
+        const matchesQuery =
+          !query ||
+          (order.orderNumber?.toLowerCase().includes(query) ?? false) ||
+          (order.agencyName?.toLowerCase().includes(query) ?? false);
 
-      return matchesStatus && matchesFrom && matchesQuery;
-    });
+        return matchesStatus && matchesFrom && matchesQuery;
+      });
 
-    const start = page * size;
-    const end = start + size;
-    const pageContent = filtered.slice(start, end);
+      const start = page * size;
+      const end = start + size;
+      const pageContent = filtered.slice(start, end);
 
-    return apiSuccess({
-      content: pageContent,
-      page,
-      size,
-      totalPages: Math.max(1, Math.ceil(filtered.length / size || 1)),
-      totalElements: filtered.length,
-    });
-  }),
+      return apiSuccess({
+        content: pageContent,
+        page,
+        size,
+        totalPages: Math.max(1, Math.ceil(filtered.length / size || 1)),
+        totalElements: filtered.length,
+      });
+    },
+  ),
 
-  http.get("/api/order/:orderId", async ({ params }) => {
+  http.get("*/api/order/:orderId", async ({ params }) => {
     await sleep(300);
 
     // "outbound"와 같은 특수 경로는 이 핸들러에서 처리하지 않음
@@ -72,7 +75,7 @@ export const handlers = [
     return apiSuccess(order);
   }),
 
-  http.patch("/api/order/cancel/:orderId", async ({ params }) => {
+  http.patch("*/api/order/cancel/:orderId", async ({ params }) => {
     await sleep(400);
     const orderId = Number(params.orderId);
     if (!orderId || Number.isNaN(orderId)) {
