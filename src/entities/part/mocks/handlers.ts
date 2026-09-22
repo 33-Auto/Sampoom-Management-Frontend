@@ -5,7 +5,7 @@ import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 import { mockPartCategories, mockPartGroups } from "./data";
 
 export const handlers = [
-  http.get("/api/part/parts/categories", async () => {
+  http.get("*/api/part/parts/categories", async () => {
     await sleep(300);
     return apiSuccess(mockPartCategories);
   }),

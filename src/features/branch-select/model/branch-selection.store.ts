@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { BranchModuleType } from "../ui/BranchSelect";
+import type { BranchModuleType } from "./types";
 
 type BranchSelections = Record<BranchModuleType, string>;
 

@@ -7,7 +7,7 @@ import { mockPartnerVendors, type PartnerVendor } from "./data";
 let partnerVendors = [...mockPartnerVendors];
 
 export const handlers = [
-  http.post("/api/site/vendors", async ({ request }) => {
+  http.post("*/api/site/vendors", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<PartnerVendor>;
 
@@ -39,7 +39,7 @@ export const handlers = [
     return apiSuccess(nextVendor, 201, "거래처가 생성되었습니다.");
   }),
 
-  http.put("/api/site/vendors/:id", async ({ params, request }) => {
+  http.put("*/api/site/vendors/:id", async ({ params, request }) => {
     await sleep(350);
     const id = Number(params.id);
 
@@ -70,7 +70,7 @@ export const handlers = [
     return apiSuccess(updatedVendor, 200, "거래처가 수정되었습니다.");
   }),
 
-  http.delete("/api/site/vendors/:id", async ({ params }) => {
+  http.delete("*/api/site/vendors/:id", async ({ params }) => {
     await sleep(300);
     const id = Number(params.id);
 

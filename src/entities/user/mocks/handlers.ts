@@ -24,7 +24,7 @@ const REFRESH_TOKEN_MAX_AGE = 86400; // 24 시간
 
 export const handlers = [
   // 로그인
-  http.post("/api/auth/login", async ({ request }) => {
+  http.post("*/api/auth/login", async ({ request }) => {
     const { email, password } = (await request.json()) as LoginRequest;
 
     const user = findUser(email, password);
@@ -63,7 +63,7 @@ export const handlers = [
   }),
 
   // 회원가입 - 두 가지 엔드포인트 지원
-  http.post("/api/user/signup", async ({ request }) => {
+  http.post("*/api/user/signup", async ({ request }) => {
     const newUser = (await request.json()) as SignupRequest;
 
     await sleep(1000);
@@ -83,7 +83,7 @@ export const handlers = [
     return apiSuccess(responseData, 201, "User registered successfully");
   }),
 
-  http.post("/api/auth/signup", async ({ request }) => {
+  http.post("*/api/auth/signup", async ({ request }) => {
     const newUser = (await request.json()) as SignupRequest;
 
     await sleep(1000);
@@ -104,7 +104,7 @@ export const handlers = [
   }),
 
   // 프로필 조회
-  http.get("/api/user/profile", async ({ cookies: cookies }) => {
+  http.get("*/api/user/profile", async ({ cookies: cookies }) => {
     await sleep(500);
 
     // 인증 검증 로직 추가
@@ -148,7 +148,7 @@ export const handlers = [
   }),
 
   // 리프레시 토큰 재발급
-  http.post("/api/auth/refresh", async ({ cookies: cookies }) => {
+  http.post("*/api/auth/refresh", async ({ cookies: cookies }) => {
     await sleep(500);
 
     // 쿠키에서 리프레시 토큰 확인 (실제로는 REFRESH_TOKEN 쿠키에 있을 수 있음)
@@ -197,7 +197,7 @@ export const handlers = [
   }),
 
   // 로그아웃
-  http.post("/api/auth/logout", async () => {
+  http.post("*/api/auth/logout", async () => {
     await sleep(300);
 
     return HttpResponse.json(
