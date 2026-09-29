@@ -41,9 +41,12 @@ export const ensureAuthBootstrapped = async () => {
 
 export const bootstrapAuthLoader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const isAuthPage = url.pathname === "/login" || url.pathname === "/signup";
+  const isPublicPage =
+    url.pathname === "/login" ||
+    url.pathname === "/signup" ||
+    url.pathname === "/perf-stress-test";
 
-  if (isAuthPage) {
+  if (isPublicPage) {
     return null;
   }
 

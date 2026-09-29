@@ -10,7 +10,7 @@ const calculateRop = (averageDaily: number, leadTime: number) =>
   Math.max(Math.round((averageDaily || 0) * (leadTime || 0)), 0);
 
 export const handlers = [
-  http.post("/api/warehouse/rop/create", async ({ request }) => {
+  http.post("*/api/warehouse/rop/create", async ({ request }) => {
     await sleep(450);
     const payload = (await request.json()) as Partial<RopRecord> & {
       partCode?: string;
@@ -48,7 +48,7 @@ export const handlers = [
     return apiSuccess(nextRecord, 201, "ROP 설정이 생성되었습니다.");
   }),
 
-  http.patch("/api/warehouse/rop", async ({ request }) => {
+  http.patch("*/api/warehouse/rop", async ({ request }) => {
     await sleep(400);
     const payload = (await request.json()) as Partial<RopRecord> & {
       ropId?: number;
@@ -87,7 +87,7 @@ export const handlers = [
     return apiSuccess(updatedRecord, 200, "ROP 설정이 수정되었습니다.");
   }),
 
-  http.delete("/api/warehouse/rop/:ropId", async ({ params }) => {
+  http.delete("*/api/warehouse/rop/:ropId", async ({ params }) => {
     await sleep(300);
     const ropId = Number(params.ropId);
 
