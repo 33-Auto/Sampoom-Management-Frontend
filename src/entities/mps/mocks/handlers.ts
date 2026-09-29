@@ -14,7 +14,7 @@ const buildKey = (...values: (string | number | undefined)[]) =>
   values.filter((value) => value !== undefined).join("-");
 
 export const handlers = [
-  http.get("/api/factory/:factoryId/mps/parts", async ({ params }) => {
+  http.get("*/api/factory/:factoryId/mps/parts", async ({ params }) => {
     await sleep(400);
     const factoryId = Number(params.factoryId);
 
@@ -53,7 +53,7 @@ export const handlers = [
     },
   ),
 
-  http.get("/api/factory/:factoryId/mps", async ({ request, params }) => {
+  http.get("*/api/factory/:factoryId/mps", async ({ request, params }) => {
     await sleep(450);
     const factoryId = Number(params.factoryId);
 
