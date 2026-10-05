@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { RouterProvider } from "react-router";
+import { RouterProvider } from "react-router-dom";
 
 import router from "@/app/providers/router";
 import { useAuthStore } from "@/entities/user";
@@ -27,13 +27,13 @@ const App: React.FC = () => {
 
   // 인증 실패에 대한 전역 처리
   useEffect(() => {
-    const handleAuthFailure = () => {
+    const handleAuthFailure = (): void => {
       useAuthStore.getState().logout();
     };
 
     window.addEventListener("auth:failed", handleAuthFailure);
 
-    return () => {
+    return (): void => {
       window.removeEventListener("auth:failed", handleAuthFailure);
     };
   }, []);
