@@ -1,4 +1,5 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import type { ReactNode } from "react";
+import { Navigate, useInRouterContext, useNavigate } from "react-router-dom";
 
 import { Button } from "../Button";
 
@@ -17,14 +18,54 @@ const isDev =
       !!(import.meta as any).env.DEV));
 
 const ErrorHandler = (props: ErrorHandlerProps) => {
-  const { error, resetErrorBoundary } = props;
+  const isInsideRouter = useInRouterContext();
 
+  // App's outer boundary can render after RouterProvider has unmounted.
+  if (isInsideRouter) {
+    return <RouterErrorHandler {...props} />;
+  }
+
+  return (
+    <ErrorHandlerView
+      {...props}
+      homeAction={
+        <Button asChild>
+          <a href="/">홈으로</a>
+        </Button>
+      }
+    />
+  );
+};
+
+const RouterErrorHandler = (props: ErrorHandlerProps) => {
   const navigate = useNavigate();
 
-  if ((error as any)?.status === 404) {
+  if (props.error?.status === 404) {
     return <Navigate to="/404" replace />;
   }
 
+  return (
+    <ErrorHandlerView
+      {...props}
+      homeAction={
+        <Button
+          type="button"
+          onClick={() => {
+            void navigate("/");
+          }}
+        >
+          홈으로
+        </Button>
+      }
+    />
+  );
+};
+
+const ErrorHandlerView = ({
+  error,
+  resetErrorBoundary,
+  homeAction,
+}: ErrorHandlerProps & { homeAction: ReactNode }) => {
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-bg-white px-4 text-center dark:bg-bg-black">
       <h2 className="text-3xl font-semibold text-gray-400 md:text-6xl">오류</h2>
@@ -46,9 +87,7 @@ const ErrorHandler = (props: ErrorHandlerProps) => {
         <Button type="button" onClick={resetErrorBoundary}>
           다시시도
         </Button>
-        <Button type="button" onClick={async () => navigate("/")}>
-          홈으로
-        </Button>
+        {homeAction}
       </div>
     </div>
   );
