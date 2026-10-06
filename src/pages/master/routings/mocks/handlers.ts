@@ -72,7 +72,7 @@ function getItemInfoByCode(itemCode: string) {
 
 export const handlers = [
   // 공정 목록 조회 (검색)
-  http.get("/api/part/processes", async ({ request }) => {
+  http.get("*/api/part/processes", async ({ request }) => {
     await sleep(500);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 0;
@@ -178,7 +178,7 @@ export const handlers = [
   }),
 
   // 특정 공정 조회
-  http.get("/api/part/processes/:processId", async ({ params }) => {
+  http.get("*/api/part/processes/:processId", async ({ params }) => {
     await sleep(300);
     const processId = String(params.processId);
     let routingIndex = mockRoutingsMaster.findIndex(
@@ -242,7 +242,7 @@ export const handlers = [
   }),
 
   // 공정 등록
-  http.post("/api/part/processes", async ({ request }) => {
+  http.post("*/api/part/processes", async ({ request }) => {
     await sleep(400);
     const newProcess = (await request.json()) as any;
     const createdProcess = {
@@ -254,7 +254,7 @@ export const handlers = [
   }),
 
   // 공정 수정
-  http.put("/api/part/processes/:processId", async ({ params, request }) => {
+  http.put("*/api/part/processes/:processId", async ({ params, request }) => {
     await sleep(300);
     const updates = (await request.json()) as any;
     const processId = String(params.processId);

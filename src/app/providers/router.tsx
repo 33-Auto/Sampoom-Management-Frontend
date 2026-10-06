@@ -20,7 +20,7 @@ import { useAuthStore } from "@/entities/user";
 import { Home } from "@/pages/home";
 import { Login } from "@/pages/login";
 import { Notfound } from "@/pages/Notfound";
-// (Removed static imports to enable true lazy loading)
+import { InventoryDashboard, inventoryLoader } from "@/pages/wms/inventory";
 
 // ============================================================================
 // Layouts - 각 모듈별 레이아웃 컴포넌트 (즉시 로딩)
@@ -151,6 +151,14 @@ const routes: RouteObject[] = [
         lazy: async () => {
           const { Register: Component } = await import("@/pages/register");
           return { Component };
+        },
+      },
+      {
+        path: "/perf-stress-test",
+        lazy: async () => {
+          const { InventoryDashboard: Component, inventoryLoader } =
+            await import("@/pages/wms/inventory");
+          return { Component, loader: inventoryLoader };
         },
       },
 
@@ -360,14 +368,8 @@ const routes: RouteObject[] = [
           },
           {
             path: "inventory",
-            lazy: async () => {
-              const { InventoryDashboard, inventoryLoader } =
-                await import("@/pages/wms/inventory");
-              return {
-                Component: InventoryDashboard,
-                loader: inventoryLoader,
-              };
-            },
+            element: <InventoryDashboard />,
+            loader: inventoryLoader,
           },
           {
             path: "orders",
