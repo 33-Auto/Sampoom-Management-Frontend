@@ -41,7 +41,7 @@ export const CreateWorkCenter = () => {
     return `${prefix}${nameCode}${randomNum}`;
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string): void => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -69,7 +69,7 @@ export const CreateWorkCenter = () => {
     return true;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!validateForm()) return;
 
     setLoading(true);
@@ -93,7 +93,7 @@ export const CreateWorkCenter = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate("/master/workcenters");
   };
 

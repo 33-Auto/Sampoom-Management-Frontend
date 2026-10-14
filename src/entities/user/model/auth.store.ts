@@ -13,13 +13,13 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   isLoggedIn: false,
   user: null,
-  login: (user) => {
+  login: (user): void => {
     set({ isLoggedIn: true, user });
   },
-  logout: () => {
+  logout: (): void => {
     set({ isLoggedIn: false, user: null });
   },
-  initialize: (user) => {
+  initialize: (user): void => {
     set({ isLoggedIn: true, user });
   },
 }));

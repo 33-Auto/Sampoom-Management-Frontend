@@ -40,7 +40,7 @@ const Login = () => {
     }
   });
 
-  const handleExampleUserClick = (user: (typeof users)[0]) => {
+  const handleExampleUserClick = (user: (typeof users)[0]): void => {
     setValue("email", user.email);
     setValue("password", user.password);
     setValue("workspace", user.workspace || "");

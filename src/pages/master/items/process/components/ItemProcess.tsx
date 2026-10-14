@@ -45,11 +45,11 @@ export function ItemProcess() {
   const categoryName = state.categoryName ?? stateItem?.category ?? undefined;
   const groupName = state.groupName ?? stateItem?.groupName ?? undefined;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/items");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

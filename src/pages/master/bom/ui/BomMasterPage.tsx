@@ -35,10 +35,7 @@ export const BomMasterPage = () => {
       statusFilter === ""
         ? undefined
         : (statusFilter as
-            | "ACTIVE"
-            | "REVIEWING"
-            | "INACTIVE"
-            | "PENDING_APPROVAL"),
+            "ACTIVE" | "REVIEWING" | "INACTIVE" | "PENDING_APPROVAL"),
     complexity:
       complexityFilter === ""
         ? undefined
@@ -89,11 +86,11 @@ export const BomMasterPage = () => {
       }),
   ];
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/master/bom/process");
   };
 
-  const handleViewDetail = (row: BomResponseDTO) => {
+  const handleViewDetail = (row: BomResponseDTO): void => {
     navigate(`/master/bom/process/${row.id}`, {
       state: { bomData: row },
     });
@@ -253,7 +250,7 @@ export const BomMasterPage = () => {
             key: "categoryId",
             value: categoryIdFilter,
             options: categoryOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setCategoryIdFilter(e);
               setGroupIdFilter(""); // 카테고리 변경 시 그룹 초기화
               onPageChange(0);
@@ -263,7 +260,7 @@ export const BomMasterPage = () => {
             key: "groupId",
             value: groupIdFilter,
             options: groupOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setGroupIdFilter(e);
               onPageChange(0);
             },
@@ -273,7 +270,7 @@ export const BomMasterPage = () => {
             key: "status",
             value: statusFilter,
             options: statusOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setStatusFilter(e);
               onPageChange(0);
             },
@@ -282,7 +279,7 @@ export const BomMasterPage = () => {
             key: "complexity",
             value: complexityFilter,
             options: complexityOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setComplexityFilter(e);
               onPageChange(0);
             },

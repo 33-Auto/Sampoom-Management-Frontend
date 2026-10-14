@@ -25,7 +25,7 @@ export const Modal: React.FC<ModalProps> = ({
     // 추후 modal이 사라져도 그 컴포넌트가 포커스를 유지될 수 있게
     previousActiveElementRef.current = document.activeElement as HTMLElement;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "Escape") {
         onClose();
       }
@@ -58,7 +58,7 @@ export const Modal: React.FC<ModalProps> = ({
     // modal이 열리면 자동으로 포커스를 맨 처음 요소로 이동한다.
     modalRef.current?.focus();
 
-    return () => {
+    return (): void => {
       document.removeEventListener("keydown", handleKeyDown);
       // 전에 포커스 되어있던 컴포넌트로 다시 포커스를 이동한다.
       previousActiveElementRef.current?.focus();

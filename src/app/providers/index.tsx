@@ -38,7 +38,7 @@ const initMSW = async (): Promise<void> => {
   return mswReadyPromise;
 };
 
-const renderApp = async () => {
+const renderApp = async (): Promise<void> => {
   // MSW(Mock Service Worker) 활성화 여부를 환경 변수로 제어 한다.
   // VITE_USE_MOCK=true로 설정하면 MSW가 활성화
   const shouldUseMock =

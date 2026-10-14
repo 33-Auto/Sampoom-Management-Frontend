@@ -84,7 +84,9 @@ export function StockingProcessForm({
   const { showSuccess, showError } = useNotification();
   const { mutateAsync, isPending } = useStockingMutation();
 
-  const handleSubmitForm = async (formData: StockingProcessFormData) => {
+  const handleSubmitForm = async (
+    formData: StockingProcessFormData,
+  ): Promise<void> => {
     const result = schema.safeParse(formData);
     if (!result.success) {
       const firstError = result.error.issues[0];

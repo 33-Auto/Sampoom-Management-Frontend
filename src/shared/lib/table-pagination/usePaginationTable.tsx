@@ -26,7 +26,7 @@ export function usePaginationTable({
   const [page, setPage] = useState(initialPage);
   const [size, setSize] = useState(initialSize);
 
-  const onSizeChange = (newSize: number) => {
+  const onSizeChange = (newSize: number): void => {
     setSize(newSize);
     // 사이즈가 변한다면 페이지를 첫 페이지로 변경
     setPage(0);

@@ -78,10 +78,7 @@ export function BomProcessForm({
       if (bomData.status) {
         setBomStatus(
           bomData.status as
-            | "ACTIVE"
-            | "REVIEWING"
-            | "INACTIVE"
-            | "PENDING_APPROVAL",
+            "ACTIVE" | "REVIEWING" | "INACTIVE" | "PENDING_APPROVAL",
         );
       }
       // materials 설정
@@ -123,20 +120,20 @@ export function BomProcessForm({
   const updateMutation = useUpdateBomProcessMutation();
   const deleteMutation = useDeleteBomProcessMutation();
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = (value: string): void => {
     setSelectedCategoryId(value);
     setSelectedGroupId("");
     setSelectedPart("");
     setSelectedPartId(undefined);
   };
 
-  const handleGroupChange = (value: string) => {
+  const handleGroupChange = (value: string): void => {
     setSelectedGroupId(value);
     setSelectedPart("");
     setSelectedPartId(undefined);
   };
 
-  const handlePartChange = (value: string) => {
+  const handlePartChange = (value: string): void => {
     if (!value) {
       setSelectedPart("");
       setSelectedPartId(undefined);
@@ -163,7 +160,7 @@ export function BomProcessForm({
     { value: "INACTIVE", label: "비활성" },
   ];
 
-  const handleAddMaterial = (material: MaterialResponseDTO) => {
+  const handleAddMaterial = (material: MaterialResponseDTO): void => {
     const existingMaterial = bomMaterials.find(
       (m) => m.materialId === material.id,
     );
@@ -184,7 +181,7 @@ export function BomProcessForm({
     setShowMaterialModal(false);
   };
 
-  const handleQuantityChange = (materialId: number, quantity: number) => {
+  const handleQuantityChange = (materialId: number, quantity: number): void => {
     if (quantity < 1) return;
     setBomMaterials((prev) =>
       prev.map((item) =>
@@ -193,7 +190,7 @@ export function BomProcessForm({
     );
   };
 
-  const handleRemoveMaterial = (materialId: number) => {
+  const handleRemoveMaterial = (materialId: number): void => {
     setBomMaterials((prev) =>
       prev.filter((item) => item.materialId !== materialId),
     );
@@ -215,7 +212,7 @@ export function BomProcessForm({
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (!validateForm()) return;
 
     const partCode = isEditMode
@@ -241,7 +238,7 @@ export function BomProcessForm({
         {
           params: {
             path: {
-              bomId: bomId!,
+              bomId: bomId,
             },
           },
           body: {
@@ -289,7 +286,7 @@ export function BomProcessForm({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (!bomId) return;
 
     showConfirm({
@@ -455,10 +452,7 @@ export function BomProcessForm({
                 onChange={(e) =>
                   setBomStatus(
                     e.target.value as
-                      | "ACTIVE"
-                      | "REVIEWING"
-                      | "INACTIVE"
-                      | "PENDING_APPROVAL",
+                      "ACTIVE" | "REVIEWING" | "INACTIVE" | "PENDING_APPROVAL",
                   )
                 }
                 options={statusOptions}

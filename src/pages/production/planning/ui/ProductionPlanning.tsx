@@ -50,9 +50,7 @@ export const ProductionPlanning = () => {
   const executeBatchMrpMutation = useBatchMrpExecutionMutation();
   const applyBatchMrpMutation = useBatchMrpApplyMutation();
 
-  const { defaultFactoryId } = useLoaderData() as {
-    defaultFactoryId?: number;
-  };
+  const { defaultFactoryId } = useLoaderData();
   const selectedFactoryId = useBranchId("factory");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -211,7 +209,7 @@ export const ProductionPlanning = () => {
     return <Badge variant={variant}>{label}</Badge>;
   };
 
-  const handleResetFilters = () => {
+  const handleResetFilters = (): void => {
     setSearchTerm("");
     setStatusFilter(DEFAULT_STATUS_FILTER);
     setPriorityFilter("");
@@ -219,7 +217,7 @@ export const ProductionPlanning = () => {
     void refetch();
   };
 
-  const handleRunMRP = () => {
+  const handleRunMRP = (): void => {
     if (selectedPlanIds.length === 0 || executeBatchMrpMutation.isPending) {
       return;
     }
@@ -276,7 +274,7 @@ export const ProductionPlanning = () => {
     );
   };
 
-  const handleApplyMrpResult = () => {
+  const handleApplyMrpResult = (): void => {
     if (
       mrpResultPlans.length === 0 ||
       applyBatchMrpMutation.isPending ||
@@ -326,7 +324,7 @@ export const ProductionPlanning = () => {
     );
   };
 
-  const handleCloseMrpModal = () => {
+  const handleCloseMrpModal = (): void => {
     if (executeBatchMrpMutation.isPending || applyBatchMrpMutation.isPending) {
       return;
     }
@@ -468,7 +466,7 @@ export const ProductionPlanning = () => {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (value: string) => {
+              onChange: (value: string): void => {
                 setStatusFilter(value);
                 onPageChange(0);
               },
@@ -477,7 +475,7 @@ export const ProductionPlanning = () => {
               key: "priority",
               value: priorityFilter,
               options: priorityOptions,
-              onChange: (value: string) => {
+              onChange: (value: string): void => {
                 setPriorityFilter(value);
                 onPageChange(0);
               },

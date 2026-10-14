@@ -38,13 +38,13 @@ export function ShippingProcess() {
     throw new Error("출고 품목 정보가 필요합니다.");
   }
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/wms/shipping", {
       state: { refresh: true },
     });
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

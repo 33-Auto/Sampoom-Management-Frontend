@@ -55,10 +55,10 @@ export const createWorkCenterColumns = ({
   keys,
   onEdit,
 }: WorkCenterColumnsParams): Column[] => [
-  { key: keys.code as any, title: "작업장 코드", width: "120px" },
-  { key: keys.name as any, title: "작업장명" },
+  { key: keys.code, title: "작업장 코드", width: "120px" },
+  { key: keys.name, title: "작업장명" },
   {
-    key: keys.type as any,
+    key: keys.type,
     title: "유형",
     width: "120px",
     render: (value: string) => {
@@ -71,25 +71,25 @@ export const createWorkCenterColumns = ({
     },
   },
   {
-    key: keys.dailyOperatingHours as any,
+    key: keys.dailyOperatingHours,
     title: "일일 가용시간",
     width: "120px",
     render: (value: any) => formatOperatingHours(value),
   },
   {
-    key: keys.efficiency as any,
+    key: keys.efficiency,
     title: "효율",
     width: "80px",
     render: (value: any) => formatEfficiency(value),
   },
   {
-    key: keys.costPerHour as any,
+    key: keys.costPerHour,
     title: "시간당 비용",
     width: "120px",
     render: (value: any) => formatCostPerHour(value),
   },
   {
-    key: keys.status as any,
+    key: keys.status,
     title: "상태",
     width: "80px",
     render: (value: string) => {

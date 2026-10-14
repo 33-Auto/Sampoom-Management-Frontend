@@ -30,9 +30,7 @@ export function RopSettings() {
   const { page, size, onPageChange, onSizeChange, setPage } =
     usePaginationTable({});
 
-  const { defaultWarehouseId } = useLoaderData() as {
-    defaultWarehouseId?: number;
-  };
+  const { defaultWarehouseId } = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -103,11 +101,11 @@ export function RopSettings() {
     { value: "INACTIVE", label: "비활성" },
   ];
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/wms/rop-settings/process");
   };
 
-  const handleViewDetail = (row: RopResDto) => {
+  const handleViewDetail = (row: RopResDto): void => {
     console.log(row);
     navigate(`/wms/rop-settings/process/${row.ropId}`, {
       state: { ropData: row },
@@ -240,7 +238,7 @@ export function RopSettings() {
               key: "category",
               value: categoryFilter,
               options: categoryOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setCategoryFilter(e);
                 setGroupFilter("");
                 onPageChange(0);
@@ -250,7 +248,7 @@ export function RopSettings() {
               key: "group",
               value: groupFilter,
               options: groupOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setGroupFilter(e);
                 onPageChange(0);
               },
@@ -260,7 +258,7 @@ export function RopSettings() {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setStatusFilter(e);
                 onPageChange(0);
               },

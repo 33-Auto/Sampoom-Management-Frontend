@@ -13,11 +13,11 @@ export function RopProcess() {
   // location state에서 ROP 데이터 받기
   const ropData = (location.state as { ropData?: RopResDto })?.ropData;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/wms/rop-settings");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

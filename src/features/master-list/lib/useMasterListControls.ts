@@ -46,12 +46,12 @@ export const useMasterListControls = (
 
   const pagination = usePaginationTable({});
 
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = (value: string): void => {
     setSearchTerm(value);
     pagination.onPageChange(0);
   };
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = (key: string, value: string): void => {
     setFilters((prev) => {
       if (prev[key] === value) {
         return prev;
@@ -64,12 +64,12 @@ export const useMasterListControls = (
     pagination.onPageChange(0);
   };
 
-  const resetFilters = () => {
+  const resetFilters = (): void => {
     setFilters(cloneFilters(baseFilters));
     pagination.onPageChange(0);
   };
 
-  const resetAll = () => {
+  const resetAll = (): void => {
     setSearchTerm("");
     resetFilters();
   };

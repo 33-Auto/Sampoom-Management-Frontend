@@ -49,7 +49,7 @@ export function ToastContainer() {
     });
   }, [toasts, toastsToRender, exitingToasts]);
 
-  const handleClose = (id: string) => {
+  const handleClose = (id: string): void => {
     setExitingToasts((prev) => new Set(prev).add(id));
     // 애니메이션 완료 후 제거 (200ms)
     setTimeout(() => {

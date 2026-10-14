@@ -144,7 +144,7 @@ export const HRMEmployees = () => {
   ];
 
   // 조직 필터 변경 시 지점 필터 초기화
-  const handleWorkspaceChange = (value: string) => {
+  const handleWorkspaceChange = (value: string): void => {
     setWorkspaceFilter(value as "FACTORY" | "WAREHOUSE" | "AGENCY" | "");
     setOrganizationIdFilter("");
     setPage(0);
@@ -165,7 +165,7 @@ export const HRMEmployees = () => {
             key: "organization",
             value: organizationIdFilter,
             options: branchOptions,
-            onChange: (value: string) => {
+            onChange: (value: string): void => {
               setOrganizationIdFilter(value);
               setPage(0);
             },

@@ -82,7 +82,7 @@ export function ReceivingProcessForm({
 
   const { mutate, isPending, isError, error } = useReceivingProcessMutation();
 
-  const onSubmit = (data: ReceivingProcess) => {
+  const onSubmit = (data: ReceivingProcess): void => {
     // TODO: warehouseId와 processId를 실제 값으로 대체해야 함
 
     console.log("TEst");

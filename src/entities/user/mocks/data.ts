@@ -186,7 +186,7 @@ export function userExists(email?: string) {
   return users.some((u) => u.email === email);
 }
 
-export function addUser(user: SignupRequest) {
+export function addUser(user: SignupRequest): void {
   users.push(user);
   userIdCounter++;
 }

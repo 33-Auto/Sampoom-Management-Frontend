@@ -17,7 +17,7 @@ const STATUS_LABELS: Record<WorkCenterStatusKey, string> = {
 
 export const formatWorkCenterType = (value?: WorkCenterType | null) => {
   if (!value) return "-";
-  const key = value as WorkCenterTypeKey;
+  const key = value;
   return TYPE_LABELS[key] ?? value;
 };
 
@@ -30,7 +30,7 @@ export const getWorkCenterTypeBadgeVariant = (
 
 export const formatWorkCenterStatus = (value?: WorkCenterStatus | null) => {
   if (!value) return "-";
-  const key = value as WorkCenterStatusKey;
+  const key = value;
   return STATUS_LABELS[key] ?? value;
 };
 
