@@ -81,11 +81,13 @@ export function UserMenu({
       <button
         type="button"
         onClick={toggleMenu}
-        className="flex items-center space-x-4 rounded-lg px-2 py-1 transition-colors hover:cursor-pointer focus:outline-none dark:hover:bg-gray-700"
+        className="flex items-center gap-3 rounded-lg px-1 py-1 transition-colors hover:cursor-pointer focus:outline-none sm:gap-4 sm:px-2 dark:hover:bg-gray-700"
         aria-haspopup="true"
         aria-expanded={isOpen}
+        aria-label="사용자 메뉴"
       >
-        <div className="text-right">
+        {/* 좁은 화면에서는 아바타만 보이고, 이름·이메일은 펼친 메뉴에서 본다 */}
+        <div className="hidden text-right sm:block">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
             {displayName}
           </p>
@@ -96,7 +98,7 @@ export function UserMenu({
             {displayEmail}
           </p>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200">
           <i className="ri-user-line text-gray-600 dark:text-gray-400"></i>
         </div>
       </button>

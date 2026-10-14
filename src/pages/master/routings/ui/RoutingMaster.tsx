@@ -84,7 +84,7 @@ export const RoutingMaster = () => {
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
       <MasterListLayout
         title="공정 목록"
         search={{

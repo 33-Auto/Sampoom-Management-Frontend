@@ -20,7 +20,7 @@ export const PaginationMeta: React.FC<PaginationMetaProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-3 text-sm text-gray-500">
-      <span>
+      <span className="whitespace-nowrap">
         총 {totalElements}개 / 페이지 {page + 1} / {Math.max(totalPages, 1)}
       </span>
       <select

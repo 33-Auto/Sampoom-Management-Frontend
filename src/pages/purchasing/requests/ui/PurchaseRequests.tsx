@@ -177,7 +177,7 @@ export const PurchaseRequests = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
       {/* 필터 및 검색 */}
       <SearchFilterBar
         searchTerm={searchTerm}

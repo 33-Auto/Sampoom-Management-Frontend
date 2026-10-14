@@ -240,7 +240,7 @@ export function WmsPurchaseOrders() {
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <InfoBox type="info" title="창고 선택 필요">
           <p className="text-sm">
             상단에서 창고를 선택하면 발주 현황을 확인할 수 있습니다.
@@ -253,7 +253,7 @@ export function WmsPurchaseOrders() {
   return (
     <>
       {/* 메인 컨텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         {/* 자동화 현황 대시보드 */}
 
         {/* 실시간 모니터링 알림 */}

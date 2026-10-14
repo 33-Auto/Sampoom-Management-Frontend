@@ -232,7 +232,7 @@ export function ShippingTodos() {
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <InfoBox type="info" title="창고 선택 필요">
           <p className="text-sm">
             상단에서 창고를 선택하면 출고 요청 목록을 확인할 수 있습니다.
@@ -243,7 +243,7 @@ export function ShippingTodos() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
       <InfoBox type="info" title="WMS 출고 관리 안내">
         <p className="text-sm">
           출고 요청은 창고의 가용 재고를 기반으로 진행됩니다. 재고 부족분은

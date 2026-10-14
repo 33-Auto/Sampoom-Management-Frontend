@@ -62,7 +62,12 @@ export const MasterListLayout = ({
     search !== undefined || (filters && filters.length > 0) || Boolean(actions);
 
   return (
-    <div className={cn("mx-auto max-w-7xl px-6 py-8", containerClassName)}>
+    <div
+      className={cn(
+        "mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8",
+        containerClassName,
+      )}
+    >
       {headerSlot && <div className="mb-6">{headerSlot}</div>}
 
       {shouldRenderFilters && (
@@ -76,7 +81,7 @@ export const MasterListLayout = ({
         />
       )}
       {asideSlot ? (
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <div>
             <PaginationTableSection
               title={title}

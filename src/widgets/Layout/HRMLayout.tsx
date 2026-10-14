@@ -21,7 +21,7 @@ const HRMLayout: React.FC = () => {
     <div className="min-h-screen bg-bg-white dark:bg-bg-black">
       <ModuleHeader {...headerConfig} />
       <NavigationTabs navItems={navItems} moduleColor="bg-teal-600" />
-      <div className="p-6">
+      <div className="p-4 sm:p-6 max-sm:[&>.max-w-7xl]:px-0">
         <Outlet />
       </div>
     </div>
