@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useInRouterContext } from "react-router-dom";
 
 import { Button } from "@/shared/ui";
 
@@ -19,9 +19,10 @@ const isDev =
 const ErrorHandler = (props: ErrorHandlerProps) => {
   const { error, resetErrorBoundary } = props;
 
-  const navigate = useNavigate();
+  // 최상단 ErrorBoundary는 Router 바깥이라 useNavigate를 쓰면 fallback이 다시 터진다.
+  const inRouter = useInRouterContext();
 
-  if ((error as any)?.status === 404) {
+  if ((error as any)?.status === 404 && inRouter) {
     return <Navigate to="/404" replace />;
   }
 
@@ -46,7 +47,7 @@ const ErrorHandler = (props: ErrorHandlerProps) => {
         <Button type="button" onClick={resetErrorBoundary}>
           다시시도
         </Button>
-        <Button type="button" onClick={async () => navigate("/")}>
+        <Button type="button" onClick={() => window.location.assign("/")}>
           홈으로
         </Button>
       </div>
