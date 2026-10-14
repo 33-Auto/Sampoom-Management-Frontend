@@ -193,7 +193,10 @@ export function addUser(user: SignupRequest): void {
 
 // 프로필 정보 조회 (실제로는 로그인된 사용자 ID를 기반으로 조회해야 함)
 export function getUserProfile(userId?: number): UserResponse {
-  const defaultUser = users[0] || users[1] || users[users.length - 1];
+  const defaultUser =
+    (userId ? users[userId - 1] : undefined) ??
+    users[0] ??
+    users[users.length - 1];
 
   return {
     userId: userId || findUserIndex(defaultUser.email) + 1,
