@@ -192,7 +192,7 @@ export function RopSettings() {
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <InfoBox type="info" title="창고 선택 필요">
           <p className="text-sm">
             상단에서 창고를 선택하면 ROP 설정을 확인할 수 있습니다.
@@ -205,10 +205,11 @@ export function RopSettings() {
   return (
     <>
       {/* 메인 컨텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         {/* ROP 자동 계산 섹션 */}
         <InfoBox type="info" title="ROP 자동 계산">
-          <div className="flex items-center justify-around">
+          {/* 좁은 화면에서는 버튼을 설명 아래로 내린다 */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-around">
             <div className="flex-1">
               <p className="text-sm">
                 과거 데이터를 기반으로 리드타임과 평균 소비량을 자동으로
@@ -216,7 +217,7 @@ export function RopSettings() {
               </p>
             </div>
 
-            <div className="ml-4 flex space-x-3">
+            <div className="flex shrink-0 space-x-3 sm:ml-4">
               <Button variant="default" onClick={handleCreateNew}>
                 <i className="ri-add-line mr-2"></i>
                 신규 ROP 설정

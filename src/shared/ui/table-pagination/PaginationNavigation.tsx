@@ -32,8 +32,8 @@ export const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
     <div className="flex items-center gap-2">
       {showRefresh && onRefresh && (
         <Button variant="secondary" size="sm" onClick={onRefresh}>
-          <i className="ri-refresh-line mr-2"></i>
-          새로고침
+          <i className="ri-refresh-line sm:mr-2"></i>
+          <span className="hidden sm:inline">새로고침</span>
         </Button>
       )}
       <div className="flex items-center gap-1">

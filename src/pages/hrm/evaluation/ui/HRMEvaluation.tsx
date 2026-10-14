@@ -226,14 +226,14 @@ export const HRMEvaluation = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
       {/* Filters and Actions */}
       <div className="mb-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold whitespace-nowrap text-gray-900 dark:text-white">
             성과 평가
           </h2>
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Button variant="secondary" size="sm">
               <i className="ri-download-line mr-2"></i>
               평가 리포트
@@ -278,11 +278,12 @@ export const HRMEvaluation = () => {
         {filteredEvaluations.map((evaluation) => (
           <div
             key={evaluation.id}
-            className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-bg-card-black"
+            className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 dark:border-gray-700 dark:bg-bg-card-black"
           >
-            <div className="mb-4 flex items-start justify-between">
-              <div className="flex-1">
-                <div className="mb-2 flex items-center space-x-3">
+            {/* 좁은 화면에서는 버튼을 정보 아래로 내린다 */}
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0 flex-1">
+                <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="text-lg font-semibold text-gray-900 dark:text-white">
                     {evaluation.name}
                   </span>
@@ -334,7 +335,7 @@ export const HRMEvaluation = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex shrink-0 items-center space-x-2">
                 <Button
                   variant="secondary"
                   size="sm"

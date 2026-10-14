@@ -59,7 +59,7 @@ export const PaginationTableSection: React.FC<PaginationTableSectionProps> = ({
         />
       }
       actionsRight={
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <PaginationNavigation
             page={page}
             totalPages={totalPages}

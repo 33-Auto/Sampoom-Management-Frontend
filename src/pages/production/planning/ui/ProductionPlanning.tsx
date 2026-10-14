@@ -429,7 +429,7 @@ export const ProductionPlanning = () => {
 
   if (typeof factoryId !== "number" || Number.isNaN(factoryId)) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <div className="rounded-lg border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-600 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
           상단에서 공장을 선택하면 생산 계획 데이터를 확인할 수 있습니다.
         </div>
@@ -453,7 +453,7 @@ export const ProductionPlanning = () => {
         </div>
       )}
 
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <SearchFilterBar
           searchTerm={searchTerm}
           onSearchChange={(value) => {

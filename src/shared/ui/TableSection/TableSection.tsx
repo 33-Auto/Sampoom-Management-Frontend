@@ -22,23 +22,24 @@ export const TableSection: React.FC<TableSectionProps> = ({
       className={`rounded-lg border border-gray-200 bg-bg-card-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black ${className}`}
     >
       {hasHeader && (
-        <div className="border-b border-gray-200 p-6 dark:border-gray-700">
-          <div className="flex items-center justify-between">
+        <div className="border-b border-gray-200 p-4 sm:p-6 dark:border-gray-700">
+          {/* 좁은 화면에서는 제목과 컨트롤을 두 줄로 나눈다 (제목이 세로로 깨지던 문제) */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center space-x-3">
               {title && (
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                <h2 className="text-lg font-semibold whitespace-nowrap text-gray-900 dark:text-gray-100">
                   {title}
                 </h2>
               )}
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-2">
               {metaRight}
               {actionsRight}
             </div>
           </div>
         </div>
       )}
-      <div className="p-6">{children}</div>
+      <div className="p-4 sm:p-6">{children}</div>
     </div>
   );
 };

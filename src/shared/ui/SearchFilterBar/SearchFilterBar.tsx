@@ -35,7 +35,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   const showSearch = searchTerm !== undefined && onSearchChange !== undefined;
 
   return (
-    <div className="mb-6 rounded-lg border border-gray-200 bg-bg-card-white p-6 shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
+    <div className="mb-6 rounded-lg border border-gray-200 bg-bg-card-white p-4 shadow-sm sm:p-6 dark:border-gray-700 dark:bg-bg-card-black">
       <div
         className={`grid grid-cols-1 gap-4 ${
           showSearch

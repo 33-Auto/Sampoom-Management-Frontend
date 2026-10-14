@@ -145,7 +145,7 @@ export const Home = () => {
   return (
     <HomeLayout>
       {/* 메인 콘텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         {/* 시스템 개요 */}
         <div className="mb-8">
           <Card>

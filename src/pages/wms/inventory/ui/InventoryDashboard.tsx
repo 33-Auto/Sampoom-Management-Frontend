@@ -215,7 +215,7 @@ export const InventoryDashboard = () => {
 
   if (typeof warehouseId !== "number" || Number.isNaN(warehouseId)) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         <InfoBox type="info" title="창고 선택 필요">
           <p className="text-sm">
             상단에서 창고를 선택하면 재고 현황을 확인할 수 있습니다.
@@ -228,7 +228,7 @@ export const InventoryDashboard = () => {
   return (
     <>
       {/* 메인 컨텐츠 */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
         {/* 필터 및 검색 */}
         <SearchFilterBar
           searchTerm={searchTerm}

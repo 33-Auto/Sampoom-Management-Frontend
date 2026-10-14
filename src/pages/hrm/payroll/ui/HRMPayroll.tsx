@@ -144,14 +144,14 @@ export const HRMPayroll = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-8">
       {/* Filters and Actions */}
       <div className="mb-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold whitespace-nowrap text-gray-900 dark:text-white">
             급여 관리
           </h2>
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Button variant="secondary" size="sm">
               <i className="ri-download-line mr-2"></i>
               급여명세서 다운로드

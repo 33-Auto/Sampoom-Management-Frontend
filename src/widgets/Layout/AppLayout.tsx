@@ -19,8 +19,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      <ThemeToggle />
       <main className="flex-1">{children || <Outlet />}</main>
+      {/* 화면 아래에 붙어 있다가 푸터가 올라오면 푸터 위에 멈춘다 (fixed는 푸터를 덮었다) */}
+      <div className="pointer-events-none sticky bottom-4 z-40 h-0">
+        <ThemeToggle className="pointer-events-auto absolute bottom-0 left-4" />
+      </div>
       <Footer />
     </div>
   );
