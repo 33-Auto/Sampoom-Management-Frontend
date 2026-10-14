@@ -9,6 +9,10 @@ import { Button, Card, Input, Select } from "@/shared/ui";
 import { useLoginForm } from "../lib";
 import { WORKSPACE_OPTIONS, type LoginFormValues } from "../model";
 
+// mock 배포(데모)에서는 예시 계정을 미리 채워 바로 로그인할 수 있게 한다
+const DEMO_ACCOUNT =
+  import.meta.env.VITE_USE_MOCK === "true" ? users[0] : undefined;
+
 const Login = () => {
   const navigate = useNavigate();
   const { submitLogin, isLoading } = useLoginForm();
@@ -21,9 +25,9 @@ const Login = () => {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     defaultValues: {
-      email: "",
-      password: "",
-      workspace: "",
+      email: DEMO_ACCOUNT?.email ?? "",
+      password: DEMO_ACCOUNT?.password ?? "",
+      workspace: DEMO_ACCOUNT?.workspace ?? "",
     },
     mode: "onSubmit",
   });
