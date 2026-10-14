@@ -35,9 +35,7 @@ export const InventoryDashboard = () => {
   const { page, size, onPageChange, onSizeChange, setPage } =
     usePaginationTable({});
 
-  const { defaultWarehouseId } = useLoaderData() as {
-    defaultWarehouseId?: number;
-  };
+  const { defaultWarehouseId } = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -244,7 +242,7 @@ export const InventoryDashboard = () => {
               key: "category",
               value: categoryFilter,
               options: categoryOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setCategoryFilter(e);
                 setGroupFilter("");
                 onPageChange(0);
@@ -254,7 +252,7 @@ export const InventoryDashboard = () => {
               key: "group",
               value: groupFilter,
               options: groupOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setGroupFilter(e);
                 onPageChange(0);
               },
@@ -265,7 +263,7 @@ export const InventoryDashboard = () => {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (value: string) => {
+              onChange: (value: string): void => {
                 setStatusFilter(value as InventoryStatusKey | "");
                 onPageChange(0);
               },

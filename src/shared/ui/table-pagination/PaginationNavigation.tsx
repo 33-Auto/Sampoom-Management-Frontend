@@ -18,11 +18,11 @@ export const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
   showRefresh = false,
   onRefresh,
 }) => {
-  const handlePrev = () => {
+  const handlePrev = (): void => {
     onPageChange((p: number) => Math.max(0, p - 1)); // -1 인덱스 방어
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     onPageChange((p: number) =>
       totalPages ? Math.min(totalPages - 1, p + 1) : p + 1,
     );

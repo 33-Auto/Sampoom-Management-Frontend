@@ -41,11 +41,11 @@ export const BranchMaster = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/master/branches/process");
   };
 
-  const handleViewDetail = (row: BranchResponseDTO) => {
+  const handleViewDetail = (row: BranchResponseDTO): void => {
     navigate(`/master/branches/process/${row.id}`, {
       state: { branchData: row },
     });

@@ -17,11 +17,11 @@ export function WorkCenterProcess() {
     }
   )?.workCenterData;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/workcenters");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

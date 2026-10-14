@@ -17,11 +17,11 @@ export function PartnerProcess() {
     }
   )?.partnerData;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/partners");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

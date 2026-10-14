@@ -5,7 +5,7 @@ import { useAuthStore, getMyProfile } from "@/entities/user";
 let hasBootstrappedAuth = false;
 let bootstrapAuthPromise: Promise<void> | null = null;
 
-const buildBootstrapAuthPromise = async () => {
+const buildBootstrapAuthPromise = async (): Promise<void> => {
   const { initialize, logout } = useAuthStore.getState();
 
   try {
@@ -19,7 +19,7 @@ const buildBootstrapAuthPromise = async () => {
   }
 };
 
-export const ensureAuthBootstrapped = async () => {
+export const ensureAuthBootstrapped = async (): Promise<void> => {
   if (hasBootstrappedAuth) {
     return;
   }

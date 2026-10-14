@@ -68,9 +68,7 @@ export function ShippingTodos() {
   const { page, size, onPageChange, onSizeChange, setPage } =
     usePaginationTable({});
 
-  const { defaultWarehouseId } = useLoaderData() as {
-    defaultWarehouseId?: number;
-  };
+  const { defaultWarehouseId } = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -265,7 +263,7 @@ export function ShippingTodos() {
             key: "status",
             value: statusFilter,
             options: STATUS_OPTIONS,
-            onChange: (value: string) => {
+            onChange: (value: string): void => {
               setStatusFilter(value as ShippingStatus | "");
               onPageChange(0);
             },
@@ -274,7 +272,7 @@ export function ShippingTodos() {
             key: "category",
             value: categoryFilter,
             options: categoryOptions,
-            onChange: (value: string) => {
+            onChange: (value: string): void => {
               setCategoryFilter(value);
               setGroupFilter("");
               onPageChange(0);
@@ -284,7 +282,7 @@ export function ShippingTodos() {
             key: "group",
             value: groupFilter,
             options: groupOptions,
-            onChange: (value: string) => {
+            onChange: (value: string): void => {
               setGroupFilter(value);
               onPageChange(0);
             },

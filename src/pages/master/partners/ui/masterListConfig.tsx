@@ -35,13 +35,13 @@ export const createPartnerColumns = ({
   keys,
   onEdit,
 }: PartnerColumnsParams): Column[] => [
-  { key: keys.vendorCode as any, title: "거래처 코드", width: "120px" },
-  { key: keys.name as any, title: "거래처명" },
-  { key: keys.businessNumber as any, title: "사업자번호", width: "130px" },
-  { key: keys.ceoName as any, title: "대표자", width: "100px" },
-  { key: keys.address as any, title: "주소" },
+  { key: keys.vendorCode, title: "거래처 코드", width: "120px" },
+  { key: keys.name, title: "거래처명" },
+  { key: keys.businessNumber, title: "사업자번호", width: "130px" },
+  { key: keys.ceoName, title: "대표자", width: "100px" },
+  { key: keys.address, title: "주소" },
   {
-    key: keys.status as any,
+    key: keys.status,
     title: "상태",
     width: "80px",
     render: (value: any) => {

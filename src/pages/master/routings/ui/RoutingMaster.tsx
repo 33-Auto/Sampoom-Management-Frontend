@@ -52,11 +52,11 @@ export const RoutingMaster = () => {
     categoryFilter === "" ? 0 : Number(categoryFilter),
   );
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/master/routings/process");
   };
 
-  const handleViewDetail = (row: ProcessResponseDTO) => {
+  const handleViewDetail = (row: ProcessResponseDTO): void => {
     navigate(`/master/routings/process/${row.id}`, {
       state: { routingData: row },
     });

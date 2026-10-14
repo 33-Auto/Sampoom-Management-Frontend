@@ -52,7 +52,7 @@ export function BranchProcessForm({
     { value: "INACTIVE", label: "비활성" },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (!formData.name.trim()) {
       showError("입력 오류", "지점명을 입력해주세요.");
       return;
@@ -69,7 +69,7 @@ export function BranchProcessForm({
         {
           params: {
             path: {
-              id: branchId!,
+              id: branchId,
             },
           },
           body: {
@@ -112,7 +112,7 @@ export function BranchProcessForm({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (!branchId) return;
 
     showConfirm({

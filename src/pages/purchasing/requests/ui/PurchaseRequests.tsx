@@ -191,7 +191,7 @@ export const PurchaseRequests = () => {
             key: "status",
             value: statusFilter,
             options: statusOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setStatusFilter(e);
               onPageChange(0);
             },
@@ -200,7 +200,7 @@ export const PurchaseRequests = () => {
             key: "urgency",
             value: urgencyFilter,
             options: urgencyOptions,
-            onChange: (e) => {
+            onChange: (e): void => {
               setUrgencyFilter(e);
               onPageChange(0);
             },

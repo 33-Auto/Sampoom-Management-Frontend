@@ -220,7 +220,7 @@ export const HRMEvaluation = () => {
     return matchesSearch && matchesDepartment && matchesPeriod;
   });
 
-  const handleViewEvaluation = (evaluation: any) => {
+  const handleViewEvaluation = (evaluation: any): void => {
     setSelectedEmployee(evaluation);
     setShowEvaluationModal(true);
   };
@@ -254,14 +254,14 @@ export const HRMEvaluation = () => {
               label: "평가 기간",
               value: selectedPeriod,
               options: periodOptions,
-              onChange: (value) => setSelectedPeriod(value),
+              onChange: (value): void => setSelectedPeriod(value),
             },
             {
               key: "department",
               label: "부서",
               value: departmentFilter,
               options: departmentOptions,
-              onChange: (value) => setDepartmentFilter(value),
+              onChange: (value): void => setDepartmentFilter(value),
             },
           ]}
           actions={

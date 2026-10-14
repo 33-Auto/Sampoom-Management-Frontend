@@ -133,12 +133,12 @@ export const HRMPayroll = () => {
     return matchesDepartment;
   });
 
-  const handleViewPayroll = (payroll: any) => {
+  const handleViewPayroll = (payroll: any): void => {
     setSelectedEmployee(payroll);
     setShowPayrollModal(true);
   };
 
-  const handleProcessPayroll = () => {
+  const handleProcessPayroll = (): void => {
     // 급여 처리 로직
     alert("급여 처리가 시작되었습니다.");
   };

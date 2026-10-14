@@ -19,11 +19,11 @@ const INITIAL_SELECTIONS: BranchSelections = {
 export const useBranchSelectionStore = create<BranchSelectionState>()(
   (set) => ({
     selections: INITIAL_SELECTIONS,
-    setSelection: (moduleType, branchId) =>
+    setSelection: (moduleType, branchId): void =>
       set((state) => ({
         selections: { ...state.selections, [moduleType]: branchId },
       })),
-    resetSelection: (moduleType) =>
+    resetSelection: (moduleType): void =>
       set((state) => ({
         selections: { ...state.selections, [moduleType]: "" },
       })),

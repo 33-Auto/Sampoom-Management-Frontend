@@ -138,7 +138,7 @@ export const Home = () => {
     },
   ];
 
-  const handleModuleClick = (path: string) => {
+  const handleModuleClick = (path: string): void => {
     navigate(path);
   };
 

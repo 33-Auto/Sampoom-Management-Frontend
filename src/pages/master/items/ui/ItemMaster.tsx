@@ -68,7 +68,7 @@ export const ItemMaster = () => {
   const totalPages = data?.data?.totalPages ?? 0;
   const totalElements = data?.data?.totalElements ?? 0;
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     const defaultType =
       selectedType === "원자재"
         ? "MATERIAL"
@@ -95,7 +95,7 @@ export const ItemMaster = () => {
     });
   };
 
-  const handleEditItem = (row: ItemResponseDTO) => {
+  const handleEditItem = (row: ItemResponseDTO): void => {
     const itemType = row.type === "MATERIAL" ? "MATERIAL" : "PART";
     navigate(`/master/items/process/${row.id}`, {
       state: {

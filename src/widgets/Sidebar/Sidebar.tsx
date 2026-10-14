@@ -17,7 +17,7 @@ function Sidebar({ items, userRole }: SidebarProps) {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem("user");
     navigate("/login");
   };

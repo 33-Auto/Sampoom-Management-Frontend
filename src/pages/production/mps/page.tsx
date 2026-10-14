@@ -6,7 +6,6 @@ import {
   useExecuteMpsMutation,
   useMpsPartsQuery,
   usePartForecastMonthsQuery,
-  type MpsDetail,
   type MpsPartInfoResponse,
   type PartForecastMonthsResponse,
   type MpsPlanResult,
@@ -234,7 +233,7 @@ export default function MasterProductionSchedule() {
       setMpsRows([]);
       setFetchErrors([]);
       setIsFetchingMps(false);
-      return () => {
+      return (): void => {
         cancelled = true;
       };
     }
@@ -269,7 +268,7 @@ export default function MasterProductionSchedule() {
 
         if (result.status === "fulfilled") {
           const response = result.value;
-          const detail = (response?.data ?? null) as MpsDetail | null;
+          const detail = response?.data ?? null;
           if (detail) {
             nextRows.push({
               key: `${warehouse.id}-${detail.mpsId ?? "unknown"}`,
@@ -307,7 +306,7 @@ export default function MasterProductionSchedule() {
       setIsFetchingMps(false);
     })();
 
-    return () => {
+    return (): void => {
       cancelled = true;
     };
   }, [
@@ -491,7 +490,7 @@ export default function MasterProductionSchedule() {
               label: "부품",
               value: selectedPartId,
               options: partOptions,
-              onChange: (value: string) => setSelectedPartId(value),
+              onChange: (value: string): void => setSelectedPartId(value),
               disabled:
                 !hasFactoryId || isPartsLoading || partOptions.length <= 1,
             },
@@ -500,7 +499,8 @@ export default function MasterProductionSchedule() {
               label: "예측 월",
               value: selectedForecastMonth,
               options: forecastOptions,
-              onChange: (value: string) => setSelectedForecastMonth(value),
+              onChange: (value: string): void =>
+                setSelectedForecastMonth(value),
               disabled:
                 !hasFactoryId ||
                 !partIdNumber ||

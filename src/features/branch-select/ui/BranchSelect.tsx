@@ -75,7 +75,7 @@ export const BranchSelect: React.FC<BranchSelectProps> = ({
     }
   }, [branchId, moduleType, onBranchChange, options, setBranchId]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const nextValue = event.target.value;
     setBranchId(moduleType, nextValue);
     onBranchChange?.(nextValue);

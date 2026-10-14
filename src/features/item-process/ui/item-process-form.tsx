@@ -245,10 +245,12 @@ export function ItemProcessForm({
   const updateMaterialMutation = useUpdateMaterialMutation();
   const updatePartMutation = useUpdatePartMutation();
 
-  const handleTypeChange = (next: ItemProcessType) => {
+  const handleTypeChange = (next: ItemProcessType): void => {
     setValue("type", next, { shouldValidate: true, shouldTouch: true });
 
     if (next === "MATERIAL") {
+      // itemData는 자재·부품 응답의 유니언이라 분기 안에서 좁혀줘야 한다
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const material = itemData as MaterialDetailResponseDTO | undefined;
       setValue(
         "materialCategoryId",
@@ -268,6 +270,8 @@ export function ItemProcessForm({
       setValue("groupId", undefined, { shouldValidate: false });
       setValue("partUnit", "", { shouldValidate: false });
     } else {
+      // itemData는 자재·부품 응답의 유니언이라 분기 안에서 좁혀줘야 한다
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const part = itemData as PartDetailResponseDTO | undefined;
       setValue("materialCategoryId", undefined, { shouldValidate: false });
       setValue("materialUnit", "", { shouldValidate: false });
@@ -512,9 +516,7 @@ export function ItemProcessForm({
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
-      <form
-        onSubmit={handleSubmit(onSubmit as SubmitHandler<ItemProcessFormData>)}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-10 p-6">
           <FormSection
             title="품목 기본 정보"

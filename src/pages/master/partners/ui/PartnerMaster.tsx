@@ -38,11 +38,11 @@ export const PartnerMaster = () => {
   const totalElements = data?.data?.totalElements ?? 0;
   const totalPages = data?.data?.totalPages ?? 0;
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/master/partners/process");
   };
 
-  const handleViewDetail = (row: PartnerResponseDTO) => {
+  const handleViewDetail = (row: PartnerResponseDTO): void => {
     navigate(`/master/partners/process/${row.id}`, {
       state: { partnerData: row },
     });

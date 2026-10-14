@@ -109,12 +109,12 @@ const RouterErrorBoundary = () => {
   useEffect(() => {
     setSkipAuthRefresh(true);
 
-    return () => {
+    return (): void => {
       setSkipAuthRefresh(false);
     };
   }, []);
 
-  const handleReset = () => {
+  const handleReset = (): void => {
     if (typeof window !== "undefined") {
       window.location.reload();
     }
