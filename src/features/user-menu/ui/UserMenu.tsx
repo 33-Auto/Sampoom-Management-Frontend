@@ -120,8 +120,7 @@ export function UserMenu({
             onClick={handleProfileClick}
             className="flex w-full items-center gap-3 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-gray-50 focus:bg-gray-100 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700"
           >
-            <i className="ri-edit-line text-base"></i>
-            프로필 수정
+            <i className="ri-user-line text-base"></i>내 프로필
           </button>
 
           <button
