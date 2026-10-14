@@ -31,8 +31,7 @@ export type MpsPartInfo = MpsPartInfoResponse extends { data?: infer T }
   : never;
 
 export type PartForecastMonthsResponse =
-  | RawPartForecastMonthsResponse
-  | undefined;
+  RawPartForecastMonthsResponse | undefined;
 
 export type MpsResponse = RawMpsResponse | undefined;
 
@@ -67,6 +66,8 @@ export const useMpsPartsQuery = (factoryId?: number) =>
       "get",
       "/api/factory/{factoryId}/mps/parts",
       getMpsPartsQueryOptions(factoryId),
+      // factoryId가 정해지기 전에 NaN 경로로 요청하지 않는다
+      { enabled: factoryId !== undefined },
     ) as any,
   );
 
@@ -91,6 +92,8 @@ export const usePartForecastMonthsQuery = (
       "get",
       "/api/factory/{factoryId}/mps/parts/{partId}/forecast-months",
       getPartForecastMonthsQueryOptions(factoryId, partId),
+      // 부품을 고르기 전에는 partId가 NaN이라 400이 난다
+      { enabled: factoryId !== undefined && partId !== undefined },
     ) as any,
   );
 

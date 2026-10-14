@@ -19,10 +19,12 @@ export const createKeyRecord = <T extends Record<string, any>>(
   data: T[],
 ): Record<keyof T, keyof T> => {
   // 데이터가 있으면 0번 째 인덱스의 키를 추출
-  // 없으면 빈 객체 반환
-  return data.length > 0
-    ? (Object.fromEntries(
-        Object.keys(data[0]).map((key) => [key, key]),
-      ) as Record<keyof T, keyof T>)
-    : ({} as Record<keyof T, keyof T>);
+  // 데이터가 아직 없어도 컬럼 key가 undefined로 겹치지 않도록 접근한 이름을 그대로 돌려준다
+  const record =
+    data.length > 0
+      ? Object.fromEntries(Object.keys(data[0]).map((key) => [key, key]))
+      : {};
+  return new Proxy(record, {
+    get: (target, key) => (key in target ? target[key as string] : key),
+  }) as Record<keyof T, keyof T>;
 };

@@ -1,5 +1,6 @@
 import { http } from "msw";
 
+import { mockItemsMaster } from "@/pages/master/items/mocks/data";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 import {
@@ -11,6 +12,41 @@ import {
 
 let materialDetails = [...mockMaterialDetails];
 let partDetails = [...mockPartDetails];
+
+// 품목 목록(mockItemsMaster)의 id로 상세를 열면 상세 mock(801~)과 id가 달라 404가 났다.
+// 상세 mock에 없으면 목록 항목으로 상세 응답을 만들어 준다.
+const findListItem = (id: number, type: "MATERIAL" | "PART") =>
+  mockItemsMaster.find((item) => item.id === id && item.type === type);
+
+const materialFromListItem = (id: number): MockMaterialDetail | undefined => {
+  const item = findListItem(id, "MATERIAL");
+  if (!item) return undefined;
+  return {
+    materialId: id,
+    name: item.name ?? "",
+    materialCategoryId: item.categoryId ?? 0,
+    materialUnit: item.unit ?? "",
+    baseQuantity: item.baseQuantity ?? 0,
+    standardQuantity: item.standardQuantity ?? item.baseQuantity ?? 0,
+    leadTime: item.leadTime ?? 0,
+    standardCost: item.standardCost ?? 0,
+  };
+};
+
+const partFromListItem = (id: number): MockPartDetail | undefined => {
+  const item = findListItem(id, "PART");
+  if (!item) return undefined;
+  return {
+    partId: id,
+    name: item.name ?? "",
+    categoryId: item.categoryId ?? 0,
+    groupId: item.groupId ?? 0,
+    partUnit: item.unit ?? "",
+    baseQuantity: item.baseQuantity ?? 0,
+    standardQuantity: item.standardQuantity ?? item.baseQuantity ?? 0,
+    leadTime: item.leadTime ?? 0,
+  };
+};
 
 export const handlers = [
   http.get("/api/part/materials/:materialId", async ({ params }) => {
@@ -26,9 +62,9 @@ export const handlers = [
       return apiFail(400, "유효한 materialId가 필요합니다.");
     }
 
-    const material = materialDetails.find(
-      (item) => item.materialId === materialId,
-    );
+    const material =
+      materialDetails.find((item) => item.materialId === materialId) ??
+      materialFromListItem(materialId);
 
     if (!material) {
       return apiFail(404, "원자재 정보를 찾을 수 없습니다.");
@@ -45,7 +81,9 @@ export const handlers = [
       return apiFail(400, "유효한 partId가 필요합니다.");
     }
 
-    const part = partDetails.find((item) => item.partId === partId);
+    const part =
+      partDetails.find((item) => item.partId === partId) ??
+      partFromListItem(partId);
 
     if (!part) {
       return apiFail(404, "부품 정보를 찾을 수 없습니다.");
@@ -127,6 +165,14 @@ export const handlers = [
     const payload = (await request.json()) as Partial<MockMaterialDetail>;
     let updatedMaterial: MockMaterialDetail | undefined;
 
+    // 목록에서 연 품목이면 상세 mock에 먼저 넣어 두고 수정한다
+    const listMaterial = materialDetails.some(
+      (m) => m.materialId === materialId,
+    )
+      ? undefined
+      : materialFromListItem(materialId);
+    if (listMaterial) materialDetails = [...materialDetails, listMaterial];
+
     materialDetails = materialDetails.map((material) => {
       if (material.materialId !== materialId) {
         return material;
@@ -157,6 +203,11 @@ export const handlers = [
 
     const payload = (await request.json()) as Partial<MockPartDetail>;
     let updatedPart: MockPartDetail | undefined;
+
+    const listPart = partDetails.some((p) => p.partId === partId)
+      ? undefined
+      : partFromListItem(partId);
+    if (listPart) partDetails = [...partDetails, listPart];
 
     partDetails = partDetails.map((part) => {
       if (part.partId !== partId) {

@@ -55,7 +55,9 @@ export const handlers = [
         headers: {
           "set-cookie":
             `ACCESS_TOKEN=${Date.now()}; Path=/; Max-Age=${ACCESS_TOKEN_MAX_AGE},` +
-            `REFRESH_TOKEN=${Date.now()}; Path=/; Max-Age=${REFRESH_TOKEN_MAX_AGE}`,
+            `REFRESH_TOKEN=${Date.now()}; Path=/; Max-Age=${REFRESH_TOKEN_MAX_AGE},` +
+            // 프로필 조회가 로그인한 사용자를 돌려주도록 userId를 남긴다
+            `MOCK_USER_ID=${responseData.userId}; Path=/; Max-Age=${REFRESH_TOKEN_MAX_AGE}`,
         },
         status: 200,
       },
@@ -129,8 +131,10 @@ export const handlers = [
       return apiFail(401, "Unauthorized");
     }
 
-    // 기본 사용자 프로필 반환 (실제로는 로그인된 사용자 정보를 세션에서 가져와야 함)
-    const defaultUser = getUserProfile();
+    // 로그인 때 남긴 MOCK_USER_ID로 사용자를 찾는다
+    const defaultUser = getUserProfile(
+      Number(cookies.MOCK_USER_ID) || undefined,
+    );
 
     const responseData: UserResponse = {
       userId: defaultUser.userId,
@@ -209,7 +213,7 @@ export const handlers = [
       {
         // Max-Age=0 을 통해서 쿠키를 삭제
         headers: {
-          "set-cookie": `ACCESS_TOKEN=; Path=/; Max-Age=0, REFRESH_TOKEN=; Path=/; Max-Age=0`,
+          "set-cookie": `ACCESS_TOKEN=; Path=/; Max-Age=0, REFRESH_TOKEN=; Path=/; Max-Age=0, MOCK_USER_ID=; Path=/; Max-Age=0`,
         },
         status: 200,
       },

@@ -9,11 +9,16 @@ export const itemGroupsQueryOptions = (categoryId?: number) =>
   });
 
 export const useItemGroupsQuery = (categoryId?: number) =>
-  api.useQuery("get", "/api/part/parts/categories/{categoryId}/groups", {
-    params: {
-      path: {
-        categoryId: categoryId as number,
+  api.useQuery(
+    "get",
+    "/api/part/parts/categories/{categoryId}/groups",
+    {
+      params: {
+        path: {
+          categoryId: categoryId as number,
+        },
       },
     },
-    enabled: typeof categoryId === "number",
-  });
+    // enabled는 init이 아니라 옵션 인자로 넘겨야 적용된다. NaN도 막는다.
+    { enabled: Number.isFinite(categoryId) },
+  );

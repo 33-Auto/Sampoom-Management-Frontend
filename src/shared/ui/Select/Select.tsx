@@ -20,7 +20,8 @@ export interface Option {
 }
 
 export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement>,
+  extends
+    React.SelectHTMLAttributes<HTMLSelectElement>,
     VariantProps<typeof selectVariants> {
   options?: Option[];
   label?: string;
@@ -54,8 +55,11 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           {...props}
         >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
+          {options.map((option, index) => (
+            <option
+              key={`${String(option.value)}-${index}`}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
