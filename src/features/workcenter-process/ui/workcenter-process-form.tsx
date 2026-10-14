@@ -57,7 +57,7 @@ export function WorkCenterProcessForm({
     { value: "MAINTENANCE", label: "정비" },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (!formData.name.trim()) {
       showError("입력 오류", "작업장명을 입력해주세요.");
       return;
@@ -84,7 +84,7 @@ export function WorkCenterProcessForm({
         {
           params: {
             path: {
-              id: workCenterId!,
+              id: workCenterId,
             },
           },
           body: {
@@ -132,7 +132,7 @@ export function WorkCenterProcessForm({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (!workCenterId) return;
 
     showConfirm({
@@ -203,9 +203,7 @@ export function WorkCenterProcessForm({
                 setFormData({
                   ...formData,
                   status: e.target.value as
-                    | "ACTIVE"
-                    | "INACTIVE"
-                    | "MAINTENANCE",
+                    "ACTIVE" | "INACTIVE" | "MAINTENANCE",
                 })
               }
             />

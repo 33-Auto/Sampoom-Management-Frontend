@@ -16,7 +16,7 @@ export const buildRoutingStatusOptions = () => [
     .filter(([, value]) => value !== undefined)
     .map(([, value]) => ({
       value: value as string,
-      label: formatRoutingStatus(value as RoutingStatus),
+      label: formatRoutingStatus(value),
     })),
 ];
 

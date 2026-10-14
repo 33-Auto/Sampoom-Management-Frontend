@@ -80,7 +80,9 @@ export function ShippingProcessForm({
   const { showError, showSuccess } = useNotification();
   const { mutateAsync, isPending } = useShippingProcessMutation();
 
-  const handleSubmitForm = async (formData: ShippingProcessFormData) => {
+  const handleSubmitForm = async (
+    formData: ShippingProcessFormData,
+  ): Promise<void> => {
     try {
       await mutateAsync({
         body: {

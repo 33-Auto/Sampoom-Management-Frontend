@@ -7,7 +7,7 @@ import { shouldSkipAuthRefresh } from "./auth-refresh.guard";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-const applyDefaultHeaders = (request: Request) => {
+const applyDefaultHeaders = (request: Request): void => {
   request.headers.set("Content-Type", "application/json");
   request.headers.set("X-Client-Type", "WEB");
 };

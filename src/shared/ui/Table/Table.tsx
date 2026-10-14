@@ -63,7 +63,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
   const finalData = data || resolvedData;
   const isLoading = loading || isPromiseLoading;
 
-  const handleSelectAll = (checked: boolean) => {
+  const handleSelectAll = (checked: boolean): void => {
     if (!onSelectionChange) return;
     if (checked) {
       const allKeys = finalData.map((record) => record[rowKey]);
@@ -73,7 +73,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>((props, ref) => {
     }
   };
 
-  const handleSelectRow = (key: string | number, checked: boolean) => {
+  const handleSelectRow = (key: string | number, checked: boolean): void => {
     if (!onSelectionChange) return;
     if (checked) {
       onSelectionChange([...selectedRowKeys, key]);

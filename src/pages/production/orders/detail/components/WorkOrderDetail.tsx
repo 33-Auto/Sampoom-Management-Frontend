@@ -112,11 +112,11 @@ export const WorkOrderDetail = () => {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const handleMaterialRequest = () => {
+  const handleMaterialRequest = (): void => {
     alert("원자재 불출 요청이 전송되었습니다.");
   };
 
-  const handleProductionSubmit = () => {
+  const handleProductionSubmit = (): void => {
     if (completedQty === 0 && defectQty === 0) {
       alert("완료 수량 또는 불량 수량을 입력해주세요.");
       return;

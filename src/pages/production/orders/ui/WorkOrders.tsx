@@ -38,9 +38,7 @@ export const WorkOrders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { page, size, onPageChange, onSizeChange } = usePaginationTable({});
-  const { defaultFactoryId } = useLoaderData() as {
-    defaultFactoryId?: number;
-  };
+  const { defaultFactoryId } = useLoaderData();
   const selectedFactoryId = useBranchId("factory");
   const factoryId = selectedFactoryId ? Number(selectedFactoryId) : undefined;
   const setBranchSelection = useBranchSelectionStore(
@@ -160,7 +158,7 @@ export const WorkOrders = () => {
     return `${firstLabel ?? "-"} 외 ${rest.length}`;
   };
 
-  const handleResetFilters = () => {
+  const handleResetFilters = (): void => {
     setSearchTerm("");
     setStatusFilter(DEFAULT_PART_ORDER_STATUSES.join(","));
     setPriorityFilter("");
@@ -168,12 +166,12 @@ export const WorkOrders = () => {
     refetch();
   };
 
-  const handleViewDetails = (order: PartOrderResponseDTO) => {
+  const handleViewDetails = (order: PartOrderResponseDTO): void => {
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setIsModalOpen(false);
     setSelectedOrder(null);
   };
@@ -305,7 +303,7 @@ export const WorkOrders = () => {
             key: "status",
             value: statusFilter,
             options: statusOptions,
-            onChange: (value) => {
+            onChange: (value): void => {
               setStatusFilter(value);
               onPageChange(0);
             },
@@ -314,7 +312,7 @@ export const WorkOrders = () => {
             key: "priority",
             value: priorityFilter,
             options: priorityOptions,
-            onChange: (value) => {
+            onChange: (value): void => {
               setPriorityFilter(value);
               onPageChange(0);
             },

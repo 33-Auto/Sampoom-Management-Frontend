@@ -48,7 +48,7 @@ export function EmployeeStatusProcess() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
     updateMutation.mutate(
@@ -72,7 +72,7 @@ export function EmployeeStatusProcess() {
     );
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 
@@ -120,7 +120,7 @@ export function EmployeeStatusProcess() {
                   </p>
                   <p className="font-medium text-gray-900 dark:text-white">
                     {getWorkspaceLabel(
-                      user.workspace as string | undefined,
+                      user.workspace,
                       WORKSPACE_FALLBACK_LABELS,
                     )}
                   </p>

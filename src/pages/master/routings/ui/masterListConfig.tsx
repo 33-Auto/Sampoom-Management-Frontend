@@ -64,31 +64,31 @@ export const createRoutingColumns = ({
   onInspect,
   onEdit,
 }: RoutingColumnsParams): Column[] => [
-  { key: keys.code as any, title: "공정 코드", width: "120px" },
-  { key: keys.partCode as any, title: "품목 코드", width: "120px" },
-  { key: keys.partName as any, title: "품목명" },
+  { key: keys.code, title: "공정 코드", width: "120px" },
+  { key: keys.partCode, title: "품목 코드", width: "120px" },
+  { key: keys.partName, title: "품목명" },
   {
-    key: keys.categoryName as any,
+    key: keys.categoryName,
     title: "카테고리",
     width: "160px",
     render: (_value: any, row: ProcessResponseDTO) =>
       formatRoutingCategoryPath(row.categoryName, row.groupName),
   },
-  { key: keys.version as any, title: "버전", width: "80px" },
+  { key: keys.version, title: "버전", width: "80px" },
   {
-    key: keys.totalStepMinutes as any,
+    key: keys.totalStepMinutes,
     title: "총 리드타임",
     width: "120px",
     render: (value: any) => formatRoutingMinutes(value),
   },
   {
-    key: keys.stepCount as any,
+    key: keys.stepCount,
     title: "공정 수",
     width: "80px",
     render: (value: any) => formatRoutingStepCount(value),
   },
   {
-    key: keys.status as any,
+    key: keys.status,
     title: "상태",
     width: "80px",
     render: (value: any) => {

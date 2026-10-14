@@ -9,7 +9,7 @@ const HomeLayout: React.FC<PropsWithChildren> = ({ children }) => {
       setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(timer);
+    return (): void => clearInterval(timer);
   }, []);
 
   const formattedDate = currentTime.toLocaleDateString("ko-KR", {

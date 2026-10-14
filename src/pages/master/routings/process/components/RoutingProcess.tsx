@@ -17,11 +17,11 @@ export function RoutingProcess() {
     }
   )?.routingData;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/routings");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

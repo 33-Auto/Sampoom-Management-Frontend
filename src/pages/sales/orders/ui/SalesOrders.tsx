@@ -64,7 +64,7 @@ const mapOrderToRow = (order: SalesOrderDto): SalesOrderRow => {
       : firstName
     : "-";
 
-  const status = (order.status ?? "PENDING") as SalesOrderStatus;
+  const status = order.status ?? "PENDING";
 
   return {
     orderId: order.orderId ?? 0,
@@ -84,9 +84,7 @@ export const SalesOrders = () => {
     useState<SalesOrderStatusFilterValue>("ALL");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
-  const { defaultWarehouseId } = useLoaderData() as {
-    defaultWarehouseId?: number;
-  };
+  const { defaultWarehouseId } = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -117,10 +115,7 @@ export const SalesOrders = () => {
     }
 
     if (statusFilter !== "ALL") {
-      params.status = statusFilter as Exclude<
-        SalesOrderStatusFilterValue,
-        "ALL"
-      >;
+      params.status = statusFilter;
     }
 
     return params;
@@ -221,7 +216,7 @@ export const SalesOrders = () => {
               key: "agency",
               value: fromAgencyId,
               options: agencyOptions,
-              onChange: (value: string) => {
+              onChange: (value: string): void => {
                 setFromAgencyId(value);
                 setPage(0);
               },
@@ -230,7 +225,7 @@ export const SalesOrders = () => {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (value: string) => {
+              onChange: (value: string): void => {
                 setStatusFilter(value as SalesOrderStatusFilterValue);
                 setPage(0);
               },

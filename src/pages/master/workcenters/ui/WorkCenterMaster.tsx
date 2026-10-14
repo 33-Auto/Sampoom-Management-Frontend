@@ -49,11 +49,11 @@ export const WorkCenterMaster = () => {
   const totalElements = isDataValid ? (responseData.totalElements ?? 0) : 0;
   const totalPages = isDataValid ? (responseData.totalPages ?? 0) : 0;
 
-  const handleCreateNew = () => {
+  const handleCreateNew = (): void => {
     navigate("/master/workcenters/process");
   };
 
-  const handleViewDetail = (row: WorkCenterResponseDTO) => {
+  const handleViewDetail = (row: WorkCenterResponseDTO): void => {
     navigate(`/master/workcenters/process/${row.id}`, {
       state: { workCenterData: row },
     });

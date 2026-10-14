@@ -25,15 +25,15 @@ export function BomProcess() {
   const groupName = (bomDataFromState as BomResponseDTO)?.groupName;
 
   // 수정 모드일 때만 API에서 데이터 조회
-  const { data: bomDataFromApi, isLoading } = useBomDetailQuery(bomId!, {
+  const { data: bomDataFromApi, isLoading } = useBomDetailQuery(bomId, {
     enabled: !!bomId && !bomDataFromState,
   });
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/bom");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

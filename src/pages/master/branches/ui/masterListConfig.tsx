@@ -52,10 +52,10 @@ export const createBranchColumns = ({
   keys,
   onEdit,
 }: BranchColumnsParams): Column[] => [
-  { key: keys.branchCode as any, title: "지점 코드", width: "120px" },
-  { key: keys.name as any, title: "지점명" },
+  { key: keys.branchCode, title: "지점 코드", width: "120px" },
+  { key: keys.name, title: "지점명" },
   {
-    key: keys.type as any,
+    key: keys.type,
     title: "유형",
     width: "120px",
     render: (value: any) => {
@@ -67,9 +67,9 @@ export const createBranchColumns = ({
       );
     },
   },
-  { key: keys.address as any, title: "주소" },
+  { key: keys.address, title: "주소" },
   {
-    key: keys.status as any,
+    key: keys.status,
     title: "상태",
     width: "80px",
     render: (value: string) => {

@@ -54,7 +54,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const [confirmModal, setConfirmModal] = useState<ConfirmModal | null>(null);
 
-  const showToast = (toast: Omit<ToastNotification, "id">) => {
+  const showToast = (toast: Omit<ToastNotification, "id">): void => {
     const id = Date.now().toString();
     const newToast = { ...toast, id };
     setToasts((prev) => [...prev, newToast]);
@@ -64,36 +64,36 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     }, duration);
   };
 
-  const removeToast = (id: string) => {
+  const removeToast = (id: string): void => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
-  const showConfirm = (modal: Omit<ConfirmModal, "id">) => {
+  const showConfirm = (modal: Omit<ConfirmModal, "id">): void => {
     const id = Date.now().toString();
     setConfirmModal({ ...modal, id });
   };
 
-  const hideConfirm = () => {
+  const hideConfirm = (): void => {
     setConfirmModal(null);
   };
 
-  const showSuccess = (title: string, message?: string) => {
+  const showSuccess = (title: string, message?: string): void => {
     showToast({ type: "success", title, message });
   };
 
-  const showError = (title: string, message?: string) => {
+  const showError = (title: string, message?: string): void => {
     showToast({ type: "error", title, message });
   };
 
-  const showWarning = (title: string, message?: string) => {
+  const showWarning = (title: string, message?: string): void => {
     showToast({ type: "warning", title, message });
   };
 
-  const showInfo = (title: string, message?: string) => {
+  const showInfo = (title: string, message?: string): void => {
     showToast({ type: "info", title, message });
   };
 
-  const addNotification = (notification: any) => {
+  const addNotification = (notification: any): void => {
     if (notification.type && notification.message) {
       showToast({ type: notification.type, title: notification.message });
     }

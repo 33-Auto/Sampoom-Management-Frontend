@@ -40,7 +40,7 @@ export const PaginationTableSection: React.FC<PaginationTableSectionProps> = ({
   onRefresh,
   actionsRight,
 }) => {
-  const handleSizeChange = (newSize: number) => {
+  const handleSizeChange = (newSize: number): void => {
     onSizeChange(newSize);
     // size 변경 시 첫 페이지로 이동
     onPageChange(0);

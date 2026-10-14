@@ -49,7 +49,7 @@ export function PartnerProcessForm({
     { value: "INACTIVE", label: "비활성" },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (!formData.name.trim()) {
       showError("입력 오류", "거래처명을 입력해주세요.");
       return;
@@ -76,7 +76,7 @@ export function PartnerProcessForm({
         {
           params: {
             path: {
-              id: partnerId!,
+              id: partnerId,
             },
           },
           body: {
@@ -122,7 +122,7 @@ export function PartnerProcessForm({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (!partnerId) return;
 
     showConfirm({

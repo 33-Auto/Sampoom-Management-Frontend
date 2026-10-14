@@ -25,14 +25,14 @@ export function UserMenu({
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       // 클릭한 위치가 메뉴 영역 밖인지 확인
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    const handleEscape = (event: KeyboardEvent) => {
+    const handleEscape = (event: KeyboardEvent): void => {
       // Escape 키를 누르면 메뉴 닫기
       if (event.key === "Escape") {
         setIsOpen(false);
@@ -42,7 +42,7 @@ export function UserMenu({
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
 
-    return () => {
+    return (): void => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
@@ -52,18 +52,18 @@ export function UserMenu({
   const displayRole = user.position ?? user.role ?? user.workspace ?? "-";
   const displayEmail = user.email ?? "-";
 
-  const toggleMenu = () => {
+  const toggleMenu = (): void => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleProfileClick = () => {
+  const handleProfileClick = (): void => {
     setIsOpen(false);
     if (profilePath) {
       navigate(profilePath);
     }
   };
 
-  const handleLogoutClick = async () => {
+  const handleLogoutClick = async (): Promise<void> => {
     setIsOpen(false);
     try {
       await logoutMutation.mutateAsync({});

@@ -6,7 +6,6 @@ import {
   STATUS_ORDER,
   normalizePurchaseOrderStatus,
   type POResDto,
-  type PurchaseOrderStatusKey,
   PURCHASE_ORDER_STATUS_BADGE_VARIANTS,
   PURCHASE_ORDER_STATUS_LABELS,
 } from "@/entities/purchase-order";
@@ -37,9 +36,7 @@ export function WmsPurchaseOrders() {
   const { page, size, setPage, onPageChange, onSizeChange } =
     usePaginationTable({});
 
-  const { defaultWarehouseId } = useLoaderData() as {
-    defaultWarehouseId?: number;
-  };
+  const { defaultWarehouseId } = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -122,7 +119,7 @@ export function WmsPurchaseOrders() {
     );
   };
 
-  const handleStocking = (row: POResDto) => {
+  const handleStocking = (row: POResDto): void => {
     if (!row.purchaseOrderId) {
       return;
     }
@@ -285,7 +282,7 @@ export function WmsPurchaseOrders() {
               key: "category",
               value: selectedCategory,
               options: categoryOptions,
-              onChange: (e) => {
+              onChange: (e): void => {
                 setSelectedCategory(e);
                 setSelectedGroup("");
                 setPage(0);
@@ -295,7 +292,7 @@ export function WmsPurchaseOrders() {
               key: "group",
               value: selectedGroup,
               options: groupOptions,
-              onChange: (value) => {
+              onChange: (value): void => {
                 setSelectedGroup(value);
                 setPage(0);
               },
@@ -305,8 +302,8 @@ export function WmsPurchaseOrders() {
               key: "status",
               value: statusFilter,
               options: statusOptions,
-              onChange: (value) => {
-                setStatusFilter(value as PurchaseOrderStatusKey | "");
+              onChange: (value): void => {
+                setStatusFilter(value);
                 setPage(0);
               },
             },

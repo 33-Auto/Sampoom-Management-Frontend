@@ -7,7 +7,6 @@ import {
 
 import { useBranchId } from "@/features/branch-select";
 import { StockingProcessForm } from "@/features/stocking-process";
-import type { StockingProcessLoaderResult } from "@/features/stocking-process";
 import { Button } from "@/shared/ui";
 
 type LocationState = {
@@ -18,7 +17,7 @@ export default function StockingPage() {
   const navigate = useNavigate();
   const { purchaseOrderId } = useParams();
   const { state } = useLocation() as { state: LocationState };
-  const loaderData = useLoaderData() as StockingProcessLoaderResult;
+  const loaderData = useLoaderData();
   const selectedWarehouseId = useBranchId("wms");
 
   if (!purchaseOrderId) {
@@ -37,11 +36,11 @@ export default function StockingPage() {
     throw new Error("발주 상세 정보를 불러올 수 없습니다.");
   }
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/wms/orders");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

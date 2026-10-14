@@ -17,11 +17,11 @@ export function BranchProcess() {
     }
   )?.branchData;
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     navigate("/master/branches");
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     navigate(-1);
   };
 

@@ -1,6 +1,6 @@
 let skipAuthRefresh = false;
 
-export const setSkipAuthRefresh = (value: boolean) => {
+export const setSkipAuthRefresh = (value: boolean): void => {
   skipAuthRefresh = value;
 };
 
