@@ -147,6 +147,14 @@ const routes: RouteObject[] = [
         element: <Login />,
       },
       {
+        path: "/profile",
+        loader: requireAuth,
+        lazy: async () => {
+          const { Profile } = await import("@/pages/profile");
+          return { Component: Profile };
+        },
+      },
+      {
         path: "/signup",
         lazy: async () => {
           const { Register: Component } = await import("@/pages/register");
@@ -165,6 +173,14 @@ const routes: RouteObject[] = [
           { path: "items", element: <ItemMaster /> },
           {
             path: "items/process/:id",
+            lazy: async () => {
+              const { ItemProcess } = await import("@/pages/master/items");
+              return { Component: ItemProcess };
+            },
+          },
+          {
+            // 품목 목록의 "신규 등록" 버튼이 이 경로로 이동한다
+            path: "items/process",
             lazy: async () => {
               const { ItemProcess } = await import("@/pages/master/items");
               return { Component: ItemProcess };
