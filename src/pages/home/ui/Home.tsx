@@ -28,6 +28,11 @@ export const Home = () => {
           icon: "ri-building-line",
         },
         {
+          title: "지점 마스터",
+          path: "/master/branches",
+          icon: "ri-store-line",
+        },
+        {
           title: "작업장 마스터",
           path: "/master/workcenters",
           icon: "ri-tools-line",
