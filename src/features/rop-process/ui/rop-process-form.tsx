@@ -16,11 +16,10 @@ import {
 } from "../api/rop-process.api";
 import type { RopProcessFormProps } from "../model/rop-process.types";
 
-const WAREHOUSE_ID = 40; // 기본 창고 ID
-
 export function RopProcessForm({
   ropId,
   ropData,
+  warehouseId,
   onSuccess,
   onCancel,
 }: RopProcessFormProps) {
@@ -155,10 +154,15 @@ export function RopProcessForm({
       );
     } else {
       // 생성 모드
+      if (!warehouseId) {
+        showError("창고 선택 필요", "상단에서 창고를 선택해주세요.");
+        return;
+      }
+
       createMutation.mutate(
         {
           body: {
-            warehouseId: WAREHOUSE_ID,
+            warehouseId,
             partCode: partCode,
             autoCalStatus: formData.autoCalStatus,
             autoOrderStatus: formData.autoOrderStatus,
@@ -214,7 +218,7 @@ export function RopProcessForm({
 
   const calculatedRop = formData.averageDaily * formData.leadTime;
 
-  const isAutoOrder = formData.autoOrderStatus === "활성";
+  const isAutoOrder = formData.autoOrderStatus === "ACTIVE";
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-bg-card-black">
