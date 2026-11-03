@@ -19,9 +19,11 @@ import { formatNumber } from "@/shared/lib";
 import { Badge, Button, InfoBox, SearchFilterBar } from "@/shared/ui";
 // import { ModuleHeader, NavigationTabs } from "@/widgets/Header";
 
+// PROCESSING은 MPS 상태 IN_PROGRESS는 실행 결과 계획 상태
 const STATUS_LABEL: Record<string, string> = {
   PLANNED: "계획",
   PROCESSING: "진행중",
+  IN_PROGRESS: "진행중",
   COMPLETED: "완료",
   CANCELLED: "취소",
 };
@@ -31,6 +33,7 @@ const getStatusVariant = (status?: string) => {
     case "COMPLETED":
       return "success" as const;
     case "PROCESSING":
+    case "IN_PROGRESS":
       return "warning" as const;
     case "CANCELLED":
       return "error" as const;

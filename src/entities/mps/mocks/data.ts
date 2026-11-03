@@ -27,7 +27,8 @@ export type MpsPlanResult = {
   remainingTotalProduction: number;
   requiredDate: string;
   createdAt: string;
-  status: "PLANNED" | "PROCESSING" | "COMPLETED" | "DELAYED";
+  // MPS 자체와 달리 계획 상태는 v1 MpsPlanResponse 값을 쓴다
+  status: "PLANNED" | "IN_PROGRESS" | "COMPLETED" | "DELAYED" | "CANCELLED";
 };
 
 export type PartOrderResult = {
@@ -315,7 +316,7 @@ export const mockMpsPlanResults: Record<number, MpsPlanResult[]> = {
       remainingTotalProduction: 110,
       requiredDate: "2025-01-15",
       createdAt: "2024-12-22T09:00:00+09:00",
-      status: "PROCESSING",
+      status: "IN_PROGRESS",
     },
     {
       mpsPlanId: 50003,
@@ -403,7 +404,7 @@ export const mockMpsPlanResults: Record<number, MpsPlanResult[]> = {
       remainingTotalProduction: 210,
       requiredDate: "2025-01-25",
       createdAt: "2024-12-22T09:00:00+09:00",
-      status: "PROCESSING",
+      status: "IN_PROGRESS",
     },
     {
       mpsPlanId: 52002,
