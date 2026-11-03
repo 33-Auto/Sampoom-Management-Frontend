@@ -7,32 +7,28 @@ import {
   useCancelOrderMutation,
   useSalesOrderDetailQuery,
 } from "../api/sales-orders.api";
+import {
+  SALES_ORDER_STATUS_BADGE_CLASS,
+  SALES_ORDER_STATUS_LABELS,
+  type SalesOrderDto,
+} from "../model";
 
 export const SalesOrderDetail: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation() as any;
   const params = useParams<{ id: string }>();
   const idNum = Number(params.id);
-  const { data: fetched, refetch } = useSalesOrderDetailQuery(
+  const { data: fetched } = useSalesOrderDetailQuery(
     Number.isNaN(idNum) ? undefined : idNum,
   );
-  const order = fetched ?? state?.order;
+  // 응답 봉투에서 data 를 꺼내고 받기 전엔 목록이 넘긴 주문을 쓴다
+  const order: SalesOrderDto | undefined = fetched?.data ?? state?.order;
   const cancelMutation = useCancelOrderMutation();
 
   const createdDate = useMemo(
     () => (order?.createdAt ? String(order.createdAt).slice(0, 10) : "-"),
     [order],
   );
-
-  const statusLabelMap: Record<string, string> = {
-    PENDING: "대기 중",
-    CONFIRMED: "주문 확인",
-    SHIPPING: "배송 중",
-    DELAYED: "배송 지연",
-    PRODUCING: "생산 중",
-    COMPLETED: "배송 완료",
-    CANCELED: "주문 취소",
-  };
 
   const formatCurrency = (amount: number) =>
     `₩${Number(amount || 0).toLocaleString()}`;
@@ -77,8 +73,9 @@ export const SalesOrderDetail: React.FC = () => {
               disabled={cancelMutation.isPending || order?.status !== "PENDING"}
               onClick={async () => {
                 if (!order?.orderId) return;
-                await cancelMutation.mutateAsync(order.orderId);
-                await refetch();
+                await cancelMutation.mutateAsync({
+                  params: { path: { orderId: order.orderId } },
+                });
               }}
             >
               주문취소
@@ -106,23 +103,13 @@ export const SalesOrderDetail: React.FC = () => {
               <p className="text-xs text-gray-500 dark:text-gray-400">상태</p>
               <span
                 className={`rounded-full px-2 py-1 text-xs font-medium ${
-                  order?.status === "PENDING"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : order?.status === "CONFIRMED"
-                      ? "bg-blue-100 text-blue-800"
-                      : order?.status === "SHIPPING"
-                        ? "bg-indigo-100 text-indigo-800"
-                        : order?.status === "DELAYED"
-                          ? "bg-orange-100 text-orange-800"
-                          : order?.status === "PRODUCING"
-                            ? "bg-purple-100 text-purple-800"
-                            : order?.status === "COMPLETED"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
+                  (order?.status &&
+                    SALES_ORDER_STATUS_BADGE_CLASS[order.status]) ??
+                  "bg-gray-100 text-gray-800"
                 }`}
               >
                 {order?.status
-                  ? statusLabelMap[order.status] || order.status
+                  ? (SALES_ORDER_STATUS_LABELS[order.status] ?? order.status)
                   : "-"}
               </span>
             </div>

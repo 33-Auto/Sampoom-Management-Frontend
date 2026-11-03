@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import type { RopSettings as RopResDto } from "@/entities/rop";
+import { useBranchId } from "@/features/branch-select";
 import { RopProcessForm } from "@/features/rop-process";
 import { Button } from "@/shared/ui";
 
@@ -9,6 +10,12 @@ export function RopProcess() {
   const location = useLocation();
   const navigate = useNavigate();
   const isEditMode = !!id;
+
+  // 목록 화면과 같이 상단에서 고른 창고에 생성한다
+  const selectedWarehouseId = useBranchId("wms");
+  const warehouseId = selectedWarehouseId
+    ? Number(selectedWarehouseId)
+    : undefined;
 
   // location state에서 ROP 데이터 받기
   const ropData = (location.state as { ropData?: RopResDto })?.ropData;
@@ -45,6 +52,7 @@ export function RopProcess() {
         <RopProcessForm
           ropId={isEditMode ? Number(id) : undefined}
           ropData={ropData}
+          warehouseId={warehouseId}
           onSuccess={handleSuccess}
           onCancel={handleCancel}
         />

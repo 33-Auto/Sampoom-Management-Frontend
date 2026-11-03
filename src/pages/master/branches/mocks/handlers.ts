@@ -1,9 +1,9 @@
 import { http } from "msw";
 
+import { mockBranchesMaster } from "@/entities/branch";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
-import { mockBranchesMaster } from "./data";
-
+// 등록·수정·삭제는 features/branch-process가 같은 배열을 고친다
 export const handlers = [
   // 지점 목록 조회 (검색)
   http.get("/api/site/branches/search", async ({ request }) => {
@@ -62,38 +62,5 @@ export const handlers = [
       return apiFail(404, "지점을 찾을 수 없습니다");
     }
     return apiSuccess(branch);
-  }),
-
-  // 지점 등록
-  http.post("/api/site/branches", async ({ request }) => {
-    await sleep(400);
-    const newBranch = (await request.json()) as Partial<
-      (typeof mockBranchesMaster)[0]
-    >;
-    const createdBranch = {
-      ...newBranch,
-      id: mockBranchesMaster.length + 1,
-      branchCode:
-        newBranch.branchCode ||
-        `BR-${String(mockBranchesMaster.length + 1).padStart(3, "0")}`,
-    };
-    return apiSuccess(createdBranch, 201);
-  }),
-
-  // 지점 수정
-  http.put("/api/site/branches/:branchId", async ({ params, request }) => {
-    await sleep(300);
-    const updates = (await request.json()) as Partial<
-      (typeof mockBranchesMaster)[0]
-    >;
-    const branchId = Number(params.branchId);
-    const branch = mockBranchesMaster.find((b) => b.id === branchId);
-
-    if (!branch) {
-      return apiFail(404, "지점을 찾을 수 없습니다");
-    }
-
-    const updatedBranch = { ...branch, ...updates };
-    return apiSuccess(updatedBranch);
   }),
 ];

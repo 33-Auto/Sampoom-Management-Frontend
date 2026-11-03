@@ -1,8 +1,7 @@
 import { http } from "msw";
 
+import { mockRopSettings } from "@/entities/rop";
 import { apiSuccess, sleep } from "@/shared/mocks";
-
-import { mockRopSettings } from "./data";
 
 const filterRecords = (url: URL) => {
   const keyword = url.searchParams.get("keyword")?.toLowerCase();

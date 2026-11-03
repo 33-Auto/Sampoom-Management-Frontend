@@ -1,12 +1,11 @@
 import { http } from "msw";
 
-import { apiSuccess, sleep } from "@/shared/mocks";
-
 import {
   mockPurchaseOrders,
   transformToPOResDto,
   type PurchaseOrderListItem,
-} from "./data";
+} from "@/entities/purchase-order";
+import { apiSuccess, sleep } from "@/shared/mocks";
 
 // API 스키마의 orderStatus를 mock 데이터의 status로 역매핑
 const mapOrderStatusToStatus = (

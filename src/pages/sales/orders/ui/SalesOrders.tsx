@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { useAgencyBranchOptions } from "@/entities/agency";
 import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
@@ -7,6 +7,7 @@ import { Button, Table, SearchFilterBar, TableSection } from "@/shared/ui";
 
 import { useSalesOrdersQuery, type SalesOrderListQueryParams } from "../api";
 import {
+  SALES_ORDER_STATUS_BADGE_CLASS,
   SALES_ORDER_STATUS_FILTER_OPTIONS,
   SALES_ORDER_STATUS_LABELS,
   type SalesOrderDto,
@@ -23,18 +24,6 @@ type SalesOrderRow = {
   totalQuantity: number;
   totalAmount: number;
   status: SalesOrderStatus;
-};
-
-const STATUS_BADGE_CLASS: Record<SalesOrderStatus, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  DELAYED: "bg-orange-100 text-orange-800",
-  SHIPPING: "bg-indigo-100 text-indigo-800",
-  SHIPPED: "bg-sky-100 text-sky-800",
-  DELIVERING: "bg-teal-100 text-teal-800",
-  ARRIVED: "bg-emerald-100 text-emerald-800",
-  COMPLETED: "bg-green-100 text-green-800",
-  CANCELED: "bg-gray-100 text-gray-800",
 };
 
 const toDate = (iso?: string | null) =>
@@ -85,6 +74,7 @@ export const SalesOrders = () => {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
   const { defaultWarehouseId } = useLoaderData();
+  const navigate = useNavigate();
   const selectedWarehouseId = useBranchId("wms");
   const setBranchSelection = useBranchSelectionStore(
     (state) => state.setSelection,
@@ -156,6 +146,11 @@ export const SalesOrders = () => {
   }, [warehouseId, setPage]);
 
   // 작업 버튼 - 취소/상세
+  const handleViewDetail = (row: SalesOrderRow): void => {
+    const order = rawContent.find((item) => item.orderId === row.orderId);
+    navigate(`/sales/orders/${row.orderId}`, { state: { order } });
+  };
+
   const statusOptions = useMemo(
     () => [
       { value: "ALL", label: "전체 상태" },
@@ -194,7 +189,7 @@ export const SalesOrders = () => {
       render: (value: SalesOrderStatus) => {
         const label = SALES_ORDER_STATUS_LABELS[value] ?? value;
         const className =
-          STATUS_BADGE_CLASS[value] ?? "bg-gray-100 text-gray-800";
+          SALES_ORDER_STATUS_BADGE_CLASS[value] ?? "bg-gray-100 text-gray-800";
         return (
           <span
             className={`rounded-full px-2 py-1 text-xs font-medium ${className}`}
@@ -203,6 +198,21 @@ export const SalesOrders = () => {
           </span>
         );
       },
+    },
+    {
+      key: "actions",
+      title: "작업",
+      width: "100px",
+      render: (_value: unknown, row: SalesOrderRow) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => handleViewDetail(row)}
+        >
+          <i className="ri-eye-line mr-1"></i>
+          상세
+        </Button>
+      ),
     },
   ];
 

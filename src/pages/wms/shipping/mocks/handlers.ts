@@ -1,8 +1,10 @@
 import { http } from "msw";
 
+import {
+  mockShippingOrders,
+  transformToShippingOrderDto,
+} from "@/entities/shipping";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
-
-import { mockShippingOrders, transformToShippingOrderDto } from "./data";
 
 const filterOrders = (url: URL) => {
   const keyword = url.searchParams.get("keyword")?.toLowerCase();

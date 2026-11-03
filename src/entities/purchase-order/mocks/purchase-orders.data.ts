@@ -1,6 +1,4 @@
-import type { Schemas } from "@/shared/model";
-
-export type POResDto = Schemas["POResDto"];
+import type { POResDto } from "../model";
 
 // 레거시 타입 (내부 사용)
 export type PurchaseOrderListItem = {
@@ -11,6 +9,7 @@ export type PurchaseOrderListItem = {
   groupName: string;
   categoryId?: number;
   groupId?: number;
+  partId: number;
   partCode: string;
   partName: string;
   unit: string;
@@ -26,6 +25,7 @@ export type PurchaseOrderListItem = {
     | "COMPLETED"
     | "CANCELED";
   scheduledDate?: string;
+  receivedDate?: string;
   warehouseId: number;
 };
 
@@ -54,6 +54,7 @@ export const transformToPOResDto = (item: PurchaseOrderListItem): POResDto => {
     orderNumber: item.orderNumber,
     categoryName: item.categoryName,
     groupName: item.groupName,
+    partId: item.partId,
     partCode: item.partCode,
     partName: item.partName,
     unit: item.unit,
@@ -62,6 +63,7 @@ export const transformToPOResDto = (item: PurchaseOrderListItem): POResDto => {
     restQuantity: item.restQuantity,
     price: item.price,
     scheduledDate: item.scheduledDate,
+    receivedDate: item.receivedDate,
     createdAt: new Date().toISOString(), // 기본값
     orderStatus: mapStatusToOrderStatus(item.status),
   };
@@ -76,6 +78,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "연료 공급",
     categoryId: 1,
     groupId: 11,
+    partId: 1001,
     partCode: "ENG-FUEL-001",
     partName: "고압 연료 펌프",
     unit: "EA",
@@ -85,6 +88,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 1850000,
     status: "PARTIAL",
     scheduledDate: "2025-01-05",
+    receivedDate: "2024-12-29T10:00:00+09:00",
     warehouseId: 201,
   },
   {
@@ -95,6 +99,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "제동 장치",
     categoryId: 2,
     groupId: 22,
+    partId: 2002,
     partCode: "CHS-BRAKE-008",
     partName: "세라믹 브레이크 패드",
     unit: "SET",
@@ -114,6 +119,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "센서 모듈",
     categoryId: 3,
     groupId: 31,
+    partId: 3001,
     partCode: "ELE-SENSOR-003",
     partName: "ABS 휠 속도 센서",
     unit: "EA",
@@ -123,6 +129,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 960000,
     status: "COMPLETED",
     scheduledDate: "2024-12-28",
+    receivedDate: "2024-12-28T16:45:00+09:00",
     warehouseId: 201,
   },
   {
@@ -133,6 +140,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "엔진 블록",
     categoryId: 1,
     groupId: 12,
+    partId: 1007,
     partCode: "ENG-BLOCK-012",
     partName: "엔진 크랭크샤프트",
     unit: "EA",
@@ -152,6 +160,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "연료 공급",
     categoryId: 1,
     groupId: 11,
+    partId: 1003,
     partCode: "ENG-FUEL-002",
     partName: "연료 인젝터",
     unit: "EA",
@@ -161,6 +170,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 125000,
     status: "PARTIAL",
     scheduledDate: "2025-01-10",
+    receivedDate: "2025-01-10T09:30:00+09:00",
     warehouseId: 201,
   },
   {
@@ -171,6 +181,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "센서 모듈",
     categoryId: 3,
     groupId: 31,
+    partId: 3002,
     partCode: "ELE-SENSOR-010",
     partName: "배기가스 온도 센서",
     unit: "EA",
@@ -180,6 +191,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 85000,
     status: "PARTIAL",
     scheduledDate: "2025-01-15",
+    receivedDate: "2025-01-15T13:00:00+09:00",
     warehouseId: 202,
   },
   {
@@ -190,6 +202,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "현가 장치",
     categoryId: 2,
     groupId: 21,
+    partId: 2001,
     partCode: "CHS-SUS-005",
     partName: "후륜 서스펜션 스프링",
     unit: "EA",
@@ -199,6 +212,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 75000,
     status: "PARTIAL",
     scheduledDate: "2025-01-08",
+    receivedDate: "2025-01-08T15:45:00+09:00",
     warehouseId: 203,
   },
   {
@@ -209,6 +223,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "엔진 블록",
     categoryId: 1,
     groupId: 12,
+    partId: 1002,
     partCode: "ENG-BLOCK-010",
     partName: "알루미늄 엔진 블록",
     unit: "EA",
@@ -218,6 +233,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 300000,
     status: "COMPLETED",
     scheduledDate: "2024-12-30",
+    receivedDate: "2024-12-30T10:00:00+09:00",
     warehouseId: 201,
   },
   {
@@ -228,6 +244,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "제동 장치",
     categoryId: 2,
     groupId: 22,
+    partId: 2004,
     partCode: "CHS-BRAKE-009",
     partName: "브레이크 디스크",
     unit: "EA",
@@ -247,6 +264,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "제어 모듈",
     categoryId: 3,
     groupId: 32,
+    partId: 3004,
     partCode: "ELE-ECU-001",
     partName: "엔진 제어 모듈",
     unit: "EA",
@@ -256,6 +274,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     price: 450000,
     status: "PARTIAL",
     scheduledDate: "2025-01-20",
+    receivedDate: "2025-01-20T11:10:00+09:00",
     warehouseId: 203,
   },
   {
@@ -266,6 +285,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "센서 모듈",
     categoryId: 3,
     groupId: 31,
+    partId: 3003,
     partCode: "ELE-SENSOR-011",
     partName: "산소 센서",
     unit: "EA",
@@ -285,6 +305,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "스티어링",
     categoryId: 2,
     groupId: 23,
+    partId: 2005,
     partCode: "CHS-STEER-013",
     partName: "파워 스티어링 펌프",
     unit: "EA",
@@ -304,6 +325,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "라디에이터",
     categoryId: 4,
     groupId: 41,
+    partId: 4001,
     partCode: "COOL-RAD-001",
     partName: "알루미늄 라디에이터",
     unit: "EA",
@@ -323,6 +345,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "배기 매니폴드",
     categoryId: 5,
     groupId: 51,
+    partId: 5001,
     partCode: "EXH-MAN-001",
     partName: "배기 매니폴드",
     unit: "EA",
@@ -342,6 +365,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "연료 공급",
     categoryId: 1,
     groupId: 11,
+    partId: 1006,
     partCode: "ENG-FUEL-003",
     partName: "연료 필터",
     unit: "EA",
@@ -361,6 +385,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "현가 장치",
     categoryId: 2,
     groupId: 21,
+    partId: 2006,
     partCode: "CHS-SUS-007",
     partName: "쇼크 업소버",
     unit: "EA",
@@ -380,6 +405,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "제동 장치",
     categoryId: 2,
     groupId: 22,
+    partId: 2007,
     partCode: "CHS-BRAKE-010",
     partName: "브레이크 캘리퍼",
     unit: "EA",
@@ -399,6 +425,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "센서 모듈",
     categoryId: 3,
     groupId: 31,
+    partId: 3005,
     partCode: "ELE-SENSOR-012",
     partName: "압력 센서",
     unit: "EA",
@@ -418,6 +445,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "제어 모듈",
     categoryId: 3,
     groupId: 32,
+    partId: 3006,
     partCode: "ELE-TCU-001",
     partName: "변속기 제어 모듈",
     unit: "EA",
@@ -437,6 +465,7 @@ export const mockPurchaseOrders: PurchaseOrderListItem[] = [
     groupName: "엔진 블록",
     categoryId: 1,
     groupId: 12,
+    partId: 1007,
     partCode: "ENG-BLOCK-012",
     partName: "피스톤 링 세트",
     unit: "SET",

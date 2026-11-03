@@ -28,10 +28,11 @@ const formatNumber = (value?: number | null) => {
   return value.toLocaleString("ko-KR");
 };
 
+// 계획 상태 배지 v1 MpsPlanResponse는 진행중을 IN_PROGRESS로 준다
 const statusVariants: Record<string, "info" | "warning" | "success" | "error"> =
   {
     PLANNED: "info",
-    PROCESSING: "warning",
+    IN_PROGRESS: "warning",
     COMPLETED: "success",
     DELAYED: "error",
     CANCELLED: "error",
@@ -39,7 +40,7 @@ const statusVariants: Record<string, "info" | "warning" | "success" | "error"> =
 
 const statusLabels: Record<string, string> = {
   PLANNED: "계획",
-  PROCESSING: "진행중",
+  IN_PROGRESS: "진행중",
   COMPLETED: "완료",
   DELAYED: "지연",
   CANCELLED: "취소",

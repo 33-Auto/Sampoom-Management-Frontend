@@ -1,4 +1,4 @@
-export type RopRecord = {
+export type RopSettingsRecord = {
   ropId: number;
   warehouseId: number;
   partId: number;
@@ -14,7 +14,8 @@ export type RopRecord = {
   autoCalStatus: "ACTIVE" | "INACTIVE";
 };
 
-export const mockRopRecords: RopRecord[] = [
+// 목록 조회와 생성·수정·삭제 핸들러가 이 배열 하나를 같이 쓴다
+export const mockRopSettings: RopSettingsRecord[] = [
   {
     ropId: 4001,
     warehouseId: 201,
@@ -193,6 +194,51 @@ export const mockRopRecords: RopRecord[] = [
     rop: 90,
     maxStock: 150,
     autoOrderStatus: "INACTIVE",
+    autoCalStatus: "ACTIVE",
+  },
+  {
+    ropId: 4013,
+    warehouseId: 203,
+    partId: 4001,
+    partCode: "COOL-RAD-001",
+    partName: "알루미늄 라디에이터",
+    categoryName: "냉각 시스템",
+    groupName: "라디에이터",
+    leadTime: 12,
+    averageDaily: 8,
+    rop: 96,
+    maxStock: 200,
+    autoOrderStatus: "ACTIVE",
+    autoCalStatus: "ACTIVE",
+  },
+  {
+    ropId: 4014,
+    warehouseId: 201,
+    partId: 5001,
+    partCode: "EXH-MAN-001",
+    partName: "배기 매니폴드",
+    categoryName: "배기 시스템",
+    groupName: "배기 매니폴드",
+    leadTime: 14,
+    averageDaily: 5,
+    rop: 70,
+    maxStock: 140,
+    autoOrderStatus: "ACTIVE",
+    autoCalStatus: "ACTIVE",
+  },
+  {
+    ropId: 4015,
+    warehouseId: 202,
+    partId: 1006,
+    partCode: "ENG-FUEL-003",
+    partName: "연료 필터",
+    categoryName: "엔진 부품",
+    groupName: "연료 공급",
+    leadTime: 4,
+    averageDaily: 20,
+    rop: 80,
+    maxStock: 250,
+    autoOrderStatus: "ACTIVE",
     autoCalStatus: "ACTIVE",
   },
 ];

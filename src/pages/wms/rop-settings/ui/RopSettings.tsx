@@ -48,12 +48,11 @@ export function RopSettings() {
       keyword: searchTerm === "" ? undefined : searchTerm,
       categoryId: categoryFilter === "" ? undefined : Number(categoryFilter),
       groupId: groupFilter === "" ? undefined : Number(groupFilter),
+      // 상태 옵션 값이 ACTIVE와 INACTIVE라 그대로 보낸다
       autoOrderStatus:
         statusFilter === ""
           ? undefined
-          : statusFilter === "활성"
-            ? "ACTIVE"
-            : "INACTIVE",
+          : (statusFilter as RopSettingsListQueryParams["autoOrderStatus"]),
       page,
       size,
     };
@@ -148,8 +147,8 @@ export function RopSettings() {
       width: "100px",
       render: (value: string) => {
         return (
-          <Badge variant={value === "활성" ? "success" : "default"}>
-            {value === "활성" ? "활성" : "비활성"}
+          <Badge variant={value === "ACTIVE" ? "success" : "default"}>
+            {value === "ACTIVE" ? "활성" : "비활성"}
           </Badge>
         );
       },
