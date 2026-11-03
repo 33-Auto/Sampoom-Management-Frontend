@@ -1,9 +1,9 @@
 import { http } from "msw";
 
-import { mockItemsMaster } from "@/pages/master/items/mocks/data";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 import { mockPartCategories, mockPartGroups } from "./data";
+import { mockItemsMaster } from "./items-master.data";
 
 export const handlers = [
   // 부품 그룹별 부품 목록 (usePartSearchQuery)

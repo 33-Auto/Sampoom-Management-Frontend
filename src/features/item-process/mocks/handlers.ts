@@ -1,6 +1,6 @@
 import { http } from "msw";
 
-import { mockItemsMaster } from "@/pages/master/items/mocks/data";
+import { mockItemsMaster } from "@/entities/part";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 import {
