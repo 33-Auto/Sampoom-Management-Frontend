@@ -3689,11 +3689,7 @@ export interface components {
       remainingTotalProduction?: number;
       /** @enum {string} */
       status?:
-        | "PLANNED"
-        | "IN_PROGRESS"
-        | "COMPLETED"
-        | "DELAYED"
-        | "CANCELLED";
+        "PLANNED" | "IN_PROGRESS" | "COMPLETED" | "DELAYED" | "CANCELLED";
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */

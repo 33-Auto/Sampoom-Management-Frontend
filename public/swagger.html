@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>삼품관리 API 문서</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.1/swagger-ui.min.css"
+      integrity="sha512-QIJpSy6rqOKoEjIR+Pp7r5lTkNPJPJCRejWzG4jb12bCT1EeL/vcjZtk4NNKeEuVRXY+d34d/t9y1CHzZbgeJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #fff;
+      }
+      .notice {
+        max-width: 1460px;
+        margin: 0 auto;
+        padding: 16px 20px 0;
+        font-family: sans-serif;
+        font-size: 14px;
+        color: #3b4151;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 백엔드가 없어서 실행 버튼은 꺼 두고 규격만 보여준다 -->
+    <p class="notice">
+      백엔드 서버는 내려가 있어서 여기서는 규격만 볼 수 있습니다. 화면은
+      브라우저 안의 목 서버가 이 규격대로 응답합니다.
+      <a href="/">삼품관리로 돌아가기</a>
+    </p>
+    <div id="swagger-ui"></div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.1/swagger-ui-bundle.min.js"
+      integrity="sha512-yfAKqi7F3JSDZA7V/XTql3caj2o8A81yg2EWIBykt2BJjLjNYnsd4CVAKvrFp/nYl9HQX7R06Z6e5KBn5aoj6g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      window.ui = SwaggerUIBundle({
+        url: "/openapi.json",
+        dom_id: "#swagger-ui",
+        deepLinking: true,
+        docExpansion: "none",
+        supportedSubmitMethods: [],
+      });
+    </script>
+  </body>
+</html>
