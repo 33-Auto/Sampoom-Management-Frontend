@@ -23,8 +23,6 @@
   },
   "include": [
     "./src",
-    "./mocks",
-    "scripts",
     "./**.js",
     "./**.ts",
     "eslint.config.js",
