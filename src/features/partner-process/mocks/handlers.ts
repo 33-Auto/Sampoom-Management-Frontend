@@ -1,40 +1,55 @@
 import { http } from "msw";
 
+import { mockPartnersMaster, type PartnerMaster } from "@/entities/partner";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
+import type { Schemas } from "@/shared/model";
 
-import { mockPartnerVendors, type PartnerVendor } from "./data";
+type VendorRequest = Schemas["VendorRequestDTO"];
+type VendorUpdateRequest = Schemas["VendorUpdateRequestDTO"];
 
-let partnerVendors = [...mockPartnerVendors];
+// 시드 코드 VEND-### 다음 번호로 만든다
+const nextVendorCode = () => {
+  const maxNumber = mockPartnersMaster.reduce((max, vendor) => {
+    const matched = /^VEND-(\d+)$/.exec(vendor.vendorCode);
+    return matched ? Math.max(max, Number(matched[1])) : max;
+  }, 0);
 
+  return `VEND-${String(maxNumber + 1).padStart(3, "0")}`;
+};
+
+// 목록과 같은 배열이라 제자리에서 고쳐야 목록에 바로 보인다
 export const handlers = [
   http.post("/api/site/vendors", async ({ request }) => {
     await sleep(400);
-    const payload = (await request.json()) as Partial<PartnerVendor>;
+    const payload = (await request.json()) as VendorRequest;
 
-    if (!payload.name || !payload.contactName) {
-      return apiFail(400, "거래처명과 담당자는 필수입니다.");
+    // 폼이 보내는 필드만 검사한다
+    if (
+      !payload.name ||
+      !payload.businessNumber ||
+      !payload.ceoName ||
+      !payload.address
+    ) {
+      return apiFail(400, "거래처명, 사업자번호, 대표자명, 주소는 필수입니다.");
     }
 
     const nextId =
-      partnerVendors.reduce((max, vendor) => Math.max(max, vendor.id), 0) + 1;
+      mockPartnersMaster.reduce((max, vendor) => Math.max(max, vendor.id), 0) +
+      1;
 
-    const nextVendor: PartnerVendor = {
+    const nextVendor: PartnerMaster = {
       id: nextId,
-      vendorCode:
-        payload.vendorCode ?? `VEN-${String(nextId).padStart(3, "0")}`,
-      code: payload.code ?? `VEN-${String(nextId).padStart(3, "0")}`,
+      vendorCode: nextVendorCode(),
       name: payload.name,
-      businessNumber: payload.businessNumber ?? "",
-      ceoName: payload.ceoName ?? "",
-      address: payload.address ?? "",
+      businessNumber: payload.businessNumber,
+      ceoName: payload.ceoName,
+      address: payload.address,
       status: payload.status ?? "ACTIVE",
-      contactName: payload.contactName,
-      contactEmail: payload.contactEmail ?? "unknown@example.com",
-      contactPhone: payload.contactPhone ?? "010-0000-0000",
-      branchIds: payload.branchIds ?? [],
+      createdAt: new Date().toISOString().slice(0, 10),
     };
 
-    partnerVendors = [...partnerVendors, nextVendor];
+    // 새 항목은 첫 페이지에서 바로 보이게 앞에 넣는다
+    mockPartnersMaster.unshift(nextVendor);
 
     return apiSuccess(nextVendor, 201, "거래처가 생성되었습니다.");
   }),
@@ -47,25 +62,19 @@ export const handlers = [
       return apiFail(400, "유효한 거래처 ID가 필요합니다.");
     }
 
-    const payload = (await request.json()) as Partial<PartnerVendor>;
-    let updatedVendor: PartnerVendor | undefined;
-
-    partnerVendors = partnerVendors.map((vendor) => {
-      if (vendor.id !== id) {
-        return vendor;
-      }
-
-      updatedVendor = {
-        ...vendor,
-        ...payload,
-      };
-
-      return updatedVendor;
-    });
+    const payload = (await request.json()) as VendorUpdateRequest;
+    const updatedVendor = mockPartnersMaster.find((vendor) => vendor.id === id);
 
     if (!updatedVendor) {
       return apiFail(404, "거래처 정보를 찾을 수 없습니다.");
     }
+
+    updatedVendor.name = payload.name ?? updatedVendor.name;
+    updatedVendor.businessNumber =
+      payload.businessNumber ?? updatedVendor.businessNumber;
+    updatedVendor.ceoName = payload.ceoName ?? updatedVendor.ceoName;
+    updatedVendor.address = payload.address ?? updatedVendor.address;
+    updatedVendor.status = payload.status ?? updatedVendor.status;
 
     return apiSuccess(updatedVendor, 200, "거래처가 수정되었습니다.");
   }),
@@ -78,15 +87,13 @@ export const handlers = [
       return apiFail(400, "유효한 거래처 ID가 필요합니다.");
     }
 
-    const target = partnerVendors.find((vendor) => vendor.id === id);
+    const target = mockPartnersMaster.find((vendor) => vendor.id === id);
 
     if (!target) {
       return apiFail(404, "삭제할 거래처를 찾을 수 없습니다.");
     }
 
-    partnerVendors = partnerVendors.map((vendor) =>
-      vendor.id === id ? { ...vendor, status: "INACTIVE" } : vendor,
-    );
+    target.status = "INACTIVE";
 
     return apiSuccess(null, 200, "거래처가 비활성화되었습니다.");
   }),

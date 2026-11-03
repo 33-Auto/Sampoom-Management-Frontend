@@ -1,9 +1,9 @@
 import { http } from "msw";
 
+import { mockPartnersMaster } from "@/entities/partner";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
-import { mockPartnersMaster } from "./data";
-
+// 등록·수정·삭제는 features/partner-process가 같은 배열을 고친다
 export const handlers = [
   // 거래처 목록 조회 (검색)
   http.get("/api/site/vendors/search", async ({ request }) => {
@@ -58,36 +58,5 @@ export const handlers = [
       return apiFail(404, "거래처를 찾을 수 없습니다");
     }
     return apiSuccess(partner);
-  }),
-
-  // 거래처 등록
-  http.post("/api/site/vendors", async ({ request }) => {
-    await sleep(400);
-    const newPartner = (await request.json()) as Partial<
-      (typeof mockPartnersMaster)[0]
-    >;
-    const createdPartner = {
-      ...newPartner,
-      id: mockPartnersMaster.length + 1,
-      vendorCode: `VENDOR-${String(mockPartnersMaster.length + 1).padStart(3, "0")}`,
-    };
-    return apiSuccess(createdPartner, 201);
-  }),
-
-  // 거래처 수정
-  http.put("/api/site/vendors/:vendorId", async ({ params, request }) => {
-    await sleep(300);
-    const updates = (await request.json()) as Partial<
-      (typeof mockPartnersMaster)[0]
-    >;
-    const vendorId = Number(params.vendorId);
-    const partner = mockPartnersMaster.find((p) => p.id === vendorId);
-
-    if (!partner) {
-      return apiFail(404, "거래처를 찾을 수 없습니다");
-    }
-
-    const updatedPartner = { ...partner, ...updates };
-    return apiSuccess(updatedPartner);
   }),
 ];
