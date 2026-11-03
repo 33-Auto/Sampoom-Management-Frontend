@@ -1,572 +1,289 @@
-# Sampoom Management Frontend
+# 삼품관리 프론트엔드
 
-이 프로젝트는 Sampoom Management 시스템을 위한 프론트엔드 애플리케이션입니다. Vite, React, TypeScript를 기반으로 구축되었습니다.
+자동차 부품 제조사의 생산, 재고, 구매, 판매, 기준 정보, 인사 업무를 한곳에서 다루는 ERP 웹 화면이다.
+현대오토에버 모빌리티 SW 스쿨 3조(33-Auto)가 만든 팀 프로젝트의 프론트엔드 저장소다.
 
-## 📸 스크린샷 (Screenshots)
+**배포본: https://sampoom.vercel.app**
 
-### 1. 로그인 화면 (Login Page)
+> 2026년 11월 현재 백엔드 서버는 내려가 있다. 배포본과 로컬 개발 서버는 모두 브라우저 안에서 도는 목 서버(MSW)로 동작하므로, 백엔드 없이 화면을 끝까지 눌러볼 수 있다. 새 기능도 목 서버에서 동작하면 된다.
 
-사용자는 이메일과 비밀번호를 입력하여 시스템에 접속할 수 있습니다.
+## 1분 만에 써보기
 
-![Login Page](public/screenshots/login.png)
+1. https://sampoom.vercel.app 에 들어간다.
+2. 로그인 화면의 "예시 계정으로 둘러보기"에서 부서를 하나 고른다. 이메일, 비밀번호, 조직이 채워진다.
+3. 로그인을 누르면 홈으로 간다. 홈의 모듈 카드나 그 아래 메뉴를 눌러 각 화면으로 들어간다.
 
-### 2. 대시보드 (Dashboard)
+| 부서      | 이메일                 | 비밀번호 |
+| --------- | ---------------------- | -------- |
+| 생산 관리 | production@example.com | 12341234 |
+| 재고 관리 | inventory@example.com  | 12341234 |
+| 구매 관리 | purchase@example.com   | 12341234 |
+| 판매 관리 | sales@example.com      | 12341234 |
+| 기준 정보 | md@example.com         | 12341234 |
+| 인사 관리 | hr@example.com         | 12341234 |
+| 대리점    | agency@example.com     | 12341234 |
 
-로그인 후 사용자는 자신의 워크스페이스에 맞는 대시보드를 확인할 수 있습니다.
+목 서버에는 계정이 20개 있다. 위 표는 로그인 화면 칩에 나오는 부서별 관리자 계정이고, 나머지는 `production2@example.com`, `production3@example.com` 같은 담당자 계정이다. 비밀번호는 모두 `12341234`다. 전체 목록은 `src/entities/user/mocks/data.ts`에 있다.
 
-![Dashboard](public/screenshots/dashboard.png)
+써보기 전에 알아둘 것:
 
-### 3. 모듈 화면 (Module Page - 예: 생산 관리)
+- **어느 계정으로 들어가도 같은 화면이 보인다.** 목 서버는 이메일과 비밀번호만 확인하고 조직 값은 보지 않는다. 부서나 직급에 따라 메뉴와 권한을 나누는 기능은 아직 없다. 직급은 오른쪽 위 사용자 정보에 표시만 된다.
+- **새로고침하면 데이터가 처음 상태로 돌아간다.** 목 데이터는 브라우저 메모리에 있다. 등록하거나 수정한 내용, 회원가입으로 만든 계정은 새로고침하면 사라진다. 로그인 상태는 쿠키에 남아서 유지된다.
+- 회원가입한 계정은 승인 없이 바로 로그인된다. 이것도 새로고침하면 사라진다.
+- 다른 계정으로 바꾸려면 오른쪽 위 사용자 아이콘을 눌러 로그아웃한 뒤 다시 고른다.
+- 목 데이터는 모듈마다 따로 있다. 판매 주문을 처리해도 재고 현황 숫자는 바뀌지 않는다. 기준 정보의 품목만 품목을 쓰는 다른 화면과 데이터를 같이 쓴다.
+- 왼쪽 아래 달 모양 버튼은 다크 모드를 켜고 끈다. 처음에는 운영체제 설정을 따른다.
+- 로컬 개발 서버에서만 오른쪽 아래에 야자수 버튼이 하나 더 보인다. 서버 데이터 캐시를 들여다보는 TanStack Query Devtools다. 배포본에는 없다.
 
-각 모듈별로 특화된 기능을 제공하며, 사이드바를 통해 쉽게 이동할 수 있습니다.
+### 화면
 
-![Production Module](public/screenshots/production.png)
+로그인. 부서 칩을 누르면 해당 계정 정보가 채워진다.
 
-## 💻 프로젝트 시작하기
+![로그인 화면](public/screenshots/login.png)
 
-### 1. 사전 요구 사항
+홈. 위쪽 "시스템 개요"는 업무 흐름을 소개하는 그림이고 눌러지지 않는다. 아래쪽 모듈 카드와 그 안의 메뉴를 눌러 이동한다.
 
-- [Node.js](https://nodejs.org/en/) (프로젝트 `volta` 설정에 따라 `v22.17.0` 사용)
-- [pnpm](https://pnpm.io/installation)
+![홈 화면](public/screenshots/dashboard.png)
 
-### 2. 설치 및 실행
+모듈 화면 예시인 생산 관리. 모듈 안에서는 위쪽 탭으로 화면을 옮긴다. 공장이나 창고를 고르는 선택칸이 있는 화면이 많다.
 
-1.  **저장소 클론**
+![생산 관리 화면](public/screenshots/production.png)
 
-    ```bash
-    git clone <your-repository-url>
-    cd Sampoom-Management-Frontend
-    ```
+## 이 시스템이 다루는 일
 
-2.  **의존성 설치**
+### 이름 정리
 
-    ```bash
-    pnpm install
-    ```
+| 이름                          | 뜻                                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------------------ |
+| 삼품관리 (Sampoom Management) | 이 ERP의 제품 이름이다. 로그인 화면 로고에는 "三품 관리"로 쓰여 있다.                      |
+| 삼삼오토                      | 화면 속 회사 이름이다. 홈 상단과 푸터에 나온다. 팀 조직 이름 33-Auto를 한글로 읽은 것이다. |
+| 33-Auto                       | 팀의 GitHub 조직이다. 이 저장소와 백엔드, 모바일 앱 저장소가 모두 여기 있다.               |
 
-3.  **개발 서버 실행**
+### 업무 흐름
 
-    ```bash
-    pnpm dev
-    ```
+부품이 움직이는 순서로 보면 화면이 이렇게 이어진다.
 
-### 3. 애플리케이션 접속
+1. 대리점이 앱으로 부품을 주문한다. 홈의 "대리점 주문, App으로 부품 주문" 카드가 이 단계다. 앱은 이 저장소가 아니라 같은 조직의 Android, iOS 저장소에 있다. 웹에는 주문을 새로 만드는 화면이 없고, 목 서버에 주문이 미리 들어 있다.
+2. 들어온 주문은 **판매 관리**의 판매 주문에서 창고별로 보고 처리한다.
+3. 창고는 **재고 관리**(WMS)에서 출고 지시로 부품을 내보내고 재고 현황을 본다. ROP 설정에서 부품별 재주문 기준을 정한다. 발주 관리에서는 창고가 거래처에 낸 발주(PO)와 그 입고를 처리한다.
+4. 창고가 공장에 부품 생산을 요청하면 **생산 관리**에 부품 주문으로 들어온다. 공장은 생산 스케줄(MPS)과 생산 계획(MRP)으로 언제 얼마나 만들지 정하고, 생산 지시(MES)에서 진행률과 상태를 관리한다.
+5. 공장이 생산에 필요한 원자재를 요청하면 **구매 관리**의 구매 요청에 들어온다. 홈 카드 설명에는 "발주 관리"도 적혀 있지만, 구매 관리 모듈에 있는 화면은 구매 요청 하나다.
+6. 품목, BOM, 거래처, 지점, 작업장, 공정 같은 바탕 데이터는 **기준 정보 관리**에서 정한다. 직원 정보는 **인사 관리**(HRM)에서 본다.
 
-개발 서버가 성공적으로 실행되면 아래 주소로 접속할 수 있습니다.
+### 모듈과 화면
 
-- **URL:** [http://localhost:3000](http://localhost:3000)
+| 모듈           | 주소          | 화면(모듈 안 탭)                                 |
+| -------------- | ------------- | ------------------------------------------------ |
+| 기준 정보 관리 | `/master`     | 품목, BOM, 거래처, 지점, 작업장, 공정            |
+| 판매 관리      | `/sales`      | 판매 주문                                        |
+| 재고 관리(WMS) | `/wms`        | 출고 지시, 재고 현황, 발주 관리, ROP 설정        |
+| 생산 관리      | `/production` | 생산 지시(MES), 생산 계획(MRP), 생산 스케줄(MPS) |
+| 구매 관리      | `/purchasing` | 구매 요청                                        |
+| 인사 관리(HRM) | `/hrm`        | 직원 관리                                        |
 
----
+- 생산 지시(MES) 화면의 "부품 주문 목록"은 창고가 공장에 요청한 부품 생산 주문이다. 주문 코드 `WO-`는 작업 지시(Work Order)의 줄임이다. 요청일은 창고가 부품이 필요하다고 한 날짜(`requiredDate`), 계획일은 공장의 생산 예정일(`scheduledDate`)이다.
+- 홈의 기준 정보 관리 카드 메뉴에는 지점이 없다. 지점은 모듈 안 탭에서 들어간다.
+- 대리점 전용 화면은 없다. 대리점 계정으로 들어가도 다른 계정과 같은 홈이 보인다.
 
-## 📜 주요 스크립트 명령어
+### 용어
 
-### 개발
+| 용어                                 | 뜻                                                         |
+| ------------------------------------ | ---------------------------------------------------------- |
+| BOM (Bill of Materials)              | 부품 하나를 만드는 데 들어가는 자재와 수량 목록            |
+| MPS (Master Production Schedule)     | 무엇을 언제 얼마나 만들지 정한 기준 생산 일정              |
+| MRP (Material Requirements Planning) | MPS와 BOM으로 필요한 자재의 양과 시점을 계산하는 생산 계획 |
+| MES (Manufacturing Execution System) | 현장에 생산을 지시하고 진행 상황을 관리하는 단계           |
+| WMS (Warehouse Management System)    | 창고의 재고와 입출고를 관리하는 시스템                     |
+| ROP (Reorder Point)                  | 재고가 이 수량 아래로 내려가면 다시 주문하는 기준점        |
+| PO (Purchase Order)                  | 발주서. 재고 관리의 발주 관리 화면에서 다룬다              |
 
-- `pnpm dev` (or `pnpm start`): Vite 개발 서버를 시작합니다.
-- `pnpm build`: 프로덕션용으로 프로젝트를 빌드하여 `dist` 폴더에 결과물을 생성합니다.
-- `pnpm preview`: `dist` 폴더의 프로덕션 빌드를 로컬에서 미리 봅니다.
+## 로컬에서 실행하기
 
-### 테스트
+### 준비물
 
-- `pnpm test`: Vitest를 사용하여 모든 테스트를 실행합니다.
-- `pnpm test:ui`: Vitest UI를 실행하여 시각적으로 테스트를 확인하고 상호작용합니다.
-- `pnpm test:watch`: 파일 변경 시 자동으로 테스트를 재실행합니다.
+- **Node.js 22.** `package.json`의 volta 설정이 `22.17.0`이고, CI도 Node 22로 돈다. volta를 쓰면 저장소에 들어올 때 버전이 자동으로 맞춰진다. volta가 없으면 nvm 같은 다른 도구로 22 버전을 쓰면 된다.
+- **pnpm 10.** CI가 pnpm 10을 쓴다. volta 설정에는 Node만 고정돼 있으니 pnpm은 `npm install -g pnpm@10`으로 따로 설치한다. npm이나 yarn으로 의존성을 설치하면 `preinstall` 단계에서 막힌다.
 
-### 코드 품질
+### 실행
 
-- `pnpm lint`: ESLint를 사용하여 프로젝트 전체의 코드 스타일을 검사합니다.
-- `pnpm lint:fix`: ESLint가 감지한 문제를 자동으로 수정합니다.
-- `pnpm typecheck`: TypeScript 컴파일러를 통해 타입 오류를 검사합니다.
-- `pnpm prettier`: Prettier를 사용하여 모든 파일의 코드 형식을 맞춥니다.
-
-### FSD 아키텍처
-
-- `pnpm fsd`: Steiger를 사용하여 FSD 아키텍처 규칙을 검사합니다.
-- `pnpm diagram`: FSD 아키텍처 의존성 다이어그램을 생성합니다.
-
-### API 타입 생성
-
-- `pnpm merge-api-schemas`: 여러 OpenAPI 스키마를 하나로 병합합니다.
-- `pnpm generate-api-types`: 병합된 OpenAPI 스키마에서 TypeScript 타입을 생성합니다.
-- `pnpm generate:api:all`: API 스키마 병합 및 타입 생성을 한 번에 실행합니다.
-
-### 유틸리티
-
-- `pnpm clean`: `node_modules`, `pnpm-lock.yaml`, `dist` 폴더를 삭제합니다.
-- `pnpm validate`: 프로젝트 검증 스크립트를 실행합니다.
-
----
-
-## 🏗️ 프로젝트 아키텍처
-
-이 프로젝트는 **FSD (Feature-Sliced Design)** 아키텍처를 기반으로 구성되어 있습니다. FSD는 확장 가능하고 유지보수가 용이한 프론트엔드 애플리케이션을 위한 방법론입니다.
-
-### 의존성 그래프 (Dependency Graph)
-
-프로젝트의 상위 레벨 의존성 구조는 아래에서 확인할 수 있습니다.
-
-<summary>📊 의존성 그래프 </summary>
-
-```mermaid
-graph TD
-    subgraph app
-        src_app_App_tsx[App.tsx]
-        src_app_App_tsx-->src_app_providers[providers]
-        src_app_App_tsx-->src_entities_user[user]
-        src_app_App_tsx-->src_shared_api[api]
-        src_app_App_tsx-->src_shared_lib[lib]
-        src_app_App_tsx-->src_shared_ui[ui]
-        src_app_providers[providers]
-        src_app_providers-->src_app_App_tsx[App.tsx]
-        src_app_providers-->src_app_styles[styles]
-        src_app_providers-->src_entities_user[user]
-        src_app_providers-->src_pages_Notfound[Notfound]
-        src_app_providers-->src_pages_home[home]
-        src_app_providers-->src_pages_hrm[hrm]
-        src_app_providers-->src_pages_login[login]
-        src_app_providers-->src_pages_master[master]
-        src_app_providers-->src_pages_production[production]
-        src_app_providers-->src_pages_purchasing[purchasing]
-        src_app_providers-->src_pages_register[register]
-        src_app_providers-->src_pages_sales[sales]
-        src_app_providers-->src_pages_wms[wms]
-        src_app_providers-->src_shared_api[api]
-        src_app_providers-->src_shared_ui[ui]
-        src_app_providers-->src_widgets_Layout[Layout]
-        src_app_styles[styles]
-        src_app_testing[testing]
-        src_app_testing-->src_app_providers[providers]
-        src_app_types[types]
-    end
-    subgraph pages
-        src_pages_Notfound[Notfound]
-        src_pages_home[home]
-        src_pages_home-->src_shared_ui[ui]
-        src_pages_home-->src_widgets_Layout[Layout]
-        src_pages_hrm[hrm]
-        src_pages_hrm-->src_entities_factory[factory]
-        src_pages_hrm-->src_entities_vendor[vendor]
-        src_pages_hrm-->src_entities_wms[wms]
-        src_pages_hrm-->src_features_table_pagination[table_pagination]
-        src_pages_hrm-->src_shared_api[api]
-        src_pages_hrm-->src_shared_constants[constants]
-        src_pages_hrm-->src_shared_mocks[mocks]
-        src_pages_hrm-->src_shared_ui[ui]
-        src_pages_login[login]
-        src_pages_login-->src_entities_user[user]
-        src_pages_login-->src_shared_assets[assets]
-        src_pages_login-->src_shared_ui[ui]
-        src_pages_master[master]
-        src_pages_master-->src_app_providers[providers]
-        src_pages_master-->src_entities_material[material]
-        src_pages_master-->src_entities_part[part]
-        src_pages_master-->src_features_bom_process[bom_process]
-        src_pages_master-->src_features_item_process[item_process]
-        src_pages_master-->src_features_master_list[master_list]
-        src_pages_master-->src_shared_api[api]
-        src_pages_master-->src_shared_lib[lib]
-        src_pages_master-->src_shared_mocks[mocks]
-        src_pages_master-->src_shared_ui[ui]
-        src_pages_production[production]
-        src_pages_production-->src_entities_factory[factory]
-        src_pages_production-->src_entities_mps[mps]
-        src_pages_production-->src_entities_wms[wms]
-        src_pages_production-->src_shared_api[api]
-        src_pages_production-->src_shared_lib[lib]
-        src_pages_production-->src_shared_mocks[mocks]
-        src_pages_production-->src_shared_ui[ui]
-        src_pages_purchasing[purchasing]
-        src_pages_purchasing-->src_shared_api[api]
-        src_pages_purchasing-->src_shared_lib[lib]
-        src_pages_purchasing-->src_shared_mocks[mocks]
-        src_pages_purchasing-->src_shared_ui[ui]
-        src_pages_register[register]
-        src_pages_register-->src_entities_factory[factory]
-        src_pages_register-->src_entities_user[user]
-        src_pages_register-->src_entities_wms[wms]
-        src_pages_register-->src_shared_assets[assets]
-        src_pages_register-->src_shared_constants[constants]
-        src_pages_register-->src_shared_ui[ui]
-        src_pages_sales[sales]
-        src_pages_sales-->src_entities_agency[agency]
-        src_pages_sales-->src_entities_wms[wms]
-        src_pages_sales-->src_features_branch_select[branch_select]
-        src_pages_sales-->src_shared_api[api]
-        src_pages_sales-->src_shared_mocks[mocks]
-        src_pages_sales-->src_shared_ui[ui]
-        src_pages_wms[wms]
-        src_pages_wms-->src_entities_inventory[inventory]
-        src_pages_wms-->src_entities_part[part]
-        src_pages_wms-->src_entities_purchase_order[purchase_order]
-        src_pages_wms-->src_entities_wms[wms]
-        src_pages_wms-->src_features_branch_select[branch_select]
-        src_pages_wms-->src_features_rop_process[rop_process]
-        src_pages_wms-->src_features_shipping_process[shipping_process]
-        src_pages_wms-->src_features_stocking_process[stocking_process]
-        src_pages_wms-->src_features_table_pagination[table_pagination]
-        src_pages_wms-->src_shared_api[api]
-        src_pages_wms-->src_shared_lib[lib]
-        src_pages_wms-->src_shared_mocks[mocks]
-        src_pages_wms-->src_shared_ui[ui]
-    end
-    subgraph widgets
-        src_widgets_Footer[Footer]
-        src_widgets_Header[Header]
-        src_widgets_Header-->src_entities_user[user]
-        src_widgets_Header-->src_features_user_menu[user_menu]
-        src_widgets_Header-->src_shared_ui[ui]
-        src_widgets_Layout[Layout]
-        src_widgets_Layout-->src_shared_ui[ui]
-        src_widgets_Layout-->src_widgets_Footer[Footer]
-        src_widgets_Layout-->src_widgets_Header[Header]
-        src_widgets_Layout-->src_widgets_Sidebar[Sidebar]
-        src_widgets_Sidebar[Sidebar]
-    end
-    subgraph features
-        src_features_bom_process[bom_process]
-        src_features_bom_process-->src_app_providers[providers]
-        src_features_bom_process-->src_entities_part[part]
-        src_features_bom_process-->src_pages_master[master]
-        src_features_bom_process-->src_shared_api[api]
-        src_features_bom_process-->src_shared_mocks[mocks]
-        src_features_bom_process-->src_shared_ui[ui]
-        src_features_branch_process[branch_process]
-        src_features_branch_process-->src_shared_api[api]
-        src_features_branch_process-->src_shared_ui[ui]
-        src_features_branch_select[branch_select]
-        src_features_branch_select-->src_entities_wms[wms]
-        src_features_branch_select-->src_shared_lib[lib]
-        src_features_branch_select-->src_shared_ui[ui]
-        src_features_doc_list[doc_list]
-        src_features_item_process[item_process]
-        src_features_item_process-->src_app_providers[providers]
-        src_features_item_process-->src_entities_part[part]
-        src_features_item_process-->src_shared_api[api]
-        src_features_item_process-->src_shared_mocks[mocks]
-        src_features_item_process-->src_shared_ui[ui]
-        src_features_master_list[master_list]
-        src_features_master_list-->src_shared_lib[lib]
-        src_features_master_list-->src_shared_ui[ui]
-        src_features_partner_process[partner_process]
-        src_features_partner_process-->src_shared_api[api]
-        src_features_partner_process-->src_shared_ui[ui]
-        src_features_production_mps[production_mps]
-        src_features_production_mps-->src_shared_lib[lib]
-        src_features_production_mps-->src_shared_ui[ui]
-        src_features_production_planning[production_planning]
-        src_features_receiving_process[receiving_process]
-        src_features_rop_process[rop_process]
-        src_features_rop_process-->src_app_providers[providers]
-        src_features_rop_process-->src_entities_part[part]
-        src_features_rop_process-->src_shared_api[api]
-        src_features_rop_process-->src_shared_mocks[mocks]
-        src_features_rop_process-->src_shared_ui[ui]
-        src_features_routing_process[routing_process]
-        src_features_routing_process-->src_shared_api[api]
-        src_features_routing_process-->src_shared_ui[ui]
-        src_features_shipping_process[shipping_process]
-        src_features_shipping_process-->src_shared_ui[ui]
-        src_features_stocking_process[stocking_process]
-        src_features_stocking_process-->src_shared_ui[ui]
-        src_features_table_pagination[table_pagination]
-        src_features_table_pagination-->src_shared_ui[ui]
-        src_features_user_menu[user_menu]
-        src_features_user_menu-->src_app_providers[providers]
-        src_features_user_menu-->src_entities_user[user]
-        src_features_workcenter_process[workcenter_process]
-    end
-    subgraph entities
-        src_entities_agency[agency]
-        src_entities_agency-->src_shared_api[api]
-        src_entities_agency-->src_shared_mocks[mocks]
-        src_entities_factory[factory]
-        src_entities_factory-->src_shared_api[api]
-        src_entities_factory-->src_shared_mocks[mocks]
-        src_entities_inventory[inventory]
-        src_entities_inventory-->src_pages_wms[wms]
-        src_entities_item[item]
-        src_entities_item-->src_shared_api[api]
-        src_entities_material[material]
-        src_entities_material-->src_shared_api[api]
-        src_entities_material-->src_shared_mocks[mocks]
-        src_entities_mps[mps]
-        src_entities_mps-->src_shared_api[api]
-        src_entities_mps-->src_shared_mocks[mocks]
-        src_entities_part[part]
-        src_entities_part-->src_shared_api[api]
-        src_entities_part-->src_shared_mocks[mocks]
-        src_entities_purchase_order[purchase_order]
-        src_entities_purchase_order-->src_pages_wms[wms]
-        src_entities_user[user]
-        src_entities_user-->src_shared_api[api]
-        src_entities_user-->src_shared_mocks[mocks]
-        src_entities_vendor[vendor]
-        src_entities_vendor-->src_shared_api[api]
-        src_entities_vendor-->src_shared_mocks[mocks]
-        src_entities_wms[wms]
-        src_entities_wms-->src_shared_api[api]
-        src_entities_wms-->src_shared_mocks[mocks]
-    end
-    subgraph shared
-        src_shared_api[api]
-        src_shared_assets[assets]
-        src_shared_config[config]
-        src_shared_constants[constants]
-        src_shared_lib[lib]
-        src_shared_mocks[mocks]
-        src_shared_model[model]
-        src_shared_ui[ui]
-        src_shared_ui-->src_app_providers[providers]
-        src_shared_ui-->src_shared_lib[lib]
-    end
+```bash
+git clone https://github.com/33-Auto/Sampoom-Management-Frontend.git
+cd Sampoom-Management-Frontend
+pnpm install
+pnpm dev
 ```
 
-### 디렉토리 구조
+http://localhost:3000 이 열리면 위 표의 계정으로 로그인한다. `pnpm dev`는 저장소에 들어 있는 `.env.dev`를 읽어서 목 서버를 켜고 뜬다. 따로 `.env`를 만들 필요는 없다.
 
-```
-src/
-├── app/          # 애플리케이션 초기화, 라우팅, 공급자
-├── pages/        # 전체 페이지 컴포넌트
-├── widgets/      # 독립적인 복합 블록 (예: Header, Layout, Sidebar)
-├── features/     # 비즈니스 기능 (사용자 액션과 통합)
-├── entities/     # 비즈니스 엔티티
-└── shared/       # 재사용 가능한 인프라 코드 (UI kit, API, utils)
+3000번 포트는 비워 둬야 한다. `.env.dev`가 API 주소를 `http://localhost:3000`으로 정해 두었기 때문에, 포트가 차서 개발 서버가 3001번 같은 다른 포트로 뜨면 요청이 목 서버를 지나쳐 로그인부터 실패한다. 같은 이유로 `pnpm dev`와 `pnpm preview:mock`은 동시에 띄우지 않는다.
+
+`pnpm start`, `pnpm build`, `pnpm test`를 쓸 때는 처음 한 번 `.env`를 만들어야 한다. 템플릿에서 남은 `REACT_APP_TEXT` 변수가 없으면 시작하자마자 멈추기 때문이다.
+
+```bash
+cp .env.sample .env
 ```
 
-### 주요 비즈니스 모듈
+`.env.sample`에는 `REACT_APP_TEXT` 하나만 들어 있다. `.env`를 만든 뒤 `pnpm dev`를 돌리면 두 파일을 모두 읽고, 같은 변수가 있으면 `.env.dev` 값이 이긴다. 그래서 `pnpm dev`는 그대로 목 모드로 뜬다. 반면 `pnpm build` 결과에는 목 서버가 켜지지 않으니, 로컬에서 빌드 결과를 써보려면 `build:mock`을 쓴다.
 
-#### 📦 Master (기준 정보)
+### 스크립트
 
-- 품목 관리 (Items)
-- BOM 관리 (Bill of Materials)
-- 거래처 관리 (Partners)
-- 부서 관리 (Departments)
-- 직급 관리 (Positions)
-- 작업장 관리 (Work Centers)
-- 공정 관리 (Routings)
-
-#### 🏭 Factory (공장 관리)
-
-- 주문 관리 (Orders)
-- 원자재 재고 (Materials)
-- BOM 관리
-- 직원 관리
-
-#### 📦 Warehouse (창고 관리)
-
-- 주문 관리
-- 부품 재고 (Inventory)
-- 직원 관리
-
-#### 👥 HRM (인사 관리)
-
-- 근태 관리 (Attendance)
-- 직원 관리
-- 평가 관리 (Evaluation)
-- 급여 관리 (Payroll)
-
-#### 🏭 Production (생산 관리)
-
-- 작업 지시서 (Work Orders)
-- 생산 계획 (Planning)
-
-#### 🛒 Purchasing (구매 관리)
-
-- 구매 주문
-- 구매 요청
-
-#### 💰 Sales (판매 관리)
-
-- 판매 주문
-
-#### 📊 WMS (창고 관리 시스템)
-
-- 재고 관리 (Inventory)
-- 출고 관리 (Shipping)
-
----
-
-## ✨ 기술 스택 및 설치된 플러그인
-
-이 프로젝트는 다음과 같은 주요 라이브러리와 플러그인으로 구성되어 있습니다.
-
-### 핵심 기술
-
-- **React (`^19.2.0`):** 사용자 인터페이스 구축을 위한 기본 프레임워크.
-- **Vite (`^7.1.12`):** 빠르고 효율적인 개발 및 빌드를 위한 번들러.
-- **TypeScript (`^5.9.3`):** 코드의 안정성과 가독성을 높이기 위한 정적 타입 언어.
-
-### 상태 관리
-
-- **Zustand (`^5.0.8`):** 경량 상태 관리 라이브러리 (인증 상태 등).
-
-### 데이터 페칭 & API
-
-- **TanStack Query (`^5.90.5`):** 서버 상태 관리 및 데이터 페칭.
-- **openapi-fetch (`^0.15.0`):** 타입 안전한 OpenAPI 클라이언트.
-- **openapi-react-query (`^0.5.1`):** React Query와 OpenAPI 통합.
-- **axios (`^1.13.0`):** HTTP 클라이언트.
-
-### 라우팅
-
-- **React Router (`^7.9.4`):** 클라이언트 사이드 라우팅 관리.
-
-### UI 컴포넌트 & 스타일링
-
-- **Tailwind CSS (`^4.1.16`):** 유틸리티-우선 CSS 프레임워크.
-- **PostCSS (`^8.5.6`):** CSS 변환을 위한 도구.
-- **`@tailwindcss/postcss`:** PostCSS와 Tailwind CSS를 연결하는 플러그인.
-- **`prettier-plugin-tailwindcss`:** Prettier가 Tailwind CSS 클래스 순서를 자동으로 정렬하는 플러그인.
-- **`clsx` (`^2.1.1`):** 조건부 클래스 이름 결합.
-- **`tailwind-merge` (`^3.3.1`):** Tailwind 클래스 병합.
-- **`class-variance-authority` (`^0.7.1`):** 컴포넌트 변형 관리.
-- **`@radix-ui/react-slot` (`^1.2.3`):** 컴포넌트 합성.
-- **`@heroicons/react` (`^2.2.0`):** 아이콘 라이브러리.
-
-### 모니터링
-
-- **`@vercel/analytics` (`^1.5.0`):** Vercel Analytics.
-- **`@vercel/speed-insights` (`^1.2.0`):** Vercel Speed Insights.
-
-### 에러 처리
-
-- **react-error-boundary (`^6.0.0`):** React 애플리케이션의 에러 경계 처리.
-
-### 코드 품질 및 일관성
-
-- **ESLint (`^9.38.0`):** JavaScript 및 TypeScript 코드의 문제를 찾아주는 린터.
-  - `eslint-config-ts-prefixer` (`^4.0.0`): 타입스크립트 관련 ESLint 규칙 프리셋.
-  - `eslint-plugin-react-hooks` (`^7.0.1`): React Hooks의 규칙을 강제하는 플러그인.
-  - `@feature-sliced/steiger-plugin` (`^0.5.7`): FSD 아키텍처 규칙 검증 플러그인.
-- **Prettier (`^3.6.1`):** 일관된 코드 스타일을 유지하기 위한 코드 포맷터.
-- **Husky (`^9.1.7`):** Git hooks를 쉽게 관리하여 커밋 전 `lint-staged` 실행 등을 자동화.
-- **lint-staged (`^16.2.6`):** Git에 스테이징된 파일에 대해서만 린팅 및 포맷팅을 실행.
-- **steiger (`^0.5.11`):** FSD 아키텍처 검증 도구.
-- **dependency-cruiser (`^17.1.0`):** 의존성 다이어그램 생성 도구.
-
-### 테스트
-
-- **Vitest (`^3.2.0`):** Vite 환경에 최적화된 테스트 프레임워크.
-- **React Testing Library (`^16.3.0`):** 컴포넌트를 사용자와 같은 방식으로 테스트하기 위한 라이브러리.
-- **JSDOM (`^27.0.1`):** Node.js 환경에서 DOM 환경을 시뮬레이션하여 테스트를 실행.
-- **@vitest/ui (`^3.1.1`):** 테스트 결과를 시각적으로 보여주는 Vitest용 UI.
-- **@testing-library/jest-dom (`^6.9.1`):** Jest DOM 매처 라이브러리.
-- **@testing-library/user-event (`^14.6.1`):** 사용자 이벤트 시뮬레이션.
-
-### API 모킹
-
-- **Mock Service Worker (MSW) (`^2.11.6`):** 서비스 워커를 사용하여 네트워크 요청을 가로채 API를 모킹합니다.
-
-### 타입 생성
-
-- **openapi-typescript (`^7.10.1`):** OpenAPI 스키마에서 TypeScript 타입 생성.
-- **openapi-merge-cli (`^1.3.2`):** 여러 OpenAPI 스키마 병합.
-
-### Vite 플러그인
-
-- **@vitejs/plugin-react-swc (`^4.2.0`):** SWC를 사용하여 React 코드를 매우 빠르게 트랜스파일합니다.
-- **vite-plugin-environment (`^1.1.3`):** `.env` 파일의 환경 변수를 애플리케이션에서 사용할 수 있도록 합니다.
-- **vite-plugin-svgr (`^4.5.0`):** SVG 파일을 React 컴포넌트처럼 가져와서 사용할 수 있게 합니다.
-
-### Tailwind CSS 플러그인
-
-- **@tailwindcss/aspect-ratio (`^0.4.2`):** 종횡비 유틸리티.
-- **@tailwindcss/forms (`^0.5.10`):** 폼 요소 스타일링.
-- **@tailwindcss/typography (`^0.5.19`):** 타이포그래피 플러그인.
-
----
-
-## 📁 프로젝트 구조 상세
-
-### FSD 레이어 설명
-
-#### `app/` - 애플리케이션 초기화
-
-- 라우팅 설정
-- 전역 프로바이더 (Theme, Notification 등)
-- 에러 바운더리
-- 애플리케이션 진입점
-
-#### `pages/` - 페이지 컴포넌트
-
-- 전체 페이지 뷰
-- 라우터 경로와 직접 연결
-- URL 기반 라우팅
-
-#### `widgets/` - 복합 UI 블록
-
-- Header, Layout, Sidebar 등
-- 여러 기능을 결합한 독립적인 블록
-- 여러 페이지에서 재사용 가능
-
-#### `features/` - 비즈니스 기능
-
-- 사용자 액션과 관련된 기능
-- 특정 도메인의 상호작용 로직
-
-#### `entities/` - 비즈니스 엔티티
-
-- 비즈니스 도메인 객체
-- API 모델 및 비즈니스 로직
-
-#### `shared/` - 재사용 가능한 코드
-
-- UI kit (Button, Input, Table 등)
-- API 클라이언트
-- 유틸리티 함수
-- 공통 설정
-
----
-
-## 🔧 개발 환경 설정
+| 명령                                       | 하는 일                                                                                                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm dev`                                 | 목 서버를 켠 개발 서버. 평소에는 이것만 쓴다. 목 응답에 실제 서버처럼 약간의 지연이 들어간다.                                              |
+| `pnpm build:mock` 다음 `pnpm preview:mock` | 목 모드로 빌드한 결과를 http://localhost:3000 에서 띄운다. 목 응답 지연이 없어서 화면 성능을 볼 때 쓴다.                                   |
+| `pnpm start`                               | 목 서버 없이 개발 서버를 띄운다. `.env`의 `VITE_BASE_URL`에 백엔드 주소를 넣어야 쓸 수 있는데, 지금은 백엔드가 없어서 로그인부터 실패한다. |
+| `pnpm build` / `pnpm preview`              | 배포용 빌드와 그 결과 미리보기. Vercel이 쓰는 빌드다.                                                                                      |
+| `pnpm test`                                | Vitest로 테스트를 한 번 돌린다. `test:watch`는 파일이 바뀔 때마다, `test:ui`는 브라우저 화면에서 돌린다.                                   |
+| `pnpm lint` / `pnpm lint:fix`              | ESLint 검사와 자동 수정                                                                                                                    |
+| `pnpm typecheck`                           | TypeScript 타입 검사                                                                                                                       |
+| `pnpm validate`                            | test, lint:fix, typecheck, build를 한꺼번에 돌린다. PR 올리기 전에 돌려보면 CI와 거의 같은 결과를 본다.                                    |
+| `pnpm fsd`                                 | steiger로 FSD 폴더 규칙을 검사한다. 아래 "코드 구조" 참고                                                                                  |
+| `pnpm generate:api:all`                    | 백엔드 Swagger 문서를 합쳐 API 타입을 다시 만든다. 아래 "API 호출" 참고                                                                    |
+| `pnpm clean`                               | `node_modules`, `pnpm-lock.yaml`, `dist`를 지운다. lock 파일까지 지워져서 다시 설치하면 의존성 버전이 바뀔 수 있다.                        |
 
 ### 환경 변수
 
-프로젝트 루트에 `.env` 파일을 생성하고 필요한 환경 변수를 설정하세요.
+| 변수             | 하는 일                                                       | `.env.dev` (`pnpm dev`) | `.env.mock` (`build:mock`) | Vercel 배포              |
+| ---------------- | ------------------------------------------------------------- | ----------------------- | -------------------------- | ------------------------ |
+| `VITE_USE_MOCK`  | `true`면 MSW 목 서버를 켠다                                   | `true`                  | `true`                     | `true` (Production 환경) |
+| `VITE_BASE_URL`  | API 주소 앞부분. 비우면 지금 열린 주소로 요청한다             | `http://localhost:3000` | 빈 값                      | 빈 값                    |
+| `VITE_PERF_MODE` | `true`면 목 응답의 인위적 지연을 없앤다                       | 없음                    | `true`                     | 없음                     |
+| `REACT_APP_TEXT` | 템플릿에서 남은 변수다. 앱은 쓰지 않지만 없으면 빌드가 멈춘다 | 있음                    | 있음                       | 있음                     |
 
-```bash
-# .env 예시
-REACT_APP_TEXT=Development
+목 서버는 지금 열린 주소로 가는 요청만 받는다. 목 모드에서 `VITE_BASE_URL`을 다른 도메인으로 두면 요청이 목 서버를 지나쳐 실제 그 주소로 나가고 로그인부터 실패한다. 2026년 11월 배포본이 옛 도메인을 가리키다 이 문제를 겪었다.
+
+새 환경 변수는 `VITE_` 접두사를 붙이고 코드에서 `import.meta.env.VITE_이름`으로 읽는다. `REACT_APP_` 접두사는 새로 쓰지 않는다. 값은 `.env.dev`, `.env.mock`, Vercel의 Production과 Preview에 같이 넣어야 로컬과 배포본이 같은 조건으로 돈다. `pnpm start`나 `pnpm build`에서도 꼭 있어야 하는 값이면 `.env.sample`에도 넣는다.
+
+## 배포
+
+- Vercel 프로젝트 `chooslas-projects/sampoom-management-frontend`가 이 저장소에 연결돼 있다. 프로젝트는 choosla 개인 팀 계정 아래에 있어서 다른 팀원은 대시보드에 들어갈 수 없다. 빌드 로그를 보거나, 환경 변수를 바꾸거나, 다시 배포해야 하면 choosla에게 요청한다.
+- `main`에 머지되면 Production으로 자동 배포된다. 주소는 https://sampoom.vercel.app 이고, https://sampoom-management-frontend.vercel.app 도 같은 배포를 가리킨다.
+- PR을 올리면 Vercel 봇이 미리보기 주소를 PR 댓글로 단다. 미리보기에서도 로그인해 보려면 Vercel의 `VITE_USE_MOCK`이 Preview 환경에도 설정돼 있어야 한다.
+- Vite 환경 변수는 빌드할 때 코드에 들어간다. Vercel에서 값을 바꾸면 다시 배포해야 반영된다.
+- 예전 주소 samsam.autos는 도메인이 만료돼 더 이상 쓰지 않는다.
+
+## 코드 구조
+
+### 레이어
+
+[Feature-Sliced Design(FSD)](https://feature-sliced.design/kr/) 구조를 따른다. `src` 아래 레이어는 위에서 아래로만 가져다 쓴다. 예를 들어 features는 entities와 shared를 쓸 수 있지만 pages를 가져다 쓰면 안 된다. 같은 레이어의 슬라이스끼리도 서로 가져다 쓰지 않는다. feature 하나가 다른 feature를 import하면 안 된다. 두 곳에서 같이 써야 하는 것은 한 단계 아래 레이어로 내린다.
+
+| 레이어     | 들어 있는 것                                                             | 예                                                      |
+| ---------- | ------------------------------------------------------------------------ | ------------------------------------------------------- |
+| `app`      | 앱 시작, 라우터, 전역 프로바이더, 목 서버 시작, 전역 스타일, 테스트 설정 | `app/providers/router.tsx`, `app/testing/setupTests.ts` |
+| `pages`    | 주소 하나에 대응하는 화면과, 그 화면에서만 쓰는 API 호출과 목 데이터     | `pages/production/orders`, `pages/login`                |
+| `widgets`  | 여러 화면이 같이 쓰는 큰 덩어리                                          | 모듈 헤더와 탭(`widgets/Layout`), `Header`, `Footer`    |
+| `features` | 등록, 수정 같은 사용자 동작. 폼과 처리 흐름이 대부분이다                 | `features/item-process`, `features/branch-select`       |
+| `entities` | 품목, 지점, 거래처 같은 업무 데이터의 타입과 조회 API                    | `entities/part`, `entities/branch`, `entities/user`     |
+| `shared`   | 업무와 상관없는 공용 코드                                                | UI 컴포넌트, API 클라이언트, 생성된 API 타입            |
+
+`pnpm fsd`가 이 규칙을 검사한다. 이 검사는 CI에 들어 있지 않으니 PR 올리기 전에 직접 돌린다.
+
+### 슬라이스 하나의 모양
+
+슬라이스 폴더 이름은 kebab-case다. 안쪽은 하는 일에 따라 폴더를 나누고, 밖에서는 `index.ts`가 내보내는 것만 가져다 쓴다.
+
+```
+features/item-process/
+├── api/      # 요청 함수와 route loader
+├── model/    # 타입, 폼 스키마
+├── ui/       # 컴포넌트
+├── lib/      # 순수 함수 (필요할 때만)
+├── mocks/    # 목 데이터(data.ts)와 MSW 핸들러(handlers.ts)
+└── index.ts  # 밖으로 내보내는 것
 ```
 
-### Path Alias
+새 파일과 폴더 이름은 같은 자리의 기존 이름 방식을 따른다. 슬라이스 폴더는 kebab-case이고, 컴포넌트 파일은 `Login.tsx`, `WorkOrders.tsx`처럼 PascalCase가 대부분이다. `widgets` 아래 폴더도 PascalCase다. features 안에는 `item-process-form.tsx`처럼 kebab-case 컴포넌트 파일도 섞여 있으니 같은 슬라이스의 이웃 파일에 맞춘다.
 
-프로젝트에서 `@` alias를 사용하여 절대 경로로 import할 수 있습니다:
+### 라우팅
 
-```typescript
-// 상대 경로 대신
-import { Button } from "../../../shared/ui/Button";
+- 모든 경로는 `src/app/providers/router.tsx` 한 파일에 있다. 모듈 화면은 lazy로 불러오고, route loader에서 TanStack Query의 `ensureQueryData`로 화면에 처음 필요한 데이터를 먼저 받아 둔 뒤 그린다. 지금 모듈 화면은 모두 이 방식이다. 검색어나 선택값에 따라 다시 부르는 데이터는 컴포넌트 안에서 `api.useQuery`로 부른다.
+- 로그인이 필요한 경로는 loader에서 사용자 정보를 확인하고, 없으면 `/login`으로 보낸다.
+- 모듈 안의 탭은 `src/widgets/Layout/`의 모듈별 Layout 파일에 있다. 새 화면을 탭에 보이게 하려면 router에 경로를 추가하고 해당 Layout 파일의 탭 목록에도 넣는다. 홈 카드 메뉴는 `src/pages/home/ui/Home.tsx`에 따로 있다.
+- `src/widgets/Sidebar`는 남아 있지만 지금 쓰는 화면은 없다.
 
-// 절대 경로 사용
-import { Button } from "@/shared/ui/Button";
+### API 호출
+
+```mermaid
+flowchart LR
+  A["화면 컴포넌트, route loader"] --> B["api.useQuery, api.queryOptions<br/>(openapi-react-query)"]
+  B --> C["fetchClient<br/>src/shared/api/base.ts"]
+  C -->|"VITE_USE_MOCK=true"| D["MSW 목 서버<br/>각 슬라이스 mocks/handlers.ts"]
+  C -->|"목 모드가 아닐 때"| E["백엔드 API<br/>VITE_BASE_URL"]
 ```
 
-### FSD 아키텍처 검증
+- 새 API 호출은 `@/shared/api`의 `api`로 쓴다. `api.useQuery`, `api.useMutation`, loader에서 쓸 `api.queryOptions`가 있다. 주소와 요청, 응답 타입은 생성된 타입에서 자동으로 맞춰진다.
+- `fetchClient`는 모든 요청에 공통 헤더를 붙이고 쿠키를 같이 보낸다. 401이 오면 토큰 재발급을 한 번만 시도하고 원래 요청을 다시 보낸다.
+- 타입은 `src/shared/model/v1.d.ts`에 있다. 백엔드 10개 서비스의 Swagger 문서를 `openapi-merge.json` 설정대로 합친 뒤 `openapi-typescript`로 만든 파일이고, 저장소에 커밋돼 있다. 원본 Swagger가 있는 백엔드 서버가 내려가 있어서 `pnpm generate:api:all`로는 더 이상 다시 만들 수 없다. 그래서 이 파일이 API 규격의 기준이다. 새 API가 필요하면 이 파일에 타입을 직접 추가하고, 같은 규격으로 목 핸들러를 만든다.
+- 서비스 이름은 주소 앞부분(`/api/서비스/...`)과 같다. auth는 로그인과 토큰, user는 사용자와 직원 정보(인사 관리 화면), order는 판매 주문과 출고, warehouse는 재고와 ROP와 발주 입고, factory는 공장의 부품 주문과 생산 계획, purchase는 구매 요청, part와 material은 부품과 원자재 기준 정보, site는 창고, 공장, 대리점 같은 지점 정보를 다룬다. agency 서비스는 타입에는 들어 있지만 이 웹에서는 부르지 않는다.
+- axios는 의존성에 남아 있지만 코드에서 쓰지 않는다.
+- 화면 데이터는 TanStack Query 캐시에 둔다. Zustand 스토어는 세 개다. 로그인한 사용자 정보(`entities/user`의 `useAuthStore`), 선택한 창고와 공장(`features/branch-select`), 테마(`shared/lib/theme.store.ts`). 로그인한 사용자 정보가 필요하면 `useAuthStore((state) => state.user)`로 읽는다.
 
-FSD 아키텍처 규칙을 검증하려면:
+### 목 서버
 
-```bash
-pnpm fsd
-```
+- 슬라이스마다 `mocks/data.ts`(데이터)와 `mocks/handlers.ts`(MSW 핸들러)를 둔다. `src/app/providers/mocks/handlers.ts`가 `src` 아래의 `mocks/handlers.ts`를 모두 찾아서 등록하므로 따로 목록에 추가할 필요는 없다.
+- 새 API를 붙이면 같은 슬라이스에 핸들러도 같이 만든다. 핸들러가 없는 요청은 목 서버를 그냥 지나가므로 배포본에서 실패한다.
+- 목 데이터는 그 데이터를 부르는 API와 같은 슬라이스에 둔다. 여러 슬라이스가 같은 데이터를 읽고 고쳐야 하면 entities에 두고 가져다 쓴다. 품목 데이터가 그 예다. `entities/part`에 두고 기준 정보 품목 화면, 부품 조회, 품목 등록이 같이 쓴다.
+- 공용 헬퍼(`sleep`, 성공과 실패 응답 모양)는 `src/shared/mocks`에 있다.
+- 저장소 루트의 `mocks/` 폴더는 2025년 10월 초기 화면용 샘플이고 지금은 아무 데서도 쓰지 않는다.
 
-의존성 다이어그램을 생성하려면:
+### 공용 UI 컴포넌트
 
-```bash
-pnpm diagram
-```
+`src/shared/ui`에 있다. Badge, Box, Button, Card, ErrorHandler, InfoBox, Input, Modal, SearchFilterBar, Select, Spinner, StatCard, Table, TableSection, Textarea, ThemeToggle, Toast, table-pagination. 컴포넌트 카탈로그 화면은 따로 없어서 사용 예는 각 화면 코드에서 찾는다. 스타일은 Tailwind CSS 4이고, 색상 토큰은 `src/app/styles/theme.css`에 있다.
 
----
+## 테스트와 자동 검사
 
-## 📝 기여하기
+- 테스트는 Vitest, React Testing Library, jsdom을 쓴다. 테스트 파일은 대상 파일 옆에 `*.test.ts(x)`로 둔다. 공통 설정은 `src/app/testing/setupTests.ts`다.
+- 테스트에서도 MSW가 켜진다. 설정 파일이 모든 슬라이스의 목 핸들러를 담은 Node용 목 서버(`src/app/providers/mocks/server.js`)를 띄운다. 핸들러가 없는 요청이 나가면 테스트가 실패한다.
+- 지금 테스트 파일은 7개이고 대부분 `shared/ui` 컴포넌트다. 테스트를 꼭 함께 써야 한다는 규칙은 없다.
+- **커밋할 때:** husky가 `lint-staged`를 돌려 스테이징한 파일만 Prettier로 정리하고 ESLint로 고친다. 훅은 `pnpm install`할 때 자동으로 설치된다. 그래서 `pnpm prettier`로 저장소 전체를 직접 정리할 필요는 없다.
+- **PR을 올릴 때:** GitHub Actions가 build, lint, test, typecheck를 돌린다. CodeRabbit이 연결돼 있어서 PR에 요약과 리뷰 댓글이 달린다.
+- `pnpm fsd`는 CI에 없으니 필요할 때 직접 돌린다.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 작업 흐름
 
----
+- 33-Auto 저장소에 브랜치를 만들어 `main`으로 PR을 보낸다. 저장소 쓰기 권한이 없으면 choosla에게 요청한다.
+- 브랜치는 `fix/fsd-item-mock-data`처럼 `종류/내용`으로 만든다. 종류는 `feat`, `fix`, `chore`, `docs`, `refactor`를 쓴다.
+- 커밋 메시지는 `feat: 로그인 카드 안에서 예시 계정을 부서별로 고를 수 있게 한다`처럼 같은 종류를 앞에 붙이고 한국어로 쓴다.
+- 프로젝트 기간에는 Jira 이슈 키(`SPM-481`)를 브랜치와 커밋에 붙였다. Jira는 지금 쓰지 않으니 예전 기록에서 `SPM-` 번호를 보면 그때 Jira 이슈라고 보면 된다.
+- PR 본문은 조직 공통 템플릿(Summary, Question & PR point, Reference)이 자동으로 들어간다. PR을 열면 워크플로가 작성자를 담당자로 지정하고 조직의 `review_avengers` 팀에 리뷰를 요청한다. 머지 조건은 리뷰 승인 2명과 CI 통과다. 지금은 `main` 보호 규칙을 풀어 둬서 강제되지는 않는다. 머지는 merge commit으로 한다.
+- 알려진 문제와 할 일은 GitHub 이슈에 올린다. 이슈 템플릿은 기능 요청, 수정 요청, 리팩터링 요청 세 가지다.
 
-## 📄 라이선스
+## 기술 스택
 
-이 프로젝트는 MIT 라이선스를 따릅니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+| 분류            | 사용                                                                     |
+| --------------- | ------------------------------------------------------------------------ |
+| 기본            | React 19, TypeScript 5.9, Vite 8                                         |
+| 라우팅          | React Router 7 (route loader 사용)                                       |
+| 서버 상태와 API | TanStack Query 5, openapi-fetch, openapi-react-query, openapi-typescript |
+| 클라이언트 상태 | Zustand 5                                                                |
+| 폼              | react-hook-form, zod                                                     |
+| 스타일          | Tailwind CSS 4, class-variance-authority, tailwind-merge, Remix Icon     |
+| 목 서버         | MSW 2                                                                    |
+| 테스트          | Vitest 3, React Testing Library, jsdom                                   |
+| 코드 품질       | ESLint 10, Prettier, husky, lint-staged, steiger(FSD 검사)               |
+| 배포와 측정     | Vercel, Vercel Analytics, Speed Insights                                 |
+
+정확한 버전은 `package.json`을 본다.
+
+## 관련 저장소와 팀
+
+전체 팀 소개와 저장소 목록은 [33-Auto 조직 페이지](https://github.com/33-Auto)에 있다.
+
+- 백엔드: [Auth](https://github.com/33-Auto/Sampoom-Management-Backend-Auth), [User](https://github.com/33-Auto/Sampoom-Management-Backend-User), [Order](https://github.com/33-Auto/Sampoom-Management-Backend-Order), [Warehouse](https://github.com/33-Auto/Sampoom-Management-Backend-warehouse), [Factory](https://github.com/33-Auto/Sampoom-Management-Backend-Factory), [Agency](https://github.com/33-Auto/Sampoom-Management-Backend-Agency), [Part](https://github.com/33-Auto/Sampoom-Management-Backend-Part), [Material](https://github.com/33-Auto/Sampoom-Management-Backend-Material), [Purchase](https://github.com/33-Auto/Sampoom-Management-Backend-Purchase), [SITE](https://github.com/33-Auto/Sampoom-Management-Backend-SITE)
+- 모바일 앱: [Android](https://github.com/33-Auto/Sampoom-Management-Android), [iOS](https://github.com/33-Auto/Sampoom-Management-iOS)
+- 기타: [Swagger](https://github.com/33-Auto/Sampoom-Management-Swagger), [Infra](https://github.com/33-Auto/Sampoom-Management-Infra)
+
+프론트엔드는 추창우([CHOOSLA](https://github.com/CHOOSLA))가 맡았다. 판매 관리 화면, 품목 마스터 등록과 수정, 인사 관리 일부 화면은 채상윤([Sangyoon98](https://github.com/Sangyoon98))이 함께 만들었다.
+
+## 템플릿에서 남은 것
+
+이 저장소는 [laststance/create-react-app-vite](https://github.com/laststance/create-react-app-vite) 템플릿에서 시작했다. 그래서 프로젝트와 상관없는 흔적이 몇 군데 남아 있다.
+
+- `REACT_APP_TEXT` 환경 변수와 이를 읽는 `vite-plugin-environment` 설정
+- `package.json`의 이름 `create-react-app`, `.all-contributorsrc`, `.github/FUNDING.yml`
+- `LICENSE`의 템플릿 원작자 저작권 표기(Laststance.io). MIT 라이선스는 원래 표기를 지우지 않고 남기게 되어 있어서 팀 표기 아래에 그대로 둔다.
+
+## 라이선스
+
+MIT. 저작권은 33-Auto 팀과 템플릿 원작자 Laststance.io에 있다. [LICENSE](LICENSE)를 본다.
