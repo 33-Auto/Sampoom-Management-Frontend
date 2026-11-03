@@ -1,19 +1,17 @@
-import path from 'node:path'
+import path from "node:path";
 
-import EnvironmentPlugin from 'vite-plugin-environment'
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from "vitest/config";
 export default defineConfig({
-  plugins: [EnvironmentPlugin(['REACT_APP_TEXT']) as any],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: ['./src/app/testing/setupTests.ts'],
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['src/@types', 'node_modules'],
+    setupFiles: ["./src/app/testing/setupTests.ts"],
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    exclude: ["src/@types", "node_modules"],
   },
-})
+});
