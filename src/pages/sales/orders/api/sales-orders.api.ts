@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 import type {
   SalesOrderDto,
   SalesOrderListParams,
@@ -76,8 +78,25 @@ export const useSalesOrderDetailQuery = (orderId?: number) =>
     },
   );
 
-export const useCancelOrderMutation = () =>
-  api.useMutation("patch", "/api/order/cancel/{orderId}");
+// 취소 뒤 목록과 상세가 바뀐 상태를 다시 받는다
+export const useCancelOrderMutation = () => {
+  const queryClient = useQueryClient();
+
+  return api.useMutation("patch", "/api/order/cancel/{orderId}", {
+    onSuccess: async () => {
+      await Promise.all([
+        // 목록은 화면에 없어도 바로 다시 받아 복귀 때 옛 상태가 안 보인다
+        queryClient.invalidateQueries({
+          queryKey: ["get", "/api/order/warehouse/{warehouseId}"],
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["get", "/api/order/{orderId}"],
+        }),
+      ]);
+    },
+  });
+};
 
 export type SalesOrderListData = SalesOrderListResponse["data"];
 

@@ -38,6 +38,20 @@ export const SALES_ORDER_STATUS_LABELS: Record<SalesOrderStatus, string> = {
   CANCELED: "주문 취소",
 };
 
+// 목록과 상세가 같은 배지 색을 쓴다
+export const SALES_ORDER_STATUS_BADGE_CLASS: Record<SalesOrderStatus, string> =
+  {
+    PENDING: "bg-yellow-100 text-yellow-800",
+    CONFIRMED: "bg-blue-100 text-blue-800",
+    DELAYED: "bg-orange-100 text-orange-800",
+    SHIPPING: "bg-indigo-100 text-indigo-800",
+    SHIPPED: "bg-sky-100 text-sky-800",
+    DELIVERING: "bg-teal-100 text-teal-800",
+    ARRIVED: "bg-emerald-100 text-emerald-800",
+    COMPLETED: "bg-green-100 text-green-800",
+    CANCELED: "bg-gray-100 text-gray-800",
+  };
+
 export const SALES_ORDER_STATUS_FILTER_OPTIONS = [
   { value: "ALL", label: "전체 상태" },
   { value: "PENDING", label: SALES_ORDER_STATUS_LABELS.PENDING },
