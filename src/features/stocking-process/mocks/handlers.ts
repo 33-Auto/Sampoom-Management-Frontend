@@ -1,10 +1,11 @@
 import { http } from "msw";
 
+import {
+  mockPurchaseOrders,
+  transformToPOResDto,
+  type PurchaseOrderListItem,
+} from "@/entities/purchase-order";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
-
-import { mockStockingDetails, type StockingProcessDetail } from "./data";
-
-let stockingDetails = [...mockStockingDetails];
 
 type StockingMutationPayload = {
   purchaseOrderId?: number;
@@ -24,7 +25,8 @@ export const handlers = [
       return apiFail(400, "유효한 purchaseOrderId가 필요합니다.");
     }
 
-    const detail = stockingDetails.find(
+    // 발주 목록과 같은 데이터라 목록의 모든 발주가 열린다
+    const detail = mockPurchaseOrders.find(
       (record) => record.purchaseOrderId === purchaseOrderId,
     );
 
@@ -32,7 +34,7 @@ export const handlers = [
       return apiFail(404, "발주 정보를 찾을 수 없습니다.");
     }
 
-    return apiSuccess(detail);
+    return apiSuccess(transformToPOResDto(detail));
   }),
 
   http.patch("/api/warehouse/stocking", async ({ request }) => {
@@ -47,38 +49,38 @@ export const handlers = [
       return apiFail(400, "입고 품목 정보가 필요합니다.");
     }
 
-    let updatedDetail: StockingProcessDetail | undefined;
+    const detailIndex = mockPurchaseOrders.findIndex(
+      (record) =>
+        record.purchaseOrderId === payload.purchaseOrderId &&
+        record.warehouseId === payload.warehouseId,
+    );
 
-    stockingDetails = stockingDetails.map((detail) => {
-      if (
-        detail.purchaseOrderId !== payload.purchaseOrderId ||
-        detail.warehouseId !== payload.warehouseId
-      ) {
-        return detail;
-      }
-
-      const mutation = payload.items?.find((item) => item.id === detail.partId);
-
-      if (!mutation) {
-        return detail;
-      }
-
-      const delta = Math.max(0, mutation.delta ?? 0);
-      const actualInbound = Math.min(delta, detail.restQuantity);
-
-      updatedDetail = {
-        ...detail,
-        inboundQuantity: detail.inboundQuantity + actualInbound,
-        restQuantity: Math.max(detail.restQuantity - actualInbound, 0),
-        receivedDate: new Date().toISOString(),
-      };
-
-      return updatedDetail;
-    });
-
-    if (!updatedDetail) {
+    if (detailIndex === -1) {
       return apiFail(404, "입고 처리 대상을 찾을 수 없습니다.");
     }
+
+    const detail = mockPurchaseOrders[detailIndex];
+    const mutation = payload.items?.find((item) => item.id === detail.partId);
+
+    if (!mutation) {
+      return apiFail(404, "입고 처리 대상을 찾을 수 없습니다.");
+    }
+
+    const delta = Math.max(0, mutation.delta ?? 0);
+    const actualInbound = Math.min(delta, detail.restQuantity);
+    const restQuantity = Math.max(detail.restQuantity - actualInbound, 0);
+
+    // 다 들어오면 COMPLETED, 남으면 PARTIAL로 두어 목록에선 완료·진행중으로 보인다
+    const updatedDetail: PurchaseOrderListItem = {
+      ...detail,
+      inboundQuantity: detail.inboundQuantity + actualInbound,
+      restQuantity,
+      status: restQuantity === 0 ? "COMPLETED" : "PARTIAL",
+      receivedDate: new Date().toISOString(),
+    };
+
+    // 목록 핸들러와 같은 배열을 고쳐야 목록에 반영된다
+    mockPurchaseOrders[detailIndex] = updatedDetail;
 
     const statusMessage =
       updatedDetail.restQuantity === 0

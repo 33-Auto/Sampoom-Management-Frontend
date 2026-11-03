@@ -22,7 +22,7 @@ export type PurchaseOrder = {
 
 /**
  * Purchase-order 엔티티 기본 데이터
- * 필요 시 pages/wms/purchase-orders 모듈의 mocks를 참고하세요.
+ * 창고 발주 목록·입고 처리 데이터는 purchase-orders.data.ts를 참고하세요.
  */
 export const mockPurchaseOrderData: PurchaseOrder[] = [
   {
