@@ -1,10 +1,7 @@
 import { http } from "msw";
 
+import { mockShippingOrders, type ShippingListItem } from "@/entities/shipping";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
-
-import { mockShippingOrders, type ShippingOrder } from "./data";
-
-let shippingOrders = [...mockShippingOrders];
 
 type ShippingMutationPayload = {
   warehouseId?: number;
@@ -28,15 +25,17 @@ export const handlers = [
       return apiFail(400, "출고 품목이 필요합니다.");
     }
 
-    const order = shippingOrders.find(
+    const orderIndex = mockShippingOrders.findIndex(
       (record) =>
         record.orderId === payload.orderId &&
         record.warehouseId === payload.warehouseId,
     );
 
-    if (!order) {
+    if (orderIndex === -1) {
       return apiFail(404, "출고 대상을 찾을 수 없습니다.");
     }
+
+    const order = mockShippingOrders[orderIndex];
 
     const updatedItems = order.items.map((item) => {
       const mutation = payload.items?.find((v) => v.id === item.partId);
@@ -45,13 +44,14 @@ export const handlers = [
       }
 
       const shippedQty = Math.min(
-        item.availableStock,
+        item.stock,
         Math.min(item.orderQuantity, Math.abs(mutation.delta)),
       );
 
+      // 요청 수량은 남은 출고량으로 줄여 다음 출고 처리의 상한이 된다
       return {
         ...item,
-        availableStock: Math.max(item.availableStock - shippedQty, 0),
+        stock: Math.max(item.stock - shippedQty, 0),
         orderQuantity: Math.max(item.orderQuantity - shippedQty, 0),
       };
     });
@@ -61,15 +61,15 @@ export const handlers = [
       0,
     );
 
-    const updatedOrder: ShippingOrder = {
+    // v1에 부분 출고 상태가 없어 남으면 출고 진행으로 둔다
+    const updatedOrder: ShippingListItem = {
       ...order,
-      status: remaining === 0 ? "SHIPPED" : "PARTIAL",
+      status: remaining === 0 ? "SHIPPED" : "SHIPPING",
       items: updatedItems,
     };
 
-    shippingOrders = shippingOrders.map((record) =>
-      record.orderId === updatedOrder.orderId ? updatedOrder : record,
-    );
+    // 목록 핸들러와 같은 배열을 고쳐야 목록에 반영된다
+    mockShippingOrders[orderIndex] = updatedOrder;
 
     return apiSuccess(
       {
