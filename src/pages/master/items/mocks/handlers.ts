@@ -1,8 +1,7 @@
 import { http } from "msw";
 
+import { mockItemsMaster } from "@/entities/part";
 import { apiSuccess, sleep } from "@/shared/mocks";
-
-import { mockItemsMaster } from "./data";
 
 export const handlers = [
   // 품목 검색 (실제로는 /api/part/items/search 사용)
