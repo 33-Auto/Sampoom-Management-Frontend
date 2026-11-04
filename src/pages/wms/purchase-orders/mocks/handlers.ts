@@ -1,28 +1,11 @@
 import { http } from "msw";
 
 import {
+  mapStatusToOrderStatus,
   mockPurchaseOrders,
   transformToPOResDto,
-  type PurchaseOrderListItem,
 } from "@/entities/purchase-order";
 import { apiSuccess, sleep } from "@/shared/mocks";
-
-// API 스키마의 orderStatus를 mock 데이터의 status로 역매핑
-const mapOrderStatusToStatus = (
-  orderStatus: string | null,
-): PurchaseOrderListItem["status"] | null => {
-  if (!orderStatus) return null;
-
-  const reverseMap: Record<string, PurchaseOrderListItem["status"]> = {
-    UNDER_REVIEW: "REQUESTED",
-    PLAN_CONFIRMED: "APPROVED",
-    IN_PROGRESS: "IN_PROGRESS",
-    COMPLETED: "COMPLETED",
-    DELAYED: "CANCELED",
-  };
-
-  return reverseMap[orderStatus] || null;
-};
 
 const filterOrders = (url: URL) => {
   const keyword = url.searchParams.get("keyword")?.toLowerCase();
@@ -30,9 +13,6 @@ const filterOrders = (url: URL) => {
   const categoryId = Number(url.searchParams.get("categoryId"));
   const groupId = Number(url.searchParams.get("groupId"));
   const warehouseId = Number(url.searchParams.get("warehouseId"));
-
-  // API의 orderStatus를 mock 데이터의 status로 변환
-  const mappedStatus = status ? mapOrderStatusToStatus(status) : null;
 
   return mockPurchaseOrders.filter((order) => {
     const matchesWarehouse =
@@ -44,7 +24,10 @@ const filterOrders = (url: URL) => {
       order.orderNumber.toLowerCase().includes(keyword) ||
       order.partName.toLowerCase().includes(keyword) ||
       order.vendorName.toLowerCase().includes(keyword);
-    const matchesStatus = !mappedStatus || order.status === mappedStatus;
+    // 역매핑을 따로 두면 PARTIAL처럼 한쪽에만 있는 값이 빠진다
+    // 화면에 보이는 orderStatus로 바꿔 비교하고 모르는 값은 빈 결과가 된다
+    const matchesStatus =
+      !status || mapStatusToOrderStatus(order.status) === status;
     const matchesCategory =
       Number.isNaN(categoryId) ||
       !categoryId ||
