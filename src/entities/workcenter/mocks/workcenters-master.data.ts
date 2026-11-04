@@ -9,7 +9,8 @@ export type WorkCenterRecord = {
   costPerHour: number;
 };
 
-export const mockWorkCenters: WorkCenterRecord[] = [
+// 작업장 목록, 등록, 수정, 삭제와 공정 핸들러가 함께 쓰는 단일 데이터
+export const mockWorkCentersMaster: WorkCenterRecord[] = [
   {
     id: 401,
     name: "엔진 가공 1호기",

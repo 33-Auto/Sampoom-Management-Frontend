@@ -170,7 +170,9 @@ export const RoutingMaster = () => {
                                   {step.stepOrder}. {step.stepName || "-"}
                                 </span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                                  {step.workCenterCode || "-"}
+                                  {[step.workCenterCode, step.workCenterName]
+                                    .filter(Boolean)
+                                    .join(" - ") || "-"}
                                 </span>
                               </div>
                               <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-400">

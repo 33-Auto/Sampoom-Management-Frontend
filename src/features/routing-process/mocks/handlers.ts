@@ -8,6 +8,7 @@ import {
   type ProcessStepCreateRequestDTO,
   type ProcessUpdateRequestDTO,
 } from "@/entities/routing";
+import { mockWorkCentersMaster } from "@/entities/workcenter";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
 // 시드 코드 RT### 다음 번호로 만든다
@@ -39,6 +40,26 @@ const findPartInfo = (partId: number) => {
   };
 };
 
+// 스텝도 작업장 id만 와서 상세에 보일 작업장 코드와 이름을 채운다
+const findWorkCenterInfo = (workCenterId: number) => {
+  const workCenter = mockWorkCentersMaster.find(
+    (center) => center.id === workCenterId,
+  );
+
+  if (!workCenter) {
+    return undefined;
+  }
+
+  return {
+    workCenterId,
+    workCenterCode: workCenter.code,
+    workCenterName: workCenter.name,
+  };
+};
+
+const hasUnknownWorkCenter = (steps: ProcessStepCreateRequestDTO[]) =>
+  steps.some((step) => !findWorkCenterInfo(step.workCenterId));
+
 // 스텝이 바뀌면 시간 합계와 비용도 다시 계산한다
 const toStepFields = (steps: ProcessStepCreateRequestDTO[]) => {
   const sumOf = (pick: (step: ProcessStepCreateRequestDTO) => number) =>
@@ -57,6 +78,7 @@ const toStepFields = (steps: ProcessStepCreateRequestDTO[]) => {
     totalProcessCost: totalProcessMinutes * 50000, // 시드와 같은 임시 계산
     steps: steps.map((step) => ({
       ...step,
+      ...findWorkCenterInfo(step.workCenterId),
       totalMinutes: step.setupMinutes + step.processMinutes + step.waitMinutes,
     })),
   };
@@ -76,6 +98,10 @@ export const handlers = [
 
     if (!partInfo) {
       return apiFail(404, "품목 정보를 찾을 수 없습니다.");
+    }
+
+    if (hasUnknownWorkCenter(payload.steps)) {
+      return apiFail(404, "작업장 정보를 찾을 수 없습니다.");
     }
 
     const nextId =
@@ -115,6 +141,11 @@ export const handlers = [
 
     if (!updatedRecord) {
       return apiFail(404, "라우팅 정보를 찾을 수 없습니다.");
+    }
+
+    // 어느 것도 고치기 전에 작업장부터 확인한다
+    if (payload.steps?.length && hasUnknownWorkCenter(payload.steps)) {
+      return apiFail(404, "작업장 정보를 찾을 수 없습니다.");
     }
 
     // 품목이 바뀐 경우에만 품목 정보를 다시 채운다

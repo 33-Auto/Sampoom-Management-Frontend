@@ -51,10 +51,10 @@ export const RoutingCreate = () => {
   const workCenterOptions = [
     { value: "", label: "작업장 선택" },
     ...mockWorkCentersMaster
-      .filter((wc) => wc.status === "가동")
+      .filter((wc) => wc.status === "ACTIVE")
       .map((wc: (typeof mockWorkCentersMaster)[0]) => ({
-        value: wc.workCenterCode,
-        label: `${wc.workCenterCode} - ${wc.workCenterName}`,
+        value: wc.code,
+        label: `${wc.code} - ${wc.name}`,
       })),
   ];
 

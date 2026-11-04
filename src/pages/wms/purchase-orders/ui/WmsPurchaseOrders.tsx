@@ -25,6 +25,17 @@ import {
   PaginationTableSection,
 } from "@/shared/ui";
 
+type FilterStatus = NonNullable<PurchaseOrderListQueryParams["status"]>;
+
+// 목록 API가 받는 status만 필터로 고른다 나머지 값으로 보이는 발주는 없다
+const FILTERABLE_STATUSES: readonly FilterStatus[] = [
+  "UNDER_REVIEW",
+  "PLAN_CONFIRMED",
+  "IN_PROGRESS",
+  "DELAYED",
+  "COMPLETED",
+];
+
 export function WmsPurchaseOrders() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,6 +110,7 @@ export function WmsPurchaseOrders() {
     { value: "", label: "전체 상태" },
     ...STATUS_ORDER.filter(
       (status, index, self) =>
+        FILTERABLE_STATUSES.some((filterable) => filterable === status) &&
         PURCHASE_ORDER_STATUS_LABELS[status] !== undefined &&
         self.indexOf(status) === index,
     ).map((status) => ({

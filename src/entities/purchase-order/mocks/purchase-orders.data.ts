@@ -30,7 +30,8 @@ export type PurchaseOrderListItem = {
 };
 
 // 상태 매핑: mock 데이터의 status를 API 스키마의 orderStatus로 변환
-const mapStatusToOrderStatus = (
+// 목록 필터도 이 함수로 비교해 표시와 필터가 한 방향 매핑만 쓴다
+export const mapStatusToOrderStatus = (
   status: PurchaseOrderListItem["status"],
 ): POResDto["orderStatus"] => {
   const statusMap: Record<

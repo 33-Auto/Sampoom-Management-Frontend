@@ -1,70 +1,36 @@
 import { http } from "msw";
 
+import {
+  mockWorkCentersMaster,
+  type WorkCenterRecord,
+} from "@/entities/workcenter";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
+import type { Schemas } from "@/shared/model";
 
-import { mockWorkCenters, type WorkCenterRecord } from "./data";
+type WorkCenterCreateRequest = Schemas["WorkCenterCreateRequestDTO"];
+type WorkCenterUpdateRequest = Schemas["WorkCenterUpdateRequestDTO"];
 
-let workCenters = [...mockWorkCenters];
-
+// 목록과 같은 배열이라 제자리에서 고쳐야 목록에 바로 보인다
 export const handlers = [
-  http.get("/api/part/work-centers", async ({ request }) => {
-    await sleep(300);
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") || "0");
-    const size = Number(url.searchParams.get("size") || "10");
-    const type = url.searchParams.get("type");
-    const status = url.searchParams.get("status");
-    const queryParameter = url.searchParams.get("query");
-
-    let filtered = [...workCenters];
-
-    if (type) {
-      filtered = filtered.filter((wc) => wc.type === type);
-    }
-    if (status) {
-      filtered = filtered.filter((wc) => wc.status === status);
-    }
-    if (queryParameter) {
-      const lowerQuery = queryParameter.toLowerCase();
-      filtered = filtered.filter(
-        (wc) =>
-          wc.name.toLowerCase().includes(lowerQuery) ||
-          wc.code.toLowerCase().includes(lowerQuery),
-      );
-    }
-
-    const start = page * size;
-    const end = start + size;
-    const content = filtered.slice(start, end);
-
-    return apiSuccess(
-      {
-        content,
-        totalElements: filtered.length,
-        totalPages: Math.ceil(filtered.length / size),
-        size,
-        number: page,
-      },
-      200,
-      "작업장 목록을 조회했습니다.",
-    );
-  }),
-
   http.post("/api/part/work-centers", async ({ request }) => {
     await sleep(400);
-    const payload = (await request.json()) as Partial<WorkCenterRecord>;
+    const payload = (await request.json()) as WorkCenterCreateRequest;
 
     if (!payload.name || !payload.type) {
       return apiFail(400, "작업장명과 유형은 필수입니다.");
     }
 
     const nextId =
-      workCenters.reduce((max, center) => Math.max(max, center.id), 0) + 1;
+      mockWorkCentersMaster.reduce(
+        (max, center) => Math.max(max, center.id),
+        0,
+      ) + 1;
 
     const nextRecord: WorkCenterRecord = {
       id: nextId,
       name: payload.name,
-      code: payload.code ?? `WC-${String(nextId).padStart(3, "0")}`,
+      // 폼이 코드를 보내지 않아 id로 만든다
+      code: `WC-${String(nextId).padStart(3, "0")}`,
       type: payload.type,
       status: payload.status ?? "ACTIVE",
       dailyOperatingHours: payload.dailyOperatingHours ?? 8,
@@ -72,7 +38,8 @@ export const handlers = [
       costPerHour: payload.costPerHour ?? 150000,
     };
 
-    workCenters = [...workCenters, nextRecord];
+    // 새 항목은 첫 페이지에서 바로 보이게 앞에 넣는다
+    mockWorkCentersMaster.unshift(nextRecord);
 
     return apiSuccess(nextRecord, 201, "작업장이 생성되었습니다.");
   }),
@@ -85,25 +52,17 @@ export const handlers = [
       return apiFail(400, "유효한 작업장 ID가 필요합니다.");
     }
 
-    const payload = (await request.json()) as Partial<WorkCenterRecord>;
-    let updatedCenter: WorkCenterRecord | undefined;
-
-    workCenters = workCenters.map((center) => {
-      if (center.id !== id) {
-        return center;
-      }
-
-      updatedCenter = {
-        ...center,
-        ...payload,
-      };
-
-      return updatedCenter;
-    });
+    const payload = (await request.json()) as WorkCenterUpdateRequest;
+    const updatedCenter = mockWorkCentersMaster.find(
+      (center) => center.id === id,
+    );
 
     if (!updatedCenter) {
       return apiFail(404, "작업장을 찾을 수 없습니다.");
     }
+
+    // 부분 수정이라 보낸 필드만 덮어쓴다
+    Object.assign(updatedCenter, payload);
 
     return apiSuccess(updatedCenter, 200, "작업장이 수정되었습니다.");
   }),
@@ -116,12 +75,15 @@ export const handlers = [
       return apiFail(400, "유효한 작업장 ID가 필요합니다.");
     }
 
-    const beforeLength = workCenters.length;
-    workCenters = workCenters.filter((center) => center.id !== id);
+    const targetIndex = mockWorkCentersMaster.findIndex(
+      (center) => center.id === id,
+    );
 
-    if (beforeLength === workCenters.length) {
+    if (targetIndex === -1) {
       return apiFail(404, "삭제할 작업장을 찾을 수 없습니다.");
     }
+
+    mockWorkCentersMaster.splice(targetIndex, 1);
 
     return apiSuccess(null, 200, "작업장이 삭제되었습니다.");
   }),
