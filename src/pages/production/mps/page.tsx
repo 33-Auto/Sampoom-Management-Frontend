@@ -196,6 +196,8 @@ export default function MasterProductionSchedule() {
   const [resultPlans, setResultPlans] = useState<MpsPlanResult[]>([]);
   const [resultOrders, setResultOrders] = useState<PartOrderResult[]>([]);
   const [resultError, setResultError] = useState<string | null>(null);
+  // 확정 오류를 따로 두어야 상세 보기가 실행 결과 대신 확정 오류를 띄우지 않는다
+  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   const executeMutation = useExecuteMpsMutation();
   const confirmMutation = useConfirmMpsMutation();
@@ -204,6 +206,7 @@ export default function MasterProductionSchedule() {
     setResultPlans([]);
     setResultOrders([]);
     setResultError(null);
+    setConfirmError(null);
     setIsResultModalOpen(false);
   }, []);
 
@@ -331,6 +334,8 @@ export default function MasterProductionSchedule() {
   }, [mpsRows]);
 
   const handleExecute = useCallback(() => {
+    // 다시 실행하면 이전 확정 결과와 함께 확정 오류도 지운다
+    setConfirmError(null);
     if (!hasFactoryId || typeof factoryId !== "number") {
       setResultMode("execute");
       setResultPlans([]);
@@ -398,7 +403,7 @@ export default function MasterProductionSchedule() {
       setResultMode("confirm");
       setResultPlans([]);
       setResultOrders([]);
-      setResultError("공장을 먼저 선택한 후 다시 시도하세요.");
+      setConfirmError("공장을 먼저 선택한 후 다시 시도하세요.");
       setIsResultModalOpen(true);
       return;
     }
@@ -406,21 +411,21 @@ export default function MasterProductionSchedule() {
       setResultMode("confirm");
       setResultPlans([]);
       setResultOrders([]);
-      setResultError("MPS 실행을 먼저 진행하세요.");
+      setConfirmError("MPS 실행을 먼저 진행하세요.");
       setIsResultModalOpen(true);
       return;
     }
     if (resultPlans.length === 0) {
       setResultMode("confirm");
       setResultOrders([]);
-      setResultError("MPS 실행 결과가 없습니다. 먼저 실행을 수행하세요.");
+      setConfirmError("MPS 실행 결과가 없습니다. 먼저 실행을 수행하세요.");
       setIsResultModalOpen(true);
       return;
     }
 
     setResultMode("confirm");
     setResultOrders([]);
-    setResultError(null);
+    setConfirmError(null);
     setIsResultModalOpen(true);
 
     setPendingAction({ type: "confirm", mpsId: currentRow.mpsId });
@@ -438,7 +443,7 @@ export default function MasterProductionSchedule() {
           const orders = (response?.data ?? []) as PartOrderResult[];
           setResultMode("confirm");
           setResultOrders(orders);
-          setResultError(
+          setConfirmError(
             orders.length === 0 ? "확정된 주문이 없습니다." : null,
           );
           setReloadKey((prev) => prev + 1);
@@ -451,7 +456,7 @@ export default function MasterProductionSchedule() {
           setFetchErrors((prev) => [...prev, message]);
           setResultMode("confirm");
           setResultOrders([]);
-          setResultError(message);
+          setConfirmError(message);
         },
         onSettled: () => {
           setPendingAction(null);
@@ -683,7 +688,7 @@ export default function MasterProductionSchedule() {
                 </p>
               </div>
               <div className="flex gap-2">
-                {/* <Button
+                <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => {
@@ -693,7 +698,7 @@ export default function MasterProductionSchedule() {
                 >
                   <i className="ri-eye-line mr-2"></i>
                   상세 보기
-                </Button> */}
+                </Button>
                 <Button
                   variant="default"
                   size="sm"
@@ -777,9 +782,9 @@ export default function MasterProductionSchedule() {
           </section>
         )}
 
-        {resultMode === "confirm" && resultError && (
+        {confirmError && (
           <InfoBox title="MPS 확정 오류" type="error">
-            {resultError}
+            {confirmError}
           </InfoBox>
         )}
       </div>
@@ -788,7 +793,7 @@ export default function MasterProductionSchedule() {
         open={isResultModalOpen}
         mode={resultMode}
         isLoading={isExecutePending || isConfirmPending}
-        error={resultError}
+        error={resultMode === "execute" ? resultError : confirmError}
         plans={resultPlans}
         orders={resultOrders}
         onClose={handleCloseResultModal}
