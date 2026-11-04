@@ -118,7 +118,7 @@ export const Home = () => {
     {
       id: "purchasing",
       title: "구매 관리",
-      description: "구매 요청 및 발주 관리를 수행합니다",
+      description: "생산에 필요한 원자재 구매 요청을 관리합니다",
       icon: "ri-shopping-bag-line",
       color: "bg-red-500",
       path: "/purchasing/requests",

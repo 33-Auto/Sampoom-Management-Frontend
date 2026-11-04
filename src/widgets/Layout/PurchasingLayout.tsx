@@ -7,7 +7,7 @@ import NavigationTabs from "@/widgets/Header/NavigationTabs";
 const PurchasingLayout: React.FC = () => {
   const headerConfig = {
     moduleTitle: "구매 관리",
-    moduleDescription: "구매 요청 및 발주 관리를 수행합니다",
+    moduleDescription: "생산에 필요한 원자재 구매 요청을 관리합니다",
     moduleIcon: "ri-shopping-bag-line",
     moduleColor: "bg-red-600",
     navItems: [],
