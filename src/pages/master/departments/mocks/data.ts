@@ -18,7 +18,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 3,
     budget: 500000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT002",
@@ -28,7 +28,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 25,
     budget: 800000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT003",
@@ -38,7 +38,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 8,
     budget: 150000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT004",
@@ -48,7 +48,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 12,
     budget: 300000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT005",
@@ -58,7 +58,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 6,
     budget: 200000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT006",
@@ -68,7 +68,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 4,
     budget: 100000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT007",
@@ -78,7 +78,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 5,
     budget: 120000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT008",
@@ -88,7 +88,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 15,
     budget: 600000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT009",
@@ -98,7 +98,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 9,
     budget: 80000000,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     deptCode: "DEPT010",
@@ -108,7 +108,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 7,
     budget: 70000000,
     status: "활성",
-    createdDate: "2024-01-15",
+    createdDate: "2025-11-05",
   },
   {
     deptCode: "DEPT011",
@@ -118,7 +118,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 10,
     budget: 400000000,
     status: "활성",
-    createdDate: "2024-01-20",
+    createdDate: "2025-11-10",
   },
   {
     deptCode: "DEPT012",
@@ -128,7 +128,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 5,
     budget: 200000000,
     status: "활성",
-    createdDate: "2024-02-01",
+    createdDate: "2025-11-22",
   },
   {
     deptCode: "DEPT013",
@@ -138,7 +138,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 8,
     budget: 150000000,
     status: "활성",
-    createdDate: "2024-02-05",
+    createdDate: "2025-11-26",
   },
   {
     deptCode: "DEPT014",
@@ -148,7 +148,7 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 4,
     budget: 50000000,
     status: "활성",
-    createdDate: "2024-02-10",
+    createdDate: "2025-12-01",
   },
   {
     deptCode: "DEPT015",
@@ -158,6 +158,6 @@ export const mockDepartmentsMaster: DepartmentMaster[] = [
     employeeCount: 3,
     budget: 100000000,
     status: "활성",
-    createdDate: "2024-02-15",
+    createdDate: "2025-12-06",
   },
 ];

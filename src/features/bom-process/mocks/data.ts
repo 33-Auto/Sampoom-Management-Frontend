@@ -27,8 +27,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "ACTIVE",
     complexity: "COMPLEX",
     description: "고성능 엔진 어셈블리 (2025년형)",
-    createdAt: "2024-12-15T09:00:00+09:00",
-    updatedAt: "2024-12-20T09:00:00+09:00",
+    createdAt: "2026-10-06T09:00:00+09:00",
+    updatedAt: "2026-10-11T09:00:00+09:00",
     materials: [
       {
         partId: 1001,
@@ -55,8 +55,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "REVIEWING",
     complexity: "NORMAL",
     description: "경량화 브레이크 시스템",
-    createdAt: "2024-11-10T09:00:00+09:00",
-    updatedAt: "2024-12-01T09:00:00+09:00",
+    createdAt: "2026-09-01T09:00:00+09:00",
+    updatedAt: "2026-09-22T09:00:00+09:00",
     materials: [
       {
         partId: 2002,
@@ -83,8 +83,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "ACTIVE",
     complexity: "NORMAL",
     description: "프리미엄 서스펜션 시스템",
-    createdAt: "2024-12-05T09:00:00+09:00",
-    updatedAt: "2024-12-20T09:00:00+09:00",
+    createdAt: "2026-09-26T09:00:00+09:00",
+    updatedAt: "2026-10-11T09:00:00+09:00",
     materials: [
       {
         partId: 2001,
@@ -111,8 +111,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "ACTIVE",
     complexity: "SIMPLE",
     description: "고효율 냉각 시스템",
-    createdAt: "2024-11-20T09:00:00+09:00",
-    updatedAt: "2024-12-15T09:00:00+09:00",
+    createdAt: "2026-09-11T09:00:00+09:00",
+    updatedAt: "2026-10-06T09:00:00+09:00",
     materials: [
       {
         partId: 4001,
@@ -139,8 +139,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "ACTIVE",
     complexity: "NORMAL",
     description: "저소음 배기 시스템",
-    createdAt: "2024-12-01T09:00:00+09:00",
-    updatedAt: "2024-12-18T09:00:00+09:00",
+    createdAt: "2026-09-22T09:00:00+09:00",
+    updatedAt: "2026-10-09T09:00:00+09:00",
     materials: [
       {
         partId: 5001,
@@ -167,8 +167,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "ACTIVE",
     complexity: "COMPLEX",
     description: "고압 직접분사 시스템",
-    createdAt: "2024-11-15T09:00:00+09:00",
-    updatedAt: "2024-12-25T09:00:00+09:00",
+    createdAt: "2026-09-06T09:00:00+09:00",
+    updatedAt: "2026-10-16T09:00:00+09:00",
     materials: [
       {
         partId: 1001,
@@ -203,8 +203,8 @@ export const mockBomDetails: MockBomDetail[] = [
     status: "REVIEWING",
     complexity: "NORMAL",
     description: "전동 파워 스티어링",
-    createdAt: "2024-12-10T09:00:00+09:00",
-    updatedAt: "2024-12-22T09:00:00+09:00",
+    createdAt: "2026-10-01T09:00:00+09:00",
+    updatedAt: "2026-10-13T09:00:00+09:00",
     materials: [
       {
         partId: 2005,

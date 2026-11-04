@@ -22,7 +22,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "회사 최고 경영진",
     employeeCount: 1,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS002",
@@ -34,7 +34,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "부문별 최고 책임자",
     employeeCount: 2,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS003",
@@ -46,7 +46,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "부서 책임자",
     employeeCount: 9,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS004",
@@ -58,7 +58,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "부서 차석 관리자",
     employeeCount: 12,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS005",
@@ -70,7 +70,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "팀 리더",
     employeeCount: 18,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS006",
@@ -82,7 +82,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "중급 실무자",
     employeeCount: 22,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS007",
@@ -94,7 +94,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "초급 실무자",
     employeeCount: 15,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS008",
@@ -106,7 +106,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "신입 직원",
     employeeCount: 8,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS009",
@@ -118,7 +118,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "사업부 최고 책임자",
     employeeCount: 1,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS010",
@@ -130,7 +130,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "사업부 책임자",
     employeeCount: 3,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS011",
@@ -142,7 +142,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "회사 부사장",
     employeeCount: 1,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS012",
@@ -154,7 +154,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "수석 관리자",
     employeeCount: 5,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS013",
@@ -166,7 +166,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "선임 실무자",
     employeeCount: 20,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS014",
@@ -178,7 +178,7 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "주임 보조",
     employeeCount: 12,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
   {
     positionCode: "POS015",
@@ -190,6 +190,6 @@ export const mockPositionsMaster: PositionMaster[] = [
     description: "인턴 직원",
     employeeCount: 3,
     status: "활성",
-    createdDate: "2024-01-01",
+    createdDate: "2025-10-22",
   },
 ];

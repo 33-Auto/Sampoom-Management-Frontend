@@ -22,7 +22,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "kim@seoul-dealer.com",
     contactPhone: "02-1234-5678",
-    createdAt: "2024-01-01",
+    createdAt: "2025-10-22",
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "lee@busan-dealer.com",
     contactPhone: "051-2345-6789",
-    createdAt: "2024-01-05",
+    createdAt: "2025-10-26",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "park@daehan-metal.com",
     contactPhone: "031-3456-7890",
-    createdAt: "2023-12-15",
+    createdAt: "2025-10-05",
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "INACTIVE",
     contactEmail: "choi@korea-rubber.com",
     contactPhone: "032-4567-8901",
-    createdAt: "2023-12-20",
+    createdAt: "2025-10-10",
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "ms.kang@daehan-auto.co.kr",
     contactPhone: "031-789-1234",
-    createdAt: "2024-01-10",
+    createdAt: "2025-10-31",
   },
   {
     id: 6,
@@ -82,7 +82,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "jh.yoon@taeyang-elec.com",
     contactPhone: "031-234-5678",
-    createdAt: "2024-01-15",
+    createdAt: "2025-11-05",
   },
   {
     id: 7,
@@ -94,7 +94,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "dw.lim@korea-chassis.co.kr",
     contactPhone: "041-567-8901",
-    createdAt: "2024-01-20",
+    createdAt: "2025-11-10",
   },
   {
     id: 8,
@@ -106,7 +106,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "mr.song@premium-motors.co.kr",
     contactPhone: "02-3456-7890",
-    createdAt: "2024-02-01",
+    createdAt: "2025-11-22",
   },
   {
     id: 9,
@@ -118,7 +118,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "sm.cho@global-pt.co.kr",
     contactPhone: "031-456-7890",
-    createdAt: "2024-02-05",
+    createdAt: "2025-11-26",
   },
   {
     id: 10,
@@ -130,7 +130,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "sj.hong@smart-brake.co.kr",
     contactPhone: "042-123-4567",
-    createdAt: "2024-02-10",
+    createdAt: "2025-12-01",
   },
   {
     id: 11,
@@ -142,7 +142,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "INACTIVE",
     contactEmail: "th.kim@engine-tech.co.kr",
     contactPhone: "032-234-5678",
-    createdAt: "2024-02-15",
+    createdAt: "2025-12-06",
   },
   {
     id: 12,
@@ -154,7 +154,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "sj.lee@asia-sensor.co.kr",
     contactPhone: "031-345-6789",
-    createdAt: "2024-02-20",
+    createdAt: "2025-12-11",
   },
   {
     id: 13,
@@ -166,7 +166,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "jh.park@power-eng.co.kr",
     contactPhone: "054-456-7890",
-    createdAt: "2024-03-01",
+    createdAt: "2025-12-21",
   },
   {
     id: 14,
@@ -178,7 +178,7 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "yh.choi@modern-autoparts.co.kr",
     contactPhone: "062-567-8901",
-    createdAt: "2024-03-05",
+    createdAt: "2025-12-25",
   },
   {
     id: 15,
@@ -190,6 +190,6 @@ export const mockPartnersMaster: PartnerMaster[] = [
     status: "ACTIVE",
     contactEmail: "mh.jung@universal-metal.co.kr",
     contactPhone: "043-678-9012",
-    createdAt: "2024-03-10",
+    createdAt: "2025-12-30",
   },
 ];
