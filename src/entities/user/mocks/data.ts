@@ -206,7 +206,7 @@ export function getUserProfile(userId?: number): UserResponse {
     branch: defaultUser.branch,
     position: defaultUser.position,
     organizationId: 1,
-    startedAt: "2024-01-01",
+    startedAt: "2025-10-22",
     endedAt: undefined,
   };
 }

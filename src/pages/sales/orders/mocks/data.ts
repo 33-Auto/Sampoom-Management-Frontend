@@ -144,12 +144,12 @@ type SalesOrderRecord = {
 export const mockSalesOrders: SalesOrderRecord[] = [
   {
     orderId: 8001,
-    orderCode: "SO-2025-00090",
+    orderCode: "SO-2026-00090",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "코리아 모터스",
     status: "PENDING",
-    requestedDate: "2025-01-05",
+    requestedDate: "2026-10-27",
     items: [
       {
         partId: 1001,
@@ -169,12 +169,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8002,
-    orderCode: "SO-2025-00091",
+    orderCode: "SO-2026-00091",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "한빛 기전",
     status: "SHIPPING",
-    requestedDate: "2025-01-04",
+    requestedDate: "2026-10-26",
     items: [
       {
         partId: 2002,
@@ -187,13 +187,13 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8003,
-    orderCode: "SO-2025-00092",
+    orderCode: "SO-2026-00092",
     warehouseId: 202,
     warehouseName: "대구 물류센터",
     customerName: "서진 오토",
     status: "COMPLETED",
-    requestedDate: "2024-12-28",
-    completedDate: "2025-01-02",
+    requestedDate: "2026-10-19",
+    completedDate: "2026-10-24",
     items: [
       {
         partId: 1002,
@@ -206,12 +206,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8004,
-    orderCode: "SO-2025-00093",
+    orderCode: "SO-2026-00093",
     warehouseId: 203,
     warehouseName: "부산 항만 창고",
     customerName: "동아 부품",
     status: "PENDING",
-    requestedDate: "2025-01-06",
+    requestedDate: "2026-10-28",
     items: [
       {
         partId: 2001,
@@ -224,12 +224,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8005,
-    orderCode: "SO-2025-00094",
+    orderCode: "SO-2026-00094",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "대한 자동차 부품",
     status: "CONFIRMED",
-    requestedDate: "2025-01-07",
+    requestedDate: "2026-10-29",
     items: [
       {
         partId: 1003,
@@ -249,12 +249,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8006,
-    orderCode: "SO-2025-00095",
+    orderCode: "SO-2026-00095",
     warehouseId: 202,
     warehouseName: "대구 물류센터",
     customerName: "태양 전자 부품",
     status: "SHIPPING",
-    requestedDate: "2025-01-05",
+    requestedDate: "2026-10-27",
     items: [
       {
         partId: 3002,
@@ -267,13 +267,13 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8007,
-    orderCode: "SO-2025-00096",
+    orderCode: "SO-2026-00096",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "한국 섀시 시스템",
     status: "COMPLETED",
-    requestedDate: "2024-12-30",
-    completedDate: "2025-01-03",
+    requestedDate: "2026-10-21",
+    completedDate: "2026-10-25",
     items: [
       {
         partId: 2003,
@@ -286,12 +286,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8008,
-    orderCode: "SO-2025-00097",
+    orderCode: "SO-2026-00097",
     warehouseId: 203,
     warehouseName: "부산 항만 창고",
     customerName: "프리미엄 모터스",
     status: "PENDING",
-    requestedDate: "2025-01-08",
+    requestedDate: "2026-10-30",
     items: [
       {
         partId: 1004,
@@ -311,12 +311,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8009,
-    orderCode: "SO-2025-00098",
+    orderCode: "SO-2026-00098",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "글로벌 파워트레인",
     status: "CONFIRMED",
-    requestedDate: "2025-01-09",
+    requestedDate: "2026-10-31",
     items: [
       {
         partId: 2004,
@@ -329,12 +329,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8010,
-    orderCode: "SO-2025-00099",
+    orderCode: "SO-2026-00099",
     warehouseId: 202,
     warehouseName: "대구 물류센터",
     customerName: "스마트 브레이크",
     status: "SHIPPING",
-    requestedDate: "2025-01-04",
+    requestedDate: "2026-10-26",
     items: [
       {
         partId: 2005,
@@ -347,13 +347,13 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8011,
-    orderCode: "SO-2025-00100",
+    orderCode: "SO-2026-00100",
     warehouseId: 203,
     warehouseName: "부산 항만 창고",
     customerName: "아시아 센서",
     status: "COMPLETED",
-    requestedDate: "2024-12-29",
-    completedDate: "2025-01-04",
+    requestedDate: "2026-10-20",
+    completedDate: "2026-10-26",
     items: [
       {
         partId: 3003,
@@ -366,12 +366,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8012,
-    orderCode: "SO-2025-00101",
+    orderCode: "SO-2026-00101",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "파워 엔지니어링",
     status: "PENDING",
-    requestedDate: "2025-01-10",
+    requestedDate: "2026-11-01",
     items: [
       {
         partId: 3004,
@@ -384,12 +384,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8013,
-    orderCode: "SO-2025-00102",
+    orderCode: "SO-2026-00102",
     warehouseId: 202,
     warehouseName: "대구 물류센터",
     customerName: "모던 오토파츠",
     status: "CONFIRMED",
-    requestedDate: "2025-01-11",
+    requestedDate: "2026-11-02",
     items: [
       {
         partId: 4001,
@@ -402,12 +402,12 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8014,
-    orderCode: "SO-2025-00103",
+    orderCode: "SO-2026-00103",
     warehouseId: 203,
     warehouseName: "부산 항만 창고",
     customerName: "유니버설 메탈",
     status: "SHIPPING",
-    requestedDate: "2025-01-06",
+    requestedDate: "2026-10-28",
     items: [
       {
         partId: 5001,
@@ -420,13 +420,13 @@ export const mockSalesOrders: SalesOrderRecord[] = [
   },
   {
     orderId: 8015,
-    orderCode: "SO-2025-00104",
+    orderCode: "SO-2026-00104",
     warehouseId: 201,
     warehouseName: "인천 물류센터",
     customerName: "코리아 모터스",
     status: "COMPLETED",
-    requestedDate: "2024-12-31",
-    completedDate: "2025-01-05",
+    requestedDate: "2026-10-22",
+    completedDate: "2026-10-27",
     items: [
       {
         partId: 2006,
