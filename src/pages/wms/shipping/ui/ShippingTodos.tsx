@@ -8,6 +8,7 @@ import type {
   ShippingOrderItemDto,
 } from "@/entities/shipping";
 import { useBranchId, useBranchSelectionStore } from "@/features/branch-select";
+import { canProcessShipping } from "@/features/shipping-process";
 import { usePaginationTable, formatNumber } from "@/shared/lib";
 import {
   Badge,
@@ -221,7 +222,7 @@ export function ShippingTodos() {
             typeof warehouseId !== "number" ||
             Number.isNaN(warehouseId) ||
             typeof row.orderId !== "number" ||
-            !row.items?.some((item) => (item.stock ?? 0) > 0)
+            !canProcessShipping(row)
           }
         >
           출고 처리

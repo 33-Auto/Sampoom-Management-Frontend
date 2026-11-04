@@ -3,6 +3,8 @@ import { http } from "msw";
 import { mockShippingOrders, type ShippingListItem } from "@/entities/shipping";
 import { apiFail, apiSuccess, sleep } from "@/shared/mocks";
 
+import { isShippableStatus } from "../lib/status";
+
 type ShippingMutationPayload = {
   warehouseId?: number;
   orderId?: number;
@@ -36,6 +38,14 @@ export const handlers = [
     }
 
     const order = mockShippingOrders[orderIndex];
+
+    // 취소, 완료, 출고 완료 뒤 단계를 다시 출고하면 상태가 SHIPPED로 덮인다
+    if (!isShippableStatus(order.status)) {
+      return apiFail(
+        409,
+        "출고 대기, 확정, 지연이거나 일부만 출고된 주문만 출고할 수 있습니다.",
+      );
+    }
 
     const updatedItems = order.items.map((item) => {
       const mutation = payload.items?.find((v) => v.id === item.partId);
