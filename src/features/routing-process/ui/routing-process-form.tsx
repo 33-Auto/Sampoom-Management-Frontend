@@ -121,8 +121,8 @@ export function RoutingProcessForm({
   const partSelectValue =
     partIdValue && Number(partIdValue) > 0 ? String(partIdValue) : "";
 
-  // WorkCenters 옵션 가져오기
-  const { data: workCentersData } = useWorkCentersQuery({});
+  // WorkCenters 옵션 가져오기, 기본 10개면 뒤쪽 작업장을 못 골라 한 번에 받는다
+  const { data: workCentersData } = useWorkCentersQuery({ size: 100 });
   const workCenterOptions =
     workCentersData?.data?.content?.map((wc: any) => ({
       value: wc.id?.toString() || "",

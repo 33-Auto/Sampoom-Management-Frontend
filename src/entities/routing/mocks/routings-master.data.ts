@@ -1,9 +1,22 @@
 import type { ProcessResponseDTO } from "../model";
 
+// 작업장 시드와 같은 id와 이름, 다른 slice를 참조하지 않는다
+const seedWorkCenters = {
+  "WC-ENG-001": { workCenterId: 401, workCenterName: "엔진 가공 1호기" },
+  "WC-HT-EXT": { workCenterId: 402, workCenterName: "열처리 외주" },
+  "WC-CNC-002": { workCenterId: 403, workCenterName: "CNC 가공 2호기" },
+  "WC-WELD-A": { workCenterId: 404, workCenterName: "용접 라인 A" },
+  "WC-PAINT-001": { workCenterId: 405, workCenterName: "도장 라인" },
+  "WC-ASSY-B": { workCenterId: 406, workCenterName: "조립 라인 B" },
+  "WC-QC-001": { workCenterId: 407, workCenterName: "검사 라인" },
+  "WC-SURF-EXT": { workCenterId: 409, workCenterName: "표면처리 외주" },
+  "WC-PRESS-001": { workCenterId: 410, workCenterName: "프레스 가공" },
+};
+
 export interface RoutingOperation {
   operationNumber: number;
   operationName: string;
-  workCenterCode: string;
+  workCenterCode: keyof typeof seedWorkCenters;
   setupTime: number;
   processTime: number;
   waitTime: number;
@@ -34,7 +47,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 10,
         operationName: "절삭 가공",
-        workCenterCode: "WC001",
+        workCenterCode: "WC-CNC-002",
         setupTime: 30,
         processTime: 5,
         waitTime: 60,
@@ -42,7 +55,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 20,
         operationName: "밀링 가공",
-        workCenterCode: "WC002",
+        workCenterCode: "WC-ENG-001",
         setupTime: 45,
         processTime: 8,
         waitTime: 120,
@@ -50,7 +63,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 30,
         operationName: "표면처리",
-        workCenterCode: "WC004",
+        workCenterCode: "WC-PAINT-001",
         setupTime: 15,
         processTime: 3,
         waitTime: 180,
@@ -58,7 +71,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 40,
         operationName: "품질검사",
-        workCenterCode: "WC006",
+        workCenterCode: "WC-QC-001",
         setupTime: 10,
         processTime: 2,
         waitTime: 0,
@@ -77,7 +90,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 10,
         operationName: "절단 가공",
-        workCenterCode: "WC001",
+        workCenterCode: "WC-PRESS-001",
         setupTime: 20,
         processTime: 3,
         waitTime: 60,
@@ -85,7 +98,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 20,
         operationName: "표면처리",
-        workCenterCode: "WC004",
+        workCenterCode: "WC-SURF-EXT",
         setupTime: 15,
         processTime: 2,
         waitTime: 120,
@@ -93,7 +106,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 30,
         operationName: "품질검사",
-        workCenterCode: "WC006",
+        workCenterCode: "WC-QC-001",
         setupTime: 10,
         processTime: 1,
         waitTime: 0,
@@ -112,7 +125,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 10,
         operationName: "사출 성형",
-        workCenterCode: "WC002",
+        workCenterCode: "WC-PRESS-001",
         setupTime: 60,
         processTime: 2,
         waitTime: 240,
@@ -120,7 +133,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 20,
         operationName: "트리밍",
-        workCenterCode: "WC001",
+        workCenterCode: "WC-CNC-002",
         setupTime: 15,
         processTime: 1,
         waitTime: 60,
@@ -128,7 +141,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 30,
         operationName: "표면처리",
-        workCenterCode: "WC004",
+        workCenterCode: "WC-PAINT-001",
         setupTime: 30,
         processTime: 3,
         waitTime: 180,
@@ -136,7 +149,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 40,
         operationName: "조립 준비",
-        workCenterCode: "WC005",
+        workCenterCode: "WC-ASSY-B",
         setupTime: 20,
         processTime: 2,
         waitTime: 60,
@@ -144,7 +157,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 50,
         operationName: "품질검사",
-        workCenterCode: "WC006",
+        workCenterCode: "WC-QC-001",
         setupTime: 15,
         processTime: 3,
         waitTime: 0,
@@ -163,7 +176,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 10,
         operationName: "정밀 가공",
-        workCenterCode: "EXT001",
+        workCenterCode: "WC-CNC-002",
         setupTime: 120,
         processTime: 15,
         waitTime: 480,
@@ -171,7 +184,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 20,
         operationName: "열처리",
-        workCenterCode: "EXT002",
+        workCenterCode: "WC-HT-EXT",
         setupTime: 60,
         processTime: 0,
         waitTime: 720,
@@ -179,7 +192,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 30,
         operationName: "정밀 밀링",
-        workCenterCode: "WC002",
+        workCenterCode: "WC-ENG-001",
         setupTime: 45,
         processTime: 12,
         waitTime: 120,
@@ -187,7 +200,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 40,
         operationName: "용접",
-        workCenterCode: "WC003",
+        workCenterCode: "WC-WELD-A",
         setupTime: 30,
         processTime: 8,
         waitTime: 180,
@@ -195,7 +208,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 50,
         operationName: "조립",
-        workCenterCode: "WC005",
+        workCenterCode: "WC-ASSY-B",
         setupTime: 60,
         processTime: 10,
         waitTime: 120,
@@ -203,7 +216,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 60,
         operationName: "최종검사",
-        workCenterCode: "WC006",
+        workCenterCode: "WC-QC-001",
         setupTime: 20,
         processTime: 5,
         waitTime: 0,
@@ -222,7 +235,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 10,
         operationName: "주조",
-        workCenterCode: "EXT001",
+        workCenterCode: "WC-PRESS-001",
         setupTime: 180,
         processTime: 0,
         waitTime: 1440,
@@ -230,7 +243,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 20,
         operationName: "거친 가공",
-        workCenterCode: "WC001",
+        workCenterCode: "WC-CNC-002",
         setupTime: 60,
         processTime: 20,
         waitTime: 240,
@@ -238,7 +251,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 30,
         operationName: "열처리",
-        workCenterCode: "EXT002",
+        workCenterCode: "WC-HT-EXT",
         setupTime: 30,
         processTime: 0,
         waitTime: 480,
@@ -246,7 +259,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 40,
         operationName: "정밀 가공",
-        workCenterCode: "WC002",
+        workCenterCode: "WC-ENG-001",
         setupTime: 90,
         processTime: 25,
         waitTime: 180,
@@ -254,7 +267,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 50,
         operationName: "표면처리",
-        workCenterCode: "WC004",
+        workCenterCode: "WC-PAINT-001",
         setupTime: 45,
         processTime: 5,
         waitTime: 360,
@@ -262,7 +275,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 60,
         operationName: "최종 조립",
-        workCenterCode: "WC005",
+        workCenterCode: "WC-ASSY-B",
         setupTime: 120,
         processTime: 15,
         waitTime: 120,
@@ -270,7 +283,7 @@ const mockRoutingsMaster: RoutingMaster[] = [
       {
         operationNumber: 70,
         operationName: "성능 테스트",
-        workCenterCode: "WC006",
+        workCenterCode: "WC-QC-001",
         setupTime: 30,
         processTime: 10,
         waitTime: 0,
@@ -384,6 +397,8 @@ const toProcess = (
     steps: routing.operations.map((op) => ({
       stepOrder: op.operationNumber,
       stepName: op.operationName,
+      // 수정 폼이 작업장을 id로 미리 고르게 같이 넣는다
+      ...seedWorkCenters[op.workCenterCode],
       workCenterCode: op.workCenterCode,
       setupMinutes: op.setupTime,
       processMinutes: op.processTime,
